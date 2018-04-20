@@ -6,7 +6,7 @@ const path = require('path');
 
 dotenv.load({ path: '.env' });
 
-const staticFiles = express.static(path.join(__dirname, '../../client/build'));
+const staticFiles = express.static(path.join(__dirname, '../client/build'));
 app.use(staticFiles);
 
 const bpController = require('./controllers/beatportController');
