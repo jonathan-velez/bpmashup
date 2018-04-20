@@ -2,8 +2,12 @@ const dotenv = require('dotenv');
 const express = require('express');
 const app = express();
 const fs = require('fs');
+const path = require('path');
 
 dotenv.load({ path: '.env' });
+
+const staticFiles = express.static(path.join(__dirname, '../../client/build'));
+app.use(staticFiles);
 
 const bpController = require('./controllers/beatportController');
 const zippyController = require('./controllers/zippyController');
