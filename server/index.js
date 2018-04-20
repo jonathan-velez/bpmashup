@@ -28,9 +28,9 @@ app.get(`${process.env.API_BASE_URL}/tracks/similar`, bpController.callApi);
 app.get(`${process.env.API_BASE_URL}/download-track`, zippyController.zippyScrape);
 app.get(`${process.env.API_BASE_URL}/youtube/search`, ytController.Youtube);
 
-app.get('*', (req, res) => {
-  res.send('{}');
-});
+// app.get('*', (req, res) => {
+//   res.send('{}');
+// });
 
 app.use('/*', staticFiles)
 
