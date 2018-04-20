@@ -9,7 +9,7 @@ const bpController = require('./controllers/beatportController');
 const zippyController = require('./controllers/zippyController');
 const ytController = require('./controllers/youtubeController');
 
-app.use(`${process.env.API_BASE_URL}/most-popular`, (req, res, next) => {  
+app.use(`${process.env.API_BASE_URL}/most-popular`, (req, res, next) => {
   req.query.newValue = 'someTestValue';
   next();
 })
@@ -28,6 +28,7 @@ app.get('*', (req, res) => {
   res.send('{}');
 });
 
-const server = app.listen(process.env.PORT || 3001, function () {
-  console.log('BPMashup Server running on port 3001');
-});
+app.set('port', (process.env.PORT || 3001))
+app.listen(app.get('port'), () => {
+  console.log(`Listening on ${app.get('port')}`)
+})
