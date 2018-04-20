@@ -1,0 +1,33 @@
+const dotenv = require('dotenv');
+const express = require('express');
+const app = express();
+const fs = require('fs');
+
+dotenv.load({ path: '.env' });
+
+const bpController = require('./controllers/beatportController');
+const zippyController = require('./controllers/zippyController');
+const ytController = require('./controllers/youtubeController');
+
+app.use(`${process.env.API_BASE_URL}/most-popular`, (req, res, next) => {  
+  req.query.newValue = 'someTestValue';
+  next();
+})
+
+app.get(`${process.env.API_BASE_URL}/genres`, bpController.callApi);
+app.get(`${process.env.API_BASE_URL}/search`, bpController.callApi);
+app.get(`${process.env.API_BASE_URL}/most-popular`, bpController.callApi);
+app.get(`${process.env.API_BASE_URL}/most-popular/:type`, bpController.callApi);
+app.get(`${process.env.API_BASE_URL}/autocomplete`, bpController.callApi);
+app.get(`${process.env.API_BASE_URL}/artists/detail`, bpController.callApi);
+app.get(`${process.env.API_BASE_URL}/tracks/similar`, bpController.callApi);
+app.get(`${process.env.API_BASE_URL}/download-track`, zippyController.zippyScrape);
+app.get(`${process.env.API_BASE_URL}/youtube/search`, ytController.Youtube);
+
+app.get('*', (req, res) => {
+  res.send('{}');
+});
+
+const server = app.listen(3001, function () {
+  console.log('BPMashup Server running on port 3001');
+});
