@@ -28,6 +28,6 @@ app.get('*', (req, res) => {
   res.send('{}');
 });
 
-const server = app.listen(3001, function () {
+const server = app.listen(process.env.PORT || 3001, function () {
   console.log('BPMashup Server running on port 3001');
 });
