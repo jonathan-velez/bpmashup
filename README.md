@@ -10,9 +10,9 @@
 ### Installation
 
 - clone repo
-- add Beatport and YouTube Search API keys to environment variables file ".env" *see below*
-- (cd client && npm install) && (cd server && npm install)
-- concurrently "cd client && PORT=3000 npm start" "cd server && PORT=3001 npm start"
+- add Beatport and YouTube Search API keys to environment variables file "/client/.env" (see below)
+- npm install
+- npm start
 
 ### Environment Variables
 
@@ -24,4 +24,6 @@
 - API_BASE_URL=/api
 - BP_BASE_URL=https://oauth-api.beatport.com/catalog/3/
 
-Beatport API - https://oauth-api.beatport.com/ | YouTube Search API - https://developers.google.com/youtube/v3/docs/search
+Beatport API - https://oauth-api.beatport.com/
+
+YouTube Search API - https://developers.google.com/youtube/v3/docs/search
