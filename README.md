@@ -24,5 +24,7 @@
 - API_BASE_URL=/api
 - BP_BASE_URL=https://oauth-api.beatport.com/catalog/3/
 
+
 Beatport API - https://oauth-api.beatport.com/
+
 YouTube Search API - https://developers.google.com/youtube/v3/docs/search
