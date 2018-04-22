@@ -2,6 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import Axios from 'axios';
 import { scroller } from 'react-scroll';
+import _ from 'lodash';
+
 import store from '../store';
 import * as actionCreators from '../actions/ActionCreators';
 
@@ -59,17 +61,18 @@ export const scrollToTrack = (trackId) => {
 export const getNextTrack = (incrementBy = 1) => {  
   const { trackListing, mediaPlayer } = store.getState();  
   const { tracks } = trackListing;
+  
+  const orderedTracks = _.orderBy(tracks, 'position', 'asc');
+  let nextTrackId = orderedTracks.findIndex(obj => obj.id === mediaPlayer.loadedTrack.id) + incrementBy;
+  let nextTrackObj = orderedTracks[nextTrackId];
 
-  const keys = Object.keys(tracks);
-  let nextTrackId = keys.indexOf(mediaPlayer.loadedTrack.id.toString()) + incrementBy;
-
-  if (nextTrackId <= 0 || keys.length === nextTrackId) {
+  if (nextTrackId <= 0 || orderedTracks.length === nextTrackId) {
     nextTrackId = 0;
   }
 
-  scrollToTrack(tracks[keys[nextTrackId]].id);
+  scrollToTrack(nextTrackObj.id);
 
-  return tracks[keys[nextTrackId]];
+  return nextTrackObj;
 }
 
 export const loadNextTrack = (incrementBy = 1) => {
