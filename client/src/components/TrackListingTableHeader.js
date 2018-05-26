@@ -6,6 +6,7 @@ const TrackListingTableHeader = () => {
     <Table.Header>
       <Table.Row>
         <Table.HeaderCell>&nbsp;</Table.HeaderCell>
+        <Table.HeaderCell>&nbsp;</Table.HeaderCell>
         <Table.HeaderCell>Title</Table.HeaderCell>
         <Table.HeaderCell>Artists</Table.HeaderCell>
         <Table.HeaderCell>Label</Table.HeaderCell>

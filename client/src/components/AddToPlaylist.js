@@ -3,6 +3,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Popup, Label, List, Button, Icon, Form } from 'semantic-ui-react';
 import _ from 'lodash'
+import moment from 'moment';
 
 import * as actionCreators from '../actions/ActionCreators';
 import ModalView from './ModalView';
@@ -16,9 +17,14 @@ class AddToPlaylist extends React.Component {
   }
 
   addToPlaylist = (playlist) => {
+    const timeStamp = moment().unix();
+    const track = Object.assign({}, this.props.track, {
+      timeStamp
+    })
+
     this.props.addToPlaylist({
       playlist,
-      track: this.props.track
+      track
     });
     this.setState({ popupOpen: false })
   }
@@ -41,7 +47,12 @@ class AddToPlaylist extends React.Component {
 
   handleSubmit = (e) => {
     e.preventDefault();
+
+    const timeStamp = moment().unix();
     const trackId = this.props.track.id
+    const track = Object.assign({}, this.props.trackListing.tracks[trackId], {
+      timeStamp
+    })
 
     this.props.addNewPlaylist({
       name: this.state.newPlaylistName,

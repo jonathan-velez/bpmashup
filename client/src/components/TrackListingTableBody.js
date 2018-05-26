@@ -9,10 +9,14 @@ const TrackListingTableBody = ({ trackListing, removeFromPlaylist }) => {
   let trackListingBody = '';
 
   if (Object.keys(trackListing).length > 0) {
-    const orderedTracks = _.orderBy(trackListing, 'position', 'asc');
-    trackListingBody = _.map(orderedTracks, track => {
+    // sort by the order it was added to the playlist
+    const orderedTracks = _.orderBy(trackListing, 'timeStamp', 'asc');
+    trackListingBody = _.map(orderedTracks, (track, idx)  => {
       return (
-        <Table.Row key={track.id}>          
+        <Table.Row key={track.id}>
+          <Table.Cell>
+            {idx + 1}
+          </Table.Cell>
           <Table.Cell>
             <TrackAlbum              
               imageUrl={track.images.large.secureUrl}              
