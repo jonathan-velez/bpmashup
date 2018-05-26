@@ -8,6 +8,12 @@
       flex-basis: 0;
     }
 
+    .flex-card {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
     .active-track {
       -webkit-animation: pulse 2.3s infinite;
       animation: pulse 2.3s infinite;
