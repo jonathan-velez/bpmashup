@@ -63,14 +63,19 @@ export const getNextTrack = (incrementBy = 1) => {
   const { tracks } = trackListing;
   
   const orderedTracks = _.orderBy(tracks, 'position', 'asc');
-  let nextTrackId = orderedTracks.findIndex(obj => obj.id === mediaPlayer.loadedTrack.id) + incrementBy;
-  let nextTrackObj = orderedTracks[nextTrackId];
+  let nextTrackIndex = orderedTracks.findIndex(obj => obj.id === mediaPlayer.loadedTrack.id) + incrementBy;
+  
+  if(nextTrackIndex >= orderedTracks.length || nextTrackIndex < 0) {
+    nextTrackIndex = 0;
+  }
+  
+  let nextTrackObj = orderedTracks[nextTrackIndex];
 
-  if (nextTrackId <= 0 || orderedTracks.length === nextTrackId) {
-    nextTrackId = 0;
+  if (nextTrackIndex <= 0 || orderedTracks.length === nextTrackIndex) {
+    nextTrackIndex = 0;
   }
 
-  scrollToTrack(nextTrackObj.id);
+  scrollToTrack(nextTrackObj.id || 0);
 
   return nextTrackObj;
 }
