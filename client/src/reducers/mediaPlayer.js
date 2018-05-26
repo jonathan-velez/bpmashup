@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 import {
   LOAD_TRACK,
   PLAY_PAUSE,
@@ -31,6 +33,8 @@ const defaultState = {
 const mediaPlayer = (state = defaultState, action) => {
   switch (action.type) {
     case LOAD_TRACK:
+      if (_.isEmpty(action.payload)) return state;
+      
       return {
         ...state,
         loadedUrl: action.payload.sampleSecureUrl,

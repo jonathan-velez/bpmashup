@@ -9,7 +9,8 @@ const TrackListingTableBody = ({ trackListing, removeFromPlaylist }) => {
   let trackListingBody = '';
 
   if (Object.keys(trackListing).length > 0) {
-    trackListingBody = _.map(trackListing, track => {
+    const orderedTracks = _.orderBy(trackListing, 'position', 'asc');
+    trackListingBody = _.map(orderedTracks, track => {
       return (
         <Table.Row key={track.id}>          
           <Table.Cell>

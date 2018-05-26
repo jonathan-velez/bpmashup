@@ -59,9 +59,13 @@ export const scrollToTrack = (trackId) => {
 }
 
 export const getNextTrack = (incrementBy = 1) => {  
-  const { trackListing, mediaPlayer } = store.getState();  
-  const { tracks } = trackListing;
+  const { trackListing = {}, mediaPlayer = {} } = store.getState();  
+  const { tracks = [] } = trackListing;
   
+  if (_.isEmpty(trackListing) || _.isEmpty(mediaPlayer) || tracks.length ===0) {
+    return {};
+  }
+
   const orderedTracks = _.orderBy(tracks, 'position', 'asc');
   let nextTrackIndex = orderedTracks.findIndex(obj => obj.id === mediaPlayer.loadedTrack.id) + incrementBy;
   
