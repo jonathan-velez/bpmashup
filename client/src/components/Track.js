@@ -39,7 +39,7 @@ class Track extends React.Component {
           <Card.Meta>{constructLinks(track.artists, 'artist')}</Card.Meta>
           <Card.Meta><Link to={`/most-popular/label/${track.label.slug}/${track.label.id}`}>[{track.label.name}]</Link></Card.Meta>
           <Card.Meta>{constructLinks(track.genres, 'genre')}</Card.Meta>
-          {/* <Card.Meta>Release Date: {track.releaseDate}</Card.Meta> */}
+          <Card.Meta>{track.releaseDate}</Card.Meta>
         </Card.Content>
         <Card.Content extra>
           <div className='ui two buttons'>
