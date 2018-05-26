@@ -3,7 +3,7 @@ import { Button, Icon } from 'semantic-ui-react';
 
 import { downloadTrack } from '../utils/trackUtils';
 
-const DownloadTrack = ({ track }) => {
+const DownloadTrack = ({ track, mini }) => {
   return (
     <Button
       basic
@@ -14,7 +14,7 @@ const DownloadTrack = ({ track }) => {
       <Button.Content visible>
         <Icon name='download' />
       </Button.Content>
-      <Button.Content hidden>Download</Button.Content>
+      <Button.Content hidden>{mini ? 'DL' : 'Download'}</Button.Content>
     </Button>
   );
 };
