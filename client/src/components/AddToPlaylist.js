@@ -8,6 +8,7 @@ import moment from 'moment';
 import * as actionCreators from '../actions/ActionCreators';
 import ModalView from './ModalView';
 import AddToPlaylistForm from './AddNewPlaylistForm';
+import * as thunks from '../thunks';
 
 class AddToPlaylist extends React.Component {
   state = {
@@ -58,6 +59,11 @@ class AddToPlaylist extends React.Component {
       name: this.state.newPlaylistName,
       track: this.props.trackListing.tracks[trackId]
     });
+
+    // this.props.addPlaylistNew({
+    //   name: this.state.newPlaylistName,
+    //   track: this.props.trackListing.tracks[trackId]
+    // });
 
     this.setState({ modalOpen: false })
   }
@@ -134,7 +140,7 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => {
-  return bindActionCreators(actionCreators, dispatch);
+  return bindActionCreators(Object.assign({}, actionCreators, thunks), dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddToPlaylist);

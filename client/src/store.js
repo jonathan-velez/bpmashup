@@ -4,9 +4,12 @@ import { syncHistoryWithStore } from 'react-router-redux';
 import { createBrowserHistory } from 'history';
 import { reactReduxFirebase, firebaseReducer } from 'react-redux-firebase';
 import firebase from 'firebase';
+import thunk from 'redux-thunk';
+import logger from 'redux-logger'
 
 import rootReducer from './reducers/index';
 import { loadStorage, setStorage } from './localStorage';
+import { activityLogger } from './middleware';
 
 const persistedStorage = loadStorage();
 
@@ -29,7 +32,7 @@ firebase.initializeApp(firebaseConfig);
 
 const createStoreWithFirebase = compose(
   reactReduxFirebase(firebase, rrfConfig),
-  applyMiddleware(ReduxPromise)
+  applyMiddleware(ReduxPromise, thunk, logger, activityLogger)
 )(createStore);
 
 const store = createStoreWithFirebase(rootReducer, persistedStorage);

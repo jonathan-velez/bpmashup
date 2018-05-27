@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import * as actionCreators from '../actions/ActionCreators';
 import { Dimmer, Icon, Image } from 'semantic-ui-react';
 
+import * as thunks from '../thunks';
 class TrackAlbum extends React.Component {
   state = {
     active: false
@@ -25,7 +26,8 @@ class TrackAlbum extends React.Component {
         dimmed={active}
         onMouseEnter={this.handleShow}
         onMouseLeave={this.handleHide}
-        onClick={isLoaded ? () => playPause() : () => loadTrack(track)}
+        // onClick={isLoaded ? () => playPause() : () => loadTrack(track)}
+        onClick={isLoaded ? () => playPause() : () => this.props.loadTrackThunk(track)}
       >
         <Dimmer active={active}>
           <Icon
@@ -47,7 +49,7 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => {
-  return bindActionCreators(actionCreators, dispatch);
+  return bindActionCreators(Object.assign({}, actionCreators, thunks), dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(TrackAlbum);
