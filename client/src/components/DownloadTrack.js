@@ -3,12 +3,12 @@ import { Button, Icon } from 'semantic-ui-react';
 
 import { downloadTrack } from '../utils/trackUtils';
 
-const DownloadTrack = ({ track, mini }) => {
+const DownloadTrack = ({ track, mini, blue }) => {
   return (
     <Button
       basic
       animated
-      color='grey'
+      color={blue ? 'blue' : 'grey'}
       onClick={() => downloadTrack(track)}
     >
       <Button.Content visible>
