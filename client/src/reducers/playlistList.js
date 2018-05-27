@@ -4,7 +4,8 @@ import Moment from 'moment';
 import {
   ADD_PLAYLIST,
   ADD_TO_PLAYLIST,
-  REMOVE_FROM_PLAYLIST
+  REMOVE_FROM_PLAYLIST,
+  EDIT_PLAYLIST_NAME
 } from '../constants/actionTypes';
 
 const playlistList = (state = {}, action) => {
@@ -58,6 +59,14 @@ const playlistList = (state = {}, action) => {
           ...state[action.payload.playlistId],
           tracks,
           listOfTracks
+        }
+      }
+    case EDIT_PLAYLIST_NAME: 
+      return {
+        ...state,
+        [action.payload.playlistId]: {
+          ...state[action.payload.playlistId],
+          name: action.payload.newName
         }
       }
     default:

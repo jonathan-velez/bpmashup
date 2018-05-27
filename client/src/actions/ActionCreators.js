@@ -26,7 +26,8 @@ import {
   GET_YOUTUBE_LINK,
   LOAD_YOUTUBE_URL,
   SET_VOLUME,
-  LOAD_TRACKS
+  LOAD_TRACKS,
+  EDIT_PLAYLIST_NAME
 } from '../constants/actionTypes';
 
 export const startAsync = () => {
@@ -198,5 +199,12 @@ export const loadTracks = tracks => {
   return {
     type: LOAD_TRACKS,
     payload: tracks
+  }
+}
+
+export const editPlaylistName = payload => {
+  return {
+    type: EDIT_PLAYLIST_NAME,
+    payload
   }
 }

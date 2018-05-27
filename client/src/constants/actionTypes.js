@@ -24,3 +24,4 @@ export const GET_YOUTUBE_LINK = 'GET_YOUTUBE_LINK';
 export const LOAD_YOUTUBE_URL = 'LOAD_YOUTUBE_URL';
 export const SET_VOLUME = 'SET_VOLUME';
 export const LOAD_TRACKS = 'LOAD_TRACKS';
+export const EDIT_PLAYLIST_NAME = 'EDIT_PLAYLIST_NAME';

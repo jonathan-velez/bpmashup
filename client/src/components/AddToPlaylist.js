@@ -57,7 +57,7 @@ class AddToPlaylist extends React.Component {
 
     this.props.addNewPlaylist({
       name: this.state.newPlaylistName,
-      track: this.props.trackListing.tracks[trackId]
+      track
     });
 
     // this.props.addPlaylistNew({

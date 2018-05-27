@@ -29,7 +29,7 @@ const TrackListingTableBody = ({ trackListing, removeFromPlaylist }) => {
           <Table.Cell>{track.label.name}</Table.Cell>
           <Table.Cell>{track.genres[0].name}</Table.Cell>
           <Table.Cell>{track.releaseDate}</Table.Cell>
-          <Table.Cell><DownloadTrack track={track} mini /></Table.Cell>
+          <Table.Cell><DownloadTrack track={track} mini blue /></Table.Cell>
           <Table.Cell onClick={() => removeFromPlaylist(track.id.toString())}><Icon name='delete' /></Table.Cell>
         </Table.Row>
       )
