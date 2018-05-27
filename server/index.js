@@ -16,7 +16,7 @@ const ytController = require('./controllers/youtubeController');
 app.use(`${process.env.API_BASE_URL}/most-popular`, (req, res, next) => {
   req.query.newValue = 'someTestValue';
   next();
-})
+});
 
 app.get(`${process.env.API_BASE_URL}/genres`, bpController.callApi);
 app.get(`${process.env.API_BASE_URL}/search`, bpController.callApi);
@@ -28,13 +28,9 @@ app.get(`${process.env.API_BASE_URL}/tracks/similar`, bpController.callApi);
 app.get(`${process.env.API_BASE_URL}/download-track`, zippyController.zippyScrape);
 app.get(`${process.env.API_BASE_URL}/youtube/search`, ytController.Youtube);
 
-// app.get('*', (req, res) => {
-//   res.send('{}');
-// });
+app.use('/*', staticFiles);
 
-app.use('/*', staticFiles)
-
-app.set('port', (process.env.PORT || 3001))
+app.set('port', (process.env.PORT || 3001));
 app.listen(app.get('port'), () => {
-  console.log(`Listening on ${app.get('port')}`)
-})
+  console.log(`Listening on ${app.get('port')}`);
+});
