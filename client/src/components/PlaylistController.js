@@ -47,11 +47,8 @@ class PlaylistController extends React.Component {
     const thisPage = thisSearch.substr(thisSearch.indexOf('page=') + 5);
     const newPage = nextSearch.substr(nextSearch.indexOf('page=') + 5);
 
-    if (thisPage != newPage) console.log('swapping pages', thisPage, newPage);
-
     if (currentPlaylistId != newPlaylistId) {
       this.props.loadTracks(this.props.playlistList[newPlaylistId].tracks);
-      console.log('time to load new playlist ', this.props.playlistList[newPlaylistId]);
     }
 
     const currentTrackListLength = Object.keys(this.props.playlistList[currentPlaylistId].tracks).length;
@@ -59,10 +56,6 @@ class PlaylistController extends React.Component {
 
     if (currentTrackListLength != newTrackListLength) {
       this.props.loadTracks(nextProps.playlistList[newPlaylistId].tracks);
-    }
-
-    if (this.props.playlistList.length != nextProps.playlistList.length) {
-      console.log('length of playlist changed')
     }
   }
 
@@ -83,12 +76,10 @@ class PlaylistController extends React.Component {
 
   handleRef = (c) => {
     this.inputRef = c;
-    console.log(c)
   }
 
   focus = () => {
     this.inputRef.focus();
-    // this.inputRef.select();
   }
 
   render() {
