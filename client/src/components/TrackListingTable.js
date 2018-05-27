@@ -14,7 +14,7 @@ const TrackListingTable = ({ trackListing, isLoading, removeFromPlaylist }) => {
   }
 
   return (
-    <Table singleLine>
+    <Table singleLine striped>
       <TrackListingTableHeader />
       <TrackListingTableBody trackListing={trackListing} removeFromPlaylist={removeFromPlaylist} />
     </Table>
