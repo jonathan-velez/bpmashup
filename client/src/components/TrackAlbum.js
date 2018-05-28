@@ -15,7 +15,7 @@ class TrackAlbum extends React.Component {
   handleHide = () => this.setState({ active: false });
 
   render() {
-    const { imageUrl, loadTrackThunk, imageSize, track, playPause } = this.props;
+    const { imageUrl, loadTrackThunk, imageSize = 'large', track, playPause, iconSize = 'massive' } = this.props;
     const { active } = this.state;
 
     const isLoaded = this.props.mediaPlayer.loadedTrack.id === track.id;
@@ -33,10 +33,10 @@ class TrackAlbum extends React.Component {
           <Icon
             link
             name={isPlaying && isLoaded ? 'pause' : 'play'}            
-            size='huge'
+            size={iconSize}
           />
         </Dimmer>
-        <Image src={imageUrl} circular size={imageSize || 'large'} className={isLoaded ? 'flex-card active-track' : 'flex-card'} />
+        <Image src={imageUrl} circular size={imageSize} className={isLoaded ? 'flex-card active-track' : 'flex-card'} />
       </Dimmer.Dimmable>
     )
   }

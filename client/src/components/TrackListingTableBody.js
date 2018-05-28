@@ -20,7 +20,8 @@ const TrackListingTableBody = ({ trackListing, removeFromPlaylist }) => {
           <Table.Cell>
             <TrackAlbum              
               imageUrl={track.images.large.secureUrl}              
-              imageSize={'tiny'}
+              imageSize='tiny'
+              iconSize='big'
               track={track}              
             />
           </Table.Cell>
