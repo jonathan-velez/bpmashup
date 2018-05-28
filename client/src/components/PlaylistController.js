@@ -1,7 +1,7 @@
 import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Header, Message, Input } from 'semantic-ui-react';
+import { Header, Message, Form, Input } from 'semantic-ui-react';
 import Scroll from 'react-scroll';
 
 import * as actionCreators from '../actions/ActionCreators';
@@ -33,7 +33,6 @@ class PlaylistController extends React.Component {
       this.focus();
     }
   }
-
 
   componentWillReceiveProps(nextProps) {
     const { playlistId: newPlaylistId } = nextProps.match.params;
@@ -72,7 +71,6 @@ class PlaylistController extends React.Component {
   }
 
   deletePlaylist = () => {
-    console.log('deleting playlist', this.playlistId);
     this.props.deletePlaylist(this.playlistId);
   }
 
@@ -82,6 +80,10 @@ class PlaylistController extends React.Component {
 
   focus = () => {
     this.inputRef.focus();
+  }
+
+  handleFormSubmit = evt => {
+    this.editPlaylistName();
   }
 
   render() {
@@ -99,17 +101,19 @@ class PlaylistController extends React.Component {
 
     let { trackListing, isLoading } = this.props;
     const { tracks } = trackListing;
-    console.log('props', this.props)
+
     return (
       <React.Fragment>
         {this.state.playlistNameEditMode ?
-          <Input
-            value={playlist.name}
-            onChange={this.handlePlaylistNameChange}
-            size='huge'
-            onBlur={this.editPlaylistName}
-            ref={this.handleRef}
-          /> :
+          <Form onSubmit={this.handleFormSubmit}>
+            <Input
+              value={playlist.name}
+              onChange={this.handlePlaylistNameChange}
+              size='huge'
+              onBlur={this.editPlaylistName}
+              ref={this.handleRef}
+            />
+          </Form> :
           <PlaylistHeader playlistName={playlist.name} editHeader={this.editPlaylistName} deletePlaylist={this.deletePlaylist} />
         }
         <TrackListingTable
