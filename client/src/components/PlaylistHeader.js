@@ -5,11 +5,9 @@ const PlaylistHeader = ({ playlistName, editHeader, deletePlaylist }) => {
   return (
     <React.Fragment>
       <Header size='huge'>
-        <span>{playlistName}&nbsp;
-          <Icon name='pencil' size='small' onClick={editHeader} />
-          &nbsp;
-          <Icon name='delete' size='small' onClick={deletePlaylist} />
-        </span>
+        <span onClick={editHeader}>{playlistName}</span>
+        &nbsp;
+        <span><Icon name='delete' size='small' color='red' onClick={deletePlaylist} /></span>
       </Header>
     </React.Fragment>
   );
