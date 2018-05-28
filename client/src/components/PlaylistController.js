@@ -25,12 +25,12 @@ class PlaylistController extends React.Component {
       this.props.loadTracks(this.playlist.tracks);
     }
   }
-
-  componentDidUpdate() {
+  
+  componentDidUpdate(prevProps, prevState) {
     this.playlistId = this.props.match.params.playlistId;
     this.playlist = this.props.playlistList[this.playlistId];
 
-    if (this.state.playlistNameEditMode) {
+    if (!prevState.playlistNameEditMode && this.state.playlistNameEditMode) {
       this.focus();
     }
   }
