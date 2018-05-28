@@ -7,7 +7,7 @@ const PlaylistHeader = ({ playlistName, editHeader, deletePlaylist }) => {
       <Header size='huge'>
         <span onClick={editHeader} className='pointerCursor'>{playlistName}</span>
         &nbsp;
-        <span><Icon name='delete' size='small' color='red' className='pointerCursor' onClick={deletePlaylist} /></span>
+        <span><Icon link name='delete' size='small' color='red' onClick={deletePlaylist} /></span>
       </Header>
     </React.Fragment>
   );
