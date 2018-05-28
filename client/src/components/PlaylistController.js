@@ -7,7 +7,6 @@ import Scroll from 'react-scroll';
 
 import * as actionCreators from '../actions/ActionCreators';
 import TrackListingTable from './TrackListingTable';
-import Pager from './Pager';
 import PlaylistHeader from './PlaylistHeader';
 
 class PlaylistController extends React.Component {
@@ -123,7 +122,6 @@ class PlaylistController extends React.Component {
           isLoading={isLoading}
           removeFromPlaylist={this.callRemoveFromPlaylist}
         />
-        <Pager activePage={1} perPage={20} totalPages={Math.ceil(Object.keys(tracks).length / 20)} firstItem={null} lastItem={null} />
       </React.Fragment>
     )
   }
