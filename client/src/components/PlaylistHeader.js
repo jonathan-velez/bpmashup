@@ -5,9 +5,9 @@ const PlaylistHeader = ({ playlistName, editHeader, deletePlaylist }) => {
   return (
     <React.Fragment>
       <Header size='huge'>
-        <span onClick={editHeader} className='playlistHeader'>{playlistName}</span>
+        <span onClick={editHeader} className='pointerCursor'>{playlistName}</span>
         &nbsp;
-        <span><Icon name='delete' size='small' color='red' onClick={deletePlaylist} /></span>
+        <span><Icon name='delete' size='small' color='red' className='pointerCursor' onClick={deletePlaylist} /></span>
       </Header>
     </React.Fragment>
   );
