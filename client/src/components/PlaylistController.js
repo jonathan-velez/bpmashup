@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Header, Message, Form, Input } from 'semantic-ui-react';
@@ -80,6 +81,7 @@ class PlaylistController extends React.Component {
 
   focus = () => {
     this.inputRef.focus();
+    ReactDOM.findDOMNode(this.inputRef).querySelector('input').select();
   }
 
   handleFormSubmit = evt => {
