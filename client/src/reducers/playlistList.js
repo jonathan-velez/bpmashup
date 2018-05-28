@@ -5,12 +5,13 @@ import {
   ADD_PLAYLIST,
   ADD_TO_PLAYLIST,
   REMOVE_FROM_PLAYLIST,
-  EDIT_PLAYLIST_NAME
+  EDIT_PLAYLIST_NAME,
+  DELETE_PLAYLIST
 } from '../constants/actionTypes';
 
 const playlistList = (state = {}, action) => {
   switch (action.type) {
-    case ADD_PLAYLIST:      
+    case ADD_PLAYLIST:
       const playlistId = v4();
       const unixStamp = Moment().unix();
       return {
@@ -22,13 +23,13 @@ const playlistList = (state = {}, action) => {
             ...state.tracks,
             [action.payload.track.id]: action.payload.track
           },
-          listOfTracks: [            
+          listOfTracks: [
             action.payload.track.id
           ],
           dateAdded: unixStamp
         }
       }
-    case ADD_TO_PLAYLIST:      
+    case ADD_TO_PLAYLIST:
       return {
         ...state,
         [action.payload.playlist.id]: {
@@ -43,7 +44,7 @@ const playlistList = (state = {}, action) => {
           ]
         }
       }
-    case REMOVE_FROM_PLAYLIST:      
+    case REMOVE_FROM_PLAYLIST:
       //////// 'old school way' ////////////
       // let copy = Object.assign({}, state);      
       // delete copy[action.payload.playlistId].tracks[action.payload.trackId];      
@@ -61,7 +62,7 @@ const playlistList = (state = {}, action) => {
           listOfTracks
         }
       }
-    case EDIT_PLAYLIST_NAME: 
+    case EDIT_PLAYLIST_NAME:
       return {
         ...state,
         [action.payload.playlistId]: {
@@ -69,6 +70,9 @@ const playlistList = (state = {}, action) => {
           name: action.payload.newName
         }
       }
+    case DELETE_PLAYLIST:
+      const { [action.payload]: deletedPlaylist, ...restOfPlaylists } = state;
+      return restOfPlaylists;
     default:
       return state;
   }

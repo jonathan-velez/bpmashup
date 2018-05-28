@@ -39,14 +39,19 @@ class PlaylistController extends React.Component {
     const { playlistId: newPlaylistId } = nextProps.match.params;
     const { playlistId: currentPlaylistId } = this.props.match.params;
 
-    if (currentPlaylistId !== newPlaylistId) {
+    if (!this.newPlaylistId) return;
+
+    if (currentPlaylistId && currentPlaylistId != newPlaylistId) {
       this.props.loadTracks(this.props.playlistList[newPlaylistId].tracks);
+    }else {
+      console.log('no playlist');
+      return;
     }
 
     const currentTrackListLength = Object.keys(this.props.playlistList[currentPlaylistId].tracks).length;
     const newTrackListLength = Object.keys(nextProps.playlistList[newPlaylistId].tracks).length;
 
-    if (currentTrackListLength !== newTrackListLength) {
+    if (currentTrackListLength && currentTrackListLength != newTrackListLength) {
       this.props.loadTracks(nextProps.playlistList[newPlaylistId].tracks);
     }
   }
@@ -64,6 +69,11 @@ class PlaylistController extends React.Component {
       playlistId: this.playlistId,
       newName: evt.target.value
     });
+  }
+
+  deletePlaylist = () => {
+    console.log('deleting playlist', this.playlistId);
+    this.props.deletePlaylist(this.playlistId);
   }
 
   handleRef = (c) => {
@@ -100,7 +110,7 @@ class PlaylistController extends React.Component {
             onBlur={this.editPlaylistName}
             ref={this.handleRef}
           /> :
-          <PlaylistHeader playlistName={playlist.name} editHeader={this.editPlaylistName} />
+          <PlaylistHeader playlistName={playlist.name} editHeader={this.editPlaylistName} deletePlaylist={this.deletePlaylist} />
         }
         <TrackListingTable
           trackListing={tracks}

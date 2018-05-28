@@ -5,12 +5,14 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import _ from 'lodash';
 import ReactPlayer from 'react-player';
 
+import { downloadTrack } from '../utils/trackUtils';
+import * as actionCreators from '../actions/ActionCreators';
+import { getNextTrack, scrollToTrack } from '../utils/trackUtils';
+
 import Navigation from './Navigation';
 import Main from './Main';
 import Footer from './Footer';
-import { downloadTrack } from '../utils/trackUtils';
-import * as actionCreators from '../actions/ActionCreators';
-import { getNextTrack } from '../utils/trackUtils'
+import ModalView from './ModalView';
 
 class App extends React.Component {
   componentWillMount() {
@@ -127,6 +129,7 @@ class App extends React.Component {
     return (
       <Router>
         <React.Fragment>
+          <ModalView open={this.props.openModal.open} modalContent='soomemoe' modalHeader='xxxx' />
           <ReactPlayer
             ref={this.ref}
             className='react-player'
@@ -162,6 +165,7 @@ const mapStateToProps = state => {
     playlistList: state.playlistList,
     trackListing: state.trackListing,
     mediaPlayer: state.mediaPlayer,
+    openModal: state.openModal,
   }
 }
 
