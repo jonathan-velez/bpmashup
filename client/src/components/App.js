@@ -3,7 +3,6 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { BrowserRouter as Router } from 'react-router-dom';
 import _ from 'lodash';
-import { scroller } from 'react-scroll';
 import ReactPlayer from 'react-player';
 
 import Navigation from './Navigation';
@@ -11,7 +10,7 @@ import Main from './Main';
 import Footer from './Footer';
 import { downloadTrack } from '../utils/trackUtils';
 import * as actionCreators from '../actions/ActionCreators';
-import { getNextTrack, scrollToTrack } from '../utils/trackUtils'
+import { getNextTrack } from '../utils/trackUtils'
 
 class App extends React.Component {
   componentWillMount() {
@@ -19,7 +18,6 @@ class App extends React.Component {
       if (e.target.toString() === '[object HTMLInputElement]') return;
 
       const { loadedTrack } = this.props.mediaPlayer;
-      let nextTrack = {}, prevTrack = {};
 
       switch (e.key) {
         case 'p':
@@ -53,7 +51,7 @@ class App extends React.Component {
           break;
         case 'ArrowLeft':
           // rewind 5 seconds
-          if (loadedTrack.id){
+          if (loadedTrack.id) {
             this.fastForward(-5);
           }
           break;
@@ -61,7 +59,7 @@ class App extends React.Component {
           // Turn it up!
           if (loadedTrack.id) {
             this.changeVolume(.15);
-          }          
+          }
           break;
         case '-':
           // Turn it down!
@@ -84,17 +82,17 @@ class App extends React.Component {
     this.player = player;
   }
 
-  fastForward = seconds => {    
+  fastForward = seconds => {
     if (typeof seconds !== 'number') return;
 
     const { duration, played } = this.props.mediaPlayer;
     let seekToPosition = (seconds / duration) + played;
-    
-    if(seekToPosition > 1) {
+
+    if (seekToPosition > 1) {
       seekToPosition = .99;
     }
 
-    if(seekToPosition < 0) {
+    if (seekToPosition < 0) {
       seekToPosition = 0;
     }
 
@@ -108,12 +106,12 @@ class App extends React.Component {
 
     const { mediaPlayer, setVolume } = this.props;
     let setVolumeTo = mediaPlayer.volume + amount;
-    
-    if(setVolumeTo > 1){
+
+    if (setVolumeTo > 1) {
       setVolumeTo = 1;
     }
-    
-    if(setVolumeTo < 0) {
+
+    if (setVolumeTo < 0) {
       setVolumeTo = 0;
     }
 
@@ -125,7 +123,7 @@ class App extends React.Component {
   }
 
   render() {
-    const { loadedUrl, playing, volume, muted, loop, played, loaded, duration, playbackRate, loadedTrack } = this.props.mediaPlayer;
+    const { loadedUrl, playing, volume, muted, loop, playbackRate } = this.props.mediaPlayer;
     return (
       <Router>
         <React.Fragment>

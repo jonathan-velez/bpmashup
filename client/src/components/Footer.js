@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import ReactPlayer from 'react-player';
 import { scroller } from 'react-scroll';
-import { Menu, Image, Container, Card, Icon } from 'semantic-ui-react';
+import { Menu, Image, Container, Card } from 'semantic-ui-react';
 
 import * as actionCreators from '../actions/ActionCreators';
 import { constructLinks, getNextTrack } from '../utils/trackUtils';
@@ -44,7 +43,7 @@ class Footer extends Component {
   }
 
   render() {
-    const { url, playing, volume, muted, loop, played, loaded, duration, playbackRate, loadedTrack } = this.props.mediaPlayer;
+    const { playing, played, duration, loadedTrack } = this.props.mediaPlayer;
 
     return (
       <Menu fixed='bottom' className='footer-menu' compact borderless>

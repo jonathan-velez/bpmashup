@@ -1,12 +1,11 @@
 import React from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { firebaseConnect, isLoaded } from 'react-redux-firebase';
-import { Button, Image, Icon, Menu } from 'semantic-ui-react';
+import { firebaseConnect } from 'react-redux-firebase';
+import { Image, Icon, Menu } from 'semantic-ui-react';
 
 const Auth = ({ firebase, auth }) => {
-  console.log('auth', auth, 'isLoaded', isLoaded(auth))
-  const { displayName, photoURL, isEmpty } = auth;
+  const { photoURL } = auth;
 
   const logOutButton = (
     <React.Fragment>

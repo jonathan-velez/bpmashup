@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import { Card, Icon, Button, Label } from 'semantic-ui-react';
+import { Card, Label } from 'semantic-ui-react';
 import AddToPlaylist from './AddToPlaylist';
 import TrackAlbum from './TrackAlbum';
 import { constructLinks, trackGenreColors } from '../utils/trackUtils';

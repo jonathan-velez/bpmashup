@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Dropdown, Popup, Grid, Icon, Menu } from 'semantic-ui-react';
+import { Popup, Grid, Icon, Menu } from 'semantic-ui-react';
 import _ from 'lodash';
 
 class GenreList extends React.Component {

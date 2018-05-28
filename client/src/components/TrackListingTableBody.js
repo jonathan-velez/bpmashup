@@ -1,6 +1,6 @@
 import React from 'react';
 import _ from 'lodash';
-import { Table, Icon, Image } from 'semantic-ui-react';
+import { Table, Icon } from 'semantic-ui-react';
 
 import TrackAlbum from './TrackAlbum';
 import DownloadTrack from './DownloadTrack';

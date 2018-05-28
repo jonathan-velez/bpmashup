@@ -1,7 +1,7 @@
 import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Popup, Label, List, Button, Icon, Form } from 'semantic-ui-react';
+import { Popup, Label, List, Button, Icon } from 'semantic-ui-react';
 import _ from 'lodash'
 import moment from 'moment';
 

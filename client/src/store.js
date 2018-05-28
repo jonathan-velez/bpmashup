@@ -2,7 +2,7 @@ import { createStore, applyMiddleware, compose } from 'redux';
 import ReduxPromise from 'redux-promise';
 import { syncHistoryWithStore } from 'react-router-redux';
 import { createBrowserHistory } from 'history';
-import { reactReduxFirebase, firebaseReducer } from 'react-redux-firebase';
+import { reactReduxFirebase } from 'react-redux-firebase';
 import firebase from 'firebase';
 import thunk from 'redux-thunk';
 import logger from 'redux-logger'

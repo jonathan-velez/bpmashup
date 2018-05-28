@@ -3,7 +3,6 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Header, Message, Input } from 'semantic-ui-react';
 import Scroll from 'react-scroll';
-import Moment from 'moment';
 
 import * as actionCreators from '../actions/ActionCreators';
 import TrackListingTable from './TrackListingTable';
@@ -40,21 +39,14 @@ class PlaylistController extends React.Component {
     const { playlistId: newPlaylistId } = nextProps.match.params;
     const { playlistId: currentPlaylistId } = this.props.match.params;
 
-    // which page we loading?
-    const { search: nextSearch } = nextProps.location;
-    const { search: thisSearch } = this.props.location;
-
-    const thisPage = thisSearch.substr(thisSearch.indexOf('page=') + 5);
-    const newPage = nextSearch.substr(nextSearch.indexOf('page=') + 5);
-
-    if (currentPlaylistId != newPlaylistId) {
+    if (currentPlaylistId !== newPlaylistId) {
       this.props.loadTracks(this.props.playlistList[newPlaylistId].tracks);
     }
 
     const currentTrackListLength = Object.keys(this.props.playlistList[currentPlaylistId].tracks).length;
     const newTrackListLength = Object.keys(nextProps.playlistList[newPlaylistId].tracks).length;
 
-    if (currentTrackListLength != newTrackListLength) {
+    if (currentTrackListLength !== newTrackListLength) {
       this.props.loadTracks(nextProps.playlistList[newPlaylistId].tracks);
     }
   }
@@ -96,7 +88,7 @@ class PlaylistController extends React.Component {
     }
 
     let { trackListing, isLoading } = this.props;
-    const { tracks, metadata } = trackListing;
+    const { tracks } = trackListing;
 
     return (
       <React.Fragment>

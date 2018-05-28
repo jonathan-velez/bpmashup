@@ -15,7 +15,7 @@ class TrackAlbum extends React.Component {
   handleHide = () => this.setState({ active: false });
 
   render() {
-    const { imageUrl, loadTrack, imageSize, track, playPause } = this.props;
+    const { imageUrl, loadTrackThunk, imageSize, track, playPause } = this.props;
     const { active } = this.state;
 
     const isLoaded = this.props.mediaPlayer.loadedTrack.id === track.id;
@@ -27,7 +27,7 @@ class TrackAlbum extends React.Component {
         onMouseEnter={this.handleShow}
         onMouseLeave={this.handleHide}
         // onClick={isLoaded ? () => playPause() : () => loadTrack(track)}
-        onClick={isLoaded ? () => playPause() : () => this.props.loadTrackThunk(track)}
+        onClick={isLoaded ? () => playPause() : () => loadTrackThunk(track)}
       >
         <Dimmer active={active}>
           <Icon

@@ -1,7 +1,6 @@
 import {
   UPDATE_SUGGESTION_INPUT_VALUE,
   CLEAR_SUGGESTIONS,
-  MAYBE_UPDATE_SUGGESTIONS,
   LOAD_SUGGESTIONS
 } from '../constants/actionTypes';
 
