@@ -233,3 +233,8 @@
     .new-playlist-icon{
       cursor: pointer;
     }
+
+    .playlistHeader {
+      cursor: pointer;
+    }
+    
