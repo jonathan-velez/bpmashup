@@ -28,7 +28,7 @@ class PlaylistController extends React.Component {
   componentDidUpdate() {
     this.playlistId = this.props.match.params.playlistId;
     this.playlist = this.props.playlistList[this.playlistId];
-    
+
     if (this.state.playlistNameEditMode) {
       this.focus();
     }
@@ -38,21 +38,21 @@ class PlaylistController extends React.Component {
   componentWillReceiveProps(nextProps) {
     const { playlistId: newPlaylistId } = nextProps.match.params;
     const { playlistId: currentPlaylistId } = this.props.match.params;
+    const newPlaylistObj = nextProps.playlistList[newPlaylistId];
 
-    if (!this.newPlaylistId) return;
-
-    if (currentPlaylistId && currentPlaylistId != newPlaylistId) {
-      this.props.loadTracks(this.props.playlistList[newPlaylistId].tracks);
-    }else {
-      console.log('no playlist');
+    if (currentPlaylistId && currentPlaylistId != newPlaylistId && newPlaylistObj) {
+      this.props.loadTracks(newPlaylistObj.tracks);
       return;
     }
 
-    const currentTrackListLength = Object.keys(this.props.playlistList[currentPlaylistId].tracks).length;
-    const newTrackListLength = Object.keys(nextProps.playlistList[newPlaylistId].tracks).length;
+    // if num of tracks changed, loadTracks again
+    if (newPlaylistId && newPlaylistObj) {
+      const currentTrackListLength = Object.keys(this.props.playlistList[currentPlaylistId].tracks).length;
+      const newTrackListLength = Object.keys(newPlaylistObj.tracks).length;
 
-    if (currentTrackListLength && currentTrackListLength != newTrackListLength) {
-      this.props.loadTracks(nextProps.playlistList[newPlaylistId].tracks);
+      if (currentTrackListLength && currentTrackListLength != newTrackListLength) {
+        this.props.loadTracks(newPlaylistObj.tracks);
+      }
     }
   }
 
@@ -99,7 +99,7 @@ class PlaylistController extends React.Component {
 
     let { trackListing, isLoading } = this.props;
     const { tracks } = trackListing;
-
+    console.log('props', this.props)
     return (
       <React.Fragment>
         {this.state.playlistNameEditMode ?
