@@ -238,3 +238,6 @@
       cursor: pointer;
     }
     
+    .table tr.visible.transition {
+      display: table-row !important;
+    }
