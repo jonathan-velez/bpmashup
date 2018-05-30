@@ -220,9 +220,10 @@ export const deletePlaylist = payload => {
   }
 }
 
-export const openConfirm = () => {
+export const openConfirm = payload => {
   return {
-    type: OPEN_CONFIRM
+    type: OPEN_CONFIRM,
+    payload
   }
 }
 

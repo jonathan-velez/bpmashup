@@ -80,12 +80,16 @@ class PlaylistController extends React.Component {
 
   deletePlaylist = () => {
     this.setState({ deletePlaylist: true })
-    this.props.openConfirm();
+    this.props.openConfirm({
+      content: 'Are you sure you want to delete this playlist?',
+      confirmButtonText: 'Yes',
+      cancelButtonText: 'No',
+    });
   }
 
   actuallyDeletePlaylists = () => {
     const { deletePlaylist } = this.state;
-    
+
     if (deletePlaylist) {
       this.props.deletePlaylist(this.playlistId);
       this.setState({ deletePlaylist: false });

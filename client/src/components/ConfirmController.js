@@ -26,6 +26,9 @@ class ConfirmController extends Component {
           open={this.props.confirmModal.open}
           onCancel={this.handleCancel}
           onConfirm={this.handleConfirm}
+          content={this.props.confirmModal.content}
+          confirmButton={this.props.confirmModal.confirmButtonText}
+          cancelButton={this.props.confirmModal.cancelButtonText}
         />
       </React.Fragment>
     );

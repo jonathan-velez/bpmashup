@@ -7,6 +7,10 @@ import {
 const defaultState = {
   open: false,
   confirm: false,
+  content: null,
+  size: 'small',
+  confirmButtonText: 'OK',
+  cancelButtonText: 'Cancel',
 }
 
 const confirmModal = (state = defaultState, action) => {
@@ -15,6 +19,9 @@ const confirmModal = (state = defaultState, action) => {
       return {
         open: true,
         confirm: false,
+        content: action.payload.content,
+        confirmButtonText: action.payload.confirmButtonText,
+        cancelButtonText: action.payload.cancelButtonText,
       }
     case SET_CONFIRM:
       return {
@@ -22,10 +29,7 @@ const confirmModal = (state = defaultState, action) => {
         confirm: action.payload,
       }
     case RESET_CONFIRM:
-      return {
-        open: false,
-        confirm: false,
-      }
+      return defaultState;
     default:
       return state;
   }
