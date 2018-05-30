@@ -1,9 +1,11 @@
 import React from 'react';
 import _ from 'lodash';
 import { Table, Icon, Transition } from 'semantic-ui-react';
+import { Link } from 'react-router-dom';
 
 import TrackAlbum from './TrackAlbum';
 import DownloadTrack from './DownloadTrack';
+import { constructLinks } from '../utils/trackUtils';
 
 const TrackListingTableBody = ({ trackListing, removeFromPlaylist }) => {
   let trackListingBody = '';
@@ -27,9 +29,9 @@ const TrackListingTableBody = ({ trackListing, removeFromPlaylist }) => {
             />
           </Table.Cell>
           <Table.Cell>{track.title}</Table.Cell>
-          <Table.Cell>{track.artists[0].name}</Table.Cell>
-          <Table.Cell>{track.label.name}</Table.Cell>
-          <Table.Cell>{track.genres[0].name}</Table.Cell>
+          <Table.Cell>{constructLinks(track.artists, 'artist')}</Table.Cell>
+          <Table.Cell><Link to={`/most-popular/label/${track.label.slug}/${track.label.id}`}>{track.label.name}</Link></Table.Cell>
+          <Table.Cell>{constructLinks(track.genres, 'genre')}</Table.Cell>
           <Table.Cell>{track.releaseDate}</Table.Cell>
           <Table.Cell><DownloadTrack track={track} mini blue /></Table.Cell>
           <Table.Cell>
