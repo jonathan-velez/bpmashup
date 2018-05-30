@@ -26,3 +26,6 @@ export const SET_VOLUME = 'SET_VOLUME';
 export const LOAD_TRACKS = 'LOAD_TRACKS';
 export const EDIT_PLAYLIST_NAME = 'EDIT_PLAYLIST_NAME';
 export const DELETE_PLAYLIST = 'DELETE_PLAYLIST';
+export const OPEN_CONFIRM = 'OPEN_CONFIRM';
+export const RESET_CONFIRM = 'RESET_CONFIRM';
+export const SET_CONFIRM = 'SET_CONFIRM';

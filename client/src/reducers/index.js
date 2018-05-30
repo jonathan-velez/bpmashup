@@ -10,6 +10,7 @@ import openModal from './openModal';
 import playlistList from './playlistList';
 import mediaPlayer from './mediaPlayer';
 import autoSuggest from './autoSuggest';
+import confirmModal from './confirmModal';
 
 const rootReducer = combineReducers({
   trackListing,
@@ -19,6 +20,7 @@ const rootReducer = combineReducers({
   playlistList,
   mediaPlayer,
   autoSuggest,
+  confirmModal,
   firebaseState: firebaseReducer,
   routing: routerReducer,
 });

@@ -13,6 +13,7 @@ import Navigation from './Navigation';
 import Main from './Main';
 import Footer from './Footer';
 import ModalView from './ModalView';
+import ConfirmController from './ConfirmController';
 
 class App extends React.Component {
   componentWillMount() {
@@ -130,6 +131,7 @@ class App extends React.Component {
       <Router>
         <React.Fragment>
           <ModalView open={this.props.openModal.open} modalContent='soomemoe' modalHeader='xxxx' />
+          <ConfirmController />
           <ReactPlayer
             ref={this.ref}
             className='react-player'

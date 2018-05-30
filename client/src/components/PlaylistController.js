@@ -14,7 +14,8 @@ class PlaylistController extends React.Component {
   playlist = this.props.playlistList[this.playlistId];
 
   state = {
-    playlistNameEditMode: false
+    playlistNameEditMode: false,
+    deletePlaylist: false,
   }
 
   componentDidMount() {
@@ -24,7 +25,7 @@ class PlaylistController extends React.Component {
       this.props.loadTracks(this.playlist.tracks);
     }
   }
-  
+
   componentDidUpdate(prevProps, prevState) {
     this.playlistId = this.props.match.params.playlistId;
     this.playlist = this.props.playlistList[this.playlistId];
@@ -39,6 +40,13 @@ class PlaylistController extends React.Component {
     const { playlistId: currentPlaylistId } = this.props.match.params;
     const newPlaylistObj = nextProps.playlistList[newPlaylistId];
 
+    // handle confirm modal update to delete
+    if (nextProps.confirmModal.confirm && this.state.deletePlaylist) {
+      this.actuallyDeletePlaylists();
+      this.props.resetConfirm();
+    }
+
+    // something new to load
     if (currentPlaylistId && currentPlaylistId != newPlaylistId && newPlaylistObj) {
       this.props.loadTracks(newPlaylistObj.tracks);
       return;
@@ -59,7 +67,7 @@ class PlaylistController extends React.Component {
     this.props.removeFromPlaylist({ playlistId: this.props.match.params.playlistId, trackId: trackId });
   }
 
-  editPlaylistName = () => {
+  togglePlaylistNameEditMode = () => {
     this.setState({ playlistNameEditMode: !this.state.playlistNameEditMode });
   }
 
@@ -71,7 +79,17 @@ class PlaylistController extends React.Component {
   }
 
   deletePlaylist = () => {
-    this.props.deletePlaylist(this.playlistId);
+    this.setState({ deletePlaylist: true })
+    this.props.openConfirm();
+  }
+
+  actuallyDeletePlaylists = () => {
+    const { deletePlaylist } = this.state;
+    
+    if (deletePlaylist) {
+      this.props.deletePlaylist(this.playlistId);
+      this.setState({ deletePlaylist: false });
+    }
   }
 
   handleRef = (c) => {
@@ -84,7 +102,7 @@ class PlaylistController extends React.Component {
   }
 
   handleFormSubmit = evt => {
-    this.editPlaylistName();
+    this.togglePlaylistNameEditMode();
   }
 
   render() {
@@ -111,11 +129,11 @@ class PlaylistController extends React.Component {
               value={playlist.name}
               onChange={this.handlePlaylistNameChange}
               size='huge'
-              onBlur={this.editPlaylistName}
+              onBlur={this.togglePlaylistNameEditMode}
               ref={this.handleRef}
             />
           </Form> :
-          <PlaylistHeader playlistName={playlist.name} editHeader={this.editPlaylistName} deletePlaylist={this.deletePlaylist} />
+          <PlaylistHeader playlistName={playlist.name} editHeader={this.togglePlaylistNameEditMode} deletePlaylist={this.deletePlaylist} />
         }
         <TrackListingTable
           trackListing={tracks}
@@ -131,6 +149,7 @@ const mapStateToProps = state => {
   return {
     playlistList: state.playlistList,
     trackListing: state.trackListing,
+    confirmModal: state.confirmModal,
   }
 }
 

@@ -28,7 +28,10 @@ import {
   SET_VOLUME,
   LOAD_TRACKS,
   EDIT_PLAYLIST_NAME,
-  DELETE_PLAYLIST
+  DELETE_PLAYLIST,
+  OPEN_CONFIRM,
+  RESET_CONFIRM,
+  SET_CONFIRM
 } from '../constants/actionTypes';
 
 export const startAsync = () => {
@@ -214,5 +217,24 @@ export const deletePlaylist = payload => {
   return {
     type: DELETE_PLAYLIST,
     payload
+  }
+}
+
+export const openConfirm = () => {
+  return {
+    type: OPEN_CONFIRM
+  }
+}
+
+export const resetConfirm = () => {
+  return {
+    type: RESET_CONFIRM
+  }
+}
+
+export const setConfirm = payload => {
+  return {
+    type: SET_CONFIRM,
+    payload,
   }
 }
