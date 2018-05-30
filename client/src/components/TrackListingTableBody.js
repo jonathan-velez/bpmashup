@@ -52,7 +52,7 @@ const TrackListingTableBody = ({ trackListing, removeFromPlaylist }) => {
     <Transition.Group 
       as={Table.Body}
       animation='slide right'
-      duration={200}
+      duration={500}
     >
       {trackListingBody}
     </Transition.Group>
