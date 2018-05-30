@@ -47,7 +47,7 @@ class PlaylistController extends React.Component {
     }
 
     // something new to load
-    if (currentPlaylistId && currentPlaylistId != newPlaylistId && newPlaylistObj) {
+    if (currentPlaylistId && currentPlaylistId !== newPlaylistId && newPlaylistObj) {
       this.props.loadTracks(newPlaylistObj.tracks);
       return;
     }
@@ -57,7 +57,7 @@ class PlaylistController extends React.Component {
       const currentTrackListLength = Object.keys(this.props.playlistList[currentPlaylistId].tracks).length;
       const newTrackListLength = Object.keys(newPlaylistObj.tracks).length;
 
-      if (currentTrackListLength && currentTrackListLength != newTrackListLength) {
+      if (currentTrackListLength && currentTrackListLength !== newTrackListLength) {
         this.props.loadTracks(newPlaylistObj.tracks);
       }
     }

@@ -16,7 +16,7 @@ export const convertUnicode = (input) => {
   });
 }
 
-export const musicalKeyFilter = (input) => {
+export const musicalKeyFilter = (input, musical = false) => {
   const KeyCode = {
     Cmaj: 20,
     Cmin: 5,
@@ -94,14 +94,10 @@ export const musicalKeyFilter = (input) => {
       23: "11B",
       25: "6B",
       26: "3A"
-    },
-    KeyFormat = {
-      CAMELOT: "c",
-      MUSICAL: "m"
     };
 
   if (input) {
-    return KeyCamelot[KeyCode[input]];
+    return musical ? KeyMusical[KeyCode[input]] : KeyCamelot[KeyCode[input]];
   }
 }
 

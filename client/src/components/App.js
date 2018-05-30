@@ -7,7 +7,7 @@ import ReactPlayer from 'react-player';
 
 import { downloadTrack } from '../utils/trackUtils';
 import * as actionCreators from '../actions/ActionCreators';
-import { getNextTrack, scrollToTrack } from '../utils/trackUtils';
+import { getNextTrack } from '../utils/trackUtils';
 
 import Navigation from './Navigation';
 import Main from './Main';

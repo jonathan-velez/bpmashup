@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Confirm, Button } from 'semantic-ui-react';
+import { Confirm } from 'semantic-ui-react';
 
 import * as actionCreators from '../actions/ActionCreators';
 
