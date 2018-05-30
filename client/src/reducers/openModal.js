@@ -9,7 +9,7 @@ const openModal = (state = defaultState, action) => {
     case OPEN_MODAL:
       return {
         ...state,
-        open: action.payload.open
+        open: action.payload
       }
     default:
       return state;

@@ -1,17 +1,17 @@
 import React from 'react';
 import { Modal, Header } from 'semantic-ui-react';
 
-const ModalView = props => {
+const ModalView = ({ open, handleClose, handleOpen, headerIcon, modalHeader, modalContent }) => {
   return (
     <Modal
-      open={props.open}
-      onClose={props.handleClose}
-      onMount={props.handleOpen}
+      open={open}
+      onClose={handleClose}
+      onMount={handleOpen}
       size='tiny'
     >
-      <Header icon={props.headerIcon} content={props.modalHeader} />
+      <Header icon={headerIcon} content={modalHeader} />
       <Modal.Content>
-        {props.modalContent}
+        {modalContent}
       </Modal.Content>
     </Modal>
   )
