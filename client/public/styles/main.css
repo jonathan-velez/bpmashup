@@ -237,6 +237,11 @@
     .pointerCursor {
       cursor: pointer;
     }
+
+    .pointerCursor:hover {
+      background-color: #eee;
+      text-decoration: underline;
+    }
     
     .table tr.visible.transition {
       display: table-row !important;

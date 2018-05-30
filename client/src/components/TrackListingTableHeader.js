@@ -12,7 +12,7 @@ const TrackListingTableHeader = () => {
         <Table.HeaderCell>Label</Table.HeaderCell>
         <Table.HeaderCell>Genre</Table.HeaderCell>
         <Table.HeaderCell>Released</Table.HeaderCell>
-        <Table.HeaderCell>Download</Table.HeaderCell>
+        <Table.HeaderCell>&nbsp;</Table.HeaderCell>
         <Table.HeaderCell>&nbsp;</Table.HeaderCell>
       </Table.Row>
     </Table.Header>
