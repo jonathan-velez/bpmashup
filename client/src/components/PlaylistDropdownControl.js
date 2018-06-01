@@ -5,8 +5,10 @@ import { Link } from 'react-router-dom';
 import { Dropdown } from 'semantic-ui-react';
 
 const PlaylistDropdownControl = ({ playlistList }) => {
-  if (Object.keys(playlistList).length > 0) {
-    this.playlistList = _.map(playlistList, playlist => {
+  this.playlistItems = '';
+
+  if (playlistList && Object.keys(playlistList).length > 0) {
+    this.playlistItems = _.map(playlistList, playlist => {
       const { name, id } = playlist;
       const url = `/playlist/${id}`;
 
@@ -20,8 +22,6 @@ const PlaylistDropdownControl = ({ playlistList }) => {
         />
       )
     });
-  } else {
-    this.playlistList = '';
   }
 
   return (
@@ -31,7 +31,7 @@ const PlaylistDropdownControl = ({ playlistList }) => {
       text='Playlists'
     >
       <Dropdown.Menu>
-        {this.playlistList}
+        {this.playlistItems}
       </Dropdown.Menu>
     </Dropdown>
   )
