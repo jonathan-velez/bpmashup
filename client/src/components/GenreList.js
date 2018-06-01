@@ -10,11 +10,11 @@ class GenreList extends React.Component {
   }
 
   closePopup = () => {
-    this.setState({ popupOpen: false })
+    this.setState({ popupOpen: false });
   }
 
   openPopup = () => {
-    this.setState({ popupOpen: true })
+    this.setState({ popupOpen: true });
   }
 
   render() {
@@ -63,12 +63,6 @@ class GenreList extends React.Component {
       </React.Fragment>
     )
   }
-
-
-
-
-
-
 }
 
 export default GenreList;
