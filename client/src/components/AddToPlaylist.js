@@ -101,9 +101,11 @@ class AddToPlaylist extends React.Component {
 
     const playlistItems = _.map(this.props.playlistList, playlist => {
       const added = playlist.listOfTracks.includes(this.props.track.id);
+      const { tracks = {} } = playlist;
+      
       return (
         <List.Item as={added ? '' : 'a'} onClick={() => this.addToPlaylist({ id: playlist.id })} key={playlist.id}>
-          {playlist.name} ({Object.keys(playlist.tracks).length})
+          {playlist.name} ({Object.keys(tracks).length})
         </List.Item>
       )
     });
