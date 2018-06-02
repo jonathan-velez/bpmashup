@@ -20,7 +20,8 @@ const trackListing = (state = defaultState, action) => {
       }
     case LOAD_TRACKS:
       // since we are overriding the tracks in the tracklisting, we need to also update the metadata props that are pulled from the bp api
-      const tracks = action.payload;
+      const {payload: tracks = [] } = action;
+
       return {
         ...state,
         metadata: {
