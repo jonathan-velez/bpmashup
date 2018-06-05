@@ -14,9 +14,6 @@ import {
   START_ASYNC,
   FETCH_TRACKS,
   FETCH_GENRES,
-  ADD_PLAYLIST,
-  ADD_TO_PLAYLIST,
-  REMOVE_FROM_PLAYLIST,
   SEARCH_TRACKS,
   UPDATE_SUGGESTION_INPUT_VALUE,
   CLEAR_SUGGESTIONS,
@@ -26,8 +23,6 @@ import {
   LOAD_YOUTUBE_URL,
   SET_VOLUME,
   LOAD_TRACKS,
-  EDIT_PLAYLIST_NAME,
-  DELETE_PLAYLIST,
   OPEN_CONFIRM,
   RESET_CONFIRM,
   SET_CONFIRM
@@ -64,27 +59,6 @@ export const fetchGenres = () => {
   return {
     type: FETCH_GENRES,
     payload: request
-  }
-}
-
-export const addToPlaylist = track => {
-  return {
-    type: ADD_TO_PLAYLIST,
-    payload: track
-  }
-}
-
-export const addNewPlaylist = playlist => {
-  return {
-    type: ADD_PLAYLIST,
-    payload: playlist
-  }
-}
-
-export const removeFromPlaylist = payload => {
-  return {
-    type: REMOVE_FROM_PLAYLIST,
-    payload: payload
   }
 }
 
@@ -202,20 +176,6 @@ export const loadTracks = tracks => {
   return {
     type: LOAD_TRACKS,
     payload: tracks
-  }
-}
-
-export const editPlaylistName = payload => {
-  return {
-    type: EDIT_PLAYLIST_NAME,
-    payload
-  }
-}
-
-export const deletePlaylist = payload => {
-  return {
-    type: DELETE_PLAYLIST,
-    payload
   }
 }
 
