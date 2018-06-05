@@ -22,7 +22,7 @@ const TrackListingTable = ({ trackListing, isLoading, removeFromPlaylist }) => {
     <Message warning>
       <Header size='huge'>Hey!</Header>
       <p>This tracklist is empty!</p>
-    </Message >
+    </Message>
   )
 }
 
