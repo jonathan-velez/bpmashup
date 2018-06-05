@@ -33,5 +33,6 @@ app.use('/*', staticFiles);
 app.set('port', (process.env.PORT || 3001)); 
 app.listen(app.get('port'), () => {
   console.log('process.env.PORT', process.env.PORT)
+  console.log('process.env.API_BASE_URL', process.env.API_BASE_URL)
   console.log(`Listening on ${app.get('port')}`);
 });
