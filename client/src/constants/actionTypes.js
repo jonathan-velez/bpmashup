@@ -29,3 +29,4 @@ export const DELETE_PLAYLIST = 'DELETE_PLAYLIST';
 export const OPEN_CONFIRM = 'OPEN_CONFIRM';
 export const RESET_CONFIRM = 'RESET_CONFIRM';
 export const SET_CONFIRM = 'SET_CONFIRM';
+export const LOAD_PLAYLISTS = 'LOAD_PLAYLISTS';

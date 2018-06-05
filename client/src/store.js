@@ -10,6 +10,7 @@ import logger from 'redux-logger'
 import rootReducer from './reducers/index';
 import { loadStorage, setStorage } from './localStorage';
 import { activityLogger } from './middleware';
+import { LOAD_PLAYLISTS } from './constants/actionTypes';
 
 const persistedStorage = loadStorage();
 
@@ -38,11 +39,24 @@ const createStoreWithFirebase = compose(
 const store = createStoreWithFirebase(rootReducer, persistedStorage);
 
 store.subscribe(() => {
-  setStorage(store.getState());
+  const state = store.getState();
+  setStorage(state);
 });
 
-store.firebaseAuthIsReady.then(() => {
-  console.log('auth is loaded')
+store.firebaseAuthIsReady.then((user) => {
+  const { uid } = store.getState().firebaseState.auth;
+  const db = firebase.database();
+  const playlistListRef = db.ref(`users/${uid}/playlists`);
+
+  playlistListRef.on('value', snapshot => {
+    const playlistList = snapshot.val();
+    if (playlistList) {
+      store.dispatch({
+        type: LOAD_PLAYLISTS,
+        payload: playlistList,
+      });
+    }
+  });
 })
 
 export const history = syncHistoryWithStore(createBrowserHistory(), store);

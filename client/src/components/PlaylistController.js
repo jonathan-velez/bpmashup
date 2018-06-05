@@ -8,10 +8,11 @@ import Scroll from 'react-scroll';
 import * as actionCreators from '../actions/ActionCreators';
 import TrackListingTable from './TrackListingTable';
 import PlaylistHeader from './PlaylistHeader';
+import * as thunks from '../thunks';
 
 class PlaylistController extends React.Component {
   playlistId = this.props.match.params.playlistId;
-  playlist = this.props.playlistList[this.playlistId];
+  playlist = this.props.playlistList && this.props.playlistList[this.playlistId];
 
   state = {
     playlistNameEditMode: false,
@@ -28,7 +29,7 @@ class PlaylistController extends React.Component {
 
   componentDidUpdate(prevProps, prevState) {
     this.playlistId = this.props.match.params.playlistId;
-    this.playlist = this.props.playlistList[this.playlistId];
+    this.playlist = this.props.playlistList && this.props.playlistList[this.playlistId];
 
     if (!prevState.playlistNameEditMode && this.state.playlistNameEditMode) {
       this.focus();
@@ -38,7 +39,16 @@ class PlaylistController extends React.Component {
   componentWillReceiveProps(nextProps) {
     const { playlistId: newPlaylistId } = nextProps.match.params;
     const { playlistId: currentPlaylistId } = this.props.match.params;
-    const newPlaylistObj = nextProps.playlistList[newPlaylistId];
+
+    const newPlaylistObj = (nextProps.playlistList && nextProps.playlistList[newPlaylistId]);
+    const currentPlaylistObj = (this.props.playlistList && this.props.playlistList[currentPlaylistId]);
+
+    if (!newPlaylistObj || !currentPlaylistObj) {
+      return;
+    }
+
+    const { tracks: newPlaylistTracks = {} } = newPlaylistObj;
+    const { tracks: currentPlaylistTracks = {} } = currentPlaylistObj;
 
     // handle confirm modal update to delete
     if (nextProps.confirmModal.confirm && this.state.deletePlaylist) {
@@ -48,17 +58,17 @@ class PlaylistController extends React.Component {
 
     // something new to load
     if (currentPlaylistId && currentPlaylistId !== newPlaylistId && newPlaylistObj) {
-      this.props.loadTracks(newPlaylistObj.tracks);
+      this.props.loadTracks(newPlaylistTracks);
       return;
     }
 
     // if num of tracks changed, loadTracks again
-    if (newPlaylistId && newPlaylistObj) {
-      const currentTrackListLength = Object.keys(this.props.playlistList[currentPlaylistId].tracks).length;
-      const newTrackListLength = Object.keys(newPlaylistObj.tracks).length;
+    if (newPlaylistId && newPlaylistObj && currentPlaylistObj) {
+      const currentTrackListLength = Object.keys(currentPlaylistTracks).length;
+      const newTrackListLength = Object.keys(newPlaylistTracks).length;
 
       if (currentTrackListLength && currentTrackListLength !== newTrackListLength) {
-        this.props.loadTracks(newPlaylistObj.tracks);
+        this.props.loadTracks(newPlaylistTracks);
       }
     }
   }
@@ -111,7 +121,7 @@ class PlaylistController extends React.Component {
 
   render() {
     const { playlistId } = this.props.match.params;
-    const playlist = this.props.playlistList[playlistId];
+    const playlist = this.props.playlistList && this.props.playlistList[playlistId];
 
     if (!playlist) {
       return (
@@ -158,7 +168,7 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => {
-  return bindActionCreators(actionCreators, dispatch);
+  return bindActionCreators(Object.assign({}, actionCreators, thunks), dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(PlaylistController);

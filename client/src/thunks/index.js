@@ -1,4 +1,4 @@
 import loadTrackThunk from './loadTrackThunk';
-import playlistThunk from './playlistThunk';
+import { addPlaylist, removeFromPlaylist, addToPlaylist, editPlaylistName, deletePlaylist, addNewPlaylist, loadPlaylists } from './playlistThunk';
 
-export { loadTrackThunk, playlistThunk };
+export { loadTrackThunk, addPlaylist, removeFromPlaylist, addToPlaylist, editPlaylistName, deletePlaylist, addNewPlaylist, loadPlaylists };

@@ -6,7 +6,8 @@ import {
   ADD_TO_PLAYLIST,
   REMOVE_FROM_PLAYLIST,
   EDIT_PLAYLIST_NAME,
-  DELETE_PLAYLIST
+  DELETE_PLAYLIST,
+  LOAD_PLAYLISTS
 } from '../constants/actionTypes';
 
 const playlistList = (state = {}, action) => {
@@ -73,6 +74,9 @@ const playlistList = (state = {}, action) => {
     case DELETE_PLAYLIST:
       const { [action.payload]: deletedPlaylist, ...restOfPlaylists } = state;
       return restOfPlaylists;
+    case LOAD_PLAYLISTS:
+      return Object.assign({}, state, action.payload); 
+      // return _.merge(state, action.payload);
     default:
       return state;
   }

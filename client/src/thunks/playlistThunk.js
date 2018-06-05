@@ -1,20 +1,75 @@
 import firebase from 'firebase';
-import { ADD_PLAYLIST } from '../constants/actionTypes';
+import { ADD_PLAYLIST, REMOVE_FROM_PLAYLIST, ADD_TO_PLAYLIST, EDIT_PLAYLIST_NAME, DELETE_PLAYLIST, LOAD_PLAYLISTS } from '../constants/actionTypes';
 
-export const addPlaylistNew = (playList) => {
-  console.log('inside addPlaylistNew', playList)
-  return (dispatch, getState) => {    
-    console.log('getState inside thunk', getState());
+const setFirebase = (state) => {
+  const { uid } = state.firebaseState.auth;
+  const { playlistList } = state;
 
-    // add playlist to Redux store
+  if (!uid || uid === 0) return;
+  
+  firebase.set(`users/${uid}/playlists/`, playlistList);
+}
+
+export const addNewPlaylist = (playList) => {
+  return (dispatch, getState) => { 
     dispatch({
       type: ADD_PLAYLIST,
       payload: playList
     });
 
-    const { uid } = getState().firebaseState.auth;
+    setFirebase(getState());
+  }
+}
 
-    // add playlist to Firebase
-    firebase.push(`users/${uid}/playlists/`, playList)
+export const removeFromPlaylist = track => {
+  return (dispatch, getState) => {
+    dispatch({
+      type: REMOVE_FROM_PLAYLIST,
+      payload: track
+    });
+
+    setFirebase(getState());
+  }
+}
+
+export const addToPlaylist = payload => {
+  return (dispatch, getState) => {
+    dispatch({
+      type: ADD_TO_PLAYLIST,
+      payload
+    });
+    
+    setFirebase(getState());
+  }
+}
+
+export const editPlaylistName = payload => {
+  return (dispatch, getState) => {
+    dispatch({
+      type: EDIT_PLAYLIST_NAME,
+      payload
+    });
+
+    setFirebase(getState());
+  }
+}
+
+export const deletePlaylist = payload => {
+  return (dispatch, getState) => {
+    dispatch({
+      type: DELETE_PLAYLIST,
+      payload
+    });
+
+    setFirebase(getState());
+  }
+}
+
+export const loadPlaylists = playlists => {
+  return (dispatch, getState) => {
+    dispatch({
+      type: LOAD_PLAYLISTS,
+      payload: playlists,
+    })
   }
 }
