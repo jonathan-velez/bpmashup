@@ -2,7 +2,7 @@ import firebase from 'firebase';
 import { v4 } from 'node-uuid';
 import moment from 'moment';
 
-import { LOAD_TRACK, GET_YOUTUBE_LINK } from '../constants';
+import { LOAD_TRACK, GET_YOUTUBE_LINK } from '../constants/actionTypes';
 
 export const activityLogger = store => next => action => {
   const id = v4();
