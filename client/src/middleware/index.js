@@ -2,6 +2,8 @@ import firebase from 'firebase';
 import { v4 } from 'node-uuid';
 import moment from 'moment';
 
+import { LOAD_TRACK, GET_YOUTUBE_LINK } from '../constants';
+
 export const activityLogger = store => next => action => {
   const id = v4();
   const state = store.getState();
@@ -14,7 +16,7 @@ export const activityLogger = store => next => action => {
   }
 
   switch (action.type) {
-    case 'LOAD_TRACK':
+    case LOAD_TRACK:
       firebase.set(`/trackPlays/${id}`, {
         id,
         userId,
@@ -22,22 +24,18 @@ export const activityLogger = store => next => action => {
         timeStamp: moment().format(),
       });
       break;
-    case 'GET_YOUTUBE_LINK':
+    case GET_YOUTUBE_LINK:
       firebase.set(`/trackPlaysYouTube/${id}`, {
         id,
         userId,
-        track:  state.mediaPlayer.loadedTrack,
+        track: state.mediaPlayer.loadedTrack,
         youTubeId: action.payload.data[0].id.videoId,
         timeStamp: moment().format(),
       });
-      console.log('GET_YOUTUBE_LINK', state, action)
       break;
     default:
       break;
   }
-
-  // const pushed = firebase.push('/test', track);
-  // console.log('pushed', pushed.key);
 
   next(action);
 }
