@@ -5,7 +5,7 @@ import { Button, Icon } from 'semantic-ui-react';
 import { downloadTrack } from '../utils/trackUtils';
 
 const DownloadTrack = ({ track, mini, blue, downloadedTracks }) => {
-  const hasBeenDownloaded = downloadedTracks.includes(track.id);
+  const hasBeenDownloaded = downloadedTracks.includes(track.id.toString());
   return (
     <Button
       basic={!hasBeenDownloaded}
