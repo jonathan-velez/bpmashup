@@ -1,14 +1,16 @@
 import React from 'react';
-import { Button, Icon } from 'semantic-ui-react';
+import { connect } from 'react-redux';
 
+import { Button, Icon } from 'semantic-ui-react';
 import { downloadTrack } from '../utils/trackUtils';
 
-const DownloadTrack = ({ track, mini, blue }) => {
+const DownloadTrack = ({ track, mini, blue, downloadedTracks }) => {
+  const hasBeenDownloaded = downloadedTracks.includes(track.id);
   return (
     <Button
-      basic
+      basic={!hasBeenDownloaded}
       animated
-      color={blue ? 'blue' : 'grey'}
+      color={hasBeenDownloaded ? 'red' : 'blue'}
       onClick={() => downloadTrack(track)}
     >
       <Button.Content visible>
@@ -19,4 +21,12 @@ const DownloadTrack = ({ track, mini, blue }) => {
   );
 };
 
-export default DownloadTrack;
+
+
+const mapStateToProps = state => {
+  return {
+    downloadedTracks: state.downloadedTracks,
+  }
+}
+
+export default connect(mapStateToProps, {})(DownloadTrack);

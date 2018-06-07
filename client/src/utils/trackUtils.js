@@ -6,6 +6,7 @@ import _ from 'lodash';
 
 import store from '../store';
 import * as actionCreators from '../actions/ActionCreators';
+import * as thunks from '../thunks';
 
 export const constructLinks = (listItem, type) => {
   // takes in an array of genres or artists and contructs individual Link objects
@@ -29,11 +30,11 @@ export const downloadTrack = track => {
 
     strSearch = `${track.artists[0].name} ${track.title}`;
 
+    store.dispatch(thunks.downloadTrack(track.id));
+
     Axios.get(`/api/download-track?searchString=${strSearch}`)
       .then(res => {
-        console.log(res);
         if (res.data.href) {
-          console.log('open open')
           window.open(res.data.href, '_blank');
         } else {
           // TODO: handle this shit and display a message
@@ -49,7 +50,6 @@ export const downloadTrack = track => {
 }
 
 export const scrollToTrack = (trackId) => {
-  console.log('scrolling to', trackId)
   scroller.scrollTo(`track-${trackId}`, {
     duration: 750,
     delay: 50,

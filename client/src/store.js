@@ -10,7 +10,7 @@ import logger from 'redux-logger'
 import rootReducer from './reducers/index';
 import { loadStorage, setStorage } from './localStorage';
 import { activityLogger } from './middleware';
-import { LOAD_PLAYLISTS } from './constants/actionTypes';
+import { LOAD_PLAYLISTS, LOAD_DOWNLOADED_TRACKS } from './constants/actionTypes';
 
 const persistedStorage = loadStorage();
 
@@ -57,6 +57,19 @@ store.firebaseAuthIsReady.then((user) => {
       });
     }
   });
+
+  const downloadsRef = db.ref(`users/${uid}/downloads`);
+
+  downloadsRef.once('value').then(snapshot => {
+    const downloads = snapshot.val();
+
+    if (downloads) {
+      store.dispatch({
+        type: LOAD_DOWNLOADED_TRACKS,
+        payload: Object.keys(downloads),
+      });
+    }
+  })
 })
 
 export const history = syncHistoryWithStore(createBrowserHistory(), store);
