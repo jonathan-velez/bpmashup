@@ -8,7 +8,8 @@ import {
   REMOVE_FROM_PLAYLIST,
   EDIT_PLAYLIST_NAME,
   DELETE_PLAYLIST,
-  LOAD_PLAYLISTS
+  LOAD_PLAYLISTS,
+  CLEAR_PLAYLISTS
 } from '../constants/actionTypes';
 
 const playlistList = (state = {}, action) => {
@@ -76,8 +77,11 @@ const playlistList = (state = {}, action) => {
       const { [action.payload]: deletedPlaylist, ...restOfPlaylists } = state;
       return restOfPlaylists;
     case LOAD_PLAYLISTS:
-      // return Object.assign({}, state, action.payload); 
-      return _.merge(state, action.payload);
+      // return Object.assign({}, state, action.payload);
+      const stateClone = Object.assign({}, state);
+      return _.merge(stateClone, action.payload);
+    case CLEAR_PLAYLISTS:
+      return {};
     default:
       return state;
   }

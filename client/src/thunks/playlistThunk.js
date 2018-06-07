@@ -6,12 +6,12 @@ const setFirebase = (state) => {
   const { playlistList } = state;
 
   if (!uid || uid === 0) return;
-  
+
   firebase.set(`users/${uid}/playlists/`, playlistList);
 }
 
 export const addNewPlaylist = (playList) => {
-  return (dispatch, getState) => { 
+  return (dispatch, getState) => {
     dispatch({
       type: ADD_PLAYLIST,
       payload: playList
@@ -38,7 +38,7 @@ export const addToPlaylist = payload => {
       type: ADD_TO_PLAYLIST,
       payload
     });
-    
+
     setFirebase(getState());
   }
 }
@@ -65,11 +65,20 @@ export const deletePlaylist = payload => {
   }
 }
 
-export const loadPlaylists = playlists => {
+export const loadPlaylists = () => {
   return (dispatch, getState) => {
-    dispatch({
-      type: LOAD_PLAYLISTS,
-      payload: playlists,
-    })
+    const { uid } = getState().firebaseState.auth;
+    const db = firebase.database();
+    const playlistListRef = db.ref(`users/${uid}/playlists`);
+
+    playlistListRef.once('value', snapshot => {
+      const playlistList = snapshot.val();
+      if (playlistList) {
+        dispatch({
+          type: LOAD_PLAYLISTS,
+          payload: playlistList,
+        });
+      }
+    });
   }
 }
