@@ -10,7 +10,6 @@ class MutePlayer extends Component {
     const { muted } = this.props.mediaPlayer;
     return (
       <Icon
-        circular
         link
         fitted
         name={muted ? 'mute' : 'unmute'}
