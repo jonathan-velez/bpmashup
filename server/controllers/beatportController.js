@@ -4,12 +4,13 @@ const _ = require('lodash');
 const bpAPIConfig = require('../config/api');
 const bpAPIModels = require('../config/models');
 const utils = require('../utils');
+const constants = require('../config/constants');
 
 const ACCESS_TOKEN = process.env.BP_ACCESS_TOKEN;
 const ACCESS_TOKEN_SECRET = process.env.BP_ACCESS_TOKEN_SECRET;
 const CONSUMER_KEY = process.env.BP_CONSUMER_KEY;
 const SECRET_KEY = process.env.BP_SECRET;
-const BASE_URL = process.env.BP_BASE_URL;
+const BASE_URL = constants.BP_BASE_URL;
 
 const oa = new OAuth(BASE_URL, BASE_URL, CONSUMER_KEY, SECRET_KEY, '1.0A', undefined, 'HMAC-SHA1');
 

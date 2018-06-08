@@ -23,9 +23,6 @@ https://bpmashup.herokuapp.com/
 - BP_ACCESS_TOKEN
 - BP_ACCESS_TOKEN_SECRET
 - YOUTUBE_API_KEY
-- API_BASE_URL=/api
-- BP_BASE_URL=https://oauth-api.beatport.com/catalog/3/
-
 
 Beatport API - https://oauth-api.beatport.com/
 
