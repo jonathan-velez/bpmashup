@@ -1,6 +1,6 @@
 import React from 'react';
 import _ from 'lodash';
-import { Table, Icon, Transition, Dropdown } from 'semantic-ui-react';
+import { Table, Transition, Dropdown } from 'semantic-ui-react';
 import { Link, withRouter } from 'react-router-dom';
 
 import TrackAlbum from './TrackAlbum';

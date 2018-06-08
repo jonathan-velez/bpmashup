@@ -3,7 +3,6 @@ import { DOWNLOAD_TRACK, LOAD_DOWNLOADED_TRACKS } from '../constants/actionTypes
 
 const setFirebase = (state, trackId) => {
   const { uid } = state.firebaseState.auth;
-  const { playlistList } = state;
 
   if (!uid || uid === 0) return;
 

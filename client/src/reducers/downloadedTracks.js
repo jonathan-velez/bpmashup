@@ -9,8 +9,7 @@ const downloadedTracks = (state = [], action) => {
       return [...state, action.payload];
     case LOAD_DOWNLOADED_TRACKS:
       const {payload: newTracks = [] } = action;
-      return [... new Set(state.concat(newTracks))];
-      return state;
+      return [...new Set(state.concat(newTracks))];
     default:
       return state;
   }
