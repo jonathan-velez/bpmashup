@@ -40,7 +40,7 @@ class Track extends React.Component {
           <Card.Content>{constructLinks(track.artists, 'artist')}</Card.Content>
           <Card.Content><Link to={`/most-popular/label/${track.label.slug}/${track.label.id}`}>[{track.label.name}]</Link></Card.Content>
           <Card.Content>{constructLinks(track.genres, 'genre')}</Card.Content>
-          <Card.Meta><b>BPM:</b> {track.bpm} <b>Key:</b> {musicalKeyFilter(track.key.shortName)}</Card.Meta>
+          <Card.Meta><b>BPM:</b> {track.bpm} <b>Key:</b> {musicalKeyFilter(track.key && track.key.shortName)}</Card.Meta>
           <Card.Meta><b>Released:</b> {track.releaseDate}</Card.Meta>
         </Card.Content>
         <Card.Content extra>
