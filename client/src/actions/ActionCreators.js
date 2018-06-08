@@ -1,6 +1,13 @@
 import Axios from 'axios';
 
-import { API_MOST_POPULAR, API_GENRES, API_SEARCH, API_AUTOCOMPLETE, API_GET_YOUTUBE_LINK } from '../constants/apiPaths';
+import {
+  API_MOST_POPULAR,
+  API_GENRES,
+  API_SEARCH,
+  API_AUTOCOMPLETE,
+  API_GET_YOUTUBE_LINK,
+  API_SIMILAR_TRACKS } from '../constants/apiPaths';
+
 import {
   LOAD_TRACK,
   PLAY_PAUSE,
@@ -196,5 +203,14 @@ export const setConfirm = payload => {
   return {
     type: SET_CONFIRM,
     payload,
+  }
+}
+
+export const fetchTracksSimilar = (trackId, page = 1, perPage = 20) => {
+  const request = Axios.get(`${API_SIMILAR_TRACKS}?id=${trackId}&perPage=${perPage}&page=${page}`);
+
+  return {
+    type: SEARCH_TRACKS,
+    payload: request
   }
 }

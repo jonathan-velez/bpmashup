@@ -15,42 +15,43 @@ const DEFAULT_PER_PAGE = 20;
 class TrackListingController extends React.Component {
   // TODO: Dry cdm and cwrp up. Maybe use the constructor
   componentDidMount() {
-    const { type, searchId, searchString, searchTerm } = this.props.match.params; // TODO: reduce ambiguity between search vars
+    const { type, searchId, searchString, searchTerm, trackId } = this.props.match.params; // TODO: reduce ambiguity between search vars
     const { search: thisSearch } = this.props.location;
     const thisPage = thisSearch.substr(thisSearch.indexOf('page=') + 5) || DEFAULT_PAGE;
 
     Scroll.animateScroll.scrollToTop({ duration: 100 });
     this.props.startAsync();
 
-    // determine if it's a search page or not
+    // determine if it's a search page, similar tracks or not
     if (searchTerm) {
       this.props.searchTracks(deslugify(searchTerm));
+    } else if (trackId) {
+      this.props.fetchTracksSimilar(trackId);
     } else {
       this.props.fetchTracks(type, searchId, searchString, thisPage, DEFAULT_PER_PAGE);
     }
   }
 
   componentWillReceiveProps(nextProps) {
-    const { type, searchId, searchString, searchTerm } = nextProps.match.params;
+    const { type, searchId, searchString, searchTerm, trackId } = nextProps.match.params;
     const { search: nextSearch } = nextProps.location;
     const { search: thisSearch } = this.props.location;
-    const { searchTerm: thisSearchTerm } = this.props.match.params;
+    const { searchTerm: thisSearchTerm, trackId: thisTrackId } = this.props.match.params;
 
     // which page we loading?
     const thisPage = thisSearch.substr(thisSearch.indexOf('page=') + 5);
     const newPage = nextSearch.substr(nextSearch.indexOf('page=') + 5);
 
-    // how many per page?
-    // const thisPerPage = thisSearch.substr
-
     // fetch if we have a new query or a new page
-    if ((searchId !== this.props.match.params.searchId || (newPage && newPage !== thisPage) || (searchTerm && thisSearchTerm !== searchTerm)) && !this.props.isLoading) {
+    if ((searchId !== this.props.match.params.searchId || (newPage && newPage !== thisPage) || (searchTerm && thisSearchTerm !== searchTerm) || (trackId && thisTrackId !== trackId)) && !this.props.isLoading) {
 
       Scroll.animateScroll.scrollToTop({ duration: 100 });
       this.props.startAsync();
 
       if (searchTerm) {
         this.props.searchTracks(deslugify(searchTerm), newPage || DEFAULT_PAGE, DEFAULT_PER_PAGE); // TODO: get perPage
+      } else if (trackId) {
+        this.props.fetchTracksSimilar(trackId, newPage || DEFAULT_PAGE, DEFAULT_PER_PAGE);
       } else {
         this.props.fetchTracks(type, searchId, searchString, newPage || DEFAULT_PAGE, DEFAULT_PER_PAGE); // TODO: get perPage
       }
@@ -58,14 +59,31 @@ class TrackListingController extends React.Component {
   }
 
   render() {
-    let { trackListing, isLoading } = this.props;
+    const { trackListing, isLoading, match } = this.props;
     const { tracks, metadata } = trackListing;
-
     const { totalPages, page, perPage } = metadata;
+    const { url, params } = match;
+
+    const pageName = url.split('/')[1];
+    let headerTitle = '';
+
+    switch (pageName) {
+      case 'search':
+        headerTitle = `Search Results: ${params.searchTerm}`;
+        break;
+      case 'most-popular':
+        headerTitle = `Top Tracks: ${params.searchString}`;
+        break;
+      case 'similar-tracks':
+        headerTitle = `Similar To: ${params.trackName}`;
+        break;
+      default:
+        headerTitle = 'Top Tracks';
+    }
 
     return (
       <React.Fragment>
-        <Header size='huge'>{deslugify(this.props.match.params.searchString || this.props.match.params.searchTerm || 'Top 100 Tracks').toUpperCase()}</Header>
+        <Header size='huge'>{deslugify(headerTitle.toUpperCase())}</Header>
         <TrackListingCards trackListing={tracks} isLoading={isLoading} />
         <Pager activePage={page} totalPages={totalPages} firstItem={null} lastItem={null} perPage={perPage || DEFAULT_PER_PAGE} />
       </React.Fragment>

@@ -16,6 +16,7 @@ const Main = () => {
       <Switch>
         <Route exact path='/about' component={About} />
         <Route exact path="/most-popular/:type/:searchString/:searchId" component={TrackListingController} />
+        <Route exact path="/similar-tracks/:trackName/:trackId" component={TrackListingController} />
         <Route exact path="/playlist/:playlistId" component={PlaylistController} />
         <Route path="/search/:searchTerm" component={TrackListingController} />
         <Route exact path="/" component={TrackListingController} />
