@@ -5,9 +5,9 @@ import { Popup, Label, List, Button, Icon } from 'semantic-ui-react';
 import _ from 'lodash'
 import moment from 'moment';
 
-import * as actionCreators from '../actions/ActionCreators';
 import ModalView from './ModalView';
 import AddToPlaylistForm from './AddNewPlaylistForm';
+import * as actionCreators from '../actions/ActionCreators';
 import * as thunks from '../thunks';
 
 class AddToPlaylist extends React.Component {
@@ -60,11 +60,6 @@ class AddToPlaylist extends React.Component {
       track
     });
 
-    // this.props.addPlaylistNew({
-    //   name: this.state.newPlaylistName,
-    //   track: this.props.trackListing.tracks[trackId]
-    // });
-
     this.setState({ modalOpen: false })
   }
 
@@ -73,7 +68,14 @@ class AddToPlaylist extends React.Component {
   }
 
   render() {
-    const isAdded = false;
+    let isAdded = false;
+
+    _.mapValues(this.props.playlistList, playlist => {
+      if (playlist.listOfTracks.includes(this.props.track.id)) {
+        isAdded = true;
+        return;
+      }
+    })
 
     if (this.state.modalOpen) {
       return (
@@ -90,7 +92,7 @@ class AddToPlaylist extends React.Component {
     const playlistButton =
       <Button
         basic={!isAdded}
-        color={isAdded ? 'blue' : 'grey'}
+        color={isAdded ? 'gray' : 'blue'}
         animated
       >
         <Button.Content visible>
@@ -102,7 +104,7 @@ class AddToPlaylist extends React.Component {
     const playlistItems = _.map(this.props.playlistList, playlist => {
       const added = playlist.listOfTracks.includes(this.props.track.id);
       const { tracks = {} } = playlist;
-      
+
       return (
         <List.Item as={added ? '' : 'a'} onClick={() => this.addToPlaylist({ id: playlist.id })} key={playlist.id}>
           {playlist.name} ({Object.keys(tracks).length})
