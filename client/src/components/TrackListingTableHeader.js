@@ -15,7 +15,6 @@ const TrackListingTableHeader = () => {
         <Table.HeaderCell>Key</Table.HeaderCell>
         <Table.HeaderCell>Released</Table.HeaderCell>
         <Table.HeaderCell>&nbsp;</Table.HeaderCell>
-        <Table.HeaderCell>&nbsp;</Table.HeaderCell>
       </Table.Row>
     </Table.Header>
   );

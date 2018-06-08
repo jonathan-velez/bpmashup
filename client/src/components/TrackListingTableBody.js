@@ -36,7 +36,7 @@ const TrackListingTableBody = ({ trackListing, removeFromPlaylist, history }) =>
           <Table.Cell>{musicalKeyFilter(track.key && track.key.shortName)}</Table.Cell>
           <Table.Cell>{track.releaseDate}</Table.Cell>
           <Table.Cell>
-            <Dropdown icon='chevron down' floating button className='icon'>
+            <Dropdown icon='ellipsis vertical' floating className='icon'>
               <Dropdown.Menu>
                 <Dropdown.Item icon='download' text='Download' onClick={() => downloadTrack(track)} />
                 <Dropdown.Item icon='delete' text='Delete' onClick={() => removeFromPlaylist(track.id.toString())} />
@@ -58,8 +58,8 @@ const TrackListingTableBody = ({ trackListing, removeFromPlaylist, history }) =>
   return (
     <Transition.Group
       as={Table.Body}
-      animation='slide right'
-      duration={500}
+      animation='browse'
+      duration={400}
     >
       {trackListingBody}
     </Transition.Group>
