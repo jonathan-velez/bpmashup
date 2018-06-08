@@ -1,14 +1,13 @@
 import React from 'react';
 import _ from 'lodash';
-import { Table, Icon, Transition } from 'semantic-ui-react';
-import { Link } from 'react-router-dom';
+import { Table, Icon, Transition, Dropdown } from 'semantic-ui-react';
+import { Link, withRouter } from 'react-router-dom';
 
 import TrackAlbum from './TrackAlbum';
-import DownloadTrack from './DownloadTrack';
-import { constructLinks } from '../utils/trackUtils';
+import { constructLinks, downloadTrack } from '../utils/trackUtils';
 import { musicalKeyFilter } from '../utils/helpers';
 
-const TrackListingTableBody = ({ trackListing, removeFromPlaylist }) => {
+const TrackListingTableBody = ({ trackListing, removeFromPlaylist, history }) => {
   let trackListingBody = '';
 
   if (Object.keys(trackListing).length > 0) {
@@ -36,9 +35,14 @@ const TrackListingTableBody = ({ trackListing, removeFromPlaylist }) => {
           <Table.Cell>{track.bpm}</Table.Cell>
           <Table.Cell>{musicalKeyFilter(track.key && track.key.shortName)}</Table.Cell>
           <Table.Cell>{track.releaseDate}</Table.Cell>
-          <Table.Cell><DownloadTrack track={track} mini blue /></Table.Cell>
           <Table.Cell>
-            <Icon link name='delete' color='red' onClick={() => removeFromPlaylist(track.id.toString())} />
+            <Dropdown icon='chevron down' floating button className='icon'>
+              <Dropdown.Menu>
+                <Dropdown.Item icon='download' text='Download' onClick={() => downloadTrack(track)} />
+                <Dropdown.Item icon='delete' text='Delete' onClick={() => removeFromPlaylist(track.id.toString())} />
+                <Dropdown.Item icon='search' text='Similar Tracks' onClick={() => history.push(`/similar-tracks/${track.slug}/${track.id}`)} />
+              </Dropdown.Menu>
+            </Dropdown>
           </Table.Cell>
         </Table.Row>
       )
@@ -52,7 +56,7 @@ const TrackListingTableBody = ({ trackListing, removeFromPlaylist }) => {
   }
 
   return (
-    <Transition.Group 
+    <Transition.Group
       as={Table.Body}
       animation='slide right'
       duration={500}
@@ -62,4 +66,4 @@ const TrackListingTableBody = ({ trackListing, removeFromPlaylist }) => {
   );
 };
 
-export default TrackListingTableBody;
+export default withRouter(TrackListingTableBody);
