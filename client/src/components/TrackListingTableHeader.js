@@ -11,6 +11,8 @@ const TrackListingTableHeader = () => {
         <Table.HeaderCell>Artists</Table.HeaderCell>
         <Table.HeaderCell>Label</Table.HeaderCell>
         <Table.HeaderCell>Genre</Table.HeaderCell>
+        <Table.HeaderCell>BPM</Table.HeaderCell>
+        <Table.HeaderCell>Key</Table.HeaderCell>
         <Table.HeaderCell>Released</Table.HeaderCell>
         <Table.HeaderCell>&nbsp;</Table.HeaderCell>
         <Table.HeaderCell>&nbsp;</Table.HeaderCell>

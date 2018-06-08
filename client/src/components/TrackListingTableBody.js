@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import TrackAlbum from './TrackAlbum';
 import DownloadTrack from './DownloadTrack';
 import { constructLinks } from '../utils/trackUtils';
+import { musicalKeyFilter } from '../utils/helpers';
 
 const TrackListingTableBody = ({ trackListing, removeFromPlaylist }) => {
   let trackListingBody = '';
@@ -32,6 +33,8 @@ const TrackListingTableBody = ({ trackListing, removeFromPlaylist }) => {
           <Table.Cell>{constructLinks(track.artists, 'artist')}</Table.Cell>
           <Table.Cell><Link to={`/most-popular/label/${track.label.slug}/${track.label.id}`}>{track.label.name}</Link></Table.Cell>
           <Table.Cell>{constructLinks(track.genres, 'genre')}</Table.Cell>
+          <Table.Cell>{track.bpm}</Table.Cell>
+          <Table.Cell>{musicalKeyFilter(track.key.shortName)}</Table.Cell>
           <Table.Cell>{track.releaseDate}</Table.Cell>
           <Table.Cell><DownloadTrack track={track} mini blue /></Table.Cell>
           <Table.Cell>
