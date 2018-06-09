@@ -10,7 +10,7 @@ const DownloadTrack = ({ track, mini, blue, downloadedTracks }) => {
     <Button
       basic={!hasBeenDownloaded}
       animated
-      color={hasBeenDownloaded ? 'gray' : 'blue'}
+      color={hasBeenDownloaded ? 'grey' : 'blue'}
       onClick={() => downloadTrack(track)}
     >
       <Button.Content visible>
