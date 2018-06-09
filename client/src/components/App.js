@@ -78,7 +78,7 @@ class App extends React.Component {
   }
 
   componentWillUnmount() {
-    window.removeEventListener('keydown');
+    // window.removeEventListener('keydown');
   }
 
   ref = player => {
