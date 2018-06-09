@@ -246,3 +246,11 @@
     .table tr.visible.transition {
       display: table-row !important;
     }
+
+    .tracklistHeader {
+      font-size: 3em !important;
+    }
+
+    .tracklistHeaderPrefix {
+      font-weight: 100;
+    }

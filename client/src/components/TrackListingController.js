@@ -2,12 +2,12 @@ import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import Scroll from 'react-scroll';
-import { Header } from 'semantic-ui-react';
 
 import * as actionCreators from '../actions/ActionCreators';
-import TrackListingCards from '../components/TrackListingCards';
 import { deslugify } from '../utils/helpers';
-import Pager from '../components/Pager';
+import TrackListingCards from './TrackListingCards';
+import TracklistingHeader from './TracklistingHeader';
+import Pager from './Pager';
 
 const DEFAULT_PAGE = 1;
 const DEFAULT_PER_PAGE = 20;
@@ -66,24 +66,28 @@ class TrackListingController extends React.Component {
 
     const pageName = url.split('/')[1];
     let headerTitle = '';
+    let headerPrefix = '';
 
     switch (pageName) {
       case 'search':
-        headerTitle = `Search Results: ${params.searchTerm}`;
+        headerPrefix = 'SEARCH RESULTS:';
+        headerTitle = params.searchTerm;
         break;
       case 'most-popular':
-        headerTitle = `Top Tracks: ${params.searchString}`;
+        headerPrefix = 'TOP TRACKS:';
+        headerTitle = params.searchString;
         break;
       case 'similar-tracks':
-        headerTitle = `Similar To: ${params.trackName}`;
+        headerPrefix = 'SIMILAR TO:';
+        headerTitle = params.trackName;
         break;
       default:
-        headerTitle = 'Top Tracks';
+        headerPrefix = 'TOP TRACKS';
     }
 
     return (
       <React.Fragment>
-        <Header size='huge'>{deslugify(headerTitle.toUpperCase())}</Header>
+        <TracklistingHeader headerPrefix={headerPrefix} headerTitle={headerTitle} />
         <TrackListingCards trackListing={tracks} isLoading={isLoading} />
         <Pager activePage={page} totalPages={totalPages} firstItem={null} lastItem={null} perPage={perPage || DEFAULT_PER_PAGE} />
       </React.Fragment>
