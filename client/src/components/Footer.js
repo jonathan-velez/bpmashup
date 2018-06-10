@@ -3,6 +3,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { scroller } from 'react-scroll';
 import { Menu, Image, Container, Card } from 'semantic-ui-react';
+import _ from 'lodash';
 
 import * as actionCreators from '../actions/ActionCreators';
 import { constructLinks, getNextTrack } from '../utils/trackUtils';
@@ -48,9 +49,8 @@ class Footer extends Component {
   }
 
   render() {
-    const { playing, played, duration, loadedTrack, youTubeObject } = this.props.mediaPlayer;
-
-    const { youTubeUrl = '' } = youTubeObject;
+    const { playing, played, duration, loadedTrack } = this.props.mediaPlayer;
+    const youTubeUrl = _.get(this.props, 'mediaPlayer.youTubeObject.youTubeUrl');
 
     return (
       <Menu fixed='bottom' className='footer-menu' borderless>
