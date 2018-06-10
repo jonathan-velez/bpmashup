@@ -50,7 +50,7 @@ class Footer extends Component {
   render() {
     const { playing, played, duration, loadedTrack, youTubeObject } = this.props.mediaPlayer;
 
-    const { youTubeUrl } = youTubeObject;
+    const { youTubeUrl = {} } = youTubeObject;
 
     return (
       <Menu fixed='bottom' className='footer-menu' borderless>
