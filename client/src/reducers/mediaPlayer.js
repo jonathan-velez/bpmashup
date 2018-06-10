@@ -18,7 +18,6 @@ import {
 const defaultState = {
   loadedUrl: null,
   sampleUrl: null,
-  youTubeUrl: null,
   playing: true,
   volume: 1.0,
   muted: false,
@@ -28,22 +27,23 @@ const defaultState = {
   playbackRate: 1.0,
   loop: false,
   loadedTrack: {},
+  youTubeObject: {},
 }
 
 const mediaPlayer = (state = defaultState, action) => {
   switch (action.type) {
     case LOAD_TRACK:
       if (_.isEmpty(action.payload)) return state;
-      
+
       return {
         ...state,
         loadedUrl: action.payload.sampleSecureUrl,
         sampleUrl: action.payload.sampleSecureUrl,
-        youTubeUrl: null,
         played: 0,
         loaded: 0,
         playing: true,
         loadedTrack: action.payload,
+        youTubeObject: {},
       }
     case PLAY_PAUSE:
       return {
@@ -96,15 +96,44 @@ const mediaPlayer = (state = defaultState, action) => {
       // TODO: This needs a lot of work. Rather than just pull the first result,
       // we should have some logic to determine best fit. e.g.: yt length matches bp's stated length, etc.
       // should also handle null values
-      const youTubeId = action.payload.data[0].id.videoId;
-      
-      if(!youTubeId) return state;
+      const { data } = action.payload;
+      if (data.length === 0) {
+        return {
+          ...state,
+          youTubeObject: {}
+        }
+      }
+
+      const youTubeId = data[0].id && data[0].id.videoId;
+      if (!youTubeId) {
+        return {
+          ...state,
+          youTubeObject: {}
+        }
+      }
+
+      const youTubeTitle = data[0].snippet.title;
+      const youTubeImageUrl = data[0].snippet.thumbnails.default.url;
+      const youTubeImageWidth = data[0].snippet.thumbnails.default.width;
+      const youTubeImageHeight = data[0].snippet.thumbnails.default.height;
+      const youTubeDescription = data[0].snippet.description;
 
       const youTubeUrl = `http://youtube.com/watch?v=${youTubeId}`;
+
+      const youTubeObject = {
+        youTubeId,
+        youTubeUrl,
+        youTubeTitle,
+        youTubeImageUrl,
+        youTubeImageWidth,
+        youTubeImageHeight,
+        youTubeDescription,
+      }
+
       return {
         ...state,
         loadedUrl: youTubeUrl,
-        youTubeUrl,
+        youTubeObject,
         played: 0,
         loaded: 0,
         playing: true,

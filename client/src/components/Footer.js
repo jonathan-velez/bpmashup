@@ -12,11 +12,9 @@ import Duration from './Duration';
 import SeekBar from './SeekBar';
 import MutePlayer from './MutePlayer';
 import VolumeBar from './VolumeBar';
+import YouTubeButton from './YouTubeButton';
 
 class Footer extends Component {
-  componentWillReceiveProps() {
-    // console.log(this.props.mediaPlayer)
-  }
 
   // TODO: Refactor these functions into a module
   scrollToTrack = (trackId) => {
@@ -42,11 +40,20 @@ class Footer extends Component {
     this.props.loadTrack(getNextTrack(incrementBy));
   }
 
+  getYouTube = loadedTrack => {
+    if (loadedTrack) {
+      this.props.startAsync();
+      this.props.getYoutubeLink(`${loadedTrack.artists[0].name} ${loadedTrack.title}`);
+    }
+  }
+
   render() {
-    const { playing, played, duration, loadedTrack } = this.props.mediaPlayer;
+    const { playing, played, duration, loadedTrack, youTubeObject } = this.props.mediaPlayer;
+
+    const { youTubeUrl } = youTubeObject;
 
     return (
-      <Menu fixed='bottom' className='footer-menu' compact borderless>
+      <Menu fixed='bottom' className='footer-menu' borderless>
         <Container textAlign='center'>
           <Menu.Item>
             <Card>
@@ -64,6 +71,9 @@ class Footer extends Component {
               onClick={() => this.scrollToTrack(loadedTrack.id)}
               className={`vinyl${playing ? ' vinyl-animate' : ''}`}
             />
+          </Menu.Item>
+          <Menu.Item>
+            <YouTubeButton getYouTube={this.getYouTube} loadedTrack={loadedTrack} isLoaded={youTubeUrl ? true : false} />
           </Menu.Item>
           <Menu.Item>
             <Duration seconds={duration * played} />
