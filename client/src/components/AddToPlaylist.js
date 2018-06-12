@@ -1,7 +1,7 @@
 import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Popup, Label, List, Button, Icon } from 'semantic-ui-react';
+import { Popup, Label, List, Button, Icon, Checkbox } from 'semantic-ui-react';
 import _ from 'lodash'
 import moment from 'moment';
 
@@ -23,11 +23,19 @@ class AddToPlaylist extends React.Component {
       timeStamp
     })
 
-    this.props.addToPlaylist({
-      playlist,
-      track
-    });
-    this.setState({ popupOpen: false })
+    if(playlist.added) {
+      this.props.removeFromPlaylist({
+        playlistId: playlist.id,
+        trackId: track.id.toString(),
+      });
+    }else{
+      this.props.addToPlaylist({
+        playlist,
+        track
+      });
+    }
+
+    // this.setState({ popupOpen: false })
   }
 
   addNewPlaylist = () => {
@@ -106,8 +114,11 @@ class AddToPlaylist extends React.Component {
       const { tracks = {} } = playlist;
 
       return (
-        <List.Item as={added ? '' : 'a'} onClick={() => this.addToPlaylist({ id: playlist.id })} key={playlist.id}>
-          {playlist.name} ({Object.keys(tracks).length})
+        <List.Item key={playlist.id}>
+          <List.Content floated='right'>
+            <Checkbox onClick={() => this.addToPlaylist({ id: playlist.id, added })} checked={added} />
+          </List.Content>
+          <List.Content>{playlist.name} ({Object.keys(tracks).length})</List.Content>
         </List.Item>
       )
     });

@@ -55,7 +55,7 @@ const playlistList = (state = {}, action) => {
 
       //////// 'cool kids way' ////////////
       let { [action.payload.trackId]: deletedTrack, ...tracks } = state[action.payload.playlistId].tracks;
-      let listOfTracks = state[action.payload.playlistId].listOfTracks.filter(trackId => trackId !== action.payload.trackId);
+      let listOfTracks = state[action.payload.playlistId].listOfTracks.filter(trackId => trackId !== +action.payload.trackId);
 
       return {
         ...state,

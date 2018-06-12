@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
 import { Form, Input } from 'semantic-ui-react';
 
 class AddNewPlaylistForm extends Component {
@@ -12,6 +13,7 @@ class AddNewPlaylistForm extends Component {
 
   focus = () => {
     this.inputRef.focus();
+    ReactDOM.findDOMNode(this.inputRef).querySelector('input').select();
   }
 
   render() {
