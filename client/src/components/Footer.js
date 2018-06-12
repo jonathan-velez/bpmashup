@@ -42,7 +42,7 @@ class Footer extends Component {
   }
 
   getYouTube = loadedTrack => {
-    if (loadedTrack) {
+    if (loadedTrack.id) {
       this.props.startAsync();
       this.props.getYoutubeLink(`${loadedTrack.artists[0].name} ${loadedTrack.title}`);
     }
