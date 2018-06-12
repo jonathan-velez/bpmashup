@@ -254,3 +254,7 @@
     .tracklistHeaderPrefix {
       font-weight: 100;
     }
+
+    .boldedText {
+      font-weight: bold;
+    }

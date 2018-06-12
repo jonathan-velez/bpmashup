@@ -118,7 +118,7 @@ class AddToPlaylist extends React.Component {
           <List.Content floated='right'>
             <Checkbox onClick={() => this.addToPlaylist({ id: playlist.id, added })} checked={added} />
           </List.Content>
-          <List.Content>{playlist.name} ({Object.keys(tracks).length})</List.Content>
+          <List.Content className={added ? 'boldedText' : ''}>{playlist.name} ({Object.keys(tracks).length})</List.Content>
         </List.Item>
       )
     });
