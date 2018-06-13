@@ -258,3 +258,7 @@
     .boldedText {
       font-weight: bold;
     }
+
+    .trackActionDropdown {
+      z-index: 9999;
+    }

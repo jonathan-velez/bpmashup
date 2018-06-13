@@ -4,11 +4,16 @@ import { Table, Transition, Dropdown } from 'semantic-ui-react';
 import { Link, withRouter } from 'react-router-dom';
 
 import TrackAlbum from './TrackAlbum';
+import TrackActionDropdown from './TrackActionDropdown';
 import { constructLinks, downloadTrack } from '../utils/trackUtils';
 import { musicalKeyFilter } from '../utils/helpers';
 
 const TrackListingTableBody = ({ trackListing, removeFromPlaylist, history }) => {
   let trackListingBody = '';
+
+  this.findSimilarTracks = (trackSlug, trackId) => {
+    history.push(`/similar-tracks/${trackSlug}/${trackId}`);
+  }
 
   if (Object.keys(trackListing).length > 0) {
     // sort by the order it was added to the playlist
@@ -36,13 +41,12 @@ const TrackListingTableBody = ({ trackListing, removeFromPlaylist, history }) =>
           <Table.Cell>{musicalKeyFilter(track.key && track.key.shortName)}</Table.Cell>
           <Table.Cell>{track.releaseDate}</Table.Cell>
           <Table.Cell>
-            <Dropdown icon='ellipsis vertical' floating className='icon'>
-              <Dropdown.Menu>
-                <Dropdown.Item icon='download' text='Download' onClick={() => downloadTrack(track)} />
-                <Dropdown.Item icon='delete' text='Delete' onClick={() => removeFromPlaylist(track.id.toString())} />
-                <Dropdown.Item icon='search' text='Similar Tracks' onClick={() => history.push(`/similar-tracks/${track.slug}/${track.id}`)} />
-              </Dropdown.Menu>
-            </Dropdown>
+            <TrackActionDropdown
+              track={track}
+              downloadTrack={downloadTrack}
+              removeFromPlaylist={removeFromPlaylist}
+              findSimilarTracks={this.findSimilarTracks}
+            />
           </Table.Cell>
         </Table.Row>
       )
