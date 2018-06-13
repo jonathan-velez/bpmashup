@@ -4,8 +4,12 @@ import _ from 'lodash';
 import { Link } from 'react-router-dom';
 import { Dropdown } from 'semantic-ui-react';
 
+import { getAllPlaylistsTrackCount, getPlaylistCount } from '../utils/playlistUtils';
+
 const PlaylistDropdownControl = ({ playlistList }) => {
   this.playlistItems = '';
+
+  this.firstListItem = <Dropdown.Item disabled text={`${getPlaylistCount(playlistList)} playlists, ${getAllPlaylistsTrackCount(playlistList)} tracks`} />
 
   if (playlistList && Object.keys(playlistList).length > 0) {
     this.playlistItems = _.map(playlistList, playlist => {
@@ -31,6 +35,7 @@ const PlaylistDropdownControl = ({ playlistList }) => {
       text='Playlists'
     >
       <Dropdown.Menu>
+        {this.firstListItem}
         {this.playlistItems}
       </Dropdown.Menu>
     </Dropdown>
