@@ -23,9 +23,12 @@ exports.zippyScrape = (req, res) => {
     // target first search result
     let $ = cheerio.load(html);
     href = ($($('.r a')[0]).attr('href'));
-    href = href.substring(7);
-    href = href.substring(0, href.indexOf('&'));
-
-    res.json({ href });
+    if (href) {
+      href = href.substring(7);
+      href = href.substring(0, href.indexOf('&'));
+      res.json({ href });
+    }else{
+      res.json('');
+    }
   });
 }
