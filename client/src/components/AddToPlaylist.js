@@ -79,7 +79,7 @@ class AddToPlaylist extends React.Component {
     let isAdded = false;
 
     _.mapValues(this.props.playlistList, playlist => {
-      if (playlist.listOfTracks.includes(this.props.track.id)) {
+      if (playlist.listOfTracks && playlist.listOfTracks.includes(this.props.track.id)) {
         isAdded = true;
         return;
       }
@@ -110,7 +110,7 @@ class AddToPlaylist extends React.Component {
       </Button>
 
     const playlistItems = _.map(this.props.playlistList, playlist => {
-      const added = playlist.listOfTracks.includes(this.props.track.id);
+      const added = playlist.listOfTracks && playlist.listOfTracks.includes(this.props.track.id);
       const { tracks = {} } = playlist;
 
       return (
