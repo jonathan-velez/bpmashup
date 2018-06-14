@@ -262,3 +262,8 @@
     .trackActionDropdown {
       z-index: 102 !important;
     }
+
+    .playlistEditInput {
+      text-align: left;
+    }
+    

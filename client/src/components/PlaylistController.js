@@ -138,13 +138,15 @@ class PlaylistController extends React.Component {
     return (
       <React.Fragment>
         {this.state.playlistNameEditMode ?
-          <Form onSubmit={this.handleFormSubmit}>
+          <Form onSubmit={this.handleFormSubmit} className='playlistEditInput'>
             <Input
               value={playlist.name}
               onChange={this.handlePlaylistNameChange}
-              size='huge'
+              size='massive' //TODO: Style this to be the same as the header
               onBlur={this.togglePlaylistNameEditMode}
               ref={this.handleRef}
+              fluid
+              transparent
             />
           </Form> :
           <PlaylistHeader playlistName={playlist.name} editHeader={this.togglePlaylistNameEditMode} deletePlaylist={this.deletePlaylist} />
