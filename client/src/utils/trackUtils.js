@@ -30,7 +30,7 @@ export const downloadTrack = track => {
 
     strSearch = `${track.artists[0].name} ${track.title}`;
 
-    store.dispatch(thunks.downloadTrack(track.id));
+    store.dispatch(thunks.downloadTrack(track.id.toString()));
 
     Axios.get(`/api/download-track?searchString=${strSearch}`)
       .then(res => {
