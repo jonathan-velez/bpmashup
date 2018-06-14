@@ -18,7 +18,7 @@ const PlaylistDropdownControl = ({ playlistList }) => {
 
       return (
         <Dropdown.Item
-          text={`${name} (${playlist.listOfTracks && playlist.listOfTracks.length})`}
+          text={`${name} (${playlist.listOfTracks ? playlist.listOfTracks.length : 0})`}
           as={Link}
           to={url}
           key={id}

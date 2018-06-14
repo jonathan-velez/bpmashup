@@ -7,10 +7,12 @@ export const getAllPlaylistsTrackCount = playlistList => {
   }
 
   keys.forEach(item => {
-    trackCount = trackCount + (playlistList[item].listOfTracks && playlistList[item].listOfTracks.length);
+    if (playlistList[item].listOfTracks) {
+      trackCount = trackCount + (playlistList[item].listOfTracks.length);
+    }
   })
 
-  return trackCount;
+  return isNaN(trackCount) ? 0 : trackCount;
 }
 
 export const getPlaylistCount = playlistList => {
