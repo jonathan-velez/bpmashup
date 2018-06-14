@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import _ from 'lodash';
 import { Table, Transition, Dropdown } from 'semantic-ui-react';
 import { Link, withRouter } from 'react-router-dom';
@@ -8,7 +9,7 @@ import TrackActionDropdown from './TrackActionDropdown';
 import { constructLinks, downloadTrack } from '../utils/trackUtils';
 import { musicalKeyFilter } from '../utils/helpers';
 
-const TrackListingTableBody = ({ trackListing, removeFromPlaylist, history }) => {
+const TrackListingTableBody = ({ trackListing, removeFromPlaylist, history, downloadedTracks }) => {
   let trackListingBody = '';
 
   this.findSimilarTracks = (trackSlug, trackId) => {
@@ -20,8 +21,9 @@ const TrackListingTableBody = ({ trackListing, removeFromPlaylist, history }) =>
     const orderedTracks = _.orderBy(trackListing, 'timeStamp', 'asc');
 
     trackListingBody = _.map(orderedTracks, (track, idx) => {
+      const hasBeenDownloaded = downloadedTracks.includes(track.id.toString());
       return (
-        <Table.Row key={track.id}>
+        <Table.Row key={track.id} negative={hasBeenDownloaded}>
           <Table.Cell>
             {idx + 1}
           </Table.Cell>
@@ -70,4 +72,11 @@ const TrackListingTableBody = ({ trackListing, removeFromPlaylist, history }) =>
   );
 };
 
-export default withRouter(TrackListingTableBody);
+
+const mapStateToProps = state => {
+  return {
+    downloadedTracks: state.downloadedTracks,
+  }
+}
+
+export default withRouter(connect(mapStateToProps, {})(TrackListingTableBody));
