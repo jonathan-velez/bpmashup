@@ -42,7 +42,7 @@ const playlistList = (state = {}, action) => {
             [action.payload.track.id]: action.payload.track
           },
           listOfTracks: [
-            ...state[action.payload.playlist.id].listOfTracks,
+            ...state[action.payload.playlist.id].listOfTracks || [],
             action.payload.track.id
           ]
         }
