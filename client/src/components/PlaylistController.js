@@ -40,12 +40,8 @@ class PlaylistController extends React.Component {
     const { playlistId: newPlaylistId } = nextProps.match.params;
     const { playlistId: currentPlaylistId } = this.props.match.params;
 
-    const newPlaylistObj = (nextProps.playlistList && nextProps.playlistList[newPlaylistId]);
-    const currentPlaylistObj = (this.props.playlistList && this.props.playlistList[currentPlaylistId]);
-
-    if (!newPlaylistObj || !currentPlaylistObj) {
-      return;
-    }
+    const newPlaylistObj = (nextProps.playlistList && nextProps.playlistList[newPlaylistId]) || {};
+    const currentPlaylistObj = (this.props.playlistList && this.props.playlistList[currentPlaylistId]) || {};
 
     const { tracks: newPlaylistTracks = {} } = newPlaylistObj;
     const { tracks: currentPlaylistTracks = {} } = currentPlaylistObj;
@@ -54,6 +50,7 @@ class PlaylistController extends React.Component {
     if (nextProps.confirmModal.confirm && this.state.deletePlaylist) {
       this.actuallyDeletePlaylists();
       this.props.resetConfirm();
+      return;
     }
 
     // something new to load
