@@ -21,11 +21,11 @@ export const addNewPlaylist = (playList) => {
   }
 }
 
-export const removeFromPlaylist = track => {
+export const removeFromPlaylist = payload => {
   return (dispatch, getState) => {
     dispatch({
       type: REMOVE_FROM_PLAYLIST,
-      payload: track
+      payload: payload
     });
 
     setFirebase(getState());
