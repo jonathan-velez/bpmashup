@@ -14,6 +14,7 @@ import SeekBar from './SeekBar';
 import MutePlayer from './MutePlayer';
 import VolumeBar from './VolumeBar';
 import YouTubeButton from './YouTubeButton';
+import TrackActionDropdown from './TrackActionDropdown';
 
 const Footer = ({ seekChange, seekMouseUp, seekMouseDown, playPause, setVolume, startAsync, getYoutubeLink, mediaPlayer, playerRef, loadTrack }) => {
 
@@ -50,22 +51,35 @@ const Footer = ({ seekChange, seekMouseUp, seekMouseDown, playPause, setVolume, 
   const { playing, played, duration, loadedTrack } = mediaPlayer;
   const youTubeUrl = _.get(this.props, 'mediaPlayer.youTubeObject.youTubeUrl');
 
+  if (_.isEmpty(loadedTrack)) {
+    return null;
+  }
+
+  console.log(loadedTrack)
+
   return (
-    <Menu fixed='bottom' className='footer-menu' borderless>
+    <Menu fixed='bottom' className='footer-menu' borderless size='tiny' compact>
       <Container textAlign='center'>
         <Menu.Item>
           <Card>
-            <Card.Content>
+            <Card.Content textAlign='left'>
               <Card.Header>{loadedTrack.title}</Card.Header>
               <Card.Meta>{constructLinks(loadedTrack.artists, 'artist')}</Card.Meta>
             </Card.Content>
           </Card>
         </Menu.Item>
         <Menu.Item>
+          <TrackActionDropdown
+            ellipsisOrientation='horizontal'
+            upward
+            track={loadedTrack}
+          />
+        </Menu.Item>
+        <Menu.Item>
           <Image
             src={loadedTrack.images && loadedTrack.images.large.secureUrl}
             circular
-            size='tiny'
+            size='mini'
             onClick={() => this.scrollToTrack(loadedTrack.id)}
             className={`vinyl${playing ? ' vinyl-animate' : ''}`}
           />

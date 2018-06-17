@@ -1,27 +1,28 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { Button, Icon } from 'semantic-ui-react';
+import { Button, Icon, Dropdown } from 'semantic-ui-react';
 import { downloadTrack } from '../utils/trackUtils';
 
-const DownloadTrack = ({ track, mini, blue, downloadedTracks }) => {
+const DownloadTrack = ({ track, downloadedTracks, type }) => {
   const hasBeenDownloaded = downloadedTracks.includes(track.id.toString());
-  return (
+  
+  const downloadButton = 
     <Button
-      basic={!hasBeenDownloaded}
-      animated
-      color={hasBeenDownloaded ? 'grey' : 'blue'}
+      basic
       onClick={() => downloadTrack(track)}
     >
       <Button.Content visible>
-        <Icon name='download' />
+        <Icon name='download' color={hasBeenDownloaded ? 'red' : ''} />
       </Button.Content>
-      <Button.Content hidden>{mini ? 'DL' : 'Download'}</Button.Content>
     </Button>
+  
+  const downloadDropdownItem = <Dropdown.Item icon='download' text='Download' onClick={() => downloadTrack(track)} />
+
+  return (
+    type === 'dropdownItem' ? downloadDropdownItem : downloadButton
   );
 };
-
-
 
 const mapStateToProps = state => {
   return {

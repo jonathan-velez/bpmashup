@@ -6,15 +6,11 @@ import { Link, withRouter } from 'react-router-dom';
 
 import TrackAlbum from './TrackAlbum';
 import TrackActionDropdown from './TrackActionDropdown';
-import { constructLinks, downloadTrack } from '../utils/trackUtils';
+import { constructLinks } from '../utils/trackUtils';
 import { musicalKeyFilter } from '../utils/helpers';
 
 const TrackListingTableBody = ({ trackListing, removeFromPlaylist, history, downloadedTracks }) => {
   let trackListingBody = '';
-
-  this.findSimilarTracks = (trackSlug, trackId) => {
-    history.push(`/similar-tracks/${trackSlug}/${trackId}`);
-  }
 
   if (Object.keys(trackListing).length > 0) {
     // sort by the order it was added to the playlist
@@ -43,12 +39,7 @@ const TrackListingTableBody = ({ trackListing, removeFromPlaylist, history, down
           <Table.Cell>{musicalKeyFilter(track.key && track.key.shortName)}</Table.Cell>
           <Table.Cell>{track.releaseDate}</Table.Cell>
           <Table.Cell>
-            <TrackActionDropdown
-              track={track}
-              downloadTrack={downloadTrack}
-              removeFromPlaylist={removeFromPlaylist}
-              findSimilarTracks={this.findSimilarTracks}
-            />
+            <TrackActionDropdown track={track} />
           </Table.Cell>
         </Table.Row>
       )

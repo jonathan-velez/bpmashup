@@ -167,7 +167,7 @@
     /* footer menubar */
 
     .footer-menu {
-      height: 100px;
+      height: 85px;
     }
 
     /*react-autosuggest */
@@ -266,4 +266,4 @@
     .playlistEditInput {
       text-align: left;
     }
-    
+ 

@@ -1,7 +1,7 @@
 import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Popup, Label, List, Button, Icon, Checkbox } from 'semantic-ui-react';
+import { Popup, List, Button, Icon, Checkbox, Dropdown } from 'semantic-ui-react';
 import _ from 'lodash'
 import moment from 'moment';
 
@@ -9,6 +9,7 @@ import ModalView from './ModalView';
 import AddToPlaylistForm from './AddNewPlaylistForm';
 import * as actionCreators from '../actions/ActionCreators';
 import * as thunks from '../thunks';
+import { getAllPlaylistsTrackCount, getPlaylistCount } from '../utils/playlistUtils';
 
 class AddToPlaylist extends React.Component {
   state = {
@@ -23,19 +24,17 @@ class AddToPlaylist extends React.Component {
       timeStamp
     })
 
-    if(playlist.added) {
+    if (playlist.added) {
       this.props.removeFromPlaylist({
         playlistId: playlist.id,
         trackId: track.id.toString(),
       });
-    }else{
+    } else {
       this.props.addToPlaylist({
         playlist,
         track
       });
     }
-
-    // this.setState({ popupOpen: false })
   }
 
   addNewPlaylist = () => {
@@ -98,16 +97,13 @@ class AddToPlaylist extends React.Component {
     }
 
     const playlistButton =
-      <Button
-        basic={!isAdded}
-        color={isAdded ? 'grey' : 'blue'}
-        animated
-      >
+      <Button basic>
         <Button.Content visible>
-          <Icon name='numbered list' />
+          <Icon name='numbered list' color={isAdded ? 'red' : ''} />
         </Button.Content>
-        <Button.Content hidden>Add to Playlist</Button.Content>
       </Button>
+
+    const playlistDropdownItem = <Dropdown.Item icon='numbered list' text='Playlists' />
 
     const playlistItems = _.map(this.props.playlistList, playlist => {
       const added = playlist.listOfTracks && playlist.listOfTracks.includes(this.props.track.id);
@@ -126,16 +122,22 @@ class AddToPlaylist extends React.Component {
     const playlistButtonContent =
       <List divided relaxed verticalAlign='middle'>
         {playlistItems}
-        <List.Item onClick={this.addNewPlaylist} className='new-playlist-icon'>
-          <Label>
-            <Icon name='add' /> New Playlist
-            </Label>
+        <List.Item>
+          <Button
+            size='mini'
+            fluid
+            icon='add'
+            labelPosition='left'
+            content='New Playlist'
+            onClick={this.addNewPlaylist}
+          />
         </List.Item>
       </List>
 
     return (
       <Popup
-        trigger={playlistButton}
+        header={`${getPlaylistCount(this.props.playlistList)} playlists, ${getAllPlaylistsTrackCount(this.props.playlistList)} tracks`}
+        trigger={this.props.type === 'dropdownItem' ? playlistDropdownItem : playlistButton}
         content={playlistButtonContent}
         on='click'
         position='bottom center'

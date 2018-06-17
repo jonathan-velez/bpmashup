@@ -1,13 +1,17 @@
 import React from 'react';
 import { Dropdown } from 'semantic-ui-react';
 
-const TrackActionDropdown = ({ downloadTrack, removeFromPlaylist, findSimilarTracks, track, ellipsisOrientation = 'vertical' }) => {
+import AddToPlaylist from './AddToPlaylist';
+import DownloadTrack from './DownloadTrack';
+import SimilarTrack from './SimilarTrack';
+
+const TrackActionDropdown = ({ track, ellipsisOrientation = 'vertical', upward = false }) => {
   return (
-    <Dropdown icon={`ellipsis ${ellipsisOrientation}`} floating>
+    <Dropdown icon={`ellipsis ${ellipsisOrientation}`} floating upward={upward}>
       <Dropdown.Menu className='trackActionDropdown'>
-        <Dropdown.Item icon='download' text='Download' onClick={() => downloadTrack(track)} />
-        <Dropdown.Item icon='delete' text='Delete' onClick={() => removeFromPlaylist(track.id.toString())} />
-        <Dropdown.Item icon='search' text='Similar Tracks' onClick={() => findSimilarTracks(track.slug, track.id)} />
+        <DownloadTrack type='dropdownItem' track={track} />
+        <SimilarTrack type='dropdownItem' track={track} />
+        <AddToPlaylist type='dropdownItem' track={track} />
       </Dropdown.Menu>
     </Dropdown>
   );

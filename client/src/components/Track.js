@@ -1,11 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-
 import { Card, Label } from 'semantic-ui-react';
+
 import AddToPlaylist from './AddToPlaylist';
 import TrackAlbum from './TrackAlbum';
-import { constructLinks, trackGenreColors } from '../utils/trackUtils';
 import DownloadTrack from './DownloadTrack';
+import LoveTrackButton from './LoveTrackButton';
+import { constructLinks, trackGenreColors } from '../utils/trackUtils';
 import { musicalKeyFilter } from '../utils/helpers';
 
 /*
@@ -28,14 +29,14 @@ class Track extends React.Component {
         className='flex-card'
         id={`track-${track.id}`}
         color={trackGenreColors[track.genres[0].name.toLowerCase()]}
+        raised
       >
         <TrackAlbum
           imageUrl={track.images.large.secureUrl}
-          imageSize={null}
           track={track}
         />
         <Card.Content>
-          {track.position && <Label attached='top left' color='red'>{track.position}</Label>}
+          {track.position && <Label attached='top left' color='grey'>{track.position}</Label>}
           <Card.Header>{track.title}</Card.Header>
           <Card.Content>{constructLinks(track.artists, 'artist')}</Card.Content>
           <Card.Content><Link to={`/most-popular/label/${track.label.slug}/${track.label.id}`}>[{track.label.name}]</Link></Card.Content>
@@ -45,8 +46,9 @@ class Track extends React.Component {
           <Card.Content><Link to={`/similar-tracks/${track.slug}/${track.id}`}>Similar tracks</Link></Card.Content>
         </Card.Content>
         <Card.Content extra>
-          <div className='ui two buttons'>
+          <div className='ui three buttons'>
             <DownloadTrack track={track} />
+            <LoveTrackButton track={track} />
             <AddToPlaylist track={track} />
           </div>
         </Card.Content>
