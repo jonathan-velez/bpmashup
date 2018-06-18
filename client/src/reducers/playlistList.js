@@ -77,9 +77,9 @@ const playlistList = (state = {}, action) => {
       const { [action.payload]: deletedPlaylist, ...restOfPlaylists } = state;
       return restOfPlaylists;
     case LOAD_PLAYLISTS:
-      // return Object.assign({}, state, action.payload);
-      const stateClone = Object.assign({}, state);
-      return _.merge(stateClone, action.payload);
+      return Object.assign({}, state, action.payload);
+      // const stateClone = Object.assign({}, state);
+      // return _.merge(stateClone, action.payload);
     case CLEAR_PLAYLISTS:
       return {};
     default:
