@@ -73,6 +73,10 @@ class PlaylistController extends React.Component {
     }
   }
 
+  validatePlaylistName = playlistName => {
+    return playlistName.length < 51;
+  }
+
   callRemoveFromPlaylist = (trackId) => {
     this.props.removeFromPlaylist({ playlistId: this.props.match.params.playlistId, trackId: trackId });
   }
@@ -82,7 +86,11 @@ class PlaylistController extends React.Component {
   }
 
   handlePlaylistNameChange = evt => {
-    this.setState({ playlistName: evt.target.value });
+    const playlistName = evt.target.value;
+
+    if (this.validatePlaylistName(playlistName)) {
+      this.setState({ playlistName });
+    }
   }
 
   deletePlaylist = () => {
