@@ -4,7 +4,7 @@ import { Table, Dimmer, Loader, Header, Message } from 'semantic-ui-react';
 import TrackListingTableHeader from './TrackListingTableHeader';
 import TrackListingTableBody from './TrackListingTableBody';
 
-const TrackListingTable = ({ trackListing, isLoading, removeFromPlaylist }) => {
+const TrackListingTable = ({ trackListing, isLoading }) => {
   if (isLoading) {
     return (
       <Dimmer active>
@@ -16,7 +16,7 @@ const TrackListingTable = ({ trackListing, isLoading, removeFromPlaylist }) => {
   return (Object.keys(trackListing).length > 0 ?
     <Table striped>
       <TrackListingTableHeader />
-      <TrackListingTableBody trackListing={trackListing} removeFromPlaylist={removeFromPlaylist} />
+      <TrackListingTableBody trackListing={trackListing} />
     </Table>
     :
     <Message warning>
