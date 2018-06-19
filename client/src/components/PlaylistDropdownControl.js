@@ -14,7 +14,7 @@ const PlaylistDropdownControl = ({ playlistList }) => {
   if (playlistList && Object.keys(playlistList).length > 0) {
     this.playlistItems = _.map(playlistList, playlist => {
       const { name, id } = playlist;
-      const url = `/playlist/${id}`;
+      const url = `/playlist/${name}/${id}`;
 
       return (
         <Dropdown.Item
