@@ -9,7 +9,7 @@ import TrackActionDropdown from './TrackActionDropdown';
 import { constructLinks } from '../utils/trackUtils';
 import { musicalKeyFilter } from '../utils/helpers';
 
-const TrackListingTableBody = ({ trackListing, removeFromPlaylist, history, downloadedTracks }) => {
+const TrackListingTableBody = ({ trackListing, downloadedTracks }) => {
   let trackListingBody = '';
 
   if (Object.keys(trackListing).length > 0) {
@@ -19,7 +19,7 @@ const TrackListingTableBody = ({ trackListing, removeFromPlaylist, history, down
     trackListingBody = _.map(orderedTracks, (track, idx) => {
       const hasBeenDownloaded = downloadedTracks.includes(track.id.toString());
       return (
-        <Table.Row key={track.id} negative={hasBeenDownloaded}>
+        <Table.Row key={track.id} id={`track-${track.id}`} negative={hasBeenDownloaded}>
           <Table.Cell>
             {idx + 1}
           </Table.Cell>
