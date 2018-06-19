@@ -99,7 +99,7 @@ class AddToPlaylist extends React.Component {
     const playlistButton =
       <Button basic>
         <Button.Content visible>
-          <Icon name='numbered list' color={isAdded ? 'red' : ''} />
+          <Icon name='numbered list' color={isAdded ? 'red' : 'grey'} />
         </Button.Content>
       </Button>
 
