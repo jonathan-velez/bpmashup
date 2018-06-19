@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Header, Message, Form, Input } from 'semantic-ui-react';
 import Scroll from 'react-scroll';
+import { withRouter } from 'react-router-dom';
 
 import * as actionCreators from '../actions/ActionCreators';
 import TrackListingTable from './TrackListingTable';
@@ -109,6 +110,7 @@ class PlaylistController extends React.Component {
     if (deletePlaylist) {
       this.props.deletePlaylist(this.playlistId);
       this.setState({ deletePlaylist: false });
+      this.props.history.push(`/`);
     }
   }
 
@@ -184,4 +186,4 @@ const mapDispatchToProps = dispatch => {
   return bindActionCreators(Object.assign({}, actionCreators, thunks), dispatch);
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(PlaylistController);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(PlaylistController));
