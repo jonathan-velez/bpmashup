@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { Dropdown } from 'semantic-ui-react';
 
 import { getAllPlaylistsTrackCount, getPlaylistCount } from '../utils/playlistUtils';
+import { slugify } from '../utils/helpers';
 
 const PlaylistDropdownControl = ({ playlistList }) => {
   this.playlistItems = '';
@@ -14,7 +15,7 @@ const PlaylistDropdownControl = ({ playlistList }) => {
   if (playlistList && Object.keys(playlistList).length > 0) {
     this.playlistItems = _.map(playlistList, playlist => {
       const { name, id } = playlist;
-      const url = `/playlist/${name}/${id}`;
+      const url = `/playlist/${slugify(name)}/${id}`;
 
       return (
         <Dropdown.Item
