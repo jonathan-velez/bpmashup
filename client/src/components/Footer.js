@@ -49,13 +49,11 @@ const Footer = ({ seekChange, seekMouseUp, seekMouseDown, playPause, setVolume, 
   }
 
   const { playing, played, duration, loadedTrack } = mediaPlayer;
-  const youTubeUrl = _.get(this.props, 'mediaPlayer.youTubeObject.youTubeUrl');
+  const youTubeUrl = _.get(mediaPlayer, 'youTubeObject.youTubeUrl');
 
   if (_.isEmpty(loadedTrack)) {
     return null;
   }
-
-  console.log(loadedTrack)
 
   return (
     <Menu fixed='bottom' className='footer-menu' borderless size='tiny' compact>
