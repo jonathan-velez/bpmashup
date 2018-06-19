@@ -17,6 +17,7 @@ class PlaylistController extends React.Component {
   state = {
     playlistNameEditMode: false,
     deletePlaylist: false,
+    playlistName: '',
   }
 
   componentDidMount() {
@@ -24,6 +25,7 @@ class PlaylistController extends React.Component {
 
     if (this.playlist) {
       this.props.loadTracks(this.playlist.tracks);
+      this.setState({ playlistName: this.playlist.name });
     }
   }
 
@@ -56,6 +58,7 @@ class PlaylistController extends React.Component {
     // something new to load
     if (currentPlaylistId && currentPlaylistId !== newPlaylistId && newPlaylistObj) {
       this.props.loadTracks(newPlaylistTracks);
+      this.setState({ playlistName: newPlaylistObj.name });
       return;
     }
 
@@ -79,14 +82,12 @@ class PlaylistController extends React.Component {
   }
 
   handlePlaylistNameChange = evt => {
-    this.props.editPlaylistName({
-      playlistId: this.playlistId,
-      newName: evt.target.value
-    });
+    this.setState({ playlistName: evt.target.value });
   }
 
   deletePlaylist = () => {
-    this.setState({ deletePlaylist: true })
+    this.setState({ deletePlaylist: true });
+
     this.props.openConfirm({
       content: 'Are you sure you want to delete this playlist?',
       confirmButtonText: 'Yes',
@@ -112,7 +113,12 @@ class PlaylistController extends React.Component {
     ReactDOM.findDOMNode(this.inputRef).querySelector('input').select();
   }
 
-  handleFormSubmit = evt => {
+  handleFormSubmit = () => {
+    this.props.editPlaylistName({
+      playlistId: this.playlistId,
+      newName: this.state.playlistName
+    });
+
     this.togglePlaylistNameEditMode();
   }
 
@@ -137,10 +143,10 @@ class PlaylistController extends React.Component {
         {this.state.playlistNameEditMode ?
           <Form onSubmit={this.handleFormSubmit} className='playlistEditInput'>
             <Input
-              value={playlist.name}
+              value={this.state.playlistName}
               onChange={this.handlePlaylistNameChange}
               size='massive' //TODO: Style this to be the same as the header
-              onBlur={this.togglePlaylistNameEditMode}
+              onBlur={this.handleFormSubmit}
               ref={this.handleRef}
               fluid
               transparent
