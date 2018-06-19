@@ -13,7 +13,7 @@ const DownloadTrack = ({ track, downloadedTracks, type }) => {
       onClick={() => downloadTrack(track)}
     >
       <Button.Content visible>
-        <Icon name='download' color={hasBeenDownloaded ? 'red' : ''} />
+        <Icon name='download' color={hasBeenDownloaded ? 'red' : 'grey'} />
       </Button.Content>
     </Button>
   
