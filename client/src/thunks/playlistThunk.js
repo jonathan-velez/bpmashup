@@ -71,7 +71,7 @@ export const loadPlaylists = () => {
     const db = firebase.database();
     const playlistListRef = db.ref(`users/${uid}/playlists`);
 
-    playlistListRef.once('value', snapshot => {
+    playlistListRef.on('value', snapshot => {
       const playlistList = snapshot.val();
       if (playlistList) {
         dispatch({
