@@ -58,21 +58,21 @@ export const scrollToTrack = (trackId) => {
   });
 }
 
-export const getNextTrack = (incrementBy = 1) => {  
-  const { trackListing = {}, mediaPlayer = {} } = store.getState();  
+export const getNextTrack = (incrementBy = 1) => {
+  const { trackListing = {}, mediaPlayer = {} } = store.getState();
   const { tracks = [] } = trackListing;
-  
-  if (_.isEmpty(trackListing) || _.isEmpty(mediaPlayer) || tracks.length ===0) {
+
+  if (_.isEmpty(trackListing) || _.isEmpty(mediaPlayer) || tracks.length === 0) {
     return {};
   }
 
   const orderedTracks = _.orderBy(tracks, 'position', 'asc');
   let nextTrackIndex = orderedTracks.findIndex(obj => obj.id === mediaPlayer.loadedTrack.id) + incrementBy;
-  
-  if(nextTrackIndex >= orderedTracks.length || nextTrackIndex < 0) {
+
+  if (nextTrackIndex >= orderedTracks.length || nextTrackIndex < 0) {
     nextTrackIndex = 0;
   }
-  
+
   let nextTrackObj = orderedTracks[nextTrackIndex];
 
   if (nextTrackIndex <= 0 || orderedTracks.length === nextTrackIndex) {
