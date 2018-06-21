@@ -13,7 +13,7 @@ const PlaylistDropdownControl = ({ playlistList }) => {
   this.firstListItem = <Dropdown.Item disabled text={`${getPlaylistCount(playlistList)} playlists, ${getAllPlaylistsTrackCount(playlistList)} tracks`} />
 
   if (playlistList && Object.keys(playlistList).length > 0) {
-    this.playlistItems = _.map(playlistList, playlist => {
+    this.playlistItems = _.map(_.sortBy(playlistList, 'dateAdded'), playlist => {
       const { name, id } = playlist;
       const url = `/playlist/${slugify(name)}/${id}`;
 
