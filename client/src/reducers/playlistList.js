@@ -13,10 +13,16 @@ import {
 } from '../constants/actionTypes';
 
 const playlistList = (state = {}, action) => {
+  const unixStamp = Moment().unix();
+
+  // add a timestamp to the track being added so we can sort the tracklist correctly when loaded
+  const track = _.get(action.payload, 'track');
+  const newTrack = track && Object.assign({}, track, { dateAdded: unixStamp });
+
   switch (action.type) {
     case ADD_PLAYLIST:
       const playlistId = v4();
-      const unixStamp = Moment().unix();
+
       return {
         ...state,
         [playlistId]: {
@@ -24,10 +30,10 @@ const playlistList = (state = {}, action) => {
           id: playlistId,
           tracks: {
             ...state.tracks,
-            [action.payload.track.id]: action.payload.track
+            [newTrack.id]: newTrack
           },
           listOfTracks: [
-            action.payload.track.id
+            newTrack.id
           ],
           dateAdded: unixStamp
         }
@@ -39,11 +45,11 @@ const playlistList = (state = {}, action) => {
           ...state[action.payload.playlist.id],
           tracks: {
             ...state[action.payload.playlist.id].tracks,
-            [action.payload.track.id]: action.payload.track
+            [newTrack.id]: newTrack
           },
           listOfTracks: [
             ...state[action.payload.playlist.id].listOfTracks || [],
-            action.payload.track.id
+            newTrack.id
           ]
         }
       }

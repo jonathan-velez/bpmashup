@@ -66,18 +66,21 @@ export const getNextTrack = (incrementBy = 1) => {
     return {};
   }
 
-  const orderedTracks = _.orderBy(tracks, 'position', 'asc');
+  // sort the tracks by date added if playlist or position of top tracks
+  const { metadata } = trackListing;
+  const orderTracksBy = metadata.pageType === 'playlist' ? 'dateAdded' : 'position';
+  const orderedTracks = _.sortBy(tracks, orderTracksBy);
+
+  // grab the index of the next track
   let nextTrackIndex = orderedTracks.findIndex(obj => obj.id === mediaPlayer.loadedTrack.id) + incrementBy;
 
+  // reset to first track if we reached the end
   if (nextTrackIndex >= orderedTracks.length || nextTrackIndex < 0) {
     nextTrackIndex = 0;
   }
 
+  // grab track object by new id
   let nextTrackObj = orderedTracks[nextTrackIndex];
-
-  if (nextTrackIndex <= 0 || orderedTracks.length === nextTrackIndex) {
-    nextTrackIndex = 0;
-  }
 
   scrollToTrack(nextTrackObj.id || 0);
 
