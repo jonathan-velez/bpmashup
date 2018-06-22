@@ -5,19 +5,17 @@ import { Icon } from 'semantic-ui-react';
 
 import * as actionCreators from '../actions/ActionCreators';
 
-class MutePlayer extends Component {
-  render() {
-    const { muted } = this.props.mediaPlayer;
-    return (
-      <Icon
-        link
-        fitted
-        name={muted ? 'mute' : 'unmute'}
-        onClick={this.props.toggleMute}
-        size='large'
-      />
-    );
-  }
+const MutePlayer = ({ mediaPlayer, toggleMute }) => {
+  const { muted } = mediaPlayer;
+  return (
+    <Icon
+      link
+      fitted
+      name={muted ? 'mute' : 'unmute'}
+      onClick={toggleMute}
+      size='large'
+    />
+  );
 }
 
 const mapStateToProps = state => {
