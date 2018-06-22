@@ -128,10 +128,9 @@ export const setDuration = duration => {
 }
 
 export const updateSuggestionInputValue = (e,d) => {
-  console.log(d)
   return {
     type: UPDATE_SUGGESTION_INPUT_VALUE,
-    value: d.newValue
+    payload: d.newValue
   }
 }
 
