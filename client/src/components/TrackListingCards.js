@@ -3,9 +3,7 @@ import _ from 'lodash';
 import { Card, Dimmer, Loader, Message, Header } from 'semantic-ui-react';
 import Track from './Track';
 
-const TrackListingCards = props => {
-  const { trackListing, isLoading } = props;
-
+const TrackListingCards = ({ trackListing, isLoading }) => {
   if (isLoading) {
     return (
       <Dimmer active>
@@ -15,15 +13,13 @@ const TrackListingCards = props => {
   }
 
   if (trackListing && Object.keys(trackListing).length > 0) {
-    // sort the tracklisting then map the array => tracks
-    // TODO: May not be the best place to do this. Research further.
-    const orderedTracks = _.orderBy(trackListing, 'position', 'asc');
+    const orderedTracks = _.sortBy(trackListing, 'position');
     this.trackListing = orderedTracks.map(track => {
       return (
         <Track track={track} key={track.id} />
       )
     });
-  }else {
+  } else {
     return (
       <Message warning>
         <Header size='huge'>Hey!</Header>
