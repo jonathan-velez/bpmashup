@@ -51,7 +51,6 @@ export const fetchTracks = (type = 'genre', id, name, page = 1, perPage = 20) =>
 }
 
 export const searchTracks = (searchTerm, page = 1, perPage = 20) => {
-  console.log(searchTerm);
   const request = Axios.get(`${API_SEARCH}?query=${searchTerm}&facets=fieldType:track&sortBy=publishDate+DESC&perPage=${perPage}&page=${page}`);
 
   return {
@@ -164,7 +163,6 @@ export const getYoutubeLink = searchString => {
 }
 
 export const loadYoutubeLink = youTubeLink => {
-  console.log(youTubeLink)
   return {
     type: LOAD_YOUTUBE_URL,
     payload: youTubeLink

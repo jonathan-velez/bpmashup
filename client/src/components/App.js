@@ -143,14 +143,9 @@ class App extends React.Component {
             playbackRate={playbackRate}
             volume={volume}
             muted={muted}
-            // onReady={() => console.log('onReady')}
-            onStart={() => console.log('onStart')}
             onPlay={this.props.play}
             onPause={this.props.pause}
-            onBuffer={() => console.log('onBuffer')}
-            // onSeek={e => console.log('onSeek', e)}
             onEnded={this.loadNextTrack}
-            onError={e => console.log('onError', e)}
             onProgress={this.props.updateTrackProgress}
             onDuration={this.props.setDuration}
           />
