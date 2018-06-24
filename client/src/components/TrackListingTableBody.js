@@ -55,7 +55,7 @@ const TrackListingTableBody = ({ trackListing, downloadedTracks }) => {
   return (
     <Transition.Group
       as={Table.Body}
-      animation='browse'
+      animation='fade'
       duration={400}
     >
       {trackListingBody}
