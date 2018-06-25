@@ -2,15 +2,18 @@ import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import Scroll from 'react-scroll';
+import _ from 'lodash';
+import { Dropdown } from 'semantic-ui-react';
 
 import * as actionCreators from '../actions/ActionCreators';
-import { deslugify } from '../utils/helpers';
+import { deslugify, musicalKeyFilter } from '../utils/helpers';
 import TrackListingCards from './TrackListingCards';
 import TracklistingHeader from './TracklistingHeader';
 import Pager from './Pager';
+import * as thunks from '../thunks';
 
 const DEFAULT_PAGE = 1;
-const DEFAULT_PER_PAGE = 20;
+const DEFAULT_PER_PAGE = 100;
 
 class TrackListingController extends React.Component {
   // TODO: Dry cdm and cwrp up. Maybe use the constructor
@@ -58,15 +61,74 @@ class TrackListingController extends React.Component {
     }
   }
 
+  filterKey = (e, { value }) => {
+    this.props.filterTracks({
+      filterBy: 'musicalKey',
+      filterValue: value
+    });
+  }
+
+  filterLabel = (e, { value }) => {
+    this.props.filterTracks({
+      filterBy: 'label',
+      filterValue: value
+    });
+  }
+
   render() {
     const { trackListing, isLoading, match } = this.props;
-    const { tracks, metadata } = trackListing;
+    const { tracks, filteredTracks, metadata } = trackListing;
     const { totalPages, page, perPage } = metadata;
     const { url, params } = match;
 
     const pageName = url.split('/')[1];
     let headerTitle = '';
     let headerPrefix = '';
+
+    const orderedTracks = _.sortBy(filteredTracks ? filteredTracks : tracks, 'position');
+
+    // const uniqueKeysArray = [];
+
+    // const uniqueKeys = [...new Set(orderedTracks.map(track => track.key && track.key.shortName))];
+
+    // uniqueKeys.forEach(key => {
+    //   const uniqueKeysObject = {};
+    //   uniqueKeysObject.shortName = key;
+    //   uniqueKeysObject.camelotName = musicalKeyFilter(key);
+    //   uniqueKeysObject.camelotNameNumber = +musicalKeyFilter(key).replace(/\D/g, '');
+    //   uniqueKeysObject.camelotNameLetter = musicalKeyFilter(key).replace(/\d+/g, '');
+
+    //   uniqueKeysArray.push(uniqueKeysObject);
+    // })
+
+    // const sortedFinal = _.orderBy(uniqueKeysArray, [
+    //   (key) => key.camelotNameNumber,
+    //   (key) => key.camelotNameLetter,
+    // ])
+
+    const musicalKeyItems = this.props.trackListing.listOfKeys && this.props.trackListing.listOfKeys.map((key, idx) => {
+      return (
+        <Dropdown.Item
+          key={idx}
+          value={key.shortName}
+          onClick={this.filterKey}
+        >
+          {key.camelotName}
+        </Dropdown.Item>
+      )
+    })
+
+    const labelsItems = this.props.trackListing.listOfLabels && this.props.trackListing.listOfLabels.map((label, idx) => {
+      return (
+        <Dropdown.Item
+          key={idx}
+          value={label}
+          onClick={this.filterLabel}
+        >
+          {label}
+        </Dropdown.Item>
+      )
+    })
 
     switch (pageName) {
       case 'search':
@@ -87,8 +149,27 @@ class TrackListingController extends React.Component {
 
     return (
       <React.Fragment>
+        <Dropdown
+          item
+          text="Key"
+        >
+          <Dropdown.Menu>
+            {musicalKeyItems}
+          </Dropdown.Menu>
+        </Dropdown>
+
+        <Dropdown
+          item
+          text="Label"
+        >
+          <Dropdown.Menu>
+            {labelsItems}
+          </Dropdown.Menu>
+        </Dropdown>
+
+
         <TracklistingHeader headerPrefix={headerPrefix} headerTitle={headerTitle} />
-        <TrackListingCards trackListing={tracks} isLoading={isLoading} />
+        <TrackListingCards trackListing={orderedTracks} isLoading={isLoading} />
         <Pager activePage={page} totalPages={totalPages} firstItem={null} lastItem={null} perPage={perPage || DEFAULT_PER_PAGE} />
       </React.Fragment>
     )
@@ -103,7 +184,7 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => {
-  return bindActionCreators(actionCreators, dispatch);
+  return bindActionCreators(Object.assign({}, actionCreators, thunks), dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(TrackListingController);
