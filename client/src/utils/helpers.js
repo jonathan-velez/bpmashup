@@ -84,7 +84,7 @@ export const musicalKeyFilter = (input, musical = false) => {
       21: "9B",
       20: "8B",
       22: "10B",
-      24: "12B",
+      24: "1B",
       27: "3B",
       28: "12A",
       29: "5B",
