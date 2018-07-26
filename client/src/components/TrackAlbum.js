@@ -4,8 +4,8 @@ import { connect } from 'react-redux';
 
 import * as actionCreators from '../actions/ActionCreators';
 import { Dimmer, Icon, Image } from 'semantic-ui-react';
-
 import * as thunks from '../thunks';
+
 class TrackAlbum extends React.Component {
   state = {
     active: false
@@ -26,7 +26,6 @@ class TrackAlbum extends React.Component {
         dimmed={active}
         onMouseEnter={this.handleShow}
         onMouseLeave={this.handleHide}
-        // onClick={isLoaded ? () => playPause() : () => loadTrack(track)}
         onClick={isLoaded ? () => playPause() : () => loadTrackThunk(track)}
       >
         <Dimmer active={active}>

@@ -32,14 +32,10 @@ class App extends React.Component {
         case 'b':
           if (loadedTrack.id) this.loadNextTrack(-1);
           break;
-        // case 'c':
-        //   if (loadedTrack.id) this.addTrackToCrate(loadedTrack.id, true);
-        //   break;
         case 'd':
           if (loadedTrack.id) downloadTrack(loadedTrack);
           break;
         case 'f':
-          // get and load youtube link
           this.props.startAsync();
           this.props.getYoutubeLink(`${loadedTrack.artists[0].name} ${loadedTrack.title}`);
           break;
@@ -47,25 +43,21 @@ class App extends React.Component {
           if (loadedTrack.id) this.props.toggleMute();
           break;
         case 'ArrowRight':
-          // fast forward 5 seconds
           if (loadedTrack.id) {
             this.fastForward(5);
           }
           break;
         case 'ArrowLeft':
-          // rewind 5 seconds
           if (loadedTrack.id) {
             this.fastForward(-5);
           }
           break;
         case '=':
-          // Turn it up!
           if (loadedTrack.id) {
             this.changeVolume(.15);
           }
           break;
         case '-':
-          // Turn it down!
           if (loadedTrack.id) {
             this.changeVolume(-.15);
           }
@@ -75,10 +67,6 @@ class App extends React.Component {
       }
 
     }, 200), null);
-  }
-
-  componentWillUnmount() {
-    // window.removeEventListener('keydown');
   }
 
   ref = player => {
@@ -143,14 +131,9 @@ class App extends React.Component {
             playbackRate={playbackRate}
             volume={volume}
             muted={muted}
-            // onReady={() => console.log('onReady')}
-            onStart={() => console.log('onStart')}
             onPlay={this.props.play}
             onPause={this.props.pause}
-            onBuffer={() => console.log('onBuffer')}
-            // onSeek={e => console.log('onSeek', e)}
             onEnded={this.loadNextTrack}
-            onError={e => console.log('onError', e)}
             onProgress={this.props.updateTrackProgress}
             onDuration={this.props.setDuration}
           />

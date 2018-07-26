@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import {
   UPDATE_SUGGESTION_INPUT_VALUE,
   CLEAR_SUGGESTIONS,
@@ -10,11 +11,14 @@ const defaultState = {
 };
 
 const autoSuggest = (state = defaultState, action) => {
+  if (!_.get(action, 'payload') || action.error){
+    return state;
+  }
   switch (action.type) {
     case UPDATE_SUGGESTION_INPUT_VALUE:    
       return {
         ...state,
-        value: action.value
+        value: action.payload
       }
     case CLEAR_SUGGESTIONS:
       return {

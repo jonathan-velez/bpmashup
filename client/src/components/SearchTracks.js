@@ -41,6 +41,7 @@ const SearchTracks = ({ updateSuggestionInputValue, clearSuggestions, loadSugges
         getSuggestionValue={getSuggestionValue}
         renderSuggestion={renderSuggestion}
         inputProps={inputProps}
+        highlightFirstSuggestion
       />
     </Form>
   );
