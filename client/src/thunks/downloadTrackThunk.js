@@ -24,11 +24,3 @@ export const downloadTrack = payload => {
     setFirebase(getState(), payload);
   }
 }
-
-export const loadDownloadedTracks = () => {
-  return (dispatch, getState) => {
-    dispatch({
-      type: LOAD_DOWNLOADED_TRACKS
-    })
-  }
-}
