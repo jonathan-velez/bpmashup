@@ -5,7 +5,7 @@ import { Card, Label } from 'semantic-ui-react';
 import AddToPlaylist from './AddToPlaylist';
 import TrackAlbum from './TrackAlbum';
 import DownloadTrack from './DownloadTrack';
-import LoveTrackButton from './LoveTrackButton';
+import LoveTrack from './LoveTrack';
 import { constructLinks, trackGenreColors } from '../utils/trackUtils';
 import { musicalKeyFilter } from '../utils/helpers';
 
@@ -48,7 +48,7 @@ class Track extends React.Component {
         <Card.Content extra>
           <div className='ui three buttons'>
             <DownloadTrack track={track} />
-            <LoveTrackButton track={track} />
+            <LoveTrack track={track} />
             <AddToPlaylist track={track} />
           </div>
         </Card.Content>

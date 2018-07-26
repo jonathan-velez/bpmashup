@@ -6,11 +6,12 @@ import { reactReduxFirebase } from 'react-redux-firebase';
 import firebase from 'firebase';
 import thunk from 'redux-thunk';
 import logger from 'redux-logger'
+import _ from 'lodash';
 
 import rootReducer from './reducers/index';
 import { loadStorage, setStorage } from './localStorage';
 import { activityLogger } from './middleware';
-import { LOAD_PLAYLISTS, LOAD_DOWNLOADED_TRACKS } from './constants/actionTypes';
+import { LOAD_PLAYLISTS, LOAD_DOWNLOADED_TRACKS, LOAD_LOVED_TRACKS } from './constants/actionTypes';
 
 const persistedStorage = loadStorage();
 
@@ -58,8 +59,8 @@ store.firebaseAuthIsReady.then((user) => {
     }
   });
 
+  // load downloaded tracks into Redux
   const downloadsRef = db.ref(`users/${uid}/downloads`);
-
   downloadsRef.once('value').then(snapshot => {
     const downloads = snapshot.val();
 
@@ -69,7 +70,23 @@ store.firebaseAuthIsReady.then((user) => {
         payload: Object.keys(downloads),
       });
     }
+  });
+
+  // load loved tracks into Redux, filter out previously loved tracks - <trackId>: 0;
+  const lovedTracksRef = db.ref(`users/${uid}/lovedTracks`);
+  lovedTracksRef.once('value').then(snapshot => {
+    const lovedTracksObject = snapshot.val();
+
+    if (lovedTracksObject) {
+      const lovedTracks = _.pickBy(lovedTracksObject, (trackObject) => trackObject === 1);
+
+      store.dispatch({
+        type: LOAD_LOVED_TRACKS,
+        payload: Object.keys(lovedTracks)
+      })
+    }
   })
+
 })
 
 export const history = syncHistoryWithStore(createBrowserHistory(), store);
