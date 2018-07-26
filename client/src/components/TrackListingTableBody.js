@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
-import { Table, Transition, Dropdown } from 'semantic-ui-react';
+import { Table, Transition } from 'semantic-ui-react';
 import { Link, withRouter } from 'react-router-dom';
 
 import TrackAlbum from './TrackAlbum';
