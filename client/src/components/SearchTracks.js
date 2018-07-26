@@ -8,46 +8,42 @@ import * as actionCreators from '../actions/ActionCreators';
 import { Form } from 'semantic-ui-react';
 import { slugify } from '../utils/helpers';
 
-class SearchTracks extends Component {
-  handleFormSubmit = () => {    
-    const sluggedString = slugify(this.props.autoSuggest.value);
-    this.props.history.push(`/search/${sluggedString}`);
+const SearchTracks = ({ updateSuggestionInputValue, clearSuggestions, loadSuggestions, autoSuggest, history }) => {
+  const handleFormSubmit = () => {
+    const sluggedString = slugify(autoSuggest.value);
+    history.push(`/search/${sluggedString}`);
   }
 
-  getSuggestionValue = (suggestion) => {
+  const getSuggestionValue = (suggestion) => {
     return suggestion.name;
   }
 
-  renderSuggestion = (suggestion) => {
+  const renderSuggestion = (suggestion) => {
     return (
       <span>{suggestion.name}</span>
     );
   }
 
-  render() {
-    const { updateSuggestionInputValue, clearSuggestions, loadSuggestions } = this.props;
-    const { value = '', suggestions } = this.props.autoSuggest;    
+  const { value = '', suggestions } = autoSuggest;
 
-    const inputProps = {
-      placeholder: "Search...",
-      value,
-      onChange: updateSuggestionInputValue
-    };
+  const inputProps = {
+    placeholder: "Search...",
+    value,
+    onChange: updateSuggestionInputValue
+  };
 
-    return (
-      <Form onSubmit={this.handleFormSubmit}>
-        <Autosuggest
-          suggestions={suggestions}
-          onSuggestionsFetchRequested={loadSuggestions}
-          onSuggestionsClearRequested={clearSuggestions}
-          getSuggestionValue={this.getSuggestionValue}
-          renderSuggestion={this.renderSuggestion}
-          inputProps={inputProps}
-          highlightFirstSuggestion          
-        />
-      </Form>
-    );
-  }
+  return (
+    <Form onSubmit={handleFormSubmit}>
+      <Autosuggest
+        suggestions={suggestions}
+        onSuggestionsFetchRequested={loadSuggestions}
+        onSuggestionsClearRequested={clearSuggestions}
+        getSuggestionValue={getSuggestionValue}
+        renderSuggestion={renderSuggestion}
+        inputProps={inputProps}
+      />
+    </Form>
+  );
 }
 
 const mapStateToProps = state => {
