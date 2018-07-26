@@ -36,7 +36,7 @@ class TrackAlbum extends React.Component {
             size={iconSize}
           />
         </Dimmer>
-        <Image src={imageUrl} circular size={imageSize} className={isLoaded ? 'flex-card active-track' : 'flex-card'} />
+        <Image src={imageUrl} size={imageSize} className={isLoaded ? 'flex-card active-track' : 'flex-card'} />
       </Dimmer.Dimmable>
     )
   }
