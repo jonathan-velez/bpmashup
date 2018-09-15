@@ -1,34 +1,53 @@
-//Zippy-scrape.js
-const request = require('request');
 const cheerio = require('cheerio');
+const axios = require('axios');
+const _eval = require('eval');
 
-exports.zippyScrape = (req, res) => {
+// Google track name on zippyshare.com
+// Scrape search results, grab first result
+// Open zippyshare page, scrape for the JS that creates the download button href
+// use eval to execute script and finally compile the full href before returning
+// TODO: Clean this shit up! Handle failures, don't blindly take first google result
+
+async function scrape(req, res) {
   let searchString = req.query.searchString;
 
-  if (!searchString){
+  if (!searchString) {
     res.json({ href: '' });
     return;
-  } 
+  }
 
-  const urlScrape = `https://www.google.com/search?q=${searchString}%20+site:zippyshare.com`;  
+  const urlScrape = `https://www.google.com/search?q=${searchString}%20+site:zippyshare.com`;
 
-  request(urlScrape, (error, response, html) => {
-    let href = '';
+  const googleCall = await axios.get(urlScrape);
 
-    if (error){
-      res.json({ href });
-      return;
-    } 
+  const $ = cheerio.load(googleCall.data);
 
-    // target first search result
-    let $ = cheerio.load(html);
-    href = ($($('.r a')[0]).attr('href'));
-    if (href) {
-      href = href.substring(7);
-      href = href.substring(0, href.indexOf('&'));
-      res.json({ href });
-    }else{
-      res.json('');
-    }
-  });
+  let zippyLink = ($($('.r a')[0]).attr('href'));
+
+  let downloadLink = '';
+
+  if (zippyLink) {
+    zippyLink = zippyLink.substring(7);
+    zippyLink = zippyLink.substring(0, zippyLink.indexOf('&'));
+
+    let zippyCall = await axios.get(zippyLink);
+
+    const $ = cheerio.load(zippyCall.data);
+
+    $('script').get().forEach((val, idx) => {
+      if (val.children.length > 0 && idx === 7) {
+        const scriptData = val.children[0].data;
+
+        let mp3Link = scriptData.substring(scriptData.indexOf('document.getElementById(\'dlbutton\').href = ') + 43, scriptData.indexOf(';'));
+
+        mp3Link = _eval('module.exports = ' + mp3Link);
+
+        downloadLink = zippyLink.substr(0, zippyLink.indexOf('.com/') + 4) + mp3Link;
+      }
+    });
+  }
+
+  res.json({ href: downloadLink });
 }
+
+exports.zippyScrape = scrape;
