@@ -41,8 +41,8 @@ export const startAsync = () => {
   }
 }
 
-export const fetchTracks = (type = 'genre', id, name, page = 1, perPage = 20) => {
-  const request = Axios.get(`${API_MOST_POPULAR}/${type}?s=${name}&id=${id}&page=${page}&perPage=${perPage}`);
+export const fetchTracks = (type = 'genre', id, name, page = 1, perPage = 20, endPoint = API_MOST_POPULAR) => {
+  const request = Axios.get(`${endPoint}/${type}?s=${name}&id=${id}&page=${page}&perPage=${perPage}`);
 
   return {
     type: FETCH_TRACKS,
