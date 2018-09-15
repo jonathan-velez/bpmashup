@@ -16,7 +16,9 @@ const track = [
   'images',
   'dynamicImages',
   'sampleSecureUrl',
-  'position'
+  'position',
+  'preview',
+  'lengthMs'
 ];
 
 exports.track = track;
