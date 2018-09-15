@@ -42,7 +42,7 @@ const apiConfig = {
       }
     ]
   },
-  'autocomplete' : {
+  'autocomplete': {
     model: null,
     params: [
       {
@@ -57,7 +57,7 @@ const apiConfig = {
       }
     ]
   },
-  'genres' : {
+  'genres': {
     model: null,
     params: [
       {
@@ -305,6 +305,57 @@ const apiConfig = {
         name: 'perPage',
         dataType: 'int',
         required: false
+      }
+    ]
+  },
+  'tracks': {
+    model: bpAPIModels.track,
+    params: [
+      {
+        name: 'id',
+        dataType: 'int',
+        required: true
+      },
+      {
+        name: 'ids',
+        dataType: 'string',
+        required: false
+      },
+      {
+        name: 'facets',
+        dataType: 'string',
+        required: false
+      },
+      {
+        name: 'returnFacets',
+        dataType: 'string',
+        required: false
+      },
+      {
+        name: 'page',
+        dataType: 'int',
+        required: false
+      },
+      {
+        name: 'perPage',
+        dataType: 'int',
+        required: false
+      },
+      {
+        name: 'chartId',
+        dataType: 'int',
+        required: false
+      },
+      {
+        name: 'releaseId',
+        dataType: 'int',
+        required: false
+      },
+      {
+        name: 'sortBy',
+        dataType: 'string',
+        required: false,
+        allowedValues: ['genreName ASC', 'genreName DESC', 'labelName ASC', 'labelName DESC', 'publishDate ASC', 'publishDate DESC', 'releaseDate ASC', 'releaseDate DESC', 'releaseId ASC', 'releaseId DESC', 'trackId ASC', 'trackId DESC', 'trackName ASC', 'trackName DESC']
       }
     ]
   }
