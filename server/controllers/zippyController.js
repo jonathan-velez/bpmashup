@@ -35,14 +35,20 @@ async function scrape(req, res) {
     const $ = cheerio.load(zippyCall.data);
 
     $('script').get().forEach((val, idx) => {
-      if (val.children.length > 0 && idx === 7) {
+      const scriptData = val.children.length > 0 && val.children[0].data;
+
+      if (val.children.length > 0 && scriptData.includes('dlbutton')) {
         const scriptData = val.children[0].data;
 
-        let mp3Link = scriptData.substring(scriptData.indexOf('document.getElementById(\'dlbutton\').href = ') + 43, scriptData.indexOf(';'));
+        try {
+          let mp3Link = scriptData.substring(scriptData.indexOf('document.getElementById(\'dlbutton\').href = ') + 43, scriptData.indexOf(';'));
 
-        mp3Link = _eval('module.exports = ' + mp3Link);
+          mp3Link = _eval('module.exports = ' + mp3Link);
 
-        downloadLink = zippyLink.substr(0, zippyLink.indexOf('.com/') + 4) + mp3Link;
+          downloadLink = zippyLink.substr(0, zippyLink.indexOf('.com/') + 4) + mp3Link;
+        } catch (error) {
+          console.log('Error extracting mp3 link from zippyshare', error, 'scriptData', scriptData, 'zippyLink', zippyLink);
+        }
       }
     });
   }
