@@ -5,11 +5,15 @@ const defaultState = {
 }
 
 const openModal = (state = defaultState, action) => {
+  const { payload } = action;
+
   switch (action.type) {
     case OPEN_MODAL:
       return {
         ...state,
-        open: action.payload
+        open: payload.open,
+        title: payload.title,
+        body: payload.body,
       }
     default:
       return state;

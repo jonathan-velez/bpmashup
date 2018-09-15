@@ -32,7 +32,8 @@ import {
   LOAD_TRACKS,
   OPEN_CONFIRM,
   RESET_CONFIRM,
-  SET_CONFIRM
+  SET_CONFIRM,
+  OPEN_MODAL
 } from '../constants/actionTypes';
 
 export const startAsync = () => {
@@ -209,5 +210,12 @@ export const fetchTracksSimilar = (trackId, page = 1, perPage = 20) => {
   return {
     type: SEARCH_TRACKS,
     payload: request
+  }
+}
+
+export const openModalWindow = payload => {
+  return {
+    type: OPEN_MODAL,
+    payload
   }
 }

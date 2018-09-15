@@ -25,28 +25,29 @@ export const constructLinks = (listItem, type) => {
 }
 
 export const downloadTrack = track => {
-  if (typeof track === 'object') {
-    let strSearch = '';
+  return new Promise((resolve, reject) => {
+    if (typeof track === 'object') {
+      let strSearch = '';
 
-    strSearch = `${track.artists[0].name} ${track.title}`;
+      strSearch = `${track.artists[0].name} ${track.title}`;
 
-    store.dispatch(thunks.downloadTrack(track.id.toString()));
+      store.dispatch(thunks.downloadTrack(track.id.toString()));
 
-    Axios.get(`/api/download-track?searchString=${strSearch}`)
-      .then(res => {
-        if (res.data.href) {
-          window.open(res.data.href, '_blank');
-        } else {
-          // TODO: handle this shit and display a message
-          console.log('not able to find a track to download');
-        }
-      })
-      .catch(error => {
-        console.log('error downloading track', error);
-      });
-  } else {
-    console.log('no track to download');
-  }
+      Axios.get(`/api/download-track?searchString=${strSearch}`)
+        .then(res => {
+          if (res.data.href) {
+            resolve(res.data.href);
+          } else {
+            reject(null);
+          }
+        })
+        .catch(error => {
+          reject(null);
+        });
+    } else {
+      reject(null);
+    }
+  })
 }
 
 export const scrollToTrack = (trackId) => {

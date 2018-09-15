@@ -114,11 +114,17 @@ class App extends React.Component {
   }
 
   render() {
-    const { loadedUrl, playing, volume, muted, loop, playbackRate } = this.props.mediaPlayer;
+    const { openModal, mediaPlayer, openModalWindow, play, pause, updateTrackProgress, setDuration } = this.props;
+    const { loadedUrl, playing, volume, muted, loop, playbackRate } = mediaPlayer;
     return (
       <Router>
         <React.Fragment>
-          <ModalView open={this.props.openModal.open} modalContent='soomemoe' modalHeader='xxxx' />
+          <ModalView
+            open={openModal.open}
+            modalContent={openModal.body}
+            modalHeader={openModal.title}
+            handleClose={() => openModalWindow(false)}
+          />
           <ConfirmController />
           <ReactPlayer
             ref={this.ref}
@@ -131,11 +137,11 @@ class App extends React.Component {
             playbackRate={playbackRate}
             volume={volume}
             muted={muted}
-            onPlay={this.props.play}
-            onPause={this.props.pause}
+            onPlay={play}
+            onPause={pause}
             onEnded={this.loadNextTrack}
-            onProgress={this.props.updateTrackProgress}
-            onDuration={this.props.setDuration}
+            onProgress={updateTrackProgress}
+            onDuration={setDuration}
           />
           <Navigation />
           <Main />
