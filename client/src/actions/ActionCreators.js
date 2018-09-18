@@ -33,12 +33,19 @@ import {
   OPEN_CONFIRM,
   RESET_CONFIRM,
   SET_CONFIRM,
-  OPEN_MODAL
+  OPEN_MODAL,
+  STOP_ASYNC
 } from '../constants/actionTypes';
 
 export const startAsync = () => {
   return {
     type: START_ASYNC
+  }
+}
+
+export const stopAsync = () => {
+  return {
+    type: STOP_ASYNC
   }
 }
 

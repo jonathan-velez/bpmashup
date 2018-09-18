@@ -126,6 +126,7 @@ class App extends React.Component {
             open={openModal.open}
             modalContent={openModal.body}
             modalHeader={openModal.title}
+            headerIcon={openModal.headerIcon}
             handleClose={() => openModalWindow(false)}
           />
           <ConfirmController />

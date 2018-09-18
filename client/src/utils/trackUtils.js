@@ -25,29 +25,45 @@ export const constructLinks = (listItem, type) => {
 }
 
 export const downloadTrack = track => {
-  return new Promise((resolve, reject) => {
-    if (typeof track === 'object') {
-      let strSearch = '';
 
-      strSearch = `${track.artists[0].name} ${track.title}`;
+  const handleNoDownload = () => {
+    store.dispatch(actionCreators.stopAsync());
 
-      store.dispatch(thunks.downloadTrack(track.id.toString()));
+    store.dispatch(actionCreators.openModalWindow({
+      open: true,
+      title: 'Sorry!',
+      body: 'No download link found.',
+      headerIcon: 'exclamation',
+    }));
+  }
 
-      Axios.get(`/api/download-track?searchString=${strSearch}`)
-        .then(res => {
-          if (res.data.href) {
-            resolve(res.data.href);
-          } else {
-            reject(null);
-          }
-        })
-        .catch(error => {
-          reject(null);
-        });
-    } else {
-      reject(null);
-    }
-  })
+  if (typeof track === 'object') {
+    let strSearch = '';
+
+    strSearch = `${track.artists[0].name} ${track.title}`;
+
+    store.dispatch(actionCreators.startAsync());
+
+    store.dispatch(thunks.downloadTrack(track.id.toString()));
+
+    Axios.get(`/api/download-track?searchString=${strSearch}`)
+      .then(res => {
+        store.dispatch(actionCreators.stopAsync());
+        if (res.data.href) {
+          const downloadWindow = window.open('/downloadLink.html', '_blank');
+
+          downloadWindow.location = res.data.href;
+
+        } else {
+          handleNoDownload();
+        }
+      })
+      .catch(error => {
+        handleNoDownload();
+      });
+  } else {
+    handleNoDownload();
+  }
 }
 
 export const scrollToTrack = (trackId) => {
