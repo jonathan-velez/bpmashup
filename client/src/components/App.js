@@ -4,11 +4,11 @@ import { connect } from 'react-redux';
 import { BrowserRouter as Router } from 'react-router-dom';
 import _ from 'lodash';
 import ReactPlayer from 'react-player';
+import { Dimmer, Loader } from 'semantic-ui-react';
 
 import { downloadTrack } from '../utils/trackUtils';
 import * as actionCreators from '../actions/ActionCreators';
 import { getNextTrack } from '../utils/trackUtils';
-
 import Navigation from './Navigation';
 import Main from './Main';
 import Footer from './Footer';
@@ -114,11 +114,14 @@ class App extends React.Component {
   }
 
   render() {
-    const { openModal, mediaPlayer, openModalWindow, play, pause, updateTrackProgress, setDuration } = this.props;
+    const { openModal, mediaPlayer, openModalWindow, play, pause, updateTrackProgress, setDuration, isLoading } = this.props;
     const { loadedUrl, playing, volume, muted, loop, playbackRate } = mediaPlayer;
     return (
       <Router>
         <React.Fragment>
+          <Dimmer active={isLoading}>
+            <Loader content='Loading' />
+          </Dimmer>
           <ModalView
             open={openModal.open}
             modalContent={openModal.body}
@@ -157,6 +160,7 @@ const mapStateToProps = state => {
     trackListing: state.trackListing,
     mediaPlayer: state.mediaPlayer,
     openModal: state.openModal,
+    isLoading: state.isLoading,
   }
 }
 

@@ -1,17 +1,9 @@
 import React from 'react';
 import _ from 'lodash';
-import { Card, Dimmer, Loader, Message, Header } from 'semantic-ui-react';
+import { Card, Message, Header } from 'semantic-ui-react';
 import Track from './Track';
 
-const TrackListingCards = ({ trackListing, isLoading }) => {
-  if (isLoading) {
-    return (
-      <Dimmer active>
-        <Loader content='Loading' />
-      </Dimmer>
-    )
-  }
-
+const TrackListingCards = ({ trackListing }) => {
   if (trackListing && Object.keys(trackListing).length > 0) {
     const orderedTracks = _.sortBy(trackListing, 'position');
     this.trackListing = orderedTracks.map(track => {
