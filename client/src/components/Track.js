@@ -36,7 +36,7 @@ class Track extends React.Component {
           track={track}
         />
         <Card.Content>
-          {track.position && <Label attached='top left' color='grey'>{track.position}</Label>}
+          {track.position && <Label attached='top left' color='grey' ribbon>{track.position}</Label>}
           <Card.Header>{track.title}</Card.Header>
           <Card.Content>{constructLinks(track.artists, 'artist')}</Card.Content>
           <Card.Content><Link to={`/most-popular/label/${track.label.slug}/${track.label.id}`}>[{track.label.name}]</Link></Card.Content>
