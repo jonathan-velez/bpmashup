@@ -38,9 +38,7 @@ export const downloadTrack = track => {
   }
 
   if (typeof track === 'object') {
-    let strSearch = '';
-
-    strSearch = `${track.artists[0].name} ${track.title}`;
+    const strSearch = `${track.artists[0].name} ${track.title}`;
 
     store.dispatch(actionCreators.startAsync());
 
