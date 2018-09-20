@@ -13,7 +13,7 @@ const lovedTracks = (state = [], action) => {
         return [...state, trackId];
       }
 
-      return state.filter(trackId => trackId !== +trackId);
+      return state.filter(tId => tId !== trackId);
     case LOAD_LOVED_TRACKS:
       const { payload: newTracks = [] } = action;
       return [...new Set(state.concat(newTracks))];
