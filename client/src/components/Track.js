@@ -48,7 +48,7 @@ class Track extends React.Component {
         <Card.Content extra>
           <div className='ui three buttons'>
             <DownloadTrack track={track} />
-            <LoveTrack track={track} />
+            <LoveTrack item={track} type='track' />
             <AddToPlaylist track={track} />
           </div>
         </Card.Content>
