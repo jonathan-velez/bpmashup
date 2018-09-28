@@ -28,6 +28,7 @@ app.get(`${constants.API_BASE_URL}/autocomplete`, bpController.callApi);
 app.get(`${constants.API_BASE_URL}/artists/detail`, bpController.callApi);
 app.get(`${constants.API_BASE_URL}/tracks`, bpController.callApi);
 app.get(`${constants.API_BASE_URL}/tracks/similar`, bpController.callApi);
+app.get(`${constants.API_BASE_URL}/labels`, bpController.callApi);
 app.get(`${constants.API_BASE_URL}/download-track`, zippyController.zippyScrape);
 app.get(`${constants.API_BASE_URL}/youtube/search`, ytController.Youtube);
 

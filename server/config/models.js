@@ -21,4 +21,19 @@ const track = [
   'lengthMs'
 ];
 
+const label = [
+  'id',
+  'type',
+  'name',
+  'slug',
+  'lastPublishDate',
+  'biography',
+  'genres',
+  'subGenres',
+  'images',
+  'dynamicImages'
+]
+
 exports.track = track;
+
+exports.label = label;

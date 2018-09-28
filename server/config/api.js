@@ -358,6 +358,47 @@ const apiConfig = {
         allowedValues: ['genreName ASC', 'genreName DESC', 'labelName ASC', 'labelName DESC', 'publishDate ASC', 'publishDate DESC', 'releaseDate ASC', 'releaseDate DESC', 'releaseId ASC', 'releaseId DESC', 'trackId ASC', 'trackId DESC', 'trackName ASC', 'trackName DESC']
       }
     ]
+  },
+  'labels': {
+    model: bpAPIModels.label,
+    params: [
+      {
+        name: 'id',
+        dataType: 'int',
+        required: false
+      },
+      {
+        name: 'ids',
+        dataType: 'string',
+        required: false
+      },
+      {
+        name: 'facets',
+        dataType: 'string',
+        required: false
+      },
+      {
+        name: 'returnFacets',
+        dataType: 'string',
+        required: false
+      },
+      {
+        name: 'page',
+        dataType: 'int',
+        required: false
+      },
+      {
+        name: 'perPage',
+        dataType: 'int',
+        required: false
+      },
+      {
+        name: 'sortBy',
+        dataType: 'string',
+        required: false,
+        allowedValues: ['publishDate ASC', 'publishDate DESC']
+      }
+    ]
   }
 }
 
