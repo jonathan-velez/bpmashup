@@ -13,6 +13,8 @@ import autoSuggest from './autoSuggest';
 import confirmModal from './confirmModal';
 import downloadedTracks from './downloadedTracks';
 import lovedTracks from './lovedTracks';
+import lovedArtists from './lovedArtists';
+import lovedLabels from './lovedLabels';
 
 const rootReducer = combineReducers({
   trackListing,
@@ -25,6 +27,8 @@ const rootReducer = combineReducers({
   confirmModal,
   downloadedTracks,
   lovedTracks,
+  lovedArtists,
+  lovedLabels,
   firebaseState: firebaseReducer,
   routing: routerReducer,
 });

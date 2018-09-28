@@ -67,6 +67,8 @@ class TrackListingController extends React.Component {
     const pageName = url.split('/')[1];
     let headerTitle = '';
     let headerPrefix = '';
+    const headerType = params.type;
+    const headerId = params.searchId;
 
     switch (pageName) {
       case 'search':
@@ -87,7 +89,12 @@ class TrackListingController extends React.Component {
 
     return (
       <React.Fragment>
-        <TracklistingHeader headerPrefix={headerPrefix} headerTitle={headerTitle} />
+        <TracklistingHeader
+          headerPrefix={headerPrefix}
+          headerTitle={headerTitle}
+          headerId={headerId}
+          headerType={headerType}
+        />
         <TrackListingCards trackListing={tracks} isLoading={isLoading} />
         <Pager activePage={page} totalPages={totalPages} firstItem={null} lastItem={null} perPage={perPage || DEFAULT_PER_PAGE} />
       </React.Fragment>

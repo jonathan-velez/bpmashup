@@ -11,7 +11,7 @@ import _ from 'lodash';
 import rootReducer from './reducers/index';
 import { loadStorage, setStorage } from './localStorage';
 import { activityLogger } from './middleware';
-import { LOAD_PLAYLISTS, LOAD_DOWNLOADED_TRACKS, LOAD_LOVED_TRACKS } from './constants/actionTypes';
+import { LOAD_PLAYLISTS, LOAD_DOWNLOADED_TRACKS, LOAD_LOVED_TRACKS, LOAD_LOVED_ARTISTS, LOAD_LOVED_LABELS } from './constants/actionTypes';
 
 const persistedStorage = loadStorage();
 
@@ -72,17 +72,47 @@ store.firebaseAuthIsReady.then((user) => {
     }
   });
 
-  // load loved tracks into Redux, filter out previously loved tracks - <trackId>: 0;
+  // load loved tracks into Redux, filter out previously loved tracks
   const lovedTracksRef = db.ref(`users/${uid}/lovedTracks`);
   lovedTracksRef.once('value').then(snapshot => {
     const lovedTracksObject = snapshot.val();
 
     if (lovedTracksObject) {
-      const lovedTracks = _.pickBy(lovedTracksObject, (trackObject) => trackObject === 1);
+      const lovedTracks = _.pickBy(lovedTracksObject, (obj) => obj === 1);
 
       store.dispatch({
         type: LOAD_LOVED_TRACKS,
         payload: Object.keys(lovedTracks)
+      })
+    }
+  })
+
+  // load loved artists into Redux, filter out previously loved artists
+  const lovedArtistsRef = db.ref(`users/${uid}/lovedArtists`);
+  lovedArtistsRef.once('value').then(snapshot => {
+    const lovedArtistsObject = snapshot.val();
+
+    if (lovedArtistsObject) {
+      const lovedArtists = _.pickBy(lovedArtistsObject, (obj) => obj === 1);
+
+      store.dispatch({
+        type: LOAD_LOVED_ARTISTS,
+        payload: Object.keys(lovedArtists)
+      })
+    }
+  })
+
+  // load loved labels into Redux, filter out previously loved labels
+  const lovedLabelsRef = db.ref(`users/${uid}/lovedLabels`);
+  lovedLabelsRef.once('value').then(snapshot => {
+    const lovedLabelsObject = snapshot.val();
+
+    if (lovedLabelsObject) {
+      const lovedLabels = _.pickBy(lovedLabelsObject, (obj) => obj === 1);
+
+      store.dispatch({
+        type: LOAD_LOVED_LABELS,
+        payload: Object.keys(lovedLabels)
       })
     }
   })
