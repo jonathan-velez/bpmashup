@@ -5,6 +5,7 @@ import { Container } from 'semantic-ui-react';
 import TrackListingController from './TrackListingController';
 import PlaylistController from './PlaylistController';
 import About from './About';
+import MyLovedLabels from './MyLovedLabels';
 
 const Main = () => {
   const containerStyle = {
@@ -15,6 +16,7 @@ const Main = () => {
     <Container style={containerStyle} textAlign='center'>
       <Switch>
         <Route exact path='/about' component={About} />
+        <Route exact path='/my-loves' component={MyLovedLabels} />
         <Route exact path="/most-popular/:type/:searchString/:searchId" component={TrackListingController} />
         <Route exact path="/similar-tracks/:trackName/:trackId" component={TrackListingController} />
         <Route exact path="/playlist/:playlistName/:playlistId" component={PlaylistController} />
