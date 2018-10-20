@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import { Popup, Grid, Icon, Menu } from 'semantic-ui-react';
 import _ from 'lodash';
 
+import { transposeArray } from '../utils/helpers';
+
 class GenreList extends React.Component {
   state = {
     popupOpen: false,
@@ -19,42 +21,67 @@ class GenreList extends React.Component {
 
   render() {
     const { genres } = this.props;
-    let gridList = '';
+    const { popupOpen, numOfColumns } = this.state;
+    let gridList = null;
 
     if (Array.isArray(genres) && genres.length > 0) {
-      const genreChunked = _.chunk(genres, this.state.numOfColumns);
+      const transposedGenres = transposeArray(genres, 3);
 
-      gridList = genreChunked.map((chunk, idx) => {
+      let rowLength = null;
+
+      gridList = _.map(transposedGenres, (genreRow, idx) => {
+        if (idx == 0) {
+          rowLength = genreRow.length;
+        }
+
+        let columnsMade = 0;
+
         return (
-          <Grid.Row className='genre-row' key={idx} columns={chunk.length}>
-            {chunk.map(genre => {              
+          <Grid.Row className='genre-row' columns={rowLength}>
+            {genreRow.map(genre => {
               const { name, id, slug } = genre;
               const genreUrl = `/most-popular/genre/${slug}/${id}/`;
+              columnsMade++;
 
               return (
-                <Grid.Column key={id}><Link to={genreUrl} onClick={this.closePopup}>{name}</Link></Grid.Column>
+                <Grid.Column
+                  key={id}
+                  as={Link}
+                  to={genreUrl}
+                  onClick={this.closePopup}
+                  textAlign='center'
+                  verticalAlign='middle'
+                >
+                  {name.toUpperCase()}
+                </Grid.Column>
               )
-            })}
+            }
+          )}
+            {// if there's an extra column to fill, fill it with a blank for alignment
+            columnsMade != rowLength ? 
+            <Grid.Column as="a">&nbsp;</Grid.Column> : null}
           </Grid.Row>
         )
-      })
+      }
+      );
     }
 
     return (
       <React.Fragment>
-        <Popup          
+        <Popup
           trigger={<Menu.Item>Genres<Icon name='dropdown' /></Menu.Item>}
           position='bottom center'
           wide='very'
           on='click'
-          open={this.state.popupOpen}
+          open={popupOpen}
           onClose={this.closePopup}
           onOpen={this.openPopup}
           hideOnScroll
+          inverted={false}
         >
           <Grid
             centered
-            columns={this.state.numOfColumns}
+            columns={genres.length % numOfColumns > 0 ? numOfColumns + 1 : numOfColumns}
             textAlign='center'
           >
             {gridList}

@@ -116,3 +116,42 @@ export const deslugify = (input) => {
 export const splitByPeriod = (value) => {
   return value.split('.').join(' ');
 }
+
+export const transposeArray = (array, numOfColumns = 2) => {
+  /*
+  Takes in an array and number of columns and returns an object of arrays transposed vertically
+  overflow will go to a new column
+  
+  Examples:
+  transposeArray([1, 2, 3, 4, 5, 6, 7, 8, 9, 0], 3);
+
+  Result =>
+  [1, 4, 7, 0]
+  [2, 5, 8]
+  [3, 6, 9]
+
+  transposeArray([1, 2, 3, 4, 5, 6, 7, 8, 9, 0], 2);
+
+  Result =>
+  
+  [1,6]
+  [2,7]
+  [3,8]
+  [4,9]
+  [5,0]
+
+  */
+
+  const numOfRows = Math.floor(array.length / numOfColumns);
+  const finalResult = {};
+
+  for (var x = 0; x < numOfRows; x++) {
+    finalResult[x] = [];
+  }
+
+  for (let y = 0; y < array.length; y++) {
+    finalResult[y % numOfRows].push(array[y])
+  }
+
+  return finalResult;
+}
