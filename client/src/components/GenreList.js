@@ -30,7 +30,7 @@ class GenreList extends React.Component {
       let rowLength = null;
 
       tableList = _.map(transposedGenres, (genreRow, idx) => {
-        if (idx == 0) {
+        if (+idx === 0) {
           rowLength = genreRow.length;
         }
 
@@ -49,7 +49,7 @@ class GenreList extends React.Component {
                 </Table.Cell>
               )
             })}
-            {cellsMade != rowLength ?
+            {cellsMade !== rowLength ?
               <Table.Cell>&nbsp;</Table.Cell> : null}
           </Table.Row>
         )

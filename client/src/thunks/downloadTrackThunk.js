@@ -1,5 +1,5 @@
 import firebase from 'firebase';
-import { DOWNLOAD_TRACK, LOAD_DOWNLOADED_TRACKS } from '../constants/actionTypes';
+import { DOWNLOAD_TRACK } from '../constants/actionTypes';
 
 const setFirebase = (state, trackId) => {
   const { uid } = state.firebaseState.auth;
