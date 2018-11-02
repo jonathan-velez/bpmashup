@@ -267,3 +267,15 @@
       text-align: left;
     }
  
+    .ui.menu {
+     border-radius: 0;
+     box-shadow: none;
+    }
+
+    .ui.menu .menu {
+      border-bottom: none;
+    }
+
+    .genre-popup {
+      padding: 0!important;
+    }

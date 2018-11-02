@@ -25,7 +25,7 @@ class GenreList extends React.Component {
     let gridList = null;
 
     if (Array.isArray(genres) && genres.length > 0) {
-      const transposedGenres = transposeArray(genres, 3);
+      const transposedGenres = transposeArray(genres, 4);
 
       let rowLength = null;
 
@@ -56,10 +56,10 @@ class GenreList extends React.Component {
                 </Grid.Column>
               )
             }
-          )}
+            )}
             {// if there's an extra column to fill, fill it with a blank for alignment
-            columnsMade != rowLength ? 
-            <Grid.Column as="a">&nbsp;</Grid.Column> : null}
+              columnsMade != rowLength ?
+                <Grid.Column as="a">&nbsp;</Grid.Column> : null}
           </Grid.Row>
         )
       }
@@ -70,19 +70,25 @@ class GenreList extends React.Component {
       <React.Fragment>
         <Popup
           trigger={<Menu.Item>Genres<Icon name='dropdown' /></Menu.Item>}
-          position='bottom center'
+          position='bottom left'
           wide='very'
           on='click'
           open={popupOpen}
           onClose={this.closePopup}
           onOpen={this.openPopup}
+          basic
+          verticalOffset={-10}
+          size='small'
           hideOnScroll
-          inverted={false}
+          flowing
+          className='genre-popup'
         >
           <Grid
             centered
             columns={genres.length % numOfColumns > 0 ? numOfColumns + 1 : numOfColumns}
             textAlign='center'
+            padded
+            stackable
           >
             {gridList}
           </Grid>
