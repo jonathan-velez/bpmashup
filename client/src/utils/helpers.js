@@ -145,7 +145,7 @@ export const transposeArray = (array, numOfColumns = 2) => {
   const numOfRows = Math.floor(array.length / numOfColumns);
   const finalResult = {};
 
-  for (var x = 0; x < numOfRows; x++) {
+  for (let x = 0; x < numOfRows; x++) {
     finalResult[x] = [];
   }
 
