@@ -279,3 +279,17 @@
   .genre-popup {
     padding: 0!important;
   }
+
+  .ui.menu .dropdown.item .menu {
+    background: #1b1d1c!important;
+  }
+
+  .text {
+    color: #fff!important;
+  }
+
+  .ui.popup {
+    border-radius: 0!important;
+    -moz-border-radius: 0!important;
+    -webkit-border-radius: 0!important;
+  }
