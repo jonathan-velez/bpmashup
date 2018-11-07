@@ -119,7 +119,7 @@ class App extends React.Component {
     return (
       <Router>
         <React.Fragment>
-          <Dimmer active={isLoading}>
+          <Dimmer active={isLoading} page>
             <Loader content='Loading' />
           </Dimmer>
           <ModalView
