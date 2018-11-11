@@ -284,7 +284,7 @@
     background: #1b1d1c!important;
   }
 
-  .text {
+  .ui.menu .dropdown.item .menu .text {
     color: #fff!important;
   }
 
