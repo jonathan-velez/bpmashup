@@ -23,7 +23,12 @@ const executeOA = (reqPath, reqQuery) => {
     }
 
     //call API with our completed URL
-    const request = oa.get(BASE_URL + urlStr, ACCESS_TOKEN, ACCESS_TOKEN_SECRET, (error, data) => {
+    oa.get(BASE_URL + urlStr, ACCESS_TOKEN, ACCESS_TOKEN_SECRET, (error, data) => {
+      if(!data) {
+        reject(error);
+        return;
+      }
+      
       const returnData = JSON.parse(data);
 
       if (error || returnData.metadata.error) {
