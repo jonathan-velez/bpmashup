@@ -1,9 +1,10 @@
 import _ from 'lodash';
-import { FETCH_TRACKS, SEARCH_TRACKS, LOAD_TRACKS } from '../constants/actionTypes';
+import { FETCH_TRACKS, SEARCH_TRACKS, LOAD_TRACKS, TOGGLE_TRACKLIST_VIEW } from '../constants/actionTypes';
 
 const defaultState = {
   metadata: {},
-  tracks: {}
+  tracks: {},
+  tracklistView: 'table',
 }
 
 const trackListing = (state = defaultState, action) => {
@@ -20,12 +21,13 @@ const trackListing = (state = defaultState, action) => {
       const keyedTracks = _.mapKeys(results, 'id');
 
       return {
-        metadata,        
+        ...state,
+        metadata,
         tracks: keyedTracks
       }
     case LOAD_TRACKS:
       // since we are overriding the tracks in the tracklisting, we need to also update the metadata props that are pulled from the bp api
-      const {payload: tracks = [] } = action;
+      const { payload: tracks = [] } = action;
       const totalPages = Math.ceil(Object.keys(tracks).length / 20);
 
       return {
@@ -37,6 +39,13 @@ const trackListing = (state = defaultState, action) => {
           totalPages
         },
         tracks
+      }
+    case TOGGLE_TRACKLIST_VIEW:
+      const tracklistView = action.payload === 'table' ? 'table' : 'cards';
+
+      return {
+        ...state,
+        tracklistView,
       }
     default:
       return state;

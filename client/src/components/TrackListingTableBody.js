@@ -9,12 +9,13 @@ import TrackActionDropdown from './TrackActionDropdown';
 import { constructLinks } from '../utils/trackUtils';
 import { musicalKeyFilter } from '../utils/helpers';
 
-const TrackListingTableBody = ({ trackListing, downloadedTracks }) => {
+const TrackListingTableBody = ({ trackListing, downloadedTracks, isPlaylist = true }) => {
   let trackListingBody = '';
 
   if (Object.keys(trackListing).length > 0) {
     // sort by the order it was added to the playlist
-    const orderedTracks = _.orderBy(trackListing, 'timeStamp', 'asc');
+    const orderBy = isPlaylist ? 'timeStamp' : 'position';
+    const orderedTracks = _.orderBy(trackListing, orderBy, 'asc');
 
     trackListingBody = _.map(orderedTracks, (track, idx) => {
       const hasBeenDownloaded = downloadedTracks.includes(track.id.toString());

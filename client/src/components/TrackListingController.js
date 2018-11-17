@@ -7,12 +7,18 @@ import * as actionCreators from '../actions/ActionCreators';
 import { deslugify } from '../utils/helpers';
 import TrackListingCards from './TrackListingCards';
 import TracklistingHeader from './TracklistingHeader';
+import TrackListingTable from './TrackListingTable';
+import TrackListingViewToggleButtons from './TrackListingViewToggleButtons';
 import Pager from './Pager';
 
 const DEFAULT_PAGE = 1;
 const DEFAULT_PER_PAGE = 20;
 
 class TrackListingController extends React.Component {
+  state = {
+    selectedView: 'table',
+  }
+
   // TODO: Dry cdm and cwrp up. Maybe use the constructor
   componentDidMount() {
     const { type, searchId, searchString, searchTerm, trackId } = this.props.match.params; // TODO: reduce ambiguity between search vars
@@ -60,7 +66,7 @@ class TrackListingController extends React.Component {
 
   render() {
     const { trackListing, isLoading, match } = this.props;
-    const { tracks, metadata } = trackListing;
+    const { tracks, metadata, tracklistView } = trackListing;
     const { totalPages, page, perPage } = metadata;
     const { url, params } = match;
 
@@ -95,7 +101,12 @@ class TrackListingController extends React.Component {
           headerId={headerId}
           headerType={headerType}
         />
-        <TrackListingCards trackListing={tracks} isLoading={isLoading} />
+        <TrackListingViewToggleButtons />
+        {tracklistView === 'cards' ?
+          <TrackListingCards trackListing={tracks} isLoading={isLoading} />
+          :
+          <TrackListingTable trackListing={tracks} isLoading={isLoading} isPlaylist={false} />
+        }
         <Pager activePage={page} totalPages={totalPages} firstItem={null} lastItem={null} perPage={perPage || DEFAULT_PER_PAGE} />
       </React.Fragment>
     )

@@ -293,3 +293,12 @@
     -moz-border-radius: 0!important;
     -webkit-border-radius: 0!important;
   }
+
+  .ui.four.cards {
+    margin-top: 0em;
+  }
+
+  .tracklistViewToggle {
+    text-align: right;
+  }
+  

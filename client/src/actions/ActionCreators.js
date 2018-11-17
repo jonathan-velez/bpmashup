@@ -34,7 +34,8 @@ import {
   RESET_CONFIRM,
   SET_CONFIRM,
   OPEN_MODAL,
-  STOP_ASYNC
+  STOP_ASYNC,
+  TOGGLE_TRACKLIST_VIEW
 } from '../constants/actionTypes';
 
 export const startAsync = () => {
@@ -223,6 +224,13 @@ export const fetchTracksSimilar = (trackId, page = 1, perPage = 20) => {
 export const openModalWindow = payload => {
   return {
     type: OPEN_MODAL,
+    payload
+  }
+}
+
+export const toggleTracklistView = payload => {
+  return {
+    type: TOGGLE_TRACKLIST_VIEW,
     payload
   }
 }
