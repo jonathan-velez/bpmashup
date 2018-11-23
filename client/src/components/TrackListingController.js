@@ -105,7 +105,7 @@ class TrackListingController extends React.Component {
         {tracklistView === 'cards' ?
           <TrackListingCards trackListing={tracks} isLoading={isLoading} />
           :
-          <TrackListingTable trackListing={tracks} isLoading={isLoading} isPlaylist={false} />
+          <TrackListingTable trackListing={tracks} isLoading={isLoading} isPlaylist={false} page={page} perPage={perPage} />
         }
         <Pager activePage={page} totalPages={totalPages} firstItem={null} lastItem={null} perPage={perPage || DEFAULT_PER_PAGE} />
       </React.Fragment>
