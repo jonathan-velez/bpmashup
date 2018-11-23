@@ -41,7 +41,9 @@ async function scrape(req, res) {
         const scriptData = val.children[0].data;
 
         try {
-          let mp3Link = scriptData.substring(scriptData.indexOf('document.getElementById(\'dlbutton\').href = ') + 43, scriptData.indexOf(';'));
+          let mp3Link = scriptData.substring(scriptData.indexOf('document.getElementById(\'dlbutton\').href = ') + 43);
+          mp3Link = mp3Link.substring(0, mp3Link.indexOf(';'));
+          mp3Link = mp3Link.replace('a()', '1').replace('b()', '2').replace('c()', '3').replace('+ d +', '+ 4 +');
 
           mp3Link = _eval('module.exports = ' + mp3Link);
 
