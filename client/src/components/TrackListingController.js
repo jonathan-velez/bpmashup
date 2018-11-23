@@ -24,6 +24,7 @@ class TrackListingController extends React.Component {
     const { type, searchId, searchString, searchTerm, trackId } = this.props.match.params; // TODO: reduce ambiguity between search vars
     const { search: thisSearch } = this.props.location;
     const thisPage = thisSearch.substr(thisSearch.indexOf('page=') + 5) || DEFAULT_PAGE;
+    const perPage = thisSearch.substr(thisSearch.indexOf('perPage=') + 8);
 
     Scroll.animateScroll.scrollToTop({ duration: 100 });
     this.props.startAsync();
@@ -34,7 +35,7 @@ class TrackListingController extends React.Component {
     } else if (trackId) {
       this.props.fetchTracksSimilar(trackId);
     } else {
-      this.props.fetchTracks(type, searchId, searchString, thisPage, DEFAULT_PER_PAGE);
+      this.props.fetchTracks(type, searchId, searchString, thisPage, perPage);
     }
   }
 
@@ -48,6 +49,9 @@ class TrackListingController extends React.Component {
     const thisPage = thisSearch.substr(thisSearch.indexOf('page=') + 5);
     const newPage = nextSearch.substr(nextSearch.indexOf('page=') + 5);
 
+    // how many tracks per page?
+    const perPage = thisSearch.substr(thisSearch.indexOf('perPage=') + 8);
+
     // fetch if we have a new query or a new page
     if ((searchId !== this.props.match.params.searchId || (newPage && newPage !== thisPage) || (searchTerm && thisSearchTerm !== searchTerm) || (trackId && thisTrackId !== trackId)) && !this.props.isLoading) {
 
@@ -55,11 +59,11 @@ class TrackListingController extends React.Component {
       this.props.startAsync();
 
       if (searchTerm) {
-        this.props.searchTracks(deslugify(searchTerm), newPage || DEFAULT_PAGE, DEFAULT_PER_PAGE); // TODO: get perPage
+        this.props.searchTracks(deslugify(searchTerm), newPage || DEFAULT_PAGE, perPage || DEFAULT_PER_PAGE); // TODO: get perPage
       } else if (trackId) {
-        this.props.fetchTracksSimilar(trackId, newPage || DEFAULT_PAGE, DEFAULT_PER_PAGE);
+        this.props.fetchTracksSimilar(trackId, newPage || DEFAULT_PAGE, perPage || DEFAULT_PER_PAGE);
       } else {
-        this.props.fetchTracks(type, searchId, searchString, newPage || DEFAULT_PAGE, DEFAULT_PER_PAGE); // TODO: get perPage
+        this.props.fetchTracks(type, searchId, searchString, newPage || DEFAULT_PAGE, perPage || DEFAULT_PER_PAGE); // TODO: get perPage
       }
     }
   }
