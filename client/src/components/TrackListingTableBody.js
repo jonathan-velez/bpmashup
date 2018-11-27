@@ -25,7 +25,7 @@ const TrackListingTableBody = ({ trackListing, downloadedTracks, isPlaylist = tr
       return (
         <Table.Row key={track.id} id={`track-${track.id}`} negative={hasBeenDownloaded}>
           <Table.Cell>
-            {idx + firstTrack}
+            {track.position}
           </Table.Cell>
           <Table.Cell>
             <TrackAlbum
