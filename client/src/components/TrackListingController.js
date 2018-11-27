@@ -24,7 +24,7 @@ class TrackListingController extends React.Component {
     const { type, searchId, searchString, searchTerm, trackId } = this.props.match.params; // TODO: reduce ambiguity between search vars
     const { search: thisSearch } = this.props.location;
     const thisPage = thisSearch.substr(thisSearch.indexOf('page=') + 5) || DEFAULT_PAGE;
-    const perPage = thisSearch.substr(thisSearch.indexOf('perPage=') + 8);
+    const perPage = thisSearch.substr(thisSearch.indexOf('perPage=') + 8) || DEFAULT_PER_PAGE;
 
     Scroll.animateScroll.scrollToTop({ duration: 100 });
     this.props.startAsync();
