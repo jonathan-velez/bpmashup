@@ -9,23 +9,20 @@ import TrackActionDropdown from './TrackActionDropdown';
 import { constructLinks } from '../utils/trackUtils';
 import { musicalKeyFilter } from '../utils/helpers';
 
-const TrackListingTableBody = ({ trackListing, downloadedTracks, isPlaylist = true, page, perPage }) => {
+const TrackListingTableBody = ({ trackListing, downloadedTracks, isPlaylist = true }) => {
   let trackListingBody = '';
 
   if (Object.keys(trackListing).length > 0) {
     // sort by the order it was added to the playlist
     const orderBy = isPlaylist ? 'timeStamp' : 'position';
     const orderedTracks = _.orderBy(trackListing, orderBy, 'asc');
-    
-    // get the first track of the page in view
-    const firstTrack = page > 1 ? (perPage * (page - 1) + 1) : 1;
 
     trackListingBody = _.map(orderedTracks, (track, idx) => {
       const hasBeenDownloaded = downloadedTracks.includes(track.id.toString());
       return (
         <Table.Row key={track.id} id={`track-${track.id}`} negative={hasBeenDownloaded}>
           <Table.Cell>
-            {track.position}
+            {isPlaylist ? idx + 1 : track.position}
           </Table.Cell>
           <Table.Cell>
             <TrackAlbum
