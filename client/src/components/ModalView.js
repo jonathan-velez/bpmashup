@@ -9,7 +9,7 @@ const ModalView = ({ open, handleClose, handleOpen, headerIcon, modalHeader, mod
       onMount={handleOpen}
       size='tiny'
     >
-      {modalHeader && headerIcon && <Header icon={headerIcon} content={modalHeader} />}
+      {modalHeader && <Header icon={headerIcon} content={modalHeader} />}
       <Modal.Content>
         {modalContent}
       </Modal.Content>
