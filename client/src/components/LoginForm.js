@@ -96,7 +96,7 @@ class LoginForm extends Component {
   handleSignupClick = () => {
     store.dispatch(openModalWindow({
       open: true,
-      title: 'Signup',
+      title: 'Sign Up',
       body: <SignupForm />,
       headerIcon: 'signup',
     }));
