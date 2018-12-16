@@ -301,4 +301,30 @@
   .tracklistViewToggle {
     text-align: right;
   }
+
+  .dimmed.dimmable>.ui.modals.dimmer.visible {
+    display: flex !important;
+  }
+
+  .social-row {
+    text-align: center;
+  }
+
+  .social-row>.social-item {
+    padding: 5px;
+    cursor: pointer;
+  }
+
+  .form-field-centered {
+    text-align: center;
+  }
+
+  .social-row>.social-item.disabled {
+    cursor: auto;
+  }
+
+  .modal-header, .red-cta {
+    background: linear-gradient(hsl(0, 66%, 53%), hsl(0, 66%, 43%))!important;
+    color: #fff!important;
+  }
   

@@ -1,0 +1,159 @@
+import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
+import { Form, Input, Button, Icon, Message, Header } from 'semantic-ui-react';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
+import { firebaseConnect } from 'react-redux-firebase';
+
+import store from '../store';
+import { loadPlaylists } from '../thunks/';
+import { openModalWindow } from '../actions/ActionCreators';
+import SignupForm from './SignupForm';
+import ForgotPasswordForm from './ForgotPasswordForm';
+
+class LoginForm extends Component {
+  state = {
+    isLoading: false,
+    isPristine: true,
+    userEmail: '',
+    userPassword: '',
+    errorCode: '',
+  }
+
+  errorCodes = {
+    'auth/invalid-email': 'Invalid email address, please try again.',
+    'auth/user-disabled': 'Your account has been disabled. Please contact support for more information.',
+    'auth/user-not-found': 'We could not find an account for this user, please try again.',
+    'auth/wrong-password': 'Invalid password, please try again.',
+    'auth/popup-closed-by-user': 'Login failed. Please try again and do not close the popup until fully logged in.',
+  }
+
+  loginWithGoogle = () => {
+    this.setState({ isLoading: true });
+
+    this.props.firebase.login({ provider: 'google', type: 'popup' }).then(user => {
+      this.afterLogin(user);
+      this.setState({ isLoading: false, errorCode: '' });
+    })
+      .catch((error) => {
+        this.setState({ isLoading: false, errorCode: error.code, isPristine: true });
+      });
+  }
+
+  loginWithEmail = ({ userEmail, userPassword }) => {
+    this.setState({ isLoading: true });
+
+    this.props.firebase.auth().signInWithEmailAndPassword(userEmail, userPassword)
+      .then(user => {
+        this.afterLogin(user);
+        this.setState({ isLoading: false, errorCode: '' });
+      })
+      .catch((error) => {
+        this.focus();
+        this.setState({ isLoading: false, errorCode: error.code, isPristine: true });
+      });
+  }
+
+  afterLogin = (user) => {
+    console.log('after login', user); // TODO: store this in a User reducer
+    store.dispatch(openModalWindow({
+      open: false,
+    }));
+
+    store.dispatch(loadPlaylists());
+  }
+
+  componentDidMount() {
+    this.focus();
+  }
+
+  setEmailRef = (input) => {
+    this.inputEmailRef = input;
+  }
+
+  focus = () => {
+    this.inputEmailRef.focus();
+    ReactDOM.findDOMNode(this.inputEmailRef).querySelector('input').select();
+  }
+
+  handleInputChange = (inputName, evt) => {
+    this.setState({
+      [inputName]: evt.target.value,
+      isPristine: false,
+    })
+  }
+
+  handleFormSubmit = (evt) => {
+    evt.preventDefault();
+    const { userEmail, userPassword } = this.state;
+
+    this.loginWithEmail({
+      userEmail,
+      userPassword
+    });
+  }
+
+  handleSignupClick = () => {
+    store.dispatch(openModalWindow({
+      open: true,
+      title: 'Signup',
+      body: <SignupForm />,
+      headerIcon: 'signup',
+    }));
+  }
+
+  handleForgotPasswordLink = () => {
+    store.dispatch(openModalWindow({
+      open: true,
+      title: 'Reset Password',
+      body: <ForgotPasswordForm />,
+      headerIcon: 'repeat',
+    }));
+  }
+
+  render() {
+    const { errorCode, isLoading, isPristine } = this.state;
+
+    return (
+      <React.Fragment>
+        <Form onSubmit={this.handleFormSubmit} loading={isLoading}>
+          <Header as='h2'>
+            Welcome Back
+            <Header.Subheader>Please sign in with your account.</Header.Subheader>
+          </Header>
+          <Form.Field>
+            <label>Email</label>
+            <Input type="email" placeholder='Enter your email address' ref={this.setEmailRef} onChange={(evt) => this.handleInputChange('userEmail', evt)} />
+          </Form.Field>
+          <Form.Field>
+            <label>Password</label>
+            <Input type="password" placeholder='Enter your password' onChange={(evt) => this.handleInputChange('userPassword', evt)} />
+          </Form.Field>
+          <Form.Field>
+            <a href='#' onClick={this.handleForgotPasswordLink}>Forgot password?</a>
+          </Form.Field>
+          <Form.Field className='form-field-centered'>
+            <Button type='submit' className='red-cta'>Login</Button>
+            <Button type='button' basic onClick={this.handleSignupClick}>Sign Up</Button>
+          </Form.Field>
+          <Message className='social-row'>Sign in with:
+            <span className='social-item'><Icon size='large' name='google' onClick={this.loginWithGoogle} /></span>
+            <span className='social-item disabled'><Icon size='large' name='facebook f' disabled /></span>
+            <span className='social-item disabled'><Icon size='large' name='twitter' disabled /></span>
+            <span className='social-item disabled'><Icon size='large' name='github alternate' disabled /></span>
+          </Message>
+          {errorCode.length > 0 && isPristine ?
+            <Form.Field className='form-field-centered'>
+              <Message negative>{(errorCode && this.errorCodes[errorCode]) || errorCode}</Message>
+            </Form.Field>
+            : null}
+        </Form>
+      </React.Fragment>
+    );
+  }
+}
+
+export default compose(
+  firebaseConnect(),
+  connect(({ firebaseState: { auth } }) => ({ auth }))
+)(LoginForm);

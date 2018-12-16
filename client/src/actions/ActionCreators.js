@@ -35,7 +35,8 @@ import {
   SET_CONFIRM,
   OPEN_MODAL,
   STOP_ASYNC,
-  TOGGLE_TRACKLIST_VIEW
+  TOGGLE_TRACKLIST_VIEW,
+  CLEAR_PLAYLISTS
 } from '../constants/actionTypes';
 
 export const startAsync = () => {
@@ -232,5 +233,11 @@ export const toggleTracklistView = payload => {
   return {
     type: TOGGLE_TRACKLIST_VIEW,
     payload
+  }
+}
+
+export const clearPlaylists = () => {
+  return {
+    type: CLEAR_PLAYLISTS
   }
 }
