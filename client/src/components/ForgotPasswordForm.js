@@ -6,7 +6,6 @@ import { connect } from 'react-redux';
 import { firebaseConnect } from 'react-redux-firebase';
 
 import store from '../store';
-import { loadPlaylists } from '../thunks/';
 import { openModalWindow } from '../actions/ActionCreators';
 import LoginForm from './LoginForm';
 
@@ -67,6 +66,15 @@ class ForgotPasswordForm extends Component {
     }));
   }
 
+  handleLoginClick = () => {
+    store.dispatch(openModalWindow({
+      open: true,
+      title: 'Login',
+      body: <LoginForm />,
+      headerIcon: 'sign in',
+    }));
+  }
+
   render() {
     const { errorCode, isLoading, isPristine } = this.state;
 
@@ -80,6 +88,9 @@ class ForgotPasswordForm extends Component {
           <Form.Field>
             <label>Email</label>
             <Input type="email" placeholder='Enter your email address' ref={this.setEmailRef} onChange={(evt) => this.handleInputChange('userEmail', evt)} />
+          </Form.Field>
+          <Form.Field>
+            <a href="#" onClick={this.handleLoginClick}>Just kidding, I know my password.</a>
           </Form.Field>
           <Form.Field className='form-field-centered'>
             <Button type='submit' className='red-cta'>Reset Password</Button>
