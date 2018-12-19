@@ -14,7 +14,6 @@ const isLoading = (state = false, action) => {
     case SEARCH_TRACKS:
     case FETCH_TRACKS:
     case GET_YOUTUBE_LINK:
-    case FETCH_GENRES:
     case STOP_ASYNC:
       return false;
     default:
