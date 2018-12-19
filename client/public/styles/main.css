@@ -310,21 +310,21 @@
     text-align: center;
   }
 
-  .social-row>.social-item {
-    padding: 5px;
-    cursor: pointer;
-  }
-
   .form-field-centered {
     text-align: center;
-  }
-
-  .social-row>.social-item.disabled {
-    cursor: auto;
   }
 
   .modal-header, .red-cta {
     background: linear-gradient(hsl(0, 66%, 53%), hsl(0, 66%, 43%))!important;
     color: #fff!important;
   }
-  
+
+  .ButtonLink {
+    background-color: transparent;
+    border: 1px solid transparent;
+    cursor: pointer;
+    color: #4183c4;
+    padding: 0;
+    /* semantic css from cdn has a rule for button to be sans-serif. TODO: need a better solution here */
+    font-family: Lato, 'Helvetica Neue', Arial, Helvetica, sans-serif;
+  }

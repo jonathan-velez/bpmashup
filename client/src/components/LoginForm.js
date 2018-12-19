@@ -134,7 +134,7 @@ class LoginForm extends Component {
             <Input type="password" placeholder='Enter your password' onChange={(evt) => this.handleInputChange('userPassword', evt)} />
           </Form.Field>
           <Form.Field>
-            <a href='#' onClick={this.handleForgotPasswordLink}>Forgot password?</a>
+            <button type='button' className='ButtonLink' onClick={this.handleForgotPasswordLink}>Forgot password?</button>
           </Form.Field>
           <Form.Field className='form-field-centered'>
             <Button type='submit' className='red-cta'>Login</Button>

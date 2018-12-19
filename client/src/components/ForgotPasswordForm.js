@@ -90,7 +90,7 @@ class ForgotPasswordForm extends Component {
             <Input type="email" placeholder='Enter your email address' ref={this.setEmailRef} onChange={(evt) => this.handleInputChange('userEmail', evt)} />
           </Form.Field>
           <Form.Field>
-            <a href="#" onClick={this.handleLoginClick}>Just kidding, I know my password.</a>
+            <button type='button' className='ButtonLink' onClick={this.handleLoginClick}>Just kidding, I know my password.</button>
           </Form.Field>
           <Form.Field className='form-field-centered'>
             <Button type='submit' className='red-cta'>Reset Password</Button>
