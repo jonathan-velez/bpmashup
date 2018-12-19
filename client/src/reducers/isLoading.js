@@ -3,7 +3,6 @@ import {
   FETCH_TRACKS,
   SEARCH_TRACKS,
   GET_YOUTUBE_LINK,
-  FETCH_GENRES,
   STOP_ASYNC
 } from '../constants/actionTypes';
 

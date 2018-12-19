@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Popup, Icon, Menu, Table } from 'semantic-ui-react';
-import _ from 'lodash';
 
 import { transposeArray } from '../utils/helpers';
 
