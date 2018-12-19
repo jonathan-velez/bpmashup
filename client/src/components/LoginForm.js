@@ -143,10 +143,10 @@ class LoginForm extends Component {
           <Message className='social-row'>
             <Message.Header>Sign in with:</Message.Header>
             <Message.Content style={socialBarStyle}>
-              <Button circular color='google plus' icon='google' onClick={this.loginWithGoogle} />
-              <Button disabled circular color='facebook' icon='facebook' />
-              <Button disabled circular color='twitter' icon='twitter' />
-              <Button disabled circular color='linkedin' icon='github alternate' />
+              <Button type="button" circular color='google plus' icon='google' onClick={this.loginWithGoogle} />
+              <Button type="button" disabled circular color='facebook' icon='facebook' />
+              <Button type="button" disabled circular color='twitter' icon='twitter' />
+              <Button type="button" disabled circular color='linkedin' icon='github alternate' />
             </Message.Content>
           </Message>
           {errorCode.length > 0 && isPristine ?
