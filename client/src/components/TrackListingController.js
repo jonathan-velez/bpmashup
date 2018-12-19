@@ -5,65 +5,84 @@ import Scroll from 'react-scroll';
 
 import * as actionCreators from '../actions/ActionCreators';
 import { deslugify } from '../utils/helpers';
+import { DEFAULT_PAGE, DEFAULT_PER_PAGE } from '../constants/defaults';
 import TrackListingCards from './TrackListingCards';
 import TracklistingHeader from './TracklistingHeader';
 import TrackListingTable from './TrackListingTable';
-import TrackListingViewToggleButtons from './TrackListingViewToggleButtons';
+import TrackListingActionRow from './TrackListingActionRow';
 import Pager from './Pager';
-
-const DEFAULT_PAGE = 1;
-const DEFAULT_PER_PAGE = 20;
 
 class TrackListingController extends React.Component {
   state = {
     selectedView: 'table',
   }
 
-  // TODO: Dry cdm and cwrp up. Maybe use the constructor
   componentDidMount() {
-    const { type, searchId, searchString, searchTerm, trackId } = this.props.match.params; // TODO: reduce ambiguity between search vars
-    const { search: thisSearch } = this.props.location;
-    const thisPage = thisSearch.substr(thisSearch.indexOf('page=') + 5) || DEFAULT_PAGE;
-    const perPage = thisSearch.substr(thisSearch.indexOf('perPage=') + 8) || DEFAULT_PER_PAGE;
+    const { location, match, startAsync, searchTracks, fetchTracksSimilar, fetchTracks } = this.props;
+    const { type, searchId, searchString, searchTerm, trackId } = match.params;
+    const { search: thisSearch } = location;
+
+    // parse params
+    const params = {};
+    thisSearch.replace('?', '').split('&').forEach(param => {
+      const splitParam = param.split('=');
+      params[splitParam[0]] = splitParam[1];
+    });
+
+    const page = params.page || DEFAULT_PAGE;
+    const perPage = params.perPage || DEFAULT_PER_PAGE;
 
     Scroll.animateScroll.scrollToTop({ duration: 100 });
-    this.props.startAsync();
+    startAsync();
 
     // determine if it's a search page, similar tracks or not
     if (searchTerm) {
-      this.props.searchTracks(deslugify(searchTerm));
+      searchTracks(deslugify(searchTerm));
     } else if (trackId) {
-      this.props.fetchTracksSimilar(trackId);
+      fetchTracksSimilar(trackId);
     } else {
-      this.props.fetchTracks(type, searchId, searchString, thisPage, perPage);
+      fetchTracks(type, searchId, searchString, page, perPage);
     }
   }
 
   componentWillReceiveProps(nextProps) {
+    const { isLoading, location, match, startAsync, searchTracks, fetchTracksSimilar, fetchTracks } = this.props;
     const { type, searchId, searchString, searchTerm, trackId } = nextProps.match.params;
     const { search: nextSearch } = nextProps.location;
-    const { search: thisSearch } = this.props.location;
-    const { searchTerm: thisSearchTerm, trackId: thisTrackId } = this.props.match.params;
+    const { search: thisSearch } =  location;
+    const { searchTerm: thisSearchTerm, trackId: thisTrackId, searchId: thisSearchId } =  match.params;
 
-    // which page we loading?
-    const thisPage = thisSearch.substr(thisSearch.indexOf('page=') + 5);
-    const newPage = nextSearch.substr(nextSearch.indexOf('page=') + 5);
+    // parse params
+    const thisParams = {};
+    thisSearch.replace('?', '').split('&').forEach(param => {
+      const splitParam = param.split('=');
+      thisParams[splitParam[0]] = splitParam[1];
+    });
+    const nextParams = {};
+    nextSearch.replace('?', '').split('&').forEach(param => {
+      const splitParam = param.split('=');
+      nextParams[splitParam[0]] = splitParam[1];
+    });
+
+    // which page are we loading?
+    const thisPage = +thisParams.page || DEFAULT_PAGE;
+    const newPage = +nextParams.page || DEFAULT_PAGE;
 
     // how many tracks per page?
-    const perPage = thisSearch.substr(thisSearch.indexOf('perPage=') + 8);
+    const thisPerPage = +thisParams.perPage || DEFAULT_PER_PAGE;
+    const newPerPage = +nextParams.perPage || DEFAULT_PER_PAGE;
 
-    // fetch if we have a new query or a new page
-    if ((searchId !== this.props.match.params.searchId || (newPage && newPage !== thisPage) || (searchTerm && thisSearchTerm !== searchTerm) || (trackId && thisTrackId !== trackId)) && !this.props.isLoading) {
-
+    // fetch if we have a new query or new params
+    if (((searchId && searchId !== thisSearchId) || (newPage && newPage !== thisPage) || (searchTerm && searchTerm !== thisSearchTerm) || (trackId && trackId !== thisTrackId) || (newPerPage && newPerPage !== thisPerPage)) && ! isLoading) {
       Scroll.animateScroll.scrollToTop({ duration: 100 });
-      this.props.startAsync();
+      startAsync();
 
       if (searchTerm) {
-        this.props.searchTracks(deslugify(searchTerm), newPage || DEFAULT_PAGE, perPage || DEFAULT_PER_PAGE); // TODO: get perPage
+        searchTracks(deslugify(searchTerm), newPage, newPerPage);
       } else if (trackId) {
-        this.props.fetchTracksSimilar(trackId, newPage || DEFAULT_PAGE, perPage || DEFAULT_PER_PAGE);
+        fetchTracksSimilar(trackId, newPage, newPerPage);
       } else {
-        this.props.fetchTracks(type, searchId, searchString, newPage || DEFAULT_PAGE, perPage || DEFAULT_PER_PAGE); // TODO: get perPage
+        fetchTracks(type, searchId, searchString, newPage, newPerPage);
       }
     }
   }
@@ -105,13 +124,13 @@ class TrackListingController extends React.Component {
           headerId={headerId}
           headerType={headerType}
         />
-        <TrackListingViewToggleButtons />
+        <TrackListingActionRow activePage={page} totalPages={totalPages} perPage={perPage} isLoading={isLoading} />
         {tracklistView === 'cards' ?
           <TrackListingCards trackListing={tracks} isLoading={isLoading} />
           :
           <TrackListingTable trackListing={tracks} isLoading={isLoading} isPlaylist={false} page={page} perPage={perPage} />
         }
-        <Pager activePage={page} totalPages={totalPages} firstItem={null} lastItem={null} perPage={perPage || DEFAULT_PER_PAGE} />
+        <Pager activePage={page} totalPages={totalPages} firstItem={null} lastItem={null} perPage={perPage || DEFAULT_PER_PAGE} isLoading={isLoading} />
       </React.Fragment>
     )
   }

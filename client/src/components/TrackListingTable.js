@@ -4,7 +4,10 @@ import { Table, Header, Message } from 'semantic-ui-react';
 import TrackListingTableHeader from './TrackListingTableHeader';
 import TrackListingTableBody from './TrackListingTableBody';
 
-const TrackListingTable = ({ trackListing, isPlaylist, page, perPage }) => {
+const TrackListingTable = ({ trackListing, isPlaylist, isLoading, page, perPage }) => {
+
+  if (isLoading) return null;
+
   return (Object.keys(trackListing).length > 0 ?
     <Table striped>
       <TrackListingTableHeader />
