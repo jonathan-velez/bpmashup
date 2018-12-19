@@ -2,9 +2,7 @@ import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { Pagination } from 'semantic-ui-react';
 
-const Pager = (props) => {
-  const { activePage, totalPages, perPage, history } = props;
-
+const Pager = ({ activePage, totalPages, perPage, history }) => {
   const pagerStyle = {
     'marginTop': '15px'
   };
