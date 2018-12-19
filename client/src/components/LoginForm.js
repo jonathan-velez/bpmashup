@@ -114,6 +114,10 @@ class LoginForm extends Component {
   render() {
     const { errorCode, isLoading, isPristine } = this.state;
 
+    const socialBarStyle = {
+      paddingTop: '8px'
+    }
+
     return (
       <React.Fragment>
         <Form onSubmit={this.handleFormSubmit} loading={isLoading}>
@@ -136,11 +140,14 @@ class LoginForm extends Component {
             <Button type='submit' className='red-cta'>Login</Button>
             <Button type='button' basic onClick={this.handleSignupClick}>Sign Up</Button>
           </Form.Field>
-          <Message className='social-row'>Sign in with:
-            <span className='social-item'><Icon size='large' name='google' onClick={this.loginWithGoogle} /></span>
-            <span className='social-item disabled'><Icon size='large' name='facebook f' disabled /></span>
-            <span className='social-item disabled'><Icon size='large' name='twitter' disabled /></span>
-            <span className='social-item disabled'><Icon size='large' name='github alternate' disabled /></span>
+          <Message className='social-row'>
+            <Message.Header>Sign in with:</Message.Header>
+            <Message.Content style={socialBarStyle}>
+              <Button circular color='google plus' icon='google' onClick={this.loginWithGoogle} />
+              <Button disabled circular color='facebook' icon='facebook' />
+              <Button disabled circular color='twitter' icon='twitter' />
+              <Button disabled circular color='linkedin' icon='github alternate' />
+            </Message.Content>
           </Message>
           {errorCode.length > 0 && isPristine ?
             <Form.Field className='form-field-centered'>
