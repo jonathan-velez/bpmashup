@@ -6,6 +6,7 @@ import TrackListingController from './TrackListingController';
 import PlaylistController from './PlaylistController';
 import About from './About';
 import MyLovedLabels from './MyLovedLabels';
+import SearchResultsController from './SearchResultsController';
 
 const Main = () => {
   const containerStyle = {
@@ -20,7 +21,8 @@ const Main = () => {
         <Route exact path="/most-popular/:type/:searchString/:searchId" component={TrackListingController} />
         <Route exact path="/similar-tracks/:trackName/:trackId" component={TrackListingController} />
         <Route exact path="/playlist/:playlistName/:playlistId" component={PlaylistController} />
-        <Route path="/search/:searchTerm" component={TrackListingController} />
+        {/* <Route path="/search/:searchTerm" component={TrackListingController} /> */}
+        <Route exact path="/search/:searchTerm" component={SearchResultsController} />
         <Route exact path="/" component={TrackListingController} />
       </Switch>
     </Container>

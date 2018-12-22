@@ -5,7 +5,6 @@ import TrackListingTableHeader from './TrackListingTableHeader';
 import TrackListingTableBody from './TrackListingTableBody';
 
 const TrackListingTable = ({ trackListing, isPlaylist, isLoading, page, perPage }) => {
-
   if (isLoading) return null;
 
   return (Object.keys(trackListing).length > 0 ?

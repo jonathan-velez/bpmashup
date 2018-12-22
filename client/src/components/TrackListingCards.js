@@ -3,7 +3,9 @@ import _ from 'lodash';
 import { Card, Message, Header } from 'semantic-ui-react';
 import Track from './Track';
 
-const TrackListingCards = ({ trackListing }) => {
+const TrackListingCards = ({ trackListing, isLoading }) => {
+  if (isLoading) return null;
+  
   if (trackListing && Object.keys(trackListing).length > 0) {
     const orderedTracks = _.sortBy(trackListing, 'position');
     this.trackListing = orderedTracks.map(track => {

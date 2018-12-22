@@ -3,7 +3,8 @@ import {
   FETCH_TRACKS,
   SEARCH_TRACKS,
   GET_YOUTUBE_LINK,
-  STOP_ASYNC
+  STOP_ASYNC,
+  SEARCH_EVERYTHING,
 } from '../constants/actionTypes';
 
 const isLoading = (state = false, action) => {
@@ -14,6 +15,7 @@ const isLoading = (state = false, action) => {
     case FETCH_TRACKS:
     case GET_YOUTUBE_LINK:
     case STOP_ASYNC:
+    case SEARCH_EVERYTHING:
       return false;
     default:
       return state;

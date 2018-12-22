@@ -16,6 +16,7 @@ import lovedTracks from './lovedTracks';
 import lovedArtists from './lovedArtists';
 import lovedLabels from './lovedLabels';
 import lovedLabelsDetails from './lovedLabelsDetails';
+import searchResults from './searchResults';
 
 const rootReducer = combineReducers({
   trackListing,
@@ -33,6 +34,7 @@ const rootReducer = combineReducers({
   lovedLabelsDetails,
   firebaseState: firebaseReducer,
   routing: routerReducer,
+  searchResults,
 });
 
 export default rootReducer;
