@@ -95,7 +95,7 @@ export const getNextTrack = (incrementBy = 1) => {
   }
 
   // grab track object by new id
-  let nextTrackObj = orderedTracks[nextTrackIndex];
+  let nextTrackObj = orderedTracks[nextTrackIndex] || {};
 
   scrollToTrack(nextTrackObj.id || 0);
 
