@@ -328,3 +328,8 @@
     /* semantic css from cdn has a rule for button to be sans-serif. TODO: need a better solution here */
     font-family: Lato, 'Helvetica Neue', Arial, Helvetica, sans-serif;
   }
+
+  .releaseHeaderContent {
+    text-align: left;
+    font-size: 2em !important;
+  }

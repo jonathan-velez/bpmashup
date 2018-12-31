@@ -34,6 +34,21 @@ const label = [
   'dynamicImages'
 ]
 
-exports.track = track;
+const release = [
+  'id',
+  'name',
+  'slug',
+  'releaseDate',
+  'publishDate',
+  'catalogNumber',
+  'description',
+  'price',
+  'label',
+  'artists',
+  'genres',
+  'images',
+]
 
+exports.track = track;
 exports.label = label;
+exports.release = release;

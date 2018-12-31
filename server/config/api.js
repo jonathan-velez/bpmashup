@@ -399,6 +399,47 @@ const apiConfig = {
         allowedValues: ['publishDate ASC', 'publishDate DESC']
       }
     ]
+  },
+  'releases': {
+    model: bpAPIModels.release,
+    params: [
+      {
+        name: 'id',
+        dataType: 'int',
+        required: false
+      },
+      {
+        name: 'ids',
+        dataType: 'string',
+        required: false
+      },
+      {
+        name: 'facets',
+        dataType: 'string',
+        required: false
+      },
+      {
+        name: 'returnFacets',
+        dataType: 'string',
+        required: false
+      },
+      {
+        name: 'page',
+        dataType: 'int',
+        required: false
+      },
+      {
+        name: 'perPage',
+        dataType: 'int',
+        required: false
+      },
+      {
+        name: 'sortBy',
+        dataType: 'string',
+        required: false,
+        allowedValues: ['publishDate ASC', 'publishDate DESC']
+      }
+    ]
   }
 }
 
