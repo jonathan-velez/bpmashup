@@ -11,20 +11,17 @@ const defaultState = {
 };
 
 const autoSuggest = (state = defaultState, action) => {
-  if (!_.get(action, 'payload') || action.error){
+  if (_.get(action, 'payload') === undefined || action.error) {
     return state;
   }
   switch (action.type) {
-    case UPDATE_SUGGESTION_INPUT_VALUE:    
+    case UPDATE_SUGGESTION_INPUT_VALUE:
       return {
         ...state,
         value: action.payload
       }
     case CLEAR_SUGGESTIONS:
-      return {
-        ...state,
-        suggestions: [],
-      };
+      return defaultState;
     case LOAD_SUGGESTIONS:
       return {
         ...state,
