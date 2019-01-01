@@ -14,6 +14,7 @@ const MutePlayer = ({ mediaPlayer, toggleMute }) => {
       name={muted ? 'mute' : 'unmute'}
       onClick={toggleMute}
       size='large'
+      className='muteIcon'
     />
   );
 }
