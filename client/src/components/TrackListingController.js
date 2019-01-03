@@ -29,8 +29,7 @@ class TrackListingController extends React.Component {
       params[splitParam[0]] = splitParam[1];
     });
 
-    const page = params.page || DEFAULT_PAGE;
-    const perPage = params.perPage || DEFAULT_PER_PAGE;
+    const { page = DEFAULT_PAGE, perPage = DEFAULT_PER_PAGE } = params;
 
     Scroll.animateScroll.scrollToTop({ duration: 1500 });
     startAsync();
