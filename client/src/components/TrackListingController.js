@@ -96,7 +96,7 @@ class TrackListingController extends React.Component {
     let headerTitle = '';
     let headerPrefix = '';
     const headerType = params.type;
-    const headerId = params.searchId;
+    const headerId = +params.searchId;
 
     switch (pageName) {
       case 'search':
