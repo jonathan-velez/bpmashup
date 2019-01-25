@@ -90,7 +90,7 @@ store.firebaseAuthIsReady.then((user) => {
 
       store.dispatch({
         type: LOAD_LOVED_TRACKS,
-        payload: Object.keys(lovedTracks)
+        payload: Object.keys(lovedTracks).map(Number),
       })
     }
   })
@@ -105,7 +105,7 @@ store.firebaseAuthIsReady.then((user) => {
 
       store.dispatch({
         type: LOAD_LOVED_ARTISTS,
-        payload: Object.keys(lovedArtists)
+        payload: Object.keys(lovedArtists).map(Number),
       })
     }
   })
