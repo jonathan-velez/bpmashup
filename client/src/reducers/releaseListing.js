@@ -1,4 +1,4 @@
-import { GET_RELEASE_DATA, FETCH_TRACKS_BY_IDS } from '../constants/actionTypes';
+import { GET_RELEASE_DATA } from '../constants/actionTypes';
 
 const defaultState = {
   releaseName: '',

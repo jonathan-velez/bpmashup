@@ -4,10 +4,7 @@ import { connect } from 'react-redux';
 import _ from 'lodash';
 import { Item, Header } from 'semantic-ui-react';
 
-import store from '../store';
 import * as thunks from '../thunks';
-import * as actionCreators from '../actions/ActionCreators';
-import About from './About';
 
 class MyLovedLabels extends React.Component {
   componentDidMount() {
@@ -44,8 +41,6 @@ class MyLovedLabels extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    // lovedTracks: state.lovedTracks,
-    // lovedArtists: state.lovedArtists,
     lovedLabels: state.lovedLabels,
     lovedLabelsDetails: state.lovedLabelsDetails,
   }
