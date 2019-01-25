@@ -75,7 +75,7 @@ store.firebaseAuthIsReady.then((user) => {
     if (downloads) {
       store.dispatch({
         type: LOAD_DOWNLOADED_TRACKS,
-        payload: Object.keys(downloads),
+        payload: Object.keys(downloads).map(Number),
       });
     }
   });
@@ -120,7 +120,7 @@ store.firebaseAuthIsReady.then((user) => {
 
       store.dispatch({
         type: LOAD_LOVED_LABELS,
-        payload: Object.keys(lovedLabels)
+        payload: Object.keys(lovedLabels).map(Number),
       })
     }
   })
