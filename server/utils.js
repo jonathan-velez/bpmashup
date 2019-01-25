@@ -33,11 +33,6 @@ const urlBuilder = (reqPath, reqQuery) => {
   urlStr += urlParams.join("&");
 
   //TODO: first check if there are any required ones
-  for (let value of configMatch.params) {
-    if (value.required) {
-      console.log('yes!', value.name); // if it's not found in req.query then exit
-    }
-  }
 
   console.log('URL Request: ', urlStr);
 
