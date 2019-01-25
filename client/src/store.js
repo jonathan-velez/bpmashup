@@ -42,13 +42,7 @@ const store = createStoreWithFirebase(rootReducer, persistedStorage);
 store.subscribe(() => {
   const state = store.getState();
   setStorage({
-    downloadedTracks: state.downloadedTracks,
     mediaPlayer: state.mediaPlayer,
-    lovedArtists: state.lovedArtists,
-    lovedLabels: state.lovedLabels,
-    lovedLabelsDetails: state.lovedLabelsDetails,
-    lovedTracks: state.lovedTracks,
-    playlistList: state.playlistList,
   });
 });
 
