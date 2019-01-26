@@ -9,3 +9,5 @@ export const API_GET_TRACKS = `${API_ROOT}/tracks`;
 export const API_GET_LOVED_LABELS = `${API_ROOT}/labels`;
 export const API_SEARCH_EVERYTHING = `${API_ROOT}/search`
 export const API_GET_RELEASES = `${API_ROOT}/releases`;
+export const API_GET_ARTIST_DETAIL = `${API_ROOT}/artist`;
+export const API_GET_ARTIST_EVENTS_BY_NAME = `${API_ROOT}/songkick/get-artist-events`;

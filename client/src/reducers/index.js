@@ -18,6 +18,7 @@ import lovedLabels from './lovedLabels';
 import lovedLabelsDetails from './lovedLabelsDetails';
 import searchResults from './searchResults';
 import releaseListing from './releaseListing';
+import artistDetail from './artistDetail';
 
 const rootReducer = combineReducers({
   trackListing,
@@ -37,6 +38,7 @@ const rootReducer = combineReducers({
   routing: routerReducer,
   searchResults,
   releaseListing,
+  artistDetail
 });
 
 export default rootReducer;

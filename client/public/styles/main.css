@@ -35,7 +35,7 @@
   .seek-bar {
     width: 500px;
   }
-  
+
   .muteIcon {
     padding-right: 15px;
   }
@@ -324,7 +324,7 @@
     background-color: transparent;
     border: 1px solid transparent;
     cursor: pointer;
-    color: #4183c4;
+    color: hsl(0, 50%, 53%);
     padding: 0;
     /* semantic css from cdn has a rule for button to be sans-serif. TODO: need a better solution here */
     font-family: Lato, 'Helvetica Neue', Arial, Helvetica, sans-serif;
@@ -333,4 +333,13 @@
   .releaseHeaderContent {
     text-align: left;
     font-size: 2em !important;
+  }
+
+  .genre-label {
+    margin-bottom: 10px!important;
+  }
+
+  .artist-biography {
+    text-align: justify;
+    padding-bottom: 10px;
   }

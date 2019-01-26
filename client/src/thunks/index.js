@@ -6,5 +6,24 @@ import { toggleLoveItem } from './loveItemThunk';
 import { getMyFavoriteLabels } from './myFavoritesThunk';
 import { searchEverything } from './searchEverythingThunk';
 import { fetchReleaseData } from './releaseThunk';
+import { getArtistThunk, getArtistEvents } from './artistThunk';
 
-export { loadTrackThunk, addPlaylist, removeFromPlaylist, addToPlaylist, editPlaylistName, deletePlaylist, addNewPlaylist, loadPlaylists, downloadTrack, loadDownloadedTracks, toggleLoveTrack, toggleLoveItem, getMyFavoriteLabels, searchEverything, fetchReleaseData };
+export {
+  loadTrackThunk,
+  addPlaylist,
+  removeFromPlaylist,
+  addToPlaylist,
+  editPlaylistName,
+  deletePlaylist,
+  addNewPlaylist,
+  loadPlaylists,
+  downloadTrack,
+  loadDownloadedTracks,
+  toggleLoveTrack,
+  toggleLoveItem,
+  getMyFavoriteLabels,
+  searchEverything,
+  fetchReleaseData,
+  getArtistThunk,
+  getArtistEvents
+};

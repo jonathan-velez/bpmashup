@@ -1,12 +1,12 @@
 const dotenv = require('dotenv');
 const express = require('express');
 const app = express();
-const fs = require('fs');
 const path = require('path');
 
 dotenv.load({ path: '.env' });
 
 const constants = require('./config/constants');
+const { API_BASE_URL } = constants;
 
 const staticFiles = express.static(path.join(__dirname, '../client/build'));
 app.use(staticFiles);
@@ -14,29 +14,30 @@ app.use(staticFiles);
 const bpController = require('./controllers/beatportController');
 const zippyController = require('./controllers/zippyController');
 const ytController = require('./controllers/youtubeController');
+const songkickController = require('./controllers/songkickController');
+const lastFmController = require('./controllers/lastFmController');
 
-app.use(`${constants.API_BASE_URL}/most-popular`, (req, res, next) => {
-  req.query.newValue = 'someTestValue';
-  next();
-});
+app.get(`${API_BASE_URL}/genres`, bpController.callApi);
+app.get(`${API_BASE_URL}/search`, bpController.callApi);
+app.get(`${API_BASE_URL}/most-popular`, bpController.callApi);
+app.get(`${API_BASE_URL}/most-popular/:type`, bpController.callApi);
+app.get(`${API_BASE_URL}/autocomplete`, bpController.callApi);
+app.get(`${API_BASE_URL}/artists/detail`, bpController.callApi);
+app.get(`${API_BASE_URL}/tracks`, bpController.callApi);
+app.get(`${API_BASE_URL}/tracks/similar`, bpController.callApi);
+app.get(`${API_BASE_URL}/labels`, bpController.callApi);
+app.get(`${API_BASE_URL}/releases`, bpController.callApi);
+app.get(`${API_BASE_URL}/artist`, bpController.getArtistData);
 
-app.get(`${constants.API_BASE_URL}/genres`, bpController.callApi);
-app.get(`${constants.API_BASE_URL}/search`, bpController.callApi);
-app.get(`${constants.API_BASE_URL}/most-popular`, bpController.callApi);
-app.get(`${constants.API_BASE_URL}/most-popular/:type`, bpController.callApi);
-app.get(`${constants.API_BASE_URL}/autocomplete`, bpController.callApi);
-app.get(`${constants.API_BASE_URL}/artists/detail`, bpController.callApi);
-app.get(`${constants.API_BASE_URL}/tracks`, bpController.callApi);
-app.get(`${constants.API_BASE_URL}/tracks/similar`, bpController.callApi);
-app.get(`${constants.API_BASE_URL}/labels`, bpController.callApi);
-app.get(`${constants.API_BASE_URL}/releases`, bpController.callApi);
-
-app.get(`${constants.API_BASE_URL}/download-track`, zippyController.zippyScrape);
-app.get(`${constants.API_BASE_URL}/youtube/search`, ytController.Youtube);
+app.get(`${API_BASE_URL}/download-track`, zippyController.zippyScrape);
+app.get(`${API_BASE_URL}/youtube/search`, ytController.Youtube);
+app.get(`${API_BASE_URL}/songkick/get-artist-id`, songkickController.getArtistId);
+app.get(`${API_BASE_URL}/songkick/get-artist-events`, songkickController.getUpcomingEvents);
+app.get(`${API_BASE_URL}/last-fm/get-artist-info`, lastFmController.getArtistInfo);
 
 app.use('/*', staticFiles);
 
-app.set('port', (process.env.PORT || 3001)); 
+app.set('port', (process.env.PORT || 3001));
 app.listen(app.get('port'), () => {
   console.log(`Listening on ${app.get('port')}`);
 });

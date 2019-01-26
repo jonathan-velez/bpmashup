@@ -5,6 +5,7 @@ const bpAPIConfig = require('../config/api');
 const bpAPIModels = require('../config/models');
 const utils = require('../utils');
 const constants = require('../config/constants');
+const lastFmController = require('../controllers/lastFmController');
 
 const ACCESS_TOKEN = process.env.BP_ACCESS_TOKEN;
 const ACCESS_TOKEN_SECRET = process.env.BP_ACCESS_TOKEN_SECRET;
@@ -24,11 +25,11 @@ const executeOA = (reqPath, reqQuery) => {
 
     //call API with our completed URL
     oa.get(BASE_URL + urlStr, ACCESS_TOKEN, ACCESS_TOKEN_SECRET, (error, data) => {
-      if(!data) {
+      if (!data) {
         reject(error);
         return;
       }
-      
+
       const returnData = JSON.parse(data);
 
       if (error || returnData.metadata.error) {
@@ -46,7 +47,7 @@ async function callApi(req, res) {
   const reqPath = utils.filterPath(req.url);
   const reqQuery = req.query;
   let jsonResponse = {};
-  
+
   try {
     const model = bpAPIConfig[reqPath].model;
     const bpData = await executeOA(reqPath, reqQuery);
@@ -69,4 +70,37 @@ async function callApi(req, res) {
   }
 }
 
+// Get artist details from Beatport. If no biography is found, hit up Last.fm's API and patch the bio into the BP response object
+async function getArtistData(req, res) {
+  const { query } = req;
+  let detail = await executeOA('artists/detail', { id: query.id });
+  let { results } = detail;
+  let jsonResponse = {};
+
+  if (results) {
+    const { biography, name } = results;
+    if (!biography) {
+      console.log('No bio in beatport, call last-fm API', name);
+      const lastFmArtistData = await lastFmController.callGetArtistInfo(name);
+      const { bio } = lastFmArtistData;
+
+      if (bio) {
+        let { content: biography } = bio;
+        // remove last.fm link
+        biography = biography.substr(0, biography.indexOf('<a href=\"https://www.last.fm'));
+
+        Object.assign(jsonResponse, {
+          ...detail,
+          results: {
+            ...results,
+            biography
+          }
+        })
+      }
+    }
+  }
+  res.json(jsonResponse);
+}
+
 exports.callApi = callApi;
+exports.getArtistData = getArtistData;
