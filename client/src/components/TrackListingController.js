@@ -6,11 +6,8 @@ import Scroll from 'react-scroll';
 import * as actionCreators from '../actions/ActionCreators';
 import { deslugify } from '../utils/helpers';
 import { DEFAULT_PAGE, DEFAULT_PER_PAGE } from '../constants/defaults';
-import TrackListingCards from './TrackListingCards';
+import TrackListingGroup from './TrackListingGroup';
 import TracklistingHeader from './TracklistingHeader';
-import TrackListingTable from './TrackListingTable';
-import TrackListingActionRow from './TrackListingActionRow';
-import Pager from './Pager';
 
 class TrackListingController extends React.Component {
   state = {
@@ -87,9 +84,7 @@ class TrackListingController extends React.Component {
   }
 
   render() {
-    const { trackListing, isLoading, match } = this.props;
-    const { tracks, metadata, tracklistView } = trackListing;
-    const { totalPages, page, perPage } = metadata;
+    const { trackListing, match } = this.props;
     const { url, params } = match;
 
     const pageName = url.split('/')[1];
@@ -123,13 +118,7 @@ class TrackListingController extends React.Component {
           headerId={headerId}
           headerType={headerType}
         />
-        <TrackListingActionRow activePage={page} totalPages={totalPages} perPage={perPage} isLoading={isLoading} />
-        {tracklistView === 'cards' ?
-          <TrackListingCards trackListing={tracks} isLoading={isLoading} />
-          :
-          <TrackListingTable trackListing={tracks} isLoading={isLoading} isPlaylist={false} page={page} perPage={perPage} />
-        }
-        <Pager activePage={page} totalPages={totalPages} firstItem={null} lastItem={null} perPage={perPage || DEFAULT_PER_PAGE} isLoading={isLoading} />
+        <TrackListingGroup trackListing={trackListing} />
       </React.Fragment>
     )
   }

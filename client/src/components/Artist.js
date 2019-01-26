@@ -5,7 +5,7 @@ import { Grid, Image, Header } from 'semantic-ui-react';
 import Scroll from 'react-scroll';
 
 import { getArtistThunk, getArtistEvents } from '../thunks/artistThunk';
-import ResponsiveTrackListing from './ResponsiveTrackListing';
+import TrackListingGroup from './TrackListingGroup';
 import ItemCards from './ItemCards';
 import GenreLabel from './GenreLabel';
 import EventsList from './EventsList';
@@ -45,7 +45,6 @@ class Artist extends Component {
               </Grid.Column>
               <Grid.Column textAlign='right'>
                 <Header size='huge'>{name} <LoveItem type='artist' item={{ id }} /></Header>
-                {/* <div>{biography}</div> */}
                 <ShowMore content={biography} />
               </Grid.Column>
             </Grid.Row>
@@ -74,12 +73,8 @@ class Artist extends Component {
             <ItemCards items={featuredReleases} itemType='release' />
           }
         </Grid>
-        {trackListing.tracks && trackListing.tracks.length > 0 &&
-          <React.Fragment>
-            <Header textAlign='left' dividing>TRACKS</Header>
-            <ResponsiveTrackListing trackListing={trackListing.tracks} isPlaylist={true} isLoading={false} page={1} perPage={10} />
-          </React.Fragment>
-        }
+        <Header textAlign='left' dividing>TRACKS</Header>
+        <TrackListingGroup trackListing={trackListing} />
       </Fragment>
     );
   }
