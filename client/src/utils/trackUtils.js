@@ -8,24 +8,31 @@ import store from '../store';
 import * as actionCreators from '../actions/ActionCreators';
 import * as thunks from '../thunks';
 
-export const constructLinks = (listItem, type) => {
+export const constructLinks = (listItem, type, limit = 0) => {
   // takes in an array of genres or artists and contructs individual Link objects
   if (!Array.isArray(listItem)) return;
 
   return listItem.map((val, idx) => {
+    if (limit > 0 && idx >= limit) return null;
+
     const { name, id, slug } = val;
-    const returnUrl = `/most-popular/${type}/${slug}/${id}/`;
+    // TODO: clean this up
+    let returnUrl = '';
+    if (type !== 'artist') {
+      returnUrl = `/most-popular/${type}/${slug}/${id}/`;
+    } else {
+      returnUrl = `/artist/${slug}/${id}`;
+    }
 
     return (
       <React.Fragment key={idx}>
-        {idx > 0 ? ',' : ''} <Link as='a' key={idx} to={returnUrl}>{name}</Link>
+        <Link as='a' key={idx} to={returnUrl}>{name}{listItem.length > 1 && idx !== listItem.length - 1 ? ', ' : null}</Link>
       </React.Fragment>
     )
   });
 }
 
 export const downloadTrack = track => {
-
   const handleNoDownload = () => {
     store.dispatch(actionCreators.stopAsync());
 

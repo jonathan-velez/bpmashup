@@ -1,16 +1,15 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Grid, Card, Image, Header, Responsive } from 'semantic-ui-react';
+import { Grid, Header } from 'semantic-ui-react';
 import Scroll from 'react-scroll';
 import _ from 'lodash';
 
 // TODO: Clean this shit up
 import * as actionCreators from '../actions/ActionCreators';
 import * as thunks from '../thunks';
-import { constructLinks } from '../utils/trackUtils';
 import ResponsiveTrackListing from './ResponsiveTrackListing';
+import ItemCards from './ItemCards';
 
 class SearchResultsController extends Component {
   componentDidMount() {
@@ -39,91 +38,19 @@ class SearchResultsController extends Component {
     const { artists, tracks, releases, labels } = searchResults;
 
     if (isLoading || _.isEmpty(searchResults)) return null;
-
-    const artistsRow = Array.isArray(artists) && artists.map(artist => {
-      return (
-        <Card key={artist.id}>
-          <Link to={`/most-popular/artist/${artist.slug}/${artist.id}`}>
-            <Image src={artist.images.large.secureUrl} />
-          </Link>
-          <Card.Content>
-            <Card.Header>
-              <Link to={`/most-popular/artist/${artist.slug}/${artist.id}`}>{artist.name}</Link>
-            </Card.Header>
-          </Card.Content>
-        </Card>
-      )
-    })
-
-    const labelsRow = Array.isArray(labels) && labels.map(label => {
-      return (
-        <Card key={label.id}>
-          <Link to={`/most-popular/label/${label.slug}/${label.id}`}>
-            <Image src={label.images.large.secureUrl} />
-          </Link>
-          <Card.Content>
-            <Card.Header>
-              <Link to={`/most-popular/label/${label.slug}/${label.id}`}>{label.name}</Link>
-            </Card.Header>
-          </Card.Content>
-        </Card>
-      )
-    })
-
-    const releasesRow = Array.isArray(releases) && releases.map(release => {
-      return (
-        <Card key={release.id}>
-          <Link to={`/release/${release.slug}/${release.id}`}>
-            <Image src={release.images.large.secureUrl} />
-          </Link>
-          <Card.Content>
-            <Card.Header>
-              <Link to={`/release/${release.slug}/${release.id}`}>{release.name}</Link>
-            </Card.Header>
-            <Card.Meta>
-              {constructLinks(release.artists, 'artist')}
-            </Card.Meta>
-            <Card.Meta>
-              <Link to={`/most-popular/label/${release.label.slug}/${release.label.id}`}>{release.label.name}</Link>
-            </Card.Meta>
-          </Card.Content>
-        </Card>
-      )
-    })
-
+    
     return (
       <Grid stackable>
-        {artistsRow.length > 0 ?
-          <Grid.Row>
-            <Grid.Column>
-              <Header textAlign='left' dividing>ARTISTS</Header>
-              <Card.Group itemsPerRow={4}>
-                {artistsRow}
-              </Card.Group>
-            </Grid.Column>
-          </Grid.Row>
+        {artists.length > 0 ?
+          <ItemCards items={artists} itemType='artist' />
           : null
         }
-        {labelsRow.length > 0 ?
-          <Grid.Row>
-            <Grid.Column>
-              <Header textAlign='left' dividing>LABELS</Header>
-              <Card.Group itemsPerRow={4}>
-                {labelsRow}
-              </Card.Group>
-            </Grid.Column>
-          </Grid.Row>
+        {labels.length > 0 ?
+          <ItemCards items={labels} itemType='label' />
           : null
         }
-        {releasesRow.length > 0 ?
-          <Grid.Row>
-            <Grid.Column>
-              <Header textAlign='left' dividing>RELEASES</Header>
-              <Card.Group itemsPerRow={4}>
-                {releasesRow}
-              </Card.Group>
-            </Grid.Column>
-          </Grid.Row>
+        {releases.length > 0 ?
+          <ItemCards items={releases} itemType='release' />
           : null
         }
         {tracks.length > 0 ?
