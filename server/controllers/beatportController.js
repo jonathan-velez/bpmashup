@@ -72,8 +72,7 @@ async function callApi(req, res) {
 
 // Get artist details from Beatport. If no biography is found, hit up Last.fm's API and patch the bio into the BP response object
 async function getArtistData(req, res) {
-  const { query } = req;
-  let detail = await executeOA('artists/detail', { id: query.id });
+  let detail = await executeOA('artists/detail', { id: req.query.id });
   let { results } = detail;
   let jsonResponse = {};
 
@@ -97,6 +96,8 @@ async function getArtistData(req, res) {
           }
         })
       }
+    } else {
+      Object.assign(jsonResponse, detail);
     }
   }
   res.json(jsonResponse);
