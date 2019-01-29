@@ -6,13 +6,12 @@ import TrackListingTable from './TrackListingTable';
 import Pager from './Pager';
 import { DEFAULT_PER_PAGE } from '../constants/defaults';
 
-const TrackListingGroup = ({ trackListing }) => {
+const TrackListingGroup = ({ trackListing = {} }) => {
   const { tracks, metadata, tracklistView } = trackListing;
 
   if (!tracks || tracks.length < 0) {
     return null;
   }
-  
   const { totalPages, page, perPage } = metadata;
   return (
     <React.Fragment>

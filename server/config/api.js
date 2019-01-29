@@ -237,6 +237,41 @@ const apiConfig = {
       }
     ]
   },
+  'most-popular-releases/label': {
+    model: bpAPIModels.track,
+    params: [
+      {
+        name: 'page',
+        dataType: 'int',
+        required: false
+      },
+      {
+        name: 'perPage',
+        dataType: 'int',
+        required: false
+      },
+      {
+        name: 'facets',
+        dataType: 'string',
+        required: false
+      },
+      {
+        name: 'countryId',
+        dataType: 'int',
+        required: false
+      },
+      {
+        name: 'type',
+        dataType: 'int',
+        required: false
+      },
+      {
+        name: 'id',
+        dataType: 'int',
+        required: false
+      }
+    ]
+  },
   'search': {
     model: bpAPIModels.track,
     params: [

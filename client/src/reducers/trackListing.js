@@ -28,13 +28,13 @@ const trackListing = (state = defaultState, action) => {
     case LOAD_TRACKS:
       // since we are overriding the tracks in the tracklisting, we need to also update the metadata props that are pulled from the bp api
       const { payload: tracks = [] } = action;
-      const totalPages = Math.ceil(Object.keys(tracks).length / 20);
+      const totalPages = Math.ceil(tracks.length / 25);
 
       return {
         ...state,
         metadata: {
           pageType: 'playlist',
-          perPage: 20,
+          perPage: 25,
           page: 1,
           totalPages
         },

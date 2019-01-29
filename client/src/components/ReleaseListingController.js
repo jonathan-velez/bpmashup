@@ -51,7 +51,7 @@ class ReleaseListingController extends Component {
                 <Item.Header>{releaseListing.name}</Item.Header>
                 <Item.Meta>{constructLinks(releaseListing.artists, 'artist')}</Item.Meta>
                 <Item.Meta>
-                  {releaseListing.catalogNumber} [<Link to={`/most-popular/label/${releaseListing.label.slug}/${releaseListing.label.id}`}>{releaseListing.label.name}</Link>]
+                  {releaseListing.catalogNumber} [<Link to={`/label/${releaseListing.label.slug}/${releaseListing.label.id}`}>{releaseListing.label.name}</Link>]
                 </Item.Meta>
                 <Item.Description>{releaseListing.description}</Item.Description>
                 <Item.Extra>{releaseListing.releaseDate}</Item.Extra>

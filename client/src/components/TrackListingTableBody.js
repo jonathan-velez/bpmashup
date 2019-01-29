@@ -34,7 +34,7 @@ const TrackListingTableBody = ({ trackListing, downloadedTracks, isPlaylist = tr
           </Table.Cell>
           <Table.Cell>{track.title}</Table.Cell>
           <Table.Cell>{constructLinks(track.artists, 'artist')}</Table.Cell>
-          <Table.Cell><Link to={`/most-popular/label/${track.label.slug}/${track.label.id}`}>{track.label.name}</Link></Table.Cell>
+          <Table.Cell><Link to={`/label/${track.label.slug}/${track.label.id}`}>{track.label.name}</Link></Table.Cell>
           <Table.Cell>{constructLinks(track.genres, 'genre')}</Table.Cell>
           <Table.Cell>{track.bpm}</Table.Cell>
           <Table.Cell>{musicalKeyFilter(track.key && track.key.shortName)}</Table.Cell>

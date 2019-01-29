@@ -15,7 +15,7 @@ const ItemCards = ({ items, itemType }) => {
         linkUrl = `/artist/${slug}/${id}`;
         break;
       case 'label':
-        linkUrl = `/most-popular/label/${slug}/${id}`;
+        linkUrl = `/label/${slug}/${id}`;
         break;
       case 'release':
         const { artists, label } = item;
@@ -26,7 +26,7 @@ const ItemCards = ({ items, itemType }) => {
               {constructLinks(artists, 'artist', 3)}
             </Card.Meta>
             <Card.Meta>
-              [<Link to={`/most-popular/label/${label.slug}/${label.id}`}>{label.name}</Link>]
+              [<Link to={`/label/${label.slug}/${label.id}`}>{label.name}</Link>]
             </Card.Meta>
           </React.Fragment>
         break;

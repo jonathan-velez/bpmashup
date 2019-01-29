@@ -115,7 +115,7 @@ export const loadNextTrack = (incrementBy = 1) => {
 
 export const genreLabel = genres => (`Genre${(genres.length > 1 ? "s" : "")}`);
 
-export const labelUrl = label => (`/most-popular/label/${label.slug}/${label.id}`);
+export const labelUrl = label => (`/label/${label.slug}/${label.id}`);
 
 // TODO: Fill these in
 export const trackGenreColors = {

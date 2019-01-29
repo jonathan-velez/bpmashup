@@ -7,6 +7,7 @@ import { getMyFavoriteLabels } from './myFavoritesThunk';
 import { searchEverything } from './searchEverythingThunk';
 import { fetchReleaseData } from './releaseThunk';
 import { getArtistThunk, getArtistEvents } from './artistThunk';
+import { getLabelDetail } from './labelThunk';
 
 export {
   loadTrackThunk,
@@ -25,5 +26,6 @@ export {
   searchEverything,
   fetchReleaseData,
   getArtistThunk,
-  getArtistEvents
+  getArtistEvents,
+  getLabelDetail,
 };

@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { Button } from 'semantic-ui-react';
+import Scroll from 'react-scroll';
 
 class ShowMore extends Component {
   state = {
@@ -7,6 +8,9 @@ class ShowMore extends Component {
   }
 
   toggleExpanded = () => {
+    if (this.state.expanded) {
+      Scroll.animateScroll.scrollToTop({ duration: 1500 });
+    }
     this.setState({ expanded: !this.state.expanded });
   }
 
@@ -28,7 +32,7 @@ class ShowMore extends Component {
 
     return (
       <Fragment>
-        <div className='artist-biography'>
+        <div className='biography' id='biography'>
           {expanded || reducedContent.length === 0 ? content : reducedContent}
         </div>
         {reducedContent.length > 0 ?
