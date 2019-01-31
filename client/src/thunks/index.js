@@ -6,7 +6,7 @@ import { toggleLoveItem } from './loveItemThunk';
 import { getMyFavoriteLabels } from './myFavoritesThunk';
 import { searchEverything } from './searchEverythingThunk';
 import { fetchReleaseData } from './releaseThunk';
-import { getArtistThunk, getArtistEvents } from './artistThunk';
+import { getArtistDetails } from './artistThunk';
 import { getLabelDetail } from './labelThunk';
 
 export {
@@ -25,7 +25,6 @@ export {
   getMyFavoriteLabels,
   searchEverything,
   fetchReleaseData,
-  getArtistThunk,
-  getArtistEvents,
+  getArtistDetails,
   getLabelDetail,
 };

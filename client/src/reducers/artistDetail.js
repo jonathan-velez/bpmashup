@@ -1,28 +1,20 @@
-import { GET_ARTIST_DETAIL, GET_ARTIST_EVENTS_BY_NAME } from '../constants/actionTypes';
+import { GET_ARTIST_DETAIL } from '../constants/actionTypes';
 
 const defaultState = {
   artistData: {},
-  events: [],
+  eventsData: [],
 };
 
 const artistDetail = (state = defaultState, action) => {
   switch (action.type) {
     case GET_ARTIST_DETAIL:
-      const { data } = action.payload;
-      const { results: artistData } = data;
+      const { artistData, eventsData } = action.payload;
 
       return {
         ...state,
-        artistData
-      };
-    case GET_ARTIST_EVENTS_BY_NAME:
-      const { data: eventData } = action.payload;
-      const { events } = eventData;
-
-      return {
-        ...state,
-        events
-      };
+        artistData,
+        eventsData,
+      }
     default:
       return state;
   }

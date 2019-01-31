@@ -8,7 +8,8 @@ import {
   GET_RELEASE_DATA,
   GET_ARTIST_DETAIL,
   GET_ARTIST_EVENTS_BY_NAME,
-  GET_LABEL_DETAIL
+  GET_LABEL_DETAIL,
+  GENERAL_ERROR,
 } from '../constants/actionTypes';
 
 const isLoading = (state = false, action) => {
@@ -24,6 +25,8 @@ const isLoading = (state = false, action) => {
     case GET_ARTIST_DETAIL:
     case GET_ARTIST_EVENTS_BY_NAME:
     case GET_LABEL_DETAIL:
+    case GENERAL_ERROR:
+      if(action.error) console.log(GENERAL_ERROR, action.error);
       return false;
     default:
       return state;

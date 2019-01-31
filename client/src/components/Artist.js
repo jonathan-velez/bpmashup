@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Grid, Image, Header } from 'semantic-ui-react';
 import Scroll from 'react-scroll';
 
-import { getArtistThunk, getArtistEvents } from '../thunks/artistThunk';
+import { getArtistDetails } from '../thunks';
 import TrackListingGroup from './TrackListingGroup';
 import ItemCards from './ItemCards';
 import GenreLabel from './GenreLabel';
@@ -25,16 +25,19 @@ class Artist extends Component {
 
   fetchArtistData() {
     Scroll.animateScroll.scrollToTop({ duration: 1500 });
-    this.props.getArtistThunk(this.props.match.params.artistId);
-    this.props.getArtistEvents(this.props.match.params.artistName);
+    const artist = {
+      artistId: this.props.match.params.artistId,
+      artistName: this.props.match.params.artistName
+    }
+    this.props.getArtistDetails(artist);
   }
 
   render() {
     const { artistDetail, trackListing } = this.props;
-    const { artistData, events } = artistDetail;
+    const { artistData = {}, eventsData = [] } = artistDetail;
     const { name, id, biography, images, genres, featuredReleases } = artistData;
     const imageSrc = images && images.large.secureUrl;
-
+    if (Object.keys(artistData).length === 0) return null; // TODO: do something nicer here
     return (
       <Fragment>
         <Grid divided stackable>
@@ -45,7 +48,7 @@ class Artist extends Component {
               </Grid.Column>
               <Grid.Column textAlign='right'>
                 <Header size='huge'>{name} <LoveItem type='artist' item={{ id }} /></Header>
-                <ShowMore content={biography} />
+                {biography && <ShowMore content={biography} />}
               </Grid.Column>
             </Grid.Row>
           }
@@ -61,11 +64,11 @@ class Artist extends Component {
               </Grid.Column>
             </Grid.Row>
           }
-          {events && events.length > 0 &&
+          {eventsData && eventsData.length > 0 &&
             <Grid.Row columns={1} textAlign='left'>
               <Grid.Column>
                 <Header textAlign='left' dividing>UPCOMING EVENTS</Header>
-                <EventsList events={events} />
+                <EventsList eventsData={eventsData} />
               </Grid.Column>
             </Grid.Row>
           }
@@ -88,7 +91,7 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => {
-  return bindActionCreators({ getArtistThunk, getArtistEvents }, dispatch);
+  return bindActionCreators({ getArtistDetails }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Artist);
