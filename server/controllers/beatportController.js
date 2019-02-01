@@ -78,6 +78,11 @@ async function getArtistData(req, res) {
 
   if (results) {
     const { biography, name } = results;
+    jsonResponse = {
+      ...jsonResponse,
+      results
+    }
+
     if (!biography) {
       console.log('No bio in beatport, call last-fm API', name);
       const lastFmArtistData = await lastFmController.callGetArtistInfo(name);
@@ -88,16 +93,15 @@ async function getArtistData(req, res) {
         // remove last.fm link
         biography = biography.substr(0, biography.indexOf('<a href=\"https://www.last.fm'));
 
-        Object.assign(jsonResponse, {
+        jsonResponse = {
+          ...jsonResponse,
           ...detail,
           results: {
             ...results,
             biography
           }
-        })
+        }
       }
-    } else {
-      Object.assign(jsonResponse, detail);
     }
   }
   res.json(jsonResponse);
