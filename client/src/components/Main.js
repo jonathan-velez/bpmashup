@@ -4,7 +4,6 @@ import { Container } from 'semantic-ui-react';
 
 import TrackListingController from './TrackListingController';
 import PlaylistController from './PlaylistController';
-import About from './About';
 import MyLovedLabels from './MyLovedLabels';
 import SearchResultsController from './SearchResultsController';
 import ReleaseListingController from './ReleaseListingController';
@@ -19,7 +18,6 @@ const Main = () => {
   return (
     <Container style={containerStyle} textAlign='center'>
       <Switch>
-        <Route exact path='/about' component={About} />
         <Route exact path='/my-loves' component={MyLovedLabels} />
         <Route exact path='/artist/:artistName/:artistId' component={Artist} />
         <Route exact path='/label/:labelName/:labelId' component={Label} />
