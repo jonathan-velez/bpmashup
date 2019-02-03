@@ -7,15 +7,12 @@ import PlaylistDropdownControl from './PlaylistDropdownControl';
 import SearchTracks from './SearchTracks';
 import Auth from './Auth';
 
-const Navigation = props => {
+const Navigation = () => {
   return (
-    <Menu fixed='top' inverted>
+    <Menu fixed='top' inverted borderless>
       <Container textAlign='center'>
         <Menu.Item header>
           <Link to="/">BPMashup</Link>
-        </Menu.Item>
-        <Menu.Item>
-          <Link to="/about">Aboot</Link>
         </Menu.Item>
         <GenreControl />
         <PlaylistDropdownControl />
