@@ -18,7 +18,7 @@ const TrackListingTableBody = ({ trackListing, downloadedTracks, isPlaylist = tr
     const orderedTracks = _.orderBy(trackListing, orderBy, 'asc');
 
     trackListingBody = _.map(orderedTracks, (track, idx) => {
-      const hasBeenDownloaded = downloadedTracks.includes(track.id.toString());
+      const hasBeenDownloaded = downloadedTracks.includes(track.id && track.id.toString());
       return (
         <Table.Row key={track.id} id={`track-${track.id}`} negative={hasBeenDownloaded}>
           <Table.Cell>
