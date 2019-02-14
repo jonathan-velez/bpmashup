@@ -1,7 +1,7 @@
 import React from 'react';
 import _ from 'lodash';
 import { Card, Message, Header } from 'semantic-ui-react';
-import Track from './Track';
+import TrackCard from './TrackCard';
 
 const TrackListingCards = ({ trackListing, isLoading }) => {
   if (isLoading) return null;
@@ -10,7 +10,7 @@ const TrackListingCards = ({ trackListing, isLoading }) => {
     const orderedTracks = _.sortBy(trackListing, 'position');
     this.trackListing = orderedTracks.map(track => {
       return (
-        <Track track={track} key={track.id} />
+        <TrackCard track={track} key={track.id} />
       )
     });
   } else {
