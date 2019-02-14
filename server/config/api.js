@@ -475,6 +475,66 @@ const apiConfig = {
         allowedValues: ['publishDate ASC', 'publishDate DESC']
       }
     ]
+  },
+  'my-beatport': {
+    model: bpAPIModels.track,
+    params: [
+      {
+        name: 'labelIds',
+        dataType: 'string',
+        required: false
+      },
+      {
+        name: 'artistIds',
+        dataType: 'string',
+        required: false
+      },
+      {
+        name: 'releaseDateStart',
+        dataType: 'string',
+        required: false
+      },
+      {
+        name: 'releaseDateEnd',
+        dataType: 'string',
+        required: false
+      },
+      {
+        name: 'publishDateStart',
+        dataType: 'string',
+        required: false
+      },
+      {
+        name: 'publishDateEnd',
+        dataType: 'string',
+        required: false
+      },
+      {
+        name: 'page',
+        dataType: 'string',
+        required: false
+      },
+      {
+        name: 'perPage',
+        dataType: 'string',
+        required: false
+      },
+      {
+        name: 'sortBy',
+        dataType: 'string',
+        required: false
+      },
+      {
+        name: 'facets',
+        dataType: 'string',
+        required: false
+      },
+      {
+        name: 'returnFacets',
+        dataType: 'string',
+        required: false
+      }
+    ]
   }
 }
 

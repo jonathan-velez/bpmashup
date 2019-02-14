@@ -1,12 +1,26 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { Button } from 'semantic-ui-react';
+import queryString from 'query-string';
 
 const PerPageSelection = ({ activePage = 1, totalPages, perPage = 25, history }) => {
   if (!totalPages) return null;
 
   const updatePerPage = (perPage) => {
-    history.push(`?perPage=${perPage}&page=${activePage}`);
+    const { search, pathname } = history && history.location;
+    const parsedSearch = queryString.parse(search);
+
+    const newSearchString = queryString.stringify({
+      ...parsedSearch,
+      page: activePage || 1,
+      perPage,
+    });
+
+    const pushObject = {
+      pathname,
+      search: newSearchString,
+    }
+    history.push(pushObject);
   }
 
   return (

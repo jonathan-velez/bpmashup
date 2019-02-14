@@ -16,6 +16,9 @@ const Navigation = () => {
         </Menu.Item>
         <GenreControl />
         <PlaylistDropdownControl />
+        <Menu.Item as={Link} to='/tracks'>
+          Tracks
+        </Menu.Item>
         <Menu.Item>
           <SearchTracks />
         </Menu.Item>

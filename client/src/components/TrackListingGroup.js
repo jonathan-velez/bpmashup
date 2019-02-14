@@ -12,7 +12,7 @@ const TrackListingGroup = ({ trackListing = {} }) => {
   if (!tracks || tracks.length < 0) {
     return null;
   }
-  const { totalPages, page, perPage } = metadata;
+  const { totalPages, page, perPage, query } = metadata;
   return (
     <React.Fragment>
       <TrackListingActionRow activePage={page} totalPages={totalPages} perPage={perPage} />
@@ -22,7 +22,7 @@ const TrackListingGroup = ({ trackListing = {} }) => {
         <TrackListingTable trackListing={tracks} isPlaylist={false} page={page} perPage={perPage} />
       }
       {totalPages > 1 ?
-        <Pager activePage={page} totalPages={totalPages} firstItem={null} lastItem={null} perPage={perPage || DEFAULT_PER_PAGE} />
+        <Pager activePage={page} totalPages={totalPages} firstItem={null} lastItem={null} perPage={perPage || DEFAULT_PER_PAGE} query={query} />
         :
         null
       }

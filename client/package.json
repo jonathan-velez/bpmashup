@@ -9,6 +9,7 @@
     "lodash": "^4.17.4",
     "moment": "^2.20.1",
     "node-uuid": "^1.4.8",
+    "query-string": "^6.2.0",
     "react": "^16.2.0",
     "react-autosuggest": "^9.3.3",
     "react-dom": "^16.2.0",

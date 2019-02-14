@@ -9,6 +9,7 @@ import SearchResultsController from './SearchResultsController';
 import ReleaseListingController from './ReleaseListingController';
 import Artist from './Artist';
 import Label from './Label';
+import TracksController from './TracksController';
 
 const Main = () => {
   const containerStyle = {
@@ -26,6 +27,7 @@ const Main = () => {
         <Route exact path="/playlist/:playlistName/:playlistId" component={PlaylistController} />
         <Route exact path="/search/:searchTerm" component={SearchResultsController} />
         <Route exact path="/release/:releaseName/:releaseId" component={ReleaseListingController} />
+        <Route exact path="/tracks" component={TracksController} />
         <Route exact path="/" component={TrackListingController} />
       </Switch>
     </Container>

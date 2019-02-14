@@ -10,6 +10,7 @@ import {
   GET_ARTIST_EVENTS_BY_NAME,
   GET_LABEL_DETAIL,
   GENERAL_ERROR,
+  GET_TRACKS,
 } from '../constants/actionTypes';
 
 const isLoading = (state = false, action) => {
@@ -25,6 +26,7 @@ const isLoading = (state = false, action) => {
     case GET_ARTIST_DETAIL:
     case GET_ARTIST_EVENTS_BY_NAME:
     case GET_LABEL_DETAIL:
+    case GET_TRACKS:
     case GENERAL_ERROR:
       if(action.error) console.log(GENERAL_ERROR, action.error);
       return false;

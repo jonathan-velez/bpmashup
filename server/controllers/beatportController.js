@@ -45,11 +45,20 @@ const executeOA = (reqPath, reqQuery) => {
 
 async function callApi(req, res) {
   const reqPath = utils.filterPath(req.url);
-  const reqQuery = req.query;
+  let reqQuery = req.query;
   let jsonResponse = {};
 
   try {
     const model = bpAPIConfig[reqPath].model;
+    
+    // encode facets string
+    if (reqQuery.facets) {
+      reqQuery = {
+        ...reqQuery,
+        facets: encodeURIComponent(reqQuery.facets)
+      }
+    }
+
     const bpData = await executeOA(reqPath, reqQuery);
 
     // remove properties that aren't in our model

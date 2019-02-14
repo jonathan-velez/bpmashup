@@ -8,6 +8,7 @@ import { searchEverything } from './searchEverythingThunk';
 import { fetchReleaseData } from './releaseThunk';
 import { getArtistDetails } from './artistThunk';
 import { getLabelDetail } from './labelThunk';
+import { getTracks } from './tracksThunk';
 
 export {
   loadTrackThunk,
@@ -27,4 +28,5 @@ export {
   fetchReleaseData,
   getArtistDetails,
   getLabelDetail,
+  getTracks,
 };
