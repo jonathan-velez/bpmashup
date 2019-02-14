@@ -5,10 +5,12 @@ import TrackCard from './TrackCard';
 
 const TrackListingCards = ({ trackListing, isLoading }) => {
   if (isLoading) return null;
+
+  let trackListingCards = '';
   
   if (trackListing && Object.keys(trackListing).length > 0) {
     const orderedTracks = _.sortBy(trackListing, 'position');
-    this.trackListing = orderedTracks.map(track => {
+    trackListingCards = orderedTracks.map(track => {
       return (
         <TrackCard track={track} key={track.id} />
       )
@@ -24,7 +26,7 @@ const TrackListingCards = ({ trackListing, isLoading }) => {
 
   return (
     <Card.Group stackable itemsPerRow={4} className='trackListingCardGroup'>
-      {this.trackListing}
+      {trackListingCards}
     </Card.Group>
   )
 }
