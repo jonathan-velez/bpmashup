@@ -8,12 +8,12 @@ import { getAllPlaylistsTrackCount, getPlaylistCount } from '../utils/playlistUt
 import { slugify } from '../utils/helpers';
 
 const PlaylistDropdownControl = ({ playlistList }) => {
-  this.playlistItems = '';
+  let playlistItems = '';
 
-  this.firstListItem = <Dropdown.Item disabled text={`${getPlaylistCount(playlistList)} playlists, ${getAllPlaylistsTrackCount(playlistList)} tracks`} />
+  const firstListItem = <Dropdown.Item disabled text={`${getPlaylistCount(playlistList)} playlists, ${getAllPlaylistsTrackCount(playlistList)} tracks`} />
 
   if (playlistList && Object.keys(playlistList).length > 0) {
-    this.playlistItems = _.map(_.sortBy(playlistList, 'dateAdded'), playlist => {
+    playlistItems = _.map(_.sortBy(playlistList, 'dateAdded'), playlist => {
       const { name, id } = playlist;
       const url = `/playlist/${slugify(name)}/${id}`;
 
@@ -36,8 +36,8 @@ const PlaylistDropdownControl = ({ playlistList }) => {
       text='Playlists'
     >
       <Dropdown.Menu>
-        {this.firstListItem}
-        {this.playlistItems}
+        {firstListItem}
+        {playlistItems}
       </Dropdown.Menu>
     </Dropdown>
   )

@@ -18,7 +18,7 @@
     "react-redux-firebase": "^2.0.5",
     "react-router-dom": "^4.2.2",
     "react-router-redux": "^4.0.8",
-    "react-scripts": "1.1.0",
+    "react-scripts": "2.0.3",
     "react-scroll": "^1.7.6",
     "redux": "^3.7.2",
     "redux-logger": "^3.0.6",
@@ -33,5 +33,11 @@
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   },
-  "proxy": "http://localhost:3001"
+  "proxy": "http://localhost:3001",
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
 }

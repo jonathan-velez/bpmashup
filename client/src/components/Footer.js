@@ -19,7 +19,7 @@ import TrackActionDropdown from './TrackActionDropdown';
 const Footer = ({ seekChange, seekMouseUp, seekMouseDown, playPause, setVolume, startAsync, getYoutubeLink, mediaPlayer, playerRef, loadTrack }) => {
 
   // TODO: Refactor these functions into a module
-  this.scrollToTrack = (trackId) => {
+  const scrollToTrack = (trackId) => {
     scroller.scrollTo(`track-${trackId}`, {
       duration: 750,
       delay: 50,
@@ -28,20 +28,20 @@ const Footer = ({ seekChange, seekMouseUp, seekMouseDown, playPause, setVolume, 
     });
   }
 
-  this.seekChange = e => {
+  const handleSeekChange = e => {
     seekChange(+e.target.value);
   }
 
-  this.seekMouseUp = e => {
+  const handleSeekMouseUp = e => {
     playerRef.seekTo(+e.target.value)
     seekMouseUp();
   }
 
-  this.loadNextTrack = (incrementBy = 1) => {
+  const loadNextTrack = (incrementBy = 1) => {
     loadTrack(getNextTrack(incrementBy));
   }
 
-  this.getYouTube = loadedTrack => {
+  const getYouTube = loadedTrack => {
     if (loadedTrack.id) {
       startAsync();
       getYoutubeLink(`${loadedTrack.artists[0].name} ${loadedTrack.title}`);
@@ -78,12 +78,12 @@ const Footer = ({ seekChange, seekMouseUp, seekMouseDown, playPause, setVolume, 
             src={loadedTrack.images && loadedTrack.images.large.secureUrl}
             circular
             size='mini'
-            onClick={() => this.scrollToTrack(loadedTrack.id)}
+            onClick={() => scrollToTrack(loadedTrack.id)}
             className={`vinyl${playing ? ' vinyl-animate' : ''}`}
           />
         </Menu.Item>
         <Menu.Item>
-          <YouTubeButton getYouTube={this.getYouTube} loadedTrack={loadedTrack} isLoaded={youTubeUrl ? true : false} />
+          <YouTubeButton getYouTube={getYouTube} loadedTrack={loadedTrack} isLoaded={youTubeUrl ? true : false} />
         </Menu.Item>
         <Menu.Item>
           <Duration seconds={duration * played} />
@@ -91,20 +91,20 @@ const Footer = ({ seekChange, seekMouseUp, seekMouseDown, playPause, setVolume, 
         <SeekBar
           played={played}
           seekMouseDown={seekMouseDown}
-          seekChange={this.seekChange}
-          seekMouseUp={this.seekMouseUp}
+          seekChange={handleSeekChange}
+          seekMouseUp={handleSeekMouseUp}
         />
         <Menu.Item>
           <Duration seconds={duration} />
         </Menu.Item>
         <Menu.Item>
-          <PrevNextTrack buttonType='prev' handlePrevNextTrack={this.loadNextTrack} />
+          <PrevNextTrack buttonType='prev' handlePrevNextTrack={loadNextTrack} />
         </Menu.Item>
         <Menu.Item>
           <PlayPauseButton isPlaying={playing} playPause={playPause} />
         </Menu.Item>
         <Menu.Item>
-          <PrevNextTrack buttonType='next' handlePrevNextTrack={this.loadNextTrack} />
+          <PrevNextTrack buttonType='next' handlePrevNextTrack={loadNextTrack} />
         </Menu.Item >
         <Menu.Item>
           <MutePlayer />

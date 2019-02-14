@@ -1,6 +1,6 @@
 import loadTrackThunk from './loadTrackThunk';
-import { addPlaylist, removeFromPlaylist, addToPlaylist, editPlaylistName, deletePlaylist, addNewPlaylist, loadPlaylists, } from './playlistThunk';
-import { downloadTrack, loadDownloadedTracks } from './downloadTrackThunk';
+import { removeFromPlaylist, addToPlaylist, editPlaylistName, deletePlaylist, addNewPlaylist, loadPlaylists, } from './playlistThunk';
+import { downloadTrack } from './downloadTrackThunk';
 import { toggleLoveTrack } from './loveTrackThunk';
 import { toggleLoveItem } from './loveItemThunk';
 import { getMyFavoriteLabels } from './myFavoritesThunk';
@@ -12,7 +12,6 @@ import { getTracks } from './tracksThunk';
 
 export {
   loadTrackThunk,
-  addPlaylist,
   removeFromPlaylist,
   addToPlaylist,
   editPlaylistName,
@@ -20,7 +19,6 @@ export {
   addNewPlaylist,
   loadPlaylists,
   downloadTrack,
-  loadDownloadedTracks,
   toggleLoveTrack,
   toggleLoveItem,
   getMyFavoriteLabels,
