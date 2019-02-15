@@ -113,6 +113,7 @@ class Tracks extends Component {
             <Grid.Column>
               <Dropdown
                 placeholder='Genres'
+                clearable
                 fluid
                 search
                 selection
@@ -124,6 +125,7 @@ class Tracks extends Component {
             <Grid.Column>
               <Dropdown
                 placeholder='Key'
+                clearable
                 fluid
                 search
                 selection
