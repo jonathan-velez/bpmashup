@@ -8,7 +8,7 @@ const YouTubeButtonPopup = ({ youTubeObject }) => {
       <Item>
         <Item.Image size='tiny' src={youTubeObject.youTubeImageUrl} />
         <Item.Content verticalAlign='middle'>
-          <Item.Header><a href={youTubeObject.youTubeUrl} target="_blank">{youTubeObject.youTubeTitle}</a></Item.Header>
+          <Item.Header><a href={youTubeObject.youTubeUrl} target="_blank" rel="noopener noreferrer">{youTubeObject.youTubeTitle}</a></Item.Header>
         </Item.Content>
       </Item>
     </Item.Group>

@@ -11,7 +11,7 @@ const EventsList = ({ events }) => {
           <List.Item key={idx}>
             <Icon name='calendar alternate' />
             <List.Content>
-              <List.Header><a href={event.uri} target='_blank'>{event.venue.displayName}</a> ({event.start.date})</List.Header>
+              <List.Header><a href={event.uri} target='_blank' rel="noopener noreferrer">{event.venue.displayName}</a> ({event.start.date})</List.Header>
               <Icon name='map marker alternate' /> {event.location.city}
             </List.Content>
           </List.Item>
