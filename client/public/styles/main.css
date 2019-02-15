@@ -343,3 +343,7 @@
     text-align: justify;
     padding-bottom: 10px;
   }
+
+  .item-header {
+    text-transform: uppercase!important;
+  }

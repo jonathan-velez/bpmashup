@@ -42,7 +42,7 @@ class Label extends Component {
                 <Image src={imageSrc} />
               </Grid.Column>
               <Grid.Column textAlign='right'>
-                <Header size='huge'>{name} <LoveItem type='label' item={{ id }} /></Header>
+                <Header size='huge' className='item-header'>{name} <LoveItem type='label' item={{ id }} /></Header>
                 {biography && <ShowMore content={biography} />}
               </Grid.Column>
             </Grid.Row>
