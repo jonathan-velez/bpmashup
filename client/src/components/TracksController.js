@@ -20,7 +20,7 @@ class Tracks extends Component {
   }
 
   componentDidMount() {
-    this.fetchTracks(queryString.parse(this.props.location.search));
+    this.fetchTracks(Object.assign({}, this.parseParams(), queryString.parse(this.props.location.search)));
   }
 
   componentWillReceiveProps(nextProps) {
@@ -36,8 +36,25 @@ class Tracks extends Component {
     const prevSearchParams = queryString.parse(prevProps.location.search);
 
     if (!_.isEqual(prevSearchParams, newSearchParams)) {
-      this.fetchTracks(newSearchParams);
+      this.fetchTracks(Object.assign({}, this.parseParams(), newSearchParams));
     }
+  }
+
+  parseParams() {
+    const { itemType, itemId } = this.props.match.params;
+    const extraParams = {};
+
+    switch (itemType) {
+      case 'artist':
+        extraParams.artistId = itemId;
+        break;
+      case 'label':
+        extraParams.labelId = itemId;
+        break;
+      default:
+        break;
+    }
+    return extraParams;
   }
 
   fetchTracks(payload) {

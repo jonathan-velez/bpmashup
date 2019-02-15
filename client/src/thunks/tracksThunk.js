@@ -14,6 +14,8 @@ export const getTracks = async (searchFacets) => {
     const facetsModel = {
       key: null,
       genre: null,
+      artistId: null,
+      labelId: null,
     };
 
     const facetsParams = !_.isEmpty(searchFacets) && Object.keys(facetsModel).reduce((obj, key) => {
