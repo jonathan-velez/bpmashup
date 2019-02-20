@@ -1,12 +1,12 @@
 import React from 'react';
 import { List, Icon } from 'semantic-ui-react';
 
-const EventsList = ({ events }) => {
-  if (!Array.isArray(events) || events.length === 0) return null;
+const EventsList = ({ eventsData }) => {
+  if (!Array.isArray(eventsData) || eventsData.length === 0) return null;
 
   return (
-    <List verticalAlign='middle'>
-      {events.map((event, idx) => {
+    <List  floated='left'>
+      {eventsData.map((event, idx) => {
         return (
           <List.Item key={idx}>
             <Icon name='calendar alternate' />

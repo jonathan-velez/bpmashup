@@ -22,7 +22,7 @@ export const getArtistDetails = ({ artistId, artistName }) => {
         type: GET_ARTIST_DETAIL,
         payload: {
           artistData: artistData.results,
-          eventsData: eventsData.results,
+          eventsData: eventsData.events,
         }
       })
     }
