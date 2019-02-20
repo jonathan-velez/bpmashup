@@ -4,7 +4,7 @@ import { Grid, Card, Image, Header } from 'semantic-ui-react';
 
 import { constructLinks } from '../utils/trackUtils';
 
-const ItemCards = ({ items, itemType }) => {
+const ItemCards = ({ items, itemType, showHeader = true }) => {
   const itemsRow = Array.isArray(items) && items.map(item => {
     const { slug, id, images, name } = item;
     let linkUrl = '';
@@ -18,8 +18,9 @@ const ItemCards = ({ items, itemType }) => {
         linkUrl = `/label/${slug}/${id}`;
         break;
       case 'release':
+      case 'track':
         const { artists, label } = item;
-        linkUrl = `/release/${slug}/${id}`;
+        linkUrl = `/${itemType}/${slug}/${id}`;
         metaContent =
           <React.Fragment>
             <Card.Meta className='boldedText'>
@@ -55,7 +56,9 @@ const ItemCards = ({ items, itemType }) => {
       {itemsRow.length > 0 ?
         <Grid.Row>
           <Grid.Column>
-            <Header textAlign='left' dividing>{itemType.concat('S').toUpperCase()}</Header>
+            {showHeader &&
+              <Header textAlign='left' dividing>{itemType.concat('S').toUpperCase()}</Header>
+            }
             <Card.Group itemsPerRow={4}>
               {itemsRow}
             </Card.Group>
