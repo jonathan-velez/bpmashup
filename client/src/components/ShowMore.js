@@ -21,7 +21,7 @@ class ShowMore extends Component {
   }
 
   render() {
-    const { content, reducedSize = 1250 } = this.props;
+    const { content, reducedSize = 1200 } = this.props;
     const { expanded } = this.state;
 
     if (!content) {
