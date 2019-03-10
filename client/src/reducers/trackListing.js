@@ -4,7 +4,7 @@ import { FETCH_TRACKS, SEARCH_TRACKS, LOAD_TRACKS, TOGGLE_TRACKLIST_VIEW } from 
 const defaultState = {
   metadata: {},
   tracks: {},
-  tracklistView: 'table',
+  tracklistView: 'cards',
 }
 
 const trackListing = (state = defaultState, action) => {
