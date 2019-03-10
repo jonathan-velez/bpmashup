@@ -20,11 +20,8 @@ class ReleaseListingController extends Component {
   }
 
   render() {
-    const { trackListing, releaseListing, isLoading } = this.props;
-    const { tracks } = trackListing;
-    console.log('tracks', tracks);
-    console.log('releaseListing', releaseListing)
-
+    const { releaseListing, isLoading } = this.props;
+    
     return (
       <Fragment>
         <Item.Group>
@@ -72,7 +69,6 @@ class ReleaseListingController extends Component {
 const mapStateToProps = state => {
   return {
     isLoading: state.isLoading,
-    trackListing: state.trackListing,
     releaseListing: state.releaseListing,
   }
 }
