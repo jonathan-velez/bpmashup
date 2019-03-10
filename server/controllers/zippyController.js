@@ -40,10 +40,36 @@ async function scrape(req, res) {
       if (val.children.length > 0 && scriptData.includes('dlbutton')) {
         const scriptData = val.children[0].data;
 
+        /******** Sample of the script we need to emulate ********
+        var a = 497531;
+        var b = 742589;
+        document.getElementById('dlbutton').omg = "f";
+        if (document.getElementById('dlbutton').omg != 'f') {
+          a = Math.ceil(a / 3);
+
+        } else {
+          a = Math.floor(a / 3);
+
+        }
+        document.getElementById('dlbutton').href = "/d/nvOIQLGW/" + (a + 497531 % b) + "/Hermanez%20-%20Gate%20Of%20Falganda%20%28Original%20Mix%29%20edmwaves.org.mp3";
+        if (document.getElementById('fimage')) {
+          document.getElementById('fimage').href = "/i/nvOIQLGW/" + (a + 497531 % b) + "/Hermanez%20-%20Gate%20Of%20Falganda%20%28Original%20Mix%29%20edmwaves.org.mp3";
+
+        }
+        */
         try {
+          let aVar = scriptData.substring(scriptData.indexOf('var a =') + 8);
+          aVar = aVar.substring(0, aVar.indexOf(';'));
+
+          let bVar = scriptData.substring(scriptData.indexOf('var b =') + 8);
+          bVar = bVar.substring(0, bVar.indexOf(';'));
+
+          let omg = scriptData.indexOf('document.getElementById(\'dlbutton\').omg = "f";') >= 0;
+          aVar = omg ? Math.floor(aVar / 3) : aVar = Math.ceil(aVar / 3);
+
           let mp3Link = scriptData.substring(scriptData.indexOf('document.getElementById(\'dlbutton\').href = ') + 43);
           mp3Link = mp3Link.substring(0, mp3Link.indexOf(';'));
-          mp3Link = mp3Link.replace('a()', '1').replace('b()', '2').replace('c()', '3').replace('+ d +', '+ 4 +');
+          mp3Link = mp3Link.replace('(a', '(' + aVar).replace('%b)', '%' + bVar + ')');
 
           mp3Link = _eval('module.exports = ' + mp3Link);
 
