@@ -16,7 +16,7 @@ async function scrape(req, res) {
     return;
   }
 
-  const urlScrape = `https://www.google.com/search?q=${searchString}%20+site:zippyshare.com`;
+  const urlScrape = `https://www.google.com/search?q=${encodeURIComponent(searchString)}%20+site:zippyshare.com`;
 
   const googleCall = await axios.get(urlScrape);
 
@@ -25,7 +25,6 @@ async function scrape(req, res) {
   let zippyLink = ($($('.r a')[0]).attr('href'));
 
   let downloadLink = '';
-
   if (zippyLink) {
     zippyLink = zippyLink.substring(7);
     zippyLink = zippyLink.substring(0, zippyLink.indexOf('&'));

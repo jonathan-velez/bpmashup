@@ -51,7 +51,7 @@ export const downloadTrack = track => {
 
     store.dispatch(thunks.downloadTrack(track.id.toString()));
 
-    Axios.get(`/api/download-track?searchString=${strSearch}`)
+    Axios.get(`/api/download-track?searchString=${encodeURIComponent(strSearch)}`)
       .then(res => {
         store.dispatch(actionCreators.stopAsync());
         if (res.data.href) {
