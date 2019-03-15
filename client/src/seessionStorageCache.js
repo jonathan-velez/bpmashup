@@ -33,10 +33,12 @@ export const callAPIorCache = path => {
       let requestResult = getCachedResult(path);
       if (!requestResult) {
         requestResult = await axios.get(path);
-        setStorage(path, requestResult);
+        if (requestResult.status === 200) {
+          setStorage(path, requestResult);
+        }
       }
       resolve(requestResult);
-      return;  
+      return;
     } catch (error) {
       reject(error);
     }
