@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import Scroll from 'react-scroll';
 
 import * as actionCreators from '../actions/ActionCreators';
+import { fetchMostPopularTracks } from '../thunks/tracksThunk';
 import { deslugify } from '../utils/helpers';
 import { DEFAULT_PAGE, DEFAULT_PER_PAGE } from '../constants/defaults';
 import TrackListingGroup from './TrackListingGroup';
@@ -15,7 +16,7 @@ class TrackListingController extends React.Component {
   }
 
   componentDidMount() {
-    const { location, match, startAsync, searchTracks, fetchTracksSimilar, fetchTracks } = this.props;
+    const { location, match, startAsync, searchTracks, fetchTracksSimilar, fetchMostPopularTracks } = this.props;
     const { type, searchId, searchString, searchTerm, trackId } = match.params;
     const { search: thisSearch } = location;
 
@@ -37,16 +38,16 @@ class TrackListingController extends React.Component {
     } else if (trackId) {
       fetchTracksSimilar(trackId);
     } else {
-      fetchTracks(type, searchId, searchString, page, perPage);
+      fetchMostPopularTracks(type, searchId, searchString, page, perPage);
     }
   }
 
   componentWillReceiveProps(nextProps) {
-    const { isLoading, location, match, startAsync, searchTracks, fetchTracksSimilar, fetchTracks } = this.props;
+    const { isLoading, location, match, startAsync, searchTracks, fetchTracksSimilar, fetchMostPopularTracks } = this.props;
     const { type, searchId, searchString, searchTerm, trackId } = nextProps.match.params;
     const { search: nextSearch } = nextProps.location;
-    const { search: thisSearch } =  location;
-    const { searchTerm: thisSearchTerm, trackId: thisTrackId, searchId: thisSearchId } =  match.params;
+    const { search: thisSearch } = location;
+    const { searchTerm: thisSearchTerm, trackId: thisTrackId, searchId: thisSearchId } = match.params;
 
     // parse params
     const thisParams = {};
@@ -69,7 +70,7 @@ class TrackListingController extends React.Component {
     const newPerPage = +nextParams.perPage || DEFAULT_PER_PAGE;
 
     // fetch if we have a new query or new params
-    if (((searchId && searchId !== thisSearchId) || (newPage && newPage !== thisPage) || (searchTerm && searchTerm !== thisSearchTerm) || (trackId && trackId !== thisTrackId) || (newPerPage && newPerPage !== thisPerPage)) && ! isLoading) {
+    if (((searchId && searchId !== thisSearchId) || (newPage && newPage !== thisPage) || (searchTerm && searchTerm !== thisSearchTerm) || (trackId && trackId !== thisTrackId) || (newPerPage && newPerPage !== thisPerPage)) && !isLoading) {
       Scroll.animateScroll.scrollToTop({ duration: 1500 });
       startAsync();
 
@@ -78,7 +79,7 @@ class TrackListingController extends React.Component {
       } else if (trackId) {
         fetchTracksSimilar(trackId, newPage, newPerPage);
       } else {
-        fetchTracks(type, searchId, searchString, newPage, newPerPage);
+        fetchMostPopularTracks(type, searchId, searchString, newPage, newPerPage);
       }
     }
   }
@@ -132,7 +133,7 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => {
-  return bindActionCreators(actionCreators, dispatch);
+  return bindActionCreators(Object.assign(actionCreators, { fetchMostPopularTracks }), dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(TrackListingController);

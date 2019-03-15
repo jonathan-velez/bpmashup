@@ -1,4 +1,5 @@
 import Axios from 'axios';
+import { callAPIorCache } from '../seessionStorageCache';
 
 import {
   API_MOST_POPULAR,
@@ -51,8 +52,9 @@ export const stopAsync = () => {
   }
 }
 
-export const fetchTracks = (type = 'genre', id, name, page = 1, perPage = 20, endPoint = API_MOST_POPULAR) => {
-  const request = Axios.get(`${endPoint}/${type}?s=${name}&id=${id}&page=${page}&perPage=${perPage}`);
+export const fetchTracks = async (type = 'genre', id, name, page = 1, perPage = 20, endPoint = API_MOST_POPULAR) => {
+  console.log('fetchTracks action')
+  const request = await callAPIorCache(`${endPoint}/${type}?s=${name}&id=${id}&page=${page}&perPage=${perPage}`);
 
   return {
     type: FETCH_TRACKS,
@@ -60,8 +62,8 @@ export const fetchTracks = (type = 'genre', id, name, page = 1, perPage = 20, en
   }
 }
 
-export const searchTracks = (searchTerm, page = 1, perPage = 20) => {
-  const request = Axios.get(`${API_SEARCH}?query=${searchTerm}&facets=fieldType:track&sortBy=publishDate+DESC&perPage=${perPage}&page=${page}`);
+export const searchTracks = async (searchTerm, page = 1, perPage = 20) => {
+  const request = await callAPIorCache(`${API_SEARCH}?query=${searchTerm}&facets=fieldType:track&sortBy=publishDate+DESC&perPage=${perPage}&page=${page}`);
 
   return {
     type: SEARCH_TRACKS,
@@ -69,8 +71,8 @@ export const searchTracks = (searchTerm, page = 1, perPage = 20) => {
   }
 }
 
-export const fetchGenres = () => {
-  const request = Axios.get(API_GENRES);
+export const fetchGenres = async () => {
+  const request = await callAPIorCache(API_GENRES);
 
   return {
     type: FETCH_GENRES,
@@ -149,8 +151,8 @@ export const clearSuggestions = () => {
   }
 }
 
-export const loadSuggestions = ({value}) => {  
-  const request = Axios.get(`${API_AUTOCOMPLETE}?query=${value}`);
+export const loadSuggestions = async  ({value}) => {  
+  const request = await callAPIorCache(`${API_AUTOCOMPLETE}?query=${value}`);
 
   return {
     type: LOAD_SUGGESTIONS,
@@ -164,8 +166,8 @@ export const toggleMute = () => {
   }
 }
 
-export const getYoutubeLink = searchString => {
-  const request = Axios.get(`${API_GET_YOUTUBE_LINK}?q=${searchString}`);
+export const getYoutubeLink = async searchString => {
+  const request = await callAPIorCache(`${API_GET_YOUTUBE_LINK}?q=${searchString}`);
   return {
     type: GET_YOUTUBE_LINK,
     payload: request
@@ -213,8 +215,8 @@ export const setConfirm = payload => {
   }
 }
 
-export const fetchTracksSimilar = (trackId, page = 1, perPage = 20) => {
-  const request = Axios.get(`${API_SIMILAR_TRACKS}?id=${trackId}&perPage=${perPage}&page=${page}`);
+export const fetchTracksSimilar = async (trackId, page = 1, perPage = 20) => {
+  const request = await callAPIorCache(`${API_SIMILAR_TRACKS}?id=${trackId}&perPage=${perPage}&page=${page}`);
 
   return {
     type: SEARCH_TRACKS,

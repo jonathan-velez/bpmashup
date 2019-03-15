@@ -1,11 +1,11 @@
+import { callAPIorCache } from '../seessionStorageCache';
 import { SEARCH_EVERYTHING, LOAD_TRACKS } from '../constants/actionTypes';
 import { API_SEARCH_EVERYTHING } from '../constants/apiPaths';
-import axios from 'axios';
 
 export const searchEverything = searchBy => {
   return async (dispatch, getState) => {
     // parse search results and group by type. load tracks into trackListing reducer
-    const searchResponse = await axios.get(`${API_SEARCH_EVERYTHING}?query=${searchBy}&perPage=50`);
+    const searchResponse = await callAPIorCache(`${API_SEARCH_EVERYTHING}?query=${searchBy}&perPage=50`);
 
     const { data } = searchResponse;
     const { results } = data;

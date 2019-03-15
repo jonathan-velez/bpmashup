@@ -1,5 +1,4 @@
-import axios from 'axios';
-
+import { callAPIorCache } from '../seessionStorageCache';
 import { API_GET_LABEL_BY_ID, API_MOST_POPULAR_BY_LABEL, API_MOST_POPULAR_RELEASES_BY_LABEL } from '../constants/apiPaths';
 import { START_ASYNC, GET_LABEL_DETAIL, LOAD_TRACKS } from '../constants/actionTypes';
 
@@ -9,9 +8,9 @@ export const getLabelDetail = labelId => {
       type: START_ASYNC
     });
 
-    const labelData = await axios.get(`${API_GET_LABEL_BY_ID}?id=${labelId}`);
-    const labelTracks = await axios.get(`${API_MOST_POPULAR_BY_LABEL}?id=${labelId}&perPage=25`);
-    const labelReleases = await axios.get(`${API_MOST_POPULAR_RELEASES_BY_LABEL}?id=${labelId}`);
+    const labelData = await callAPIorCache(`${API_GET_LABEL_BY_ID}?id=${labelId}`);
+    const labelTracks = await callAPIorCache(`${API_MOST_POPULAR_BY_LABEL}?id=${labelId}&perPage=25`);
+    const labelReleases = await callAPIorCache(`${API_MOST_POPULAR_RELEASES_BY_LABEL}?id=${labelId}`);
 
     const { data } = labelData;
     let labelDataPayload = {};

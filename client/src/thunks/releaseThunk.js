@@ -1,4 +1,4 @@
-import axios from 'axios';
+import { callAPIorCache } from '../seessionStorageCache';
 import { GET_RELEASE_DATA, LOAD_TRACKS } from '../constants/actionTypes';
 import { API_GET_RELEASES, API_GET_TRACKS } from '../constants/apiPaths';
 
@@ -6,10 +6,10 @@ import { API_GET_RELEASES, API_GET_TRACKS } from '../constants/apiPaths';
 // Requires two separate BP API calls
 export async function fetchReleaseData(releaseId) {
   return async (dispatch, getState) => {
-    const releaseMetadata =  await axios.get(`${API_GET_RELEASES}?id=${releaseId}&perPage=50`);
+    const releaseMetadata =  await callAPIorCache(`${API_GET_RELEASES}?id=${releaseId}&perPage=50`);
     const releaseObject = releaseMetadata.data.results[0];
 
-    const releaseTracks = await axios.get(`${API_GET_TRACKS}?releaseId=${releaseId}&perPage=50`);
+    const releaseTracks = await callAPIorCache(`${API_GET_TRACKS}?releaseId=${releaseId}&perPage=50`);
     releaseObject.tracks = releaseTracks.data.results;
 
     dispatch({

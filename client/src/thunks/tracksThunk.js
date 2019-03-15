@@ -1,8 +1,10 @@
-import axios from 'axios';
 import { API_MY_BEATPORT } from '../constants/apiPaths';
 import { START_ASYNC, GET_TRACKS, FETCH_TRACKS } from '../constants/actionTypes';
 import queryString from 'query-string';
 import _ from 'lodash';
+
+import { API_MOST_POPULAR } from '../constants/apiPaths';
+import { callAPIorCache } from '../seessionStorageCache';
 
 export const getTracks = async (searchFacets) => {
   return async (dispatch) => {
@@ -44,7 +46,7 @@ export const getTracks = async (searchFacets) => {
       }
     }
 
-    const tracksRequest = await axios.get(`${API_MY_BEATPORT}?${pageParams}${facetsParams ? `&facets=${facetsString}` : ''}&sortBy=publishDate%20DESC`);
+    const tracksRequest = await callAPIorCache(`${API_MY_BEATPORT}?${pageParams}${facetsParams ? `&facets=${facetsString}` : ''}&sortBy=publishDate%20DESC`);
 
     dispatch({
       type: FETCH_TRACKS,
@@ -53,6 +55,17 @@ export const getTracks = async (searchFacets) => {
 
     dispatch({
       type: GET_TRACKS,
+    });
+  }
+}
+
+export const fetchMostPopularTracks = async (type = 'genre', id, name, page = 1, perPage = 20, endPoint = API_MOST_POPULAR) => {
+  return async (dispatch) => {
+    const requestResult = await callAPIorCache(`${endPoint}/${type}?s=${name}&id=${id}&page=${page}&perPage=${perPage}`);
+
+    dispatch({
+      type: FETCH_TRACKS,
+      payload: requestResult,
     });
   }
 }

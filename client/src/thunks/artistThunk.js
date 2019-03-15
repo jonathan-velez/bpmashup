@@ -1,5 +1,4 @@
-import Axios from 'axios';
-
+import { callAPIorCache } from '../seessionStorageCache';
 import { API_GET_ARTIST_DETAIL, API_GET_ARTIST_EVENTS_BY_NAME } from '../constants/apiPaths';
 import { START_ASYNC, LOAD_TRACKS, GET_ARTIST_DETAIL, GENERAL_ERROR } from '../constants/actionTypes';
 
@@ -39,8 +38,8 @@ export const getArtistDetails = ({ artistId, artistName }) => {
     });
 
     try {
-      const artistDetails = await Axios.get(`${API_GET_ARTIST_DETAIL}?id=${artistId}`);
-      const artistEvents = await Axios.get(`${API_GET_ARTIST_EVENTS_BY_NAME}?artistName=${artistName}`);
+      const artistDetails = await callAPIorCache(`${API_GET_ARTIST_DETAIL}?id=${artistId}`);
+      const artistEvents = await callAPIorCache(`${API_GET_ARTIST_EVENTS_BY_NAME}?artistName=${artistName}`);
 
       successfulCall({ artistDetails, artistEvents });
     } catch (error) {
