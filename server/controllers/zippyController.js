@@ -38,6 +38,7 @@ async function scrape(req, res) {
 
       if (val.children.length > 0 && scriptData.includes('dlbutton')) {
         const scriptData = val.children[0].data;
+        console.log('scriptData', scriptData);
 
         /******** Sample of the script we need to emulate ********
         var a = 497531;
@@ -59,20 +60,25 @@ async function scrape(req, res) {
         try {
           let aVar = scriptData.substring(scriptData.indexOf('var a =') + 8);
           aVar = aVar.substring(0, aVar.indexOf(';'));
+          console.log('aVar', aVar);
 
           let bVar = scriptData.substring(scriptData.indexOf('var b =') + 8);
           bVar = bVar.substring(0, bVar.indexOf(';'));
+          console.log('bVar', bVar);
 
           let omg = scriptData.indexOf('document.getElementById(\'dlbutton\').omg = "f";') >= 0;
+          console.log('omg', omg);
           aVar = omg ? Math.floor(aVar / 3) : aVar = Math.ceil(aVar / 3);
 
           let mp3Link = scriptData.substring(scriptData.indexOf('document.getElementById(\'dlbutton\').href = ') + 43);
           mp3Link = mp3Link.substring(0, mp3Link.indexOf(';'));
           mp3Link = mp3Link.replace('(a', '(' + aVar).replace('%b)', '%' + bVar + ')');
+          console.log('eval mp3link', mp3Link);
 
           mp3Link = _eval('module.exports = ' + mp3Link);
 
           downloadLink = zippyLink.substr(0, zippyLink.indexOf('.com/') + 4) + mp3Link;
+          console.log('downloadLink', downloadLink)
         } catch (error) {
           console.log('Error extracting mp3 link from zippyshare', error, 'scriptData', scriptData, 'zippyLink', zippyLink);
         }
