@@ -7,7 +7,8 @@ import {
   API_SEARCH,
   API_AUTOCOMPLETE,
   API_GET_YOUTUBE_LINK,
-  API_SIMILAR_TRACKS } from '../constants/apiPaths';
+  API_SIMILAR_TRACKS
+} from '../constants/apiPaths';
 
 import {
   LOAD_TRACK,
@@ -138,7 +139,7 @@ export const setDuration = duration => {
   }
 }
 
-export const updateSuggestionInputValue = (e,d) => {
+export const updateSuggestionInputValue = (e, d) => {
   return {
     type: UPDATE_SUGGESTION_INPUT_VALUE,
     payload: d.newValue
@@ -151,7 +152,7 @@ export const clearSuggestions = () => {
   }
 }
 
-export const loadSuggestions = async  ({value}) => {  
+export const loadSuggestions = async ({ value }) => {
   const request = await callAPIorCache(`${API_AUTOCOMPLETE}?query=${value}`);
 
   return {
@@ -167,7 +168,7 @@ export const toggleMute = () => {
 }
 
 export const getYoutubeLink = async searchString => {
-  const request = await callAPIorCache(`${API_GET_YOUTUBE_LINK}?q=${searchString}`);
+  const request = await callAPIorCache(`${API_GET_YOUTUBE_LINK}?q=${encodeURIComponent(searchString)}`);
   return {
     type: GET_YOUTUBE_LINK,
     payload: request
