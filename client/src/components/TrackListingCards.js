@@ -25,7 +25,7 @@ const TrackListingCards = ({ trackListing, isLoading }) => {
   }
 
   return (
-    <Card.Group stackable itemsPerRow={4} className='trackListingCardGroup'>
+    <Card.Group stackable itemsPerRow={3} className='trackListingCardGroup'>
       {trackListingCards}
     </Card.Group>
   )
