@@ -52,20 +52,24 @@ export const activityLogger = store => next => action => {
       return (currentValue || 0) + 1;
     });
 
-    const labelRefUser = firebase.database().ref(`users/${userId}/trackPlays/label/${label.slug}|${label.id}`);
-    labelRefUser.transaction(currentValue => {
-      return (currentValue || 0) + 1;
-    });
+    if (userId) {
+      const labelRefUser = firebase.database().ref(`users/${userId}/trackPlays/label/${label.slug}|${label.id}`);
+      labelRefUser.transaction(currentValue => {
+        return (currentValue || 0) + 1;
+      });
+    }
 
     const trackIdRef = firebase.database().ref(`allTrackPlays/tracks/${id}`);
     trackIdRef.transaction(currentValue => {
       return (currentValue || 0) + 1;
     });
 
-    const trackIdRefUser = firebase.database().ref(`users/${userId}/trackPlays/tracks/${id}`);
-    trackIdRefUser.transaction(currentValue => {
-      return (currentValue || 0) + 1;
-    });
+    if (userId) {
+      const trackIdRefUser = firebase.database().ref(`users/${userId}/trackPlays/tracks/${id}`);
+      trackIdRefUser.transaction(currentValue => {
+        return (currentValue || 0) + 1;
+      });
+    }
   }
 
   const id = v4();
