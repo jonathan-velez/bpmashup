@@ -56,6 +56,13 @@ class LoginForm extends Component {
 
   afterLogin = (user) => {
     console.log('after login', user); // TODO: store this in a User reducer
+
+    // dispatch pending action if login form popped up on user action
+    const { actionPending } = store.getState().openModal;
+    if (actionPending) {
+      store.dispatch(store.getState().openModal.actionPending)
+    }
+
     store.dispatch(openModalWindow({
       open: false,
     }));

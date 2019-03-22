@@ -5,17 +5,12 @@ import { firebaseConnect } from 'react-redux-firebase';
 import { Image, Icon, Menu } from 'semantic-ui-react';
 
 import store from '../store';
-import { openModalWindow, clearPlaylists } from '../actions/ActionCreators';
+import { clearPlaylists, openLoginModalWindow } from '../actions/ActionCreators';
 import LoginForm from './LoginForm';
 
 class Auth extends React.Component {
   logIn = () => {
-    store.dispatch(openModalWindow({
-      open: true,
-      title: 'Login',
-      body: <LoginForm />,
-      headerIcon: 'sign in',
-    }));
+    store.dispatch(openLoginModalWindow());
   }
 
   logOut = () => {

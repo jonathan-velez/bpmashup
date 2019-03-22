@@ -1,4 +1,6 @@
-import Axios from 'axios';
+import React from 'react';
+
+import LoginForm from '../components/LoginForm';
 import { callAPIorCache } from '../seessionStorageCache';
 
 import {
@@ -54,7 +56,6 @@ export const stopAsync = () => {
 }
 
 export const fetchTracks = async (type = 'genre', id, name, page = 1, perPage = 20, endPoint = API_MOST_POPULAR) => {
-  console.log('fetchTracks action')
   const request = await callAPIorCache(`${endPoint}/${type}?s=${name}&id=${id}&page=${page}&perPage=${perPage}`);
 
   return {
@@ -242,5 +243,18 @@ export const toggleTracklistView = payload => {
 export const clearPlaylists = () => {
   return {
     type: CLEAR_PLAYLISTS
+  }
+}
+
+export const openLoginModalWindow = actionPending => {
+  return {
+    type: OPEN_MODAL,
+    payload: {
+      open: true,
+      title: 'Login',
+      body: <LoginForm />,
+      headerIcon: 'sign in',
+      actionPending,
+    }
   }
 }

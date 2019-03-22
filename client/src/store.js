@@ -10,7 +10,7 @@ import _ from 'lodash';
 
 import rootReducer from './reducers/index';
 import { loadStorage, setStorage } from './localStorage';
-import { activityLogger } from './middleware';
+import { activityLogger, checkProtectedAction } from './middleware';
 import { LOAD_PLAYLISTS, LOAD_DOWNLOADED_TRACKS, LOAD_LOVED_TRACKS, LOAD_LOVED_ARTISTS, LOAD_LOVED_LABELS } from './constants/actionTypes';
 
 const persistedStorage = loadStorage();
@@ -34,7 +34,7 @@ firebase.initializeApp(firebaseConfig);
 
 const createStoreWithFirebase = compose(
   reactReduxFirebase(firebase, rrfConfig),
-  applyMiddleware(ReduxPromise, thunk, logger, activityLogger)
+  applyMiddleware(ReduxPromise, thunk, logger, activityLogger, checkProtectedAction)
 )(createStore);
 
 const store = createStoreWithFirebase(rootReducer, persistedStorage);

@@ -2,7 +2,18 @@ import firebase from 'firebase';
 import { v4 } from 'node-uuid';
 import moment from 'moment';
 
-import { LOAD_TRACK, GET_YOUTUBE_LINK } from '../constants/actionTypes';
+import {
+  LOAD_TRACK,
+  GET_YOUTUBE_LINK,
+  TOGGLE_LOVE_TRACK,
+  ADD_PLAYLIST,
+  ADD_TO_PLAYLIST,
+  REMOVE_FROM_PLAYLIST,
+  EDIT_PLAYLIST_NAME,
+  DELETE_PLAYLIST,
+  TOGGLE_LOVE_ARTIST
+} from '../constants/actionTypes';
+import { openLoginModalWindow } from '../actions/ActionCreators';
 
 export const activityLogger = store => next => action => {
   const id = v4();
@@ -38,4 +49,17 @@ export const activityLogger = store => next => action => {
   }
 
   next(action);
+}
+
+const protectedActions = [TOGGLE_LOVE_TRACK, ADD_PLAYLIST, ADD_TO_PLAYLIST, REMOVE_FROM_PLAYLIST, EDIT_PLAYLIST_NAME, DELETE_PLAYLIST, TOGGLE_LOVE_ARTIST];
+
+export const checkProtectedAction = store => next => action => {
+  const state = store.getState();
+  const { auth } = state.firebaseState;
+
+  if ((!auth.isLoaded || auth.isEmpty) && protectedActions.includes(action.type)) {
+    next(openLoginModalWindow(action));
+  } else {
+    next(action);
+  }
 }

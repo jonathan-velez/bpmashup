@@ -15,6 +15,7 @@ const openModal = (state = defaultState, action) => {
         title: payload.title,
         body: payload.body,
         headerIcon: payload.headerIcon,
+        actionPending: payload.actionPending,
       }
     default:
       return state;
