@@ -63,7 +63,7 @@ store.firebaseAuthIsReady.then((user) => {
 
   // load downloaded tracks into Redux
   const downloadsRef = db.ref(`users/${uid}/downloads`);
-  downloadsRef.once('value').then(snapshot => {
+  downloadsRef.on('value', snapshot => {
     const downloads = snapshot.val();
 
     if (downloads) {
@@ -76,7 +76,7 @@ store.firebaseAuthIsReady.then((user) => {
 
   // load loved tracks into Redux, filter out previously loved tracks
   const lovedTracksRef = db.ref(`users/${uid}/lovedTracks`);
-  lovedTracksRef.once('value').then(snapshot => {
+  lovedTracksRef.on('value', snapshot => {
     const lovedTracksObject = snapshot.val();
 
     if (lovedTracksObject) {
@@ -91,7 +91,7 @@ store.firebaseAuthIsReady.then((user) => {
 
   // load loved artists into Redux, filter out previously loved artists
   const lovedArtistsRef = db.ref(`users/${uid}/lovedArtists`);
-  lovedArtistsRef.once('value').then(snapshot => {
+  lovedArtistsRef.on('value', snapshot => {
     const lovedArtistsObject = snapshot.val();
 
     if (lovedArtistsObject) {
@@ -106,7 +106,7 @@ store.firebaseAuthIsReady.then((user) => {
 
   // load loved labels into Redux, filter out previously loved labels
   const lovedLabelsRef = db.ref(`users/${uid}/lovedLabels`);
-  lovedLabelsRef.once('value').then(snapshot => {
+  lovedLabelsRef.on('value', snapshot => {
     const lovedLabelsObject = snapshot.val();
 
     if (lovedLabelsObject) {
