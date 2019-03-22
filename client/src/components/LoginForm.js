@@ -55,7 +55,8 @@ class LoginForm extends Component {
   }
 
   afterLogin = (user) => {
-    console.log('after login', user); // TODO: store this in a User reducer
+    // load playlists into reducer
+    store.dispatch(loadPlaylists());
 
     // dispatch pending action if login form popped up on user action
     const { actionPending } = store.getState().openModal;
@@ -63,11 +64,10 @@ class LoginForm extends Component {
       store.dispatch(store.getState().openModal.actionPending)
     }
 
+    // close modal window
     store.dispatch(openModalWindow({
       open: false,
     }));
-
-    store.dispatch(loadPlaylists());
   }
 
   componentDidMount() {
