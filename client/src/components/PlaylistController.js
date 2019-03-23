@@ -168,6 +168,7 @@ class PlaylistController extends React.Component {
           trackListing={tracks}
           isLoading={isLoading}
           removeFromPlaylist={this.callRemoveFromPlaylist}
+          isPlaylist
         />
       </React.Fragment>
     )

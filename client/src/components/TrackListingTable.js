@@ -9,7 +9,7 @@ const TrackListingTable = ({ trackListing, isPlaylist, isLoading, page, perPage 
 
   return (Object.keys(trackListing).length > 0 ?
     <Table striped unstackable>
-      <TrackListingTableHeader />
+      <TrackListingTableHeader isPlaylist={isPlaylist} />
       <TrackListingTableBody trackListing={trackListing} isPlaylist={isPlaylist} page={page} perPage={perPage} />
     </Table>
     :

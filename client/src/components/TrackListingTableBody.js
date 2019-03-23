@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
+import moment from 'moment';
 import { Table, Transition } from 'semantic-ui-react';
 import { Link, withRouter } from 'react-router-dom';
 
@@ -9,7 +10,7 @@ import TrackActionDropdown from './TrackActionDropdown';
 import { constructLinks } from '../utils/trackUtils';
 import { musicalKeyFilter } from '../utils/helpers';
 
-const TrackListingTableBody = ({ trackListing, downloadedTracks, isPlaylist = true }) => {
+const TrackListingTableBody = ({ trackListing, downloadedTracks, isPlaylist }) => {
   let trackListingBody = '';
 
   if (Object.keys(trackListing).length > 0) {
@@ -18,27 +19,33 @@ const TrackListingTableBody = ({ trackListing, downloadedTracks, isPlaylist = tr
     const orderedTracks = _.orderBy(trackListing, orderBy, 'asc');
 
     trackListingBody = _.map(orderedTracks, (track, idx) => {
-      const hasBeenDownloaded = downloadedTracks.includes(track.id && track.id.toString());
+      const { id, images, title, artists, genres, label, bpm, key, releaseDate, position, dateAdded } = track;
+      const hasBeenDownloaded = downloadedTracks.includes(id && id.toString());
+      const dateAddedFormatted = dateAdded ? moment.unix(dateAdded).format('YYYY-MM-DD') : '????-??-??';
+
       return (
-        <Table.Row key={track.id} id={`track-${track.id}`} negative={hasBeenDownloaded}>
+        <Table.Row key={id} id={`track-${id}`} negative={hasBeenDownloaded}>
           <Table.Cell>
-            {isPlaylist ? idx + 1 : track.position}
+            {isPlaylist ? idx + 1 : position}
           </Table.Cell>
           <Table.Cell>
             <TrackAlbum
-              imageUrl={track.images.large.secureUrl}
+              imageUrl={images.large.secureUrl}
               imageSize='tiny'
               iconSize='big'
               track={track}
             />
           </Table.Cell>
-          <Table.Cell>{track.title}</Table.Cell>
-          <Table.Cell>{constructLinks(track.artists, 'artist')}</Table.Cell>
-          <Table.Cell><Link to={`/label/${track.label.slug}/${track.label.id}`}>{track.label.name}</Link></Table.Cell>
-          <Table.Cell>{constructLinks(track.genres, 'genre')}</Table.Cell>
-          <Table.Cell>{track.bpm}</Table.Cell>
-          <Table.Cell>{musicalKeyFilter(track.key && track.key.shortName)}</Table.Cell>
-          <Table.Cell>{track.releaseDate}</Table.Cell>
+          <Table.Cell>{title}</Table.Cell>
+          <Table.Cell>{constructLinks(artists, 'artist')}</Table.Cell>
+          <Table.Cell><Link to={`/label/${label.slug}/${label.id}`}>{label.name}</Link></Table.Cell>
+          <Table.Cell>{constructLinks(genres, 'genre')}</Table.Cell>
+          <Table.Cell>{bpm}</Table.Cell>
+          <Table.Cell>{musicalKeyFilter(key && key.shortName)}</Table.Cell>
+          <Table.Cell>{releaseDate}</Table.Cell>
+          {isPlaylist &&
+            <Table.Cell>{dateAddedFormatted}</Table.Cell>
+          }
           <Table.Cell>
             <TrackActionDropdown track={track} />
           </Table.Cell>

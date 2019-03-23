@@ -1,7 +1,7 @@
 import React from 'react';
 import { Table } from 'semantic-ui-react';
 
-const TrackListingTableHeader = () => {
+const TrackListingTableHeader = ({ isPlaylist }) => {
   return (
     <Table.Header>
       <Table.Row>
@@ -14,6 +14,9 @@ const TrackListingTableHeader = () => {
         <Table.HeaderCell>BPM</Table.HeaderCell>
         <Table.HeaderCell>Key</Table.HeaderCell>
         <Table.HeaderCell>Released</Table.HeaderCell>
+        {isPlaylist && 
+          <Table.HeaderCell>Date Added</Table.HeaderCell>
+        }
         <Table.HeaderCell>&nbsp;</Table.HeaderCell>
       </Table.Row>
     </Table.Header>
