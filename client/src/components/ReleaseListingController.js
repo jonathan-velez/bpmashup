@@ -57,7 +57,7 @@ class ReleaseListingController extends Component {
           </Item>
         </Item.Group>
         {releaseListing.id ?
-          <ResponsiveTrackListing trackListing={releaseListing.tracks} isPlaylist={true} isLoading={isLoading} page={1} perPage={10} />
+          <ResponsiveTrackListing trackListing={releaseListing.tracks} isPlaylist={false} isLoading={isLoading} page={1} perPage={10} />
           :
           null
         }

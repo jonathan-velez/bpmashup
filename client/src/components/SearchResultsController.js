@@ -57,7 +57,7 @@ class SearchResultsController extends Component {
           <Grid.Row>
             <Grid.Column>
               <Header textAlign='left' dividing>TRACKS</Header>
-              <ResponsiveTrackListing trackListing={tracks} isPlaylist={true} isLoading={isLoading} page={1} perPage={10} />
+              <ResponsiveTrackListing trackListing={tracks} isPlaylist={false} isLoading={isLoading} page={1} perPage={10} />
             </Grid.Column>
           </Grid.Row>
           : null
