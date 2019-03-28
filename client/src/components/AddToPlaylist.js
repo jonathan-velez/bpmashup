@@ -140,6 +140,7 @@ class AddToPlaylist extends React.Component {
         trigger={this.props.type === 'dropdownItem' ? playlistDropdownItem : playlistButton}
         content={playlistButtonContent}
         on='click'
+        onClick={(e) => e.stopPropagation()}
         position='bottom center'
         open={this.state.popupOpen}
         onOpen={this.handlePopupOpen}
