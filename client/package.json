@@ -25,7 +25,11 @@
     "redux-promise": "^0.5.3",
     "redux-thunk": "^2.2.0",
     "semantic-ui-react": "^0.83.0",
-    "store": "^2.0.12"
+    "store": "^2.0.12",
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-plugin-import": "^2.16.0",
+    "eslint-plugin-jsx-a11y": "^6.2.1",
+    "eslint-plugin-react": "^7.12.4"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -39,11 +43,5 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ],
-  "devDependencies": {
-    "eslint-config-airbnb": "^17.1.0",
-    "eslint-plugin-import": "^2.16.0",
-    "eslint-plugin-jsx-a11y": "^6.2.1",
-    "eslint-plugin-react": "^7.12.4"
-  }
+  ]
 }
