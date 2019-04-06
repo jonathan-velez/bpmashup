@@ -1,8 +1,6 @@
 const OAuth = require('oauth').OAuth;
-const _ = require('lodash');
 
 const bpAPIConfig = require('../config/api');
-const bpAPIModels = require('../config/models');
 const utils = require('../utils');
 const constants = require('../config/constants');
 const lastFmController = require('../controllers/lastFmController');
@@ -65,7 +63,7 @@ async function callApi(req, res) {
     if (model) {
       for (let key in bpData.results) {
         if (bpData.results.hasOwnProperty(key)) {
-          Object.getOwnPropertyNames(bpData.results[key]).forEach((val, idx, array) => {
+          Object.getOwnPropertyNames(bpData.results[key]).forEach((val) => {
             if (model.indexOf(val) === -1) delete bpData.results[key][val];
           });
         }
@@ -100,7 +98,7 @@ async function getArtistData(req, res) {
       if (bio) {
         let { content: biography } = bio;
         // remove last.fm link
-        biography = biography.substr(0, biography.indexOf('<a href=\"https://www.last.fm'));
+        biography = biography.substr(0, biography.indexOf('<a href="https://www.last.fm'));
 
         jsonResponse = {
           ...jsonResponse,

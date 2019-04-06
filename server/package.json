@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js"
+    "start": "nodemon index.js"
   },
   "author": "",
   "license": "ISC",
@@ -19,5 +19,8 @@
     "oauth": "^0.9.15",
     "path": "^0.12.7",
     "request": "^2.85.0"
+  },
+  "devDependencies": {
+    "eslint": "^5.16.0"
   }
 }

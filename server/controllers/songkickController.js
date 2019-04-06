@@ -4,7 +4,7 @@ const { SONGKICK_API_KEY } = process.env;
 // Searches the Songkick API for an artist ID by a search string
 async function getArtistId(req, res) {
   const { artistName } = req.query;
-  const url = `https://api.songkick.com/api/3.0/search/artists.json?apikey=${API_KEY}&query=${artistName}`;
+  const url = `https://api.songkick.com/api/3.0/search/artists.json?apikey=${SONGKICK_API_KEY}&query=${artistName}`;
 
   try {
     const response = await axios.get(url);

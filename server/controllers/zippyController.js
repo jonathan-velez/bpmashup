@@ -33,7 +33,7 @@ async function scrape(req, res) {
 
     const $ = cheerio.load(zippyCall.data);
 
-    $('script').get().forEach((val, idx) => {
+    $('script').get().forEach((val) => {
       const scriptData = val.children.length > 0 && val.children[0].data;
 
       if (val.children.length > 0 && scriptData.includes('dlbutton')) {
