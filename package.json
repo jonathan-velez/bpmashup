@@ -7,7 +7,7 @@
     "build": "cd client && npm run build",
     "heroku-postbuild": "npm run build",
     "install": "(cd client && npm install) && (cd server && npm install)",
-    "start": "concurrently \"cd client && PORT=3000 npm start\" \"cd server && PORT=3001 npm start\"",
+    "start": "concurrently \"cd client && PORT=3000 npm start\" \"cd server && PORT=3001 npm run start-dev\"",
     "start-prod": "cd server && npm start"
   },
   "engines": {
