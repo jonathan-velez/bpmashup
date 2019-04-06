@@ -63,7 +63,7 @@ export const downloadTrack = track => {
           handleNoDownload();
         }
       })
-      .catch(error => {
+      .catch(() => {
         handleNoDownload();
       });
   } else {

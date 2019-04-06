@@ -46,7 +46,7 @@ store.subscribe(() => {
   });
 });
 
-store.firebaseAuthIsReady.then((user) => {
+store.firebaseAuthIsReady.then(() => {
   const { uid } = store.getState().firebaseState.auth;
   const db = firebase.database();
   const playlistListRef = db.ref(`users/${uid}/playlists`);

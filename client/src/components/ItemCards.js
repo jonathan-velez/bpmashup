@@ -18,7 +18,7 @@ const ItemCards = ({ items, itemType, showHeader = true }) => {
         linkUrl = `/label/${slug}/${id}`;
         break;
       case 'release':
-      case 'track':
+      case 'track': {
         const { artists, label } = item;
         linkUrl = `/${itemType}/${slug}/${id}`;
         metaContent =
@@ -31,6 +31,7 @@ const ItemCards = ({ items, itemType, showHeader = true }) => {
             </Card.Meta>
           </React.Fragment>
         break;
+      }
       default:
         linkUrl = `/most-popular/${itemType}/${slug}/${id}`;
         break;

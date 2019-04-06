@@ -92,7 +92,7 @@ const mediaPlayer = (state = defaultState, action) => {
         ...state,
         volume: action.payload
       }
-    case GET_YOUTUBE_LINK:
+    case GET_YOUTUBE_LINK: {
       // TODO: This needs a lot of work. Rather than just pull the first result,
       // we should have some logic to determine best fit. e.g.: yt length matches bp's stated length, etc.
       // should also handle null values
@@ -138,6 +138,7 @@ const mediaPlayer = (state = defaultState, action) => {
         loaded: 0,
         playing: true,
       }
+    }
     default:
       return state;
   }

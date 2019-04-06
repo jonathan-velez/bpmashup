@@ -3,7 +3,7 @@ import { SEARCH_EVERYTHING, LOAD_TRACKS } from '../constants/actionTypes';
 import { API_SEARCH_EVERYTHING } from '../constants/apiPaths';
 
 export const searchEverything = searchBy => {
-  return async (dispatch, getState) => {
+  return async (dispatch) => {
     // parse search results and group by type. load tracks into trackListing reducer
     const searchResponse = await callAPIorCache(`${API_SEARCH_EVERYTHING}?query=${searchBy}&perPage=50`);
 

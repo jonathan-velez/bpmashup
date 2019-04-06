@@ -7,7 +7,7 @@ const defaultState = {
 
 const labelDetail = (state = defaultState, action) => {
   switch (action.type) {
-    case GET_LABEL_DETAIL:
+    case GET_LABEL_DETAIL: {
       const { payload } = action;
       const { labelData, releasesData } = payload;
 
@@ -16,6 +16,7 @@ const labelDetail = (state = defaultState, action) => {
         labelData,
         releasesData,
       }
+    }
     default:
       return state;
   }

@@ -9,7 +9,7 @@ const defaultState = {
 
 const searchResults = (state = defaultState, action) => {
   switch (action.type) {
-    case SEARCH_EVERYTHING:
+    case SEARCH_EVERYTHING: {
       const { artists, tracks, labels, releases } = action.payload;
       return {
         ...state,
@@ -18,6 +18,7 @@ const searchResults = (state = defaultState, action) => {
         labels,
         releases,
       }
+    }
     default:
       return state;
   }

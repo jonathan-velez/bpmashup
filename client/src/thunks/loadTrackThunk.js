@@ -1,7 +1,7 @@
 import { LOAD_TRACK } from '../constants/actionTypes';
 
 const loadTrackThunk = (track) => {
-  return (dispatch, getState) => {
+  return (dispatch) => {
     dispatch({
       type: LOAD_TRACK,
       payload: track

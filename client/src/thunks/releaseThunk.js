@@ -5,7 +5,7 @@ import { API_GET_RELEASES, API_GET_TRACKS } from '../constants/apiPaths';
 // For a given releaseId, fetch its metadata and then fetch the tracks within it
 // Requires two separate BP API calls
 export async function fetchReleaseData(releaseId) {
-  return async (dispatch, getState) => {
+  return async (dispatch) => {
     const releaseMetadata =  await callAPIorCache(`${API_GET_RELEASES}?id=${releaseId}&perPage=50`);
     const releaseObject = releaseMetadata.data.results[0];
 

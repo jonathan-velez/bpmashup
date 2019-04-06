@@ -6,7 +6,6 @@ import { Image, Icon, Menu } from 'semantic-ui-react';
 
 import store from '../store';
 import { clearPlaylists, openLoginModalWindow } from '../actions/ActionCreators';
-import LoginForm from './LoginForm';
 
 class Auth extends React.Component {
   logIn = () => {
@@ -14,7 +13,7 @@ class Auth extends React.Component {
   }
 
   logOut = () => {
-    this.props.firebase.logout().then(val => {
+    this.props.firebase.logout().then(() => {
       store.dispatch(clearPlaylists());
     });
   }
@@ -62,7 +61,7 @@ class Auth extends React.Component {
       <React.Fragment>{auth.isEmpty ? logInButton : logOutButton}</React.Fragment>
     );
   }
-};
+}
 
 export default compose(
   firebaseConnect(),

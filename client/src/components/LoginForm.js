@@ -54,7 +54,7 @@ class LoginForm extends Component {
       });
   }
 
-  afterLogin = (user) => {
+  afterLogin = () => {
     // load playlists into reducer
     store.dispatch(loadPlaylists());
 

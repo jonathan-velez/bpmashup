@@ -79,8 +79,7 @@ class SignupForm extends Component {
     }));
   }
 
-  afterLogin = (user) => {
-    console.log('after login', user); // TODO: store this in a User reducer
+  afterLogin = () => {
     store.dispatch(openModalWindow({
       open: false,
     }));

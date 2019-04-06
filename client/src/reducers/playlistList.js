@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { v4 } from 'node-uuid';
 import Moment from 'moment';
 import _ from 'lodash';
@@ -20,7 +21,7 @@ const playlistList = (state = {}, action) => {
   const newTrack = track && Object.assign({}, track, { dateAdded: unixStamp });
 
   switch (action.type) {
-    case ADD_PLAYLIST:
+    case ADD_PLAYLIST: {
       const playlistId = v4();
 
       return {
@@ -38,6 +39,7 @@ const playlistList = (state = {}, action) => {
           dateAdded: unixStamp
         }
       }
+    }
     case ADD_TO_PLAYLIST:
       return {
         ...state,
@@ -53,7 +55,7 @@ const playlistList = (state = {}, action) => {
           ]
         }
       }
-    case REMOVE_FROM_PLAYLIST:
+    case REMOVE_FROM_PLAYLIST: {
       //////// 'old school way' ////////////
       // let copy = Object.assign({}, state);      
       // delete copy[action.payload.playlistId].tracks[action.payload.trackId];      
@@ -71,6 +73,7 @@ const playlistList = (state = {}, action) => {
           listOfTracks
         }
       }
+    }
     case EDIT_PLAYLIST_NAME:
       return {
         ...state,
@@ -79,9 +82,10 @@ const playlistList = (state = {}, action) => {
           name: action.payload.newName
         }
       }
-    case DELETE_PLAYLIST:
+    case DELETE_PLAYLIST: {
       const { [action.payload]: deletedPlaylist, ...restOfPlaylists } = state;
       return restOfPlaylists;
+    }
     case LOAD_PLAYLISTS:
       return action.payload;
     case CLEAR_PLAYLISTS:

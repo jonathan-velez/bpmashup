@@ -7,7 +7,7 @@ const defaultState = {
 
 const artistDetail = (state = defaultState, action) => {
   switch (action.type) {
-    case GET_ARTIST_DETAIL:
+    case GET_ARTIST_DETAIL: {
       const { artistData, eventsData } = action.payload;
 
       return {
@@ -15,6 +15,7 @@ const artistDetail = (state = defaultState, action) => {
         artistData,
         eventsData,
       }
+    }
     default:
       return state;
   }
