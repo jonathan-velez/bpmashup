@@ -2,6 +2,8 @@ const cheerio = require('cheerio');
 const axios = require('axios');
 const _eval = require('eval');
 
+axios.defaults.headers.common['User-Agent'] = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36 OPR/38.0.2220.41';
+
 // Google track name on zippyshare.com
 // Scrape search results, grab first result
 // Open zippyshare page, scrape for the JS that creates the download button href
