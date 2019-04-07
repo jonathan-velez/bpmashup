@@ -29,8 +29,6 @@ async function scrape(req, res) {
     zippyLink = zippyLink.substring(7);
     zippyLink = zippyLink.substring(0, zippyLink.indexOf('&'));
 
-    axios.defaults.headers.common['User-Agent'] = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36 OPR/38.0.2220.41';
-
     let zippyCall = await axios.get(zippyLink);
 
     const $ = cheerio.load(zippyCall.data);
