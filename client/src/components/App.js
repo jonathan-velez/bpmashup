@@ -36,6 +36,7 @@ class App extends React.Component {
           if (loadedTrack.id) downloadTrack(loadedTrack);
           break;
         case 'f':
+          if (!loadedTrack.title || !loadedTrack.artists) return;
           this.props.startAsync();
           this.props.getYoutubeLink(`${loadedTrack.artists[0].name} ${loadedTrack.title}`);
           break;
