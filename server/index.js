@@ -36,7 +36,9 @@ app.get(`${API_BASE_URL}/youtube/search`, ytController.Youtube);
 app.get(`${API_BASE_URL}/songkick/get-artist-id`, songkickController.getArtistId);
 app.get(`${API_BASE_URL}/songkick/get-artist-events`, songkickController.getUpcomingEvents);
 app.get(`${API_BASE_URL}/last-fm/get-artist-info`, lastFmController.getArtistInfo);
+app.get(`${API_BASE_URL}/download-it`, zippyController.downloadIt);
 
+app.use('/downloads', express.static(path.join(__dirname, '/downloads')));
 app.use('/*', staticFiles);
 
 app.set('port', (process.env.PORT || 3001));
