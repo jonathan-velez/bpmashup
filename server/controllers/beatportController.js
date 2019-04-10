@@ -28,12 +28,19 @@ const executeOA = (reqPath, reqQuery) => {
         return;
       }
 
-      const returnData = JSON.parse(data);
+      let returnData;
+
+      try {
+        returnData = JSON.parse(data);
+      } catch (error) {
+        console.log('Error parsing response data: ', data, error);
+        return reject(error);
+      }
+
 
       if (error || returnData.metadata.error) {
         console.log(`Error calling '${urlStr}': `, returnData.metadata.error)
-        reject(error);
-        return;
+        return reject(error);
       }
 
       resolve(returnData);
@@ -44,16 +51,22 @@ const executeOA = (reqPath, reqQuery) => {
 async function callApi(req, res) {
   const reqPath = utils.filterPath(req.url);
   let reqQuery = req.query;
-  let jsonResponse = {};
 
   try {
     const model = bpAPIConfig[reqPath].model;
-    
+
     // encode facets string
     if (reqQuery.facets) {
       reqQuery = {
         ...reqQuery,
         facets: encodeURIComponent(reqQuery.facets)
+      }
+    }
+    //encode query string
+    if (reqQuery.query) {
+      reqQuery = {
+        ...reqQuery,
+        query: encodeURIComponent(reqQuery.query),
       }
     }
 
@@ -70,10 +83,10 @@ async function callApi(req, res) {
       }
     }
 
-    res.json(Object.assign({}, jsonResponse, bpData));
+    res.json(bpData);
   } catch (ex) {
     console.log('BP API error: ', ex);
-    res.json(jsonResponse);
+    res.json({});
   }
 }
 
