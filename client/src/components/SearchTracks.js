@@ -1,63 +1,41 @@
 import React from 'react';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import Autosuggest from 'react-autosuggest';
 
-import * as actionCreators from '../actions/ActionCreators';
-import { Form } from 'semantic-ui-react';
+import { Form, Input } from 'semantic-ui-react';
 import { slugify } from '../utils/helpers';
 
-const SearchTracks = ({ updateSuggestionInputValue, clearSuggestions, loadSuggestions, autoSuggest, history }) => {
-  const handleFormSubmit = () => {
-    const sluggedString = slugify(autoSuggest.value);
+class SearchTracks extends React.Component {
+
+  state = {
+    searchString: '',
+  }
+
+  handleFormSubmit = () => {
+    const { history } = this.props;
+    const { searchString } = this.state;
+
+    const sluggedString = slugify(searchString);
     history.push(`/search/${sluggedString}`);
   }
 
-  const getSuggestionValue = (suggestion) => {
-    return suggestion.name;
+  handleChange = ({ target }) => {
+    const { value } = target;
+    this.setState({
+      searchString: value,
+    })
   }
 
-  const renderSuggestion = (suggestion) => {
+  render() {
+    const inputStyle = {
+      width: '300px'
+    }
     return (
-      <span>{suggestion.name}</span>
+      <Form onSubmit={this.handleFormSubmit}>
+        <Input size='medium' onChange={(e) => this.handleChange(e)} placeholder="Search..." style={inputStyle}/>
+      </Form>
     );
   }
-
-  const { value = '', suggestions } = autoSuggest;
-
-  const inputProps = {
-    placeholder: "Search...",
-    value,
-    onChange: updateSuggestionInputValue
-  };
-
-  return (
-    <Form onSubmit={handleFormSubmit}>
-      <Autosuggest
-        suggestions={suggestions}
-        onSuggestionsFetchRequested={loadSuggestions}
-        onSuggestionsClearRequested={clearSuggestions}
-        getSuggestionValue={getSuggestionValue}
-        renderSuggestion={renderSuggestion}
-        inputProps={inputProps}
-        highlightFirstSuggestion
-        onSuggestionSelected={handleFormSubmit}
-      />
-    </Form>
-  );
 }
 
-const mapStateToProps = state => {
-  return {
-    trackListing: state.trackListing,
-    isLoading: state.isLoading,
-    autoSuggest: state.autoSuggest,
-  }
-}
 
-const mapDispatchToProps = dispatch => {
-  return bindActionCreators(actionCreators, dispatch);
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(SearchTracks));
+export default (withRouter(SearchTracks));
