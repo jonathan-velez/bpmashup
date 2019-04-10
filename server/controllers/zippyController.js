@@ -141,7 +141,7 @@ async function scrape(req, res) {
     })
   } else {
     return res.json({
-      href: `/api/download-it/?fileName=${fileName}`,
+      href: `/api/download-it/?fileName=${encodeURIComponent(fileName)}`,
       success: true,
     })
   }
@@ -172,7 +172,7 @@ async function downloadMp3(url, fileName, thePath) {
 const downloadIt = async (req, res) => {
   const { fileName } = req.query;
   console.log('Client download started', fileName);
-  res.download(`downloads/${fileName}`);
+  res.download(`downloads/${decodeURIComponent(fileName)}`);
 }
 
 exports.zippyScrape = scrape;
