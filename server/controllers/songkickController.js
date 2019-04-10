@@ -40,38 +40,36 @@ async function getUpcomingEvents(req, res) {
 
     if (resultsPage) {
       const { artist } = resultsPage.results;
-      if (artist.length === 0) {
-        res.json({ success: true, events });
-        return;
+      if (artist && artist.length === 0) {
+        return res.json({ success: true, events });
+        
       }
 
       const { identifier } = artist[0];
       if (identifier.length === 0) {
-        res.json({ success: true, events });
-        return;
+        return res.json({ success: true, events });
       }
 
       const { eventsHref } = identifier[0];
       if (!eventsHref) {
-        res.json({ success: true, events });
-        return;
+        return res.json({ success: true, events });
       }
 
       axios.get(`${eventsHref}?apikey=${SONGKICK_API_KEY}`)
         .then(events => {
-          res.json({ success: true, events: events.data.resultsPage.results.event });
+          return res.json({ success: true, events: events.data.resultsPage.results.event });
         })
         .catch(error => {
           console.log(`Error in calling songkick events api - ${eventsHref}`, error);
-          res.json({ success: false, error });
+          return res.json({ success: false, error });
         });
     } else {
       console.log('No results for this artist search')
-      res.json({ success: false });
+      return res.json({ success: false });
     }
   } catch (error) {
     console.log('Error in songkickController.getUpcomingEvents', error)
-    res.json({ success: false, error });
+    return res.json({ success: false, error });
   }
 }
 

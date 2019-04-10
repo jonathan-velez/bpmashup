@@ -2,7 +2,6 @@ import React from 'react';
 import { withRouter } from 'react-router';
 
 import { Form, Input } from 'semantic-ui-react';
-import { slugify } from '../utils/helpers';
 
 class SearchTracks extends React.Component {
 
@@ -14,7 +13,7 @@ class SearchTracks extends React.Component {
     const { history } = this.props;
     const { searchString } = this.state;
 
-    const sluggedString = slugify(searchString);
+    const sluggedString = encodeURIComponent(searchString);
     history.push(`/search/${sluggedString}`);
   }
 
