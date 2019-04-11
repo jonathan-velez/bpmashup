@@ -119,18 +119,29 @@ async function scrape(req, res) {
   }
 
   // extract file name from download link, create path to server download folder
+  // check if file extension is valid
   // check download folder if the file exists
   // if it does, send it. otherwise, download it and then send it
   let fileName = decodeURIComponent(downloadLink.substr(downloadLink.lastIndexOf('/') + 1));
+  const fileExtension = fileName.substr(fileName.lastIndexOf('.') + 1).toLowerCase();
   const thePath = path.resolve(__dirname, '../downloads', fileName);
   const fileExists = fs.existsSync(thePath);
+  const allowedExtensions = ['mp3', 'wav', 'aiff', 'flac', 'aac', 'm4a', 'ogg'];
+
+  if (!allowedExtensions.includes(fileExtension)){
+    console.log('Invalid file extension: ', fileExtension);
+
+    return res.json({
+      success: true,
+      href: null,
+      error: 'Invalid file extension',
+    })
+  }
 
   if (!fileExists) {
     console.log(`Starting new download - ${fileName}`);
     fileName = await downloadMp3(downloadLink, fileName, thePath);
   }
-
-  // res.download(`downloads/${fileName}`);
 
   if (!fileName || fileName.length === 0) {
     console.log('fileName not valid, possibly failed in downloadMp3 fn');
@@ -145,7 +156,6 @@ async function scrape(req, res) {
       success: true,
     })
   }
-
 }
 
 async function downloadMp3(url, fileName, thePath) {
@@ -165,7 +175,6 @@ async function downloadMp3(url, fileName, thePath) {
       console.log('Error with downloading mp3', thePath, error);
       reject();
     }
-
   })
 }
 
