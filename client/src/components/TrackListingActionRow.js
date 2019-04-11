@@ -12,12 +12,10 @@ const TrackListingActionRow = ({ page, totalPages, perPage, isLoading }) => {
       <Grid.Column textAlign='left'>
         <TrackListingViewToggleButtons />
       </Grid.Column>
-      {totalPages * perPage > 25 ?
+      {totalPages * perPage > 25 &&
         <Grid.Column textAlign='right'>
           <PerPageSelection activePage={page} totalPages={totalPages} perPage={perPage} />
         </Grid.Column>
-        :
-        null
       }
     </Grid>
   );
