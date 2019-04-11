@@ -47,11 +47,12 @@ class Artist extends Component {
   }
 
   render() {
-    const { artistDetail, trackListing } = this.props;
+    const { artistDetail, trackListing, location } = this.props;
     const { activeItem, activeItem2 } = this.state;
     const { artistData = {}, eventsData = [] } = artistDetail;
     const { name, id, biography, images, genres, featuredReleases } = artistData;
     const imageSrc = images && images.large.secureUrl;
+    const { pathname } = location;
 
     if (Object.keys(artistData).length === 0) return null; // TODO: do something nicer here
 
@@ -148,7 +149,7 @@ class Artist extends Component {
             onClick={this.handleItemClick2}
           >Top 10 Tracks</Menu.Item>
           <Menu.Item position='right'>
-            <Button as={Link} to={`tracks`}>
+            <Button as={Link} to={`${pathname}/tracks`}>
               View All Tracks
             </Button>
           </Menu.Item>
