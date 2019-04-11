@@ -11,6 +11,7 @@
 
 # mock data
 /src/mock
+/mock
 
 # misc
 .DS_Store
