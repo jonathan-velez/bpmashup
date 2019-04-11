@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { Grid, Image, Header, Menu } from 'semantic-ui-react';
+import { Grid, Image, Header, Menu, Button } from 'semantic-ui-react';
 import Scroll from 'react-scroll';
 
 import { getArtistDetails } from '../thunks';
@@ -147,6 +147,11 @@ class Artist extends Component {
             active={activeItem2 === 'tracks'}
             onClick={this.handleItemClick2}
           >Top 10 Tracks</Menu.Item>
+          <Menu.Item position='right'>
+            <Button as={Link} to={`tracks`}>
+              View All Tracks
+            </Button>
+          </Menu.Item>
         </Menu>
         {activeItemContent2}
       </Fragment>
