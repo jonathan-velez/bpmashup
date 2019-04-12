@@ -40,13 +40,15 @@ async function scrape(req, res) {
     const $ = cheerio.load(zippyCall.data);
     let fileExists = true;
 
-    $('div').get().forEach(elem => {
-      elem.children.forEach(child => {
-        if (child.type === 'text' && child.data.indexOf('File does not exist') >= 0) {
+    for (let elem of $('div').get()) {
+      for (let child of elem.children) {
+        if (child.type === 'text' && (child.data.indexOf('File does not exist') >= 0 || child.data.indexOf('File has expired') >= 0)) {
           fileExists = false;
+          break;
         }
-      })
-    });
+      }
+      if (!fileExists) break;
+    }
 
     if (!fileExists) {
       console.log('Zippy page says no file found, must have been deleted.')
@@ -128,7 +130,7 @@ async function scrape(req, res) {
   const fileExists = fs.existsSync(thePath);
   const allowedExtensions = ['mp3', 'wav', 'aiff', 'flac', 'aac', 'm4a', 'ogg'];
 
-  if (!allowedExtensions.includes(fileExtension)){
+  if (!allowedExtensions.includes(fileExtension)) {
     console.log('Invalid file extension: ', fileExtension);
 
     return res.json({
