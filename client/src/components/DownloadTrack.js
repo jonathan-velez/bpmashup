@@ -8,7 +8,7 @@ import { downloadTrack } from '../utils/trackUtils';
 
 const DownloadTrack = ({ track, downloadedTracks, type }) => {
   const hasBeenDownloaded = downloadedTracks.includes(track.id);
-  const downloadIcon = <Icon name='download' color={hasBeenDownloaded ? 'red' : 'grey'} />
+  const downloadIcon = <Icon name='download' color={hasBeenDownloaded ? 'red' : 'grey'} title={hasBeenDownloaded ? 'Download it again' : 'Download it'} />
   const downloadButton =
     <Button
       basic

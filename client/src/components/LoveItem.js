@@ -22,7 +22,7 @@ const LoveItem = ({ itemType, item, toggleLoveItem, lovedTracks, lovedArtists, l
       break;
   }
 
-  const loveIcon = <Icon color={isLoved ? 'red' : 'grey'} name='heart' />
+  const loveIcon = <Icon color={isLoved ? 'red' : 'grey'} name='heart' title={isLoved ? 'Unlove it' : 'Love it'} />
 
   const loveButton =
     <Button

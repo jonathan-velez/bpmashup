@@ -80,6 +80,7 @@ const Footer = ({ seekChange, seekMouseUp, seekMouseDown, playPause, setVolume, 
             size='mini'
             onClick={() => scrollToTrack(loadedTrack.id)}
             className={`vinyl${playing ? ' vinyl-animate' : ''}`}
+            title='Scroll to track'
           />
         </Menu.Item>
         <Menu.Item>
