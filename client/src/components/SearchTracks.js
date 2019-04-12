@@ -1,10 +1,10 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import { withRouter } from 'react-router';
 
 import { Form, Input } from 'semantic-ui-react';
 
 class SearchTracks extends React.Component {
-
   state = {
     searchString: '',
   }
@@ -24,13 +24,28 @@ class SearchTracks extends React.Component {
     })
   }
 
+  selectInputText = () => {
+    ReactDOM.findDOMNode(this.inputRef).querySelector('input').select();
+  }
+
+  setInputRef = (input) => {
+    this.inputRef = input;
+  }
+
   render() {
     const inputStyle = {
       width: '300px'
     }
     return (
       <Form onSubmit={this.handleFormSubmit}>
-        <Input size='medium' onChange={(e) => this.handleChange(e)} placeholder="Search..." style={inputStyle}/>
+        <Input
+          ref={this.setInputRef}
+          size='medium'
+          onChange={(e) => this.handleChange(e)}
+          onFocus={this.selectInputText}
+          placeholder="Search..."
+          style={inputStyle}
+        />
       </Form>
     );
   }
