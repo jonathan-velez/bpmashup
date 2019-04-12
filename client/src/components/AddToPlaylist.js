@@ -96,14 +96,15 @@ class AddToPlaylist extends React.Component {
       )
     }
 
+    const playlistIcon = <Icon name='numbered list' color={isAdded ? 'red' : 'grey'} />
     const playlistButton =
       <Button basic>
         <Button.Content visible>
-          <Icon name='numbered list' color={isAdded ? 'red' : 'grey'} />
+          {playlistIcon}
         </Button.Content>
       </Button>
 
-    const playlistDropdownItem = <Dropdown.Item icon='numbered list' text='Playlists' />
+    const playlistDropdownItem = <Dropdown.Item>{playlistIcon}Playlists</Dropdown.Item>
 
     const playlistItems = _.map(this.props.playlistList, playlist => {
       const added = playlist.listOfTracks && playlist.listOfTracks.includes(this.props.track.id);

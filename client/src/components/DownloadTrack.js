@@ -8,18 +8,17 @@ import { downloadTrack } from '../utils/trackUtils';
 
 const DownloadTrack = ({ track, downloadedTracks, type }) => {
   const hasBeenDownloaded = downloadedTracks.includes(track.id);
-
+  const downloadIcon = <Icon name='download' color={hasBeenDownloaded ? 'red' : 'grey'} />
   const downloadButton =
     <Button
       basic
       onClick={() => downloadTrack(track)}
     >
       <Button.Content visible>
-        <Icon name='download' color={hasBeenDownloaded ? 'red' : 'grey'} />
+        {downloadIcon}
       </Button.Content>
     </Button>
-
-  const downloadDropdownItem = <Dropdown.Item icon='download' text='Download' onClick={() => downloadTrack(track)} />
+  const downloadDropdownItem = <Dropdown.Item onClick={() => downloadTrack(track)}>{downloadIcon}Download</Dropdown.Item>
 
   return (
     type === 'dropdownItem' ? downloadDropdownItem : downloadButton
