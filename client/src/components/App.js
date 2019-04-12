@@ -18,7 +18,7 @@ import ConfirmController from './ConfirmController';
 class App extends React.Component {
   componentWillMount() {
     window.addEventListener('keydown', _.throttle((e) => {
-      if (e.target.toString() === '[object HTMLInputElement]') return;
+      if (e.target.type === 'text') return;
 
       const { loadedTrack } = this.props.mediaPlayer;
 
