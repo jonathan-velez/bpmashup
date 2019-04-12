@@ -1,14 +1,14 @@
 import React from 'react';
-import { Button, Icon } from 'semantic-ui-react';
+import { Button, Icon, Dropdown } from 'semantic-ui-react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import * as thunks from '../thunks';
 
-const LoveItem = ({ type, item, toggleLoveItem, lovedTracks, lovedArtists, lovedLabels }) => {
+const LoveItem = ({ itemType, item, toggleLoveItem, lovedTracks, lovedArtists, lovedLabels, type = 'button' }) => {
   let isLoved = false;
 
-  switch (type) {
+  switch (itemType) {
     case 'artist':
       isLoved = lovedArtists.includes(item.id);
       break;
@@ -22,15 +22,22 @@ const LoveItem = ({ type, item, toggleLoveItem, lovedTracks, lovedArtists, loved
       break;
   }
 
-  return (
+  const loveIcon = <Icon color={isLoved ? 'red' : 'grey'} name='heart' />
+
+  const loveButton =
     <Button
       basic
-      onClick={() => toggleLoveItem(type, item.id)}
+      onClick={() => toggleLoveItem(itemType, item.id)}
     >
       <Button.Content visible>
-        <Icon color={isLoved ? 'red' : 'grey'} name='heart' />
+        {loveIcon}
       </Button.Content>
     </Button>
+
+  const loveDropDown = <Dropdown.Item onClick={() => toggleLoveItem(itemType, item.id)}>{loveIcon}{isLoved ? 'Unlove' : 'Love'}</Dropdown.Item>
+
+  return (
+    type === 'button' ? loveButton : loveDropDown
   );
 };
 

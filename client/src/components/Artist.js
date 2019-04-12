@@ -53,6 +53,10 @@ class Artist extends Component {
     const { name, id, biography, images, genres, featuredReleases } = artistData;
     const imageSrc = images && images.large.secureUrl;
     const { pathname } = location;
+    const stylez = {
+      maxHeight: '405px',
+      overflowY: 'scroll',
+    }
 
     if (Object.keys(artistData).length === 0) return null; // TODO: do something nicer here
 
@@ -85,10 +89,7 @@ class Artist extends Component {
           trackListing &&
           <TrackListingGroup trackListing={trackListing} />
     }
-    const stylez = {
-      maxHeight: '405px',
-      overflowY: 'scroll',
-    }
+    
     return (
       <Fragment>
         <Grid divided stackable>
@@ -96,7 +97,7 @@ class Artist extends Component {
             <React.Fragment>
               <Grid.Row columns={1}>
                 <Grid.Column>
-                  <Header floated='right' size='huge' className='item-header'>{name} <LoveItem type='artist' item={{ id }} /></Header>
+                <Header floated='right' size='huge' className='item-header'>{name} <LoveItem itemType='artist' item={{ id }} type='button' /></Header>
                 </Grid.Column>
               </Grid.Row>
               <Grid.Row columns={2}>
