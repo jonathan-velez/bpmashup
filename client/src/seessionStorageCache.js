@@ -31,9 +31,9 @@ export const callAPIorCache = path => {
   return new Promise(async (resolve, reject) => {
     try {
       let requestResult = getCachedResult(path);
-      if (!requestResult) {
+      if (!requestResult || (requestResult && Object.keys(requestResult.data).length === 0 && requestResult.constructor === Object)) {
         requestResult = await axios.get(path);
-        if (requestResult.status === 200) {
+        if (requestResult.status === 200 && Object.keys(requestResult.data).length > 0 && requestResult.constructor === Object) {
           setStorage(path, requestResult);
         }
       }
