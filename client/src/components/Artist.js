@@ -75,6 +75,8 @@ class Artist extends Component {
       case 'events':
         activeItemContent = eventsData && eventsData.length > 0 &&
           <div style={stylez}><EventsList eventsData={eventsData} /></div>
+        break;
+      default:
     }
 
     let activeItemContent2 = null;
@@ -88,8 +90,10 @@ class Artist extends Component {
         activeItemContent2 =
           trackListing &&
           <TrackListingGroup trackListing={trackListing} />
+        break;
+      default:
     }
-    
+
     return (
       <Fragment>
         <Grid divided stackable>
@@ -97,7 +101,7 @@ class Artist extends Component {
             <React.Fragment>
               <Grid.Row columns={1}>
                 <Grid.Column>
-                <Header floated='right' size='huge' className='item-header'>{name} <LoveItem itemType='artist' item={{ id }} type='button' /></Header>
+                  <Header floated='right' size='huge' className='item-header'>{name} <LoveItem itemType='artist' item={{ id }} type='button' /></Header>
                 </Grid.Column>
               </Grid.Row>
               <Grid.Row columns={2}>

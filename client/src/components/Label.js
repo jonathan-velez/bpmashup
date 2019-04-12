@@ -55,6 +55,8 @@ class Label extends Component {
         activeItemContent =
           trackListing &&
           <TrackListingGroup trackListing={trackListing} />
+        break;
+      default:
     }
 
     return (
@@ -66,7 +68,7 @@ class Label extends Component {
                 <Image src={imageSrc} />
               </Grid.Column>
               <Grid.Column textAlign='right'>
-              <Header size='huge' className='item-header'>{name} <LoveItem itemType='label' item={{ id }} type='button' /></Header>
+                <Header size='huge' className='item-header'>{name} <LoveItem itemType='label' item={{ id }} type='button' /></Header>
                 {biography && <ShowMore content={biography} />}
               </Grid.Column>
             </Grid.Row>
