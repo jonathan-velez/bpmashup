@@ -20,6 +20,7 @@ import searchResults from './searchResults';
 import releaseListing from './releaseListing';
 import artistDetail from './artistDetail';
 import labelDetail from './labelDetail';
+import userDetail from './userDetail';
 
 const rootReducer = combineReducers({
   trackListing,
@@ -40,7 +41,8 @@ const rootReducer = combineReducers({
   searchResults,
   releaseListing,
   artistDetail,
-  labelDetail
+  labelDetail,
+  userDetail,
 });
 
 export default rootReducer;

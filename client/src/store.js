@@ -11,7 +11,7 @@ import _ from 'lodash';
 import rootReducer from './reducers/index';
 import { loadStorage, setStorage } from './localStorage';
 import { activityLogger, checkProtectedAction } from './middleware';
-import { LOAD_PLAYLISTS, LOAD_DOWNLOADED_TRACKS, LOAD_LOVED_TRACKS, LOAD_LOVED_ARTISTS, LOAD_LOVED_LABELS } from './constants/actionTypes';
+import { LOAD_PLAYLISTS, LOAD_DOWNLOADED_TRACKS, LOAD_LOVED_TRACKS, LOAD_LOVED_ARTISTS, LOAD_LOVED_LABELS, LOAD_PERMS } from './constants/actionTypes';
 
 const persistedStorage = loadStorage();
 
@@ -115,6 +115,20 @@ store.firebaseAuthIsReady.then(() => {
       store.dispatch({
         type: LOAD_LOVED_LABELS,
         payload: Object.keys(lovedLabels).map(Number),
+      })
+    }
+  })
+
+  // load permissions
+  const permsRef = db.ref(`users/${uid}/permissions`);
+  permsRef.once('value').then((snapshot) => {
+    const perms = snapshot.val();
+    if (perms) {
+      const payload = Object.keys(perms).filter(perm => perms[perm] === 1);
+
+      store.dispatch({
+        type: LOAD_PERMS,
+        payload,
       })
     }
   })

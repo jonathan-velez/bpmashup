@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Card, Label } from 'semantic-ui-react';
+import { connect } from 'react-redux';
 
 import AddToPlaylist from './AddToPlaylist';
 import TrackAlbum from './TrackAlbum';
@@ -18,7 +19,10 @@ class Track extends React.Component {
   handleHide = () => this.setState({ active: false });
 
   render() {
-    const { track } = this.props;
+    const { track, userDetail } = this.props;
+    const { permissions } = userDetail;
+    const canZip = Array.isArray(permissions) && permissions.includes('zipZip');
+    const numOfButtons = canZip ? 'three' : 'two';
 
     return (
       <Card
@@ -42,8 +46,8 @@ class Track extends React.Component {
           <Card.Content><Link to={`/similar-tracks/${track.slug}/${track.id}`}>Similar tracks</Link></Card.Content>
         </Card.Content>
         <Card.Content extra>
-          <div className='ui three buttons'>
-            <DownloadTrack track={track} />
+          <div className={`ui ${numOfButtons} buttons`}>
+            {canZip && <DownloadTrack track={track} />}
             <LoveItem itemType='track' item={track} type='button' />
             <AddToPlaylist track={track} />
           </div>
@@ -53,4 +57,10 @@ class Track extends React.Component {
   }
 }
 
-export default Track;
+const mapStateToProps = state => {
+  return {
+    userDetail: state.userDetail,
+  }
+}
+
+export default connect(mapStateToProps, null)(Track);
