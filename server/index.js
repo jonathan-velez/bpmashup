@@ -16,6 +16,7 @@ const zippyController = require('./controllers/zippyController');
 const ytController = require('./controllers/youtubeController');
 const songkickController = require('./controllers/songkickController');
 const lastFmController = require('./controllers/lastFmController');
+const spotifyController = require('./controllers/spotifyController');
 
 app.get(`${API_BASE_URL}/genres`, bpController.callApi);
 app.get(`${API_BASE_URL}/search`, bpController.callApi);
@@ -37,6 +38,7 @@ app.get(`${API_BASE_URL}/songkick/get-artist-id`, songkickController.getArtistId
 app.get(`${API_BASE_URL}/songkick/get-artist-events`, songkickController.getUpcomingEvents);
 app.get(`${API_BASE_URL}/last-fm/get-artist-info`, lastFmController.getArtistInfo);
 app.get(`${API_BASE_URL}/download-it`, zippyController.downloadIt);
+app.get(`${API_BASE_URL}/spotify/get-track`, spotifyController.getTrack)
 
 app.use('/downloads', express.static(path.join(__dirname, '/downloads')));
 app.use('/*', staticFiles);
