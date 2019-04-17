@@ -18,7 +18,8 @@
     "express": "^4.16.3",
     "lodash": "^4.17.5",
     "oauth": "^0.9.15",
-    "path": "^0.12.7"
+    "path": "^0.12.7",
+    "spotify-web-api-node": "^4.0.0"
   },
   "devDependencies": {
     "eslint": "^5.16.0"
