@@ -6,6 +6,8 @@ const setFirebase = (state) => {
   const { playlistList } = state;
 
   if (!uid || uid === 0) return;
+  console.log(`uid: ${uid} | playlistList: ${playlistList}`);
+  console.log(`uid: ${uid} | playlistList: ${JSON.stringify(playlistList)}`);
 
   firebase.set(`users/${uid}/playlists/`, playlistList);
 }
