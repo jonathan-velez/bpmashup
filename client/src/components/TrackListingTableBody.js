@@ -20,7 +20,7 @@ const TrackListingTableBody = ({ trackListing, downloadedTracks, isPlaylist }) =
 
     trackListingBody = _.map(orderedTracks, (track, idx) => {
       const { id, images, title, artists, genres, label, bpm, key, releaseDate, position, dateAdded } = track;
-      const hasBeenDownloaded = downloadedTracks.includes(id && id.toString());
+      const hasBeenDownloaded = downloadedTracks.includes(id);
       const dateAddedFormatted = dateAdded ? moment.unix(dateAdded).format('YYYY-MM-DD') : '????-??-??';
 
       return (
