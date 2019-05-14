@@ -6,7 +6,7 @@ import _ from 'lodash';
 
 import store from '../store';
 import * as actionCreators from '../actions/ActionCreators';
-import * as thunks from '../thunks';
+import { downloadTrack as downloadTrackThunk } from '../thunks';
 
 export const constructLinks = (listItem, type, limit = 0) => {
   // takes in an array of genres or artists and contructs individual Link objects
@@ -49,16 +49,13 @@ export const downloadTrack = track => {
 
     store.dispatch(actionCreators.startAsync());
 
-    store.dispatch(thunks.downloadTrack(track.id.toString()));
-
     Axios.get(`/api/download-track?searchString=${encodeURIComponent(strSearch)}`)
       .then(res => {
         store.dispatch(actionCreators.stopAsync());
         if (res.data.href) {
           const downloadWindow = window.open('/downloadLink.html', '_blank');
-
           downloadWindow.location = res.data.href;
-
+          store.dispatch(downloadTrackThunk(track.id));
         } else {
           handleNoDownload();
         }
