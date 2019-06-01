@@ -6,9 +6,8 @@ const fs = require('fs');
 
 async function scrape(req, res) {
   try {
-    // const searchString = 'Ryo Original Mix Joris Voorn'; 
     let { searchString } = req.query;
-    searchString = searchString.replace(/[\W_]+/g, ' '); // TODO: replace common terms: mix, remix, original
+    searchString = searchString.replace(/[()]/g, ''); // TODO: replace common terms: mix, remix, original
 
     if (!searchString || searchString.length < 3) {
       return res.json({
@@ -86,7 +85,7 @@ async function scrape(req, res) {
 
       // parse the page title - remove file extension and non alphanumeric characters
       pageTitle = pageTitle.substring(pageTitle.indexOf('Zippyshare.com - ') + 17, lastIndexOfDot);
-      pageTitle = pageTitle.replace(/[\W_]+/g, ' ');
+      pageTitle = pageTitle.replace(/[()]/g, '');
 
       // check file extension, ensure it's allowed, otherwise skip to next
       const allowedExtensions = ['mp3', 'wav', 'aiff', 'flac', 'aac', 'm4a', 'ogg'];
