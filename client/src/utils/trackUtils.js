@@ -45,11 +45,13 @@ export const downloadTrack = track => {
   }
 
   if (typeof track === 'object') {
-    const strSearch = `${track.artists[0].name} ${track.title}`;
+    const artists = track.artists.reduce((acc, artist, idx) => acc += (idx > 0 ? ' ' : '') + artist.name, '');
+    let { name, mixName } = track;
+    mixName = mixName.replace('Original', '').replace('Mix', '').replace('Version', '').replace('Remix', '');
 
     store.dispatch(actionCreators.startAsync());
 
-    Axios.get(`/api/download-track?searchString=${encodeURIComponent(strSearch)}`)
+    Axios.get(`/api/download-track?artists=${encodeURIComponent(artists)}&name=${encodeURIComponent(name)}&mixName=${encodeURIComponent(mixName)}`)
       .then(res => {
         store.dispatch(actionCreators.stopAsync());
         if (res.data.href) {

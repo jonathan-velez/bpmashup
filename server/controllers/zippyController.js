@@ -6,7 +6,9 @@ const fs = require('fs');
 
 async function scrape(req, res) {
   try {
-    let { searchString } = req.query;
+    let { artists, name: trackName, mixName } = req.query;
+    let searchString = [artists, trackName, mixName].join(' ');
+
     searchString = searchString.replace(/[()]/g, ''); // TODO: replace common terms: mix, remix, original
 
     if (!searchString || searchString.length < 3) {
@@ -95,26 +97,75 @@ async function scrape(req, res) {
       }
 
       // count how many search words are in the title
-      const titleWords = pageTitle.split(' ');
-      const searchWords = searchString.split(' ');
-      const matchedWords = [];
+      const searchWords = searchString.split(' ').filter(Boolean);
+      const titleWords = [...new Set(pageTitle.split(' ').filter(Boolean))];
+      const artistWords = [...new Set(artists.split(' ').filter(Boolean))];
+      const trackNameWords = [...new Set(trackName.split(' ').filter(Boolean))];
+      const mixNameWords = [...new Set(mixName.split(' ').filter(Boolean))];
+      
+      const matchedArtistsWords = [];
+      const matchedTrackNameWords = [];
+      const matchedMixNameWords = [];
 
-      for (let x = 0; x < searchWords.length; x++) {
+      console.log('searchWords', searchWords);
+      console.log('artistWords', artistWords);
+      console.log('trackNameWords', trackNameWords);
+      console.log('mixNameWords', mixNameWords);
+
+      for (let x = 0; x < artistWords.length; x++) {
         for (let y = 0; y < titleWords.length; y++) {
-          if (titleWords[y].toLowerCase() === searchWords[x].toLowerCase()) {
-            matchedWords.push(searchWords[x]);
+          let wordFound = false;
+          if (titleWords[y].toLowerCase() === artistWords[x].toLowerCase() && !wordFound) {
+            matchedArtistsWords.push(artistWords[x]);
+            wordFound = true;
           }
         }
       }
 
-      // log match count if more than half of the words found. if a perfect match is found, break out
-      const matchedPercentage = (matchedWords.length / searchWords.length) * 100;
-      console.log(`Matches in Link ${i}: ${matchedWords.length}/${searchWords.length}. matchedPercentage: ${matchedPercentage}`);
-      if (matchedWords.length > 0 && matchedPercentage > 50) {
-        pagesRank[i] = matchedWords.length;
+      for (let x = 0; x < trackNameWords.length; x++) {
+        for (let y = 0; y < titleWords.length; y++) {
+          let wordFound = false;
+          if (titleWords[y].toLowerCase() === trackNameWords[x].toLowerCase() && !wordFound) {
+            matchedTrackNameWords.push(trackNameWords[x]);
+            wordFound = true;
+          }
+        }
       }
 
-      if (matchedWords.length === searchWords.length) {
+      for (let x = 0; x < mixNameWords.length; x++) {
+        for (let y = 0; y < titleWords.length; y++) {
+          let wordFound = false;
+          if (titleWords[y].toLowerCase() === mixNameWords[x].toLowerCase() && !wordFound) {
+            matchedMixNameWords.push(mixNameWords[x]);
+            wordFound = true;
+          }
+        }
+      }
+
+      console.log('matchedArtistsWords', matchedArtistsWords)
+      console.log('matchedTrackNameWords', matchedTrackNameWords)
+      console.log('matchedMixNameWords', matchedMixNameWords)
+
+      // log match count if more than half of the words found. if a perfect match is found, break out
+      const combinedMatches = (matchedArtistsWords.length + matchedTrackNameWords.length + matchedMixNameWords.length);
+      const combinedMatchesPercentage = (combinedMatches / searchWords.length) * 100;
+      const matchedArtistsPercentage = (matchedArtistsWords.length / artistWords.length) * 100;
+      const matchedTrackNamePercentage = (matchedTrackNameWords.length / trackNameWords.length) * 100;
+      const matchedMixNameWordsPercentage = (matchedMixNameWords.length / mixNameWords.length) * 100;
+
+      console.log(`Artist Matches in Link ${i}: ${matchedArtistsWords.length}/${artistWords.length}. matchedArtistsPercentage: ${matchedArtistsPercentage}`);
+      console.log(`TrackName Matches in Link ${i}: ${matchedTrackNameWords.length}/${trackNameWords.length}. matchedTrackNamePercentage: ${matchedTrackNamePercentage}`);
+      console.log(`MixName Matches in Link ${i}: ${matchedMixNameWords.length}/${mixNameWords.length}. matchedMixNameWordsPercentage: ${matchedMixNameWordsPercentage}`)
+      console.log(`Total Matches in Link ${i}: ${combinedMatches}/${searchWords.length}. combinedMatchesPercentage: ${combinedMatchesPercentage}`);
+
+      // ensure at least half of the artists and track names match
+      if ((matchedArtistsWords.length > 0 && matchedArtistsPercentage >= 50) && (matchedTrackNameWords.length > 0 && matchedTrackNamePercentage >= 50)) {
+        pagesRank[i] = combinedMatches.length;
+      } else {
+        console.log(`Missed the mark on either artists or track names`, `matchedArtistsPercentage: ${matchedArtistsPercentage} | matchedTrackNamePercentage ${matchedTrackNamePercentage}`);
+      }
+
+      if (combinedMatches === searchWords.length) {
         console.log(`Perfect match found in index ${i}`);
         indexOfBestLink = i;
         break;
@@ -161,12 +212,12 @@ async function scrape(req, res) {
       })
     } else {
       return res.json({
-        href: `/api/download-it/?fileName=${encodeURIComponent(fileName)}`,
+        href: `/api/download-it/?fileName=${encodeURIComponent(fileName)}`, // TODO: make dynamic for dev
         success: true,
       })
     }
   } catch (error) {
-    console.log(error)
+    console.log(`Error with scrape(): ${error}`);
   }
 }
 
