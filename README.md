@@ -6,7 +6,8 @@ https://bpmashup.herokuapp.com/
 
 - Browse the Beatport catalog by genre, artist or record label
 - Play full-length tracks via YouTube
-- Download full mp3 versions via Zippyshare (for evaluation only...support your favorite artists and purchase via Beatport)
+- Display Artist's upcoming events via Songkick's API
+- Display Artist's biographies via Last.fm's API
 - Create and save playlists
 
 ### Installation
@@ -23,8 +24,5 @@ https://bpmashup.herokuapp.com/
 - BP_ACCESS_TOKEN
 - BP_ACCESS_TOKEN_SECRET
 - YOUTUBE_API_KEY
-
-Beatport API - https://oauth-api.beatport.com/
-
-YouTube Search API - https://developers.google.com/youtube/v3/docs/search
-...
+- SONGKICK_API_KEY
+- LAST_FM_API_KEY
