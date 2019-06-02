@@ -87,7 +87,7 @@ async function scrape(req, res) {
 
       // parse the page title - remove file extension and non alphanumeric characters
       pageTitle = pageTitle.substring(pageTitle.indexOf('Zippyshare.com - ') + 17, lastIndexOfDot);
-      pageTitle = pageTitle.replace(/[()]/g, '');
+      pageTitle = pageTitle.replace(/[(),]/g, '');
 
       // check file extension, ensure it's allowed, otherwise skip to next
       const allowedExtensions = ['mp3', 'wav', 'aiff', 'flac', 'aac', 'm4a', 'ogg'];
