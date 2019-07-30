@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import Axios from 'axios';
+import axios from 'axios';
 import { scroller } from 'react-scroll';
 import _ from 'lodash';
 
@@ -51,7 +51,7 @@ export const downloadTrack = track => {
 
     store.dispatch(actionCreators.startAsync());
 
-    Axios.get(`/api/download-track?artists=${encodeURIComponent(artists)}&name=${encodeURIComponent(name)}&mixName=${encodeURIComponent(mixName)}`)
+    axios.get(`/api/download-track?artists=${encodeURIComponent(artists)}&name=${encodeURIComponent(name)}&mixName=${encodeURIComponent(mixName)}`)
       .then(res => {
         store.dispatch(actionCreators.stopAsync());
         if (res.data.href) {
