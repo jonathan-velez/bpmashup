@@ -28,6 +28,7 @@ async function scrape(req, res) {
         '--disable-setuid-sandbox',
       ],
     });
+    
     const page = await browser.newPage();
     await page.goto(urlScrape);
 
