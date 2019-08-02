@@ -3,7 +3,7 @@ import { START_ASYNC, GET_TRACKS, FETCH_TRACKS } from '../constants/actionTypes'
 import queryString from 'query-string';
 import _ from 'lodash';
 
-import { API_MOST_POPULAR } from '../constants/apiPaths';
+import { API_MOST_POPULAR, API_GET_TRACKS } from '../constants/apiPaths';
 import { callAPIorCache } from '../seessionStorageCache';
 
 export const getTracks = async (searchFacets) => {
@@ -67,5 +67,16 @@ export const fetchMostPopularTracks = async (type = 'genre', id, name, page = 1,
       type: FETCH_TRACKS,
       payload: requestResult,
     });
+  }
+}
+
+export const getTracksByIds = async(ids, page=1, perPage=20) => {
+  return async(dispatch) => {
+    const requestResult = await callAPIorCache(`${API_GET_TRACKS}?ids=${ids}&page=${page}&perPage=${perPage}`);
+
+    dispatch({
+      type: FETCH_TRACKS,
+      payload: requestResult,
+    })
   }
 }
