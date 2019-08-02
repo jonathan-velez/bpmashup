@@ -22,7 +22,12 @@ async function scrape(req, res) {
 
     console.log(`Searching google for zippyshare link for: ${searchString}`);
     const urlScrape = `https://www.google.com/search?q=${encodeURIComponent(searchString)}%20+site:zippyshare.com`;
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({
+      args: [
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+      ],
+    });
     const page = await browser.newPage();
     await page.goto(urlScrape);
 
