@@ -19,7 +19,8 @@
     "firebase": "^6.1.1",
     "lodash": "^4.17.5",
     "oauth": "^0.9.15",
-    "path": "^0.12.7"
+    "path": "^0.12.7",
+    "puppeteer": "^1.19.0"
   },
   "devDependencies": {
     "eslint": "^5.16.0"

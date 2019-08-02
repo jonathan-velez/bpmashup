@@ -3,6 +3,7 @@ const axios = require('axios');
 const _eval = require('eval');
 const path = require('path');
 const fs = require('fs');
+const puppeteer = require('puppeteer');
 
 async function scrape(req, res) {
   try {
@@ -21,23 +22,26 @@ async function scrape(req, res) {
 
     console.log(`Searching google for zippyshare link for: ${searchString}`);
     const urlScrape = `https://www.google.com/search?q=${encodeURIComponent(searchString)}%20+site:zippyshare.com`;
-    const googleReslut = await axios.get(urlScrape);
-    const $ = cheerio.load(googleReslut.data);
-    const links = $('a');
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+    await page.goto(urlScrape);
 
-    const linksList = [];
+    let linksList = await page.$$eval('a', as => as.map(a => a.href));
+    console.log('hrefs', linksList)
+
+    await browser.close();
+
     const pagesRank = {};
     const pagesHtml = {};
     let indexOfBestLink = -1;
 
     // filter links to just the ones on zippyshare.com
-    const filteredLinks = $(links).filter(function () {
-      return $(this).text().includes('Zippyshare.com')
-    });
+    linksList = linksList.filter(link => link.includes('zippyshare.com/'));
+    console.log('filteredLinks', linksList)
 
-    console.log('# of links', filteredLinks.length);
+    console.log('# of links', linksList.length);
 
-    if (filteredLinks.length === 0) {
+    if (linksList.length === 0) {
       console.log(`No google hits for search: ${urlScrape}`);
       return res.json({
         success: false,
@@ -45,15 +49,6 @@ async function scrape(req, res) {
         error: 'No google hits',
       })
     }
-
-    // extract each href and push to linksList []
-    $(filteredLinks).each(function (i, link) {
-      let zippyLink = $(link).attr('href');
-
-      zippyLink = zippyLink.substring(7);
-      zippyLink = zippyLink.substring(0, zippyLink.indexOf('&'));
-      linksList.push(zippyLink);
-    });
 
     // loop through link list and analyze the file name. break out if a perfect match to our search string is found, otherwise determine best match afterwards 
     for (const [i, link] of linksList.entries()) {
