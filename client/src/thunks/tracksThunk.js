@@ -5,6 +5,7 @@ import _ from 'lodash';
 
 import { API_MOST_POPULAR, API_GET_TRACKS } from '../constants/apiPaths';
 import { callAPIorCache } from '../seessionStorageCache';
+import { DEFAULT_PAGE, DEFAULT_PER_PAGE } from '../constants/defaults';
 
 export const getTracks = async (searchFacets) => {
   return async (dispatch) => {
@@ -28,8 +29,8 @@ export const getTracks = async (searchFacets) => {
     }, {});
 
     const pageModel = {
-      page: 1,
-      perPage: 25,
+      page: DEFAULT_PAGE,
+      perPage: DEFAULT_PER_PAGE,
     }
 
     const pageParams = queryString.stringify(Object.keys(pageModel).reduce((obj, key) => {
@@ -59,7 +60,7 @@ export const getTracks = async (searchFacets) => {
   }
 }
 
-export const fetchMostPopularTracks = async (type = 'genre', id, name, page = 1, perPage = 20, endPoint = API_MOST_POPULAR) => {
+export const fetchMostPopularTracks = async (type = 'genre', id, name, page = DEFAULT_PAGE, perPage = DEFAULT_PER_PAGE, endPoint = API_MOST_POPULAR) => {
   return async (dispatch) => {
     const requestResult = await callAPIorCache(`${endPoint}/${type}?s=${name}&id=${id}&page=${page}&perPage=${perPage}`);
 
@@ -70,7 +71,7 @@ export const fetchMostPopularTracks = async (type = 'genre', id, name, page = 1,
   }
 }
 
-export const getTracksByIds = async (ids, page = 1, perPage = 25) => {
+export const getTracksByIds = async (ids, page = DEFAULT_PAGE, perPage = DEFAULT_PER_PAGE) => {
   return async (dispatch) => {
     const requestResult = await callAPIorCache(`${API_GET_TRACKS}?ids=${ids}&page=${page}&perPage=${perPage}`);
 
