@@ -51,11 +51,11 @@ class Auth extends React.Component {
                   text={displayName && displayName.toUpperCase()}
                 />
                 <Dropdown.Item
-                  as={Link} to='/my-loved-tracks'
+                  as={Link} to='/history/loved-tracks'
                   text='Loved Tracks'
                 />
                 <Dropdown.Item
-                  as={Link} to='/my-downloads'
+                  as={Link} to='/history/downloads'
                   text='Downloads'
                 />
                 <Dropdown.Divider />

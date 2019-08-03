@@ -11,23 +11,34 @@ import TracklistingHeader from './TracklistingHeader';
 import TrackListingGroup from './TrackListingGroup';
 import { DEFAULT_PAGE, DEFAULT_PER_PAGE } from '../constants/defaults';
 
-class MyLovedTracks extends Component {
+class MyDownloadsAndLovedTracks extends Component {
   componentDidMount() {
-    const { lovedTracks } = this.props;
-    if (lovedTracks.length > 0) {
-      this.fetchTracks(lovedTracks);
+    const { match, downloadedTracks, lovedTracks } = this.props;
+    const { pageType } = match.params;
+
+    if (pageType === 'downloads') {
+      if (downloadedTracks.length > 0) {
+        this.fetchTracks(downloadedTracks);
+      }
+    } else {
+      if (lovedTracks.length > 0) {
+        this.fetchTracks(lovedTracks);
+      }
     }
   }
 
   componentWillReceiveProps(nextProps) {
-    const { location } = this.props;
-    const { lovedTracks, trackListing, location: nextLocation } = nextProps;
+    const { location, isLoading, match } = this.props;
+    const { downloadedTracks, lovedTracks, trackListing, location: nextLocation, match: nextMatch } = nextProps;
     const { tracks } = trackListing;
 
+    // what type of page to render
+    const { pageType: thisPageType } = match.params;
+    const { pageType: nextPageType } = nextMatch.params;
+
+    // parse query params
     const { search: nextSearch } = nextLocation;
     const { search: thisSearch } = location;
-
-    // parse params
     const thisParams = {};
     thisSearch.replace('?', '').split('&').forEach(param => {
       const splitParam = param.split('=');
@@ -47,11 +58,21 @@ class MyLovedTracks extends Component {
     const thisPerPage = +thisParams.perPage || DEFAULT_PER_PAGE;
     const newPerPage = +nextParams.perPage || DEFAULT_PER_PAGE;
 
-    if (lovedTracks.length > 0 && tracks && Object.keys(tracks).length === 0) {
-      this.fetchTracks(lovedTracks, newPage, newPerPage);
+    if (nextPageType === 'downloads') {
+      if (nextPageType !== thisPageType || (downloadedTracks.length > 0 && tracks && Object.keys(tracks).length === 0 && !isLoading)) {
+        this.fetchTracks(downloadedTracks, newPage, newPerPage);
+      } else {
+        if ((thisPage !== newPage || thisPerPage !== newPerPage) && !isLoading) {
+          this.fetchTracks(downloadedTracks, newPage, newPerPage);
+        }
+      }
     } else {
-      if (thisPage !== newPage || thisPerPage !== newPerPage) {
+      if (nextPageType !== thisPageType || (lovedTracks.length > 0 && tracks && Object.keys(tracks).length === 0)) {
         this.fetchTracks(lovedTracks, newPage, newPerPage);
+      } else {
+        if (thisPage !== newPage || thisPerPage !== newPerPage) {
+          this.fetchTracks(lovedTracks, newPage, newPerPage);
+        }
       }
     }
   }
@@ -66,14 +87,15 @@ class MyLovedTracks extends Component {
   }
 
   render() {
-    let { trackListing, isLoading } = this.props;
+    let { match, trackListing, isLoading } = this.props;
+    const { pageType } = match.params;
 
     return (
       <React.Fragment>
         <Dimmer active={isLoading} page>
           <Loader content='Loading' />
         </Dimmer>
-        <TracklistingHeader headerTitle={'My Loved Tracks'} />
+        <TracklistingHeader headerTitle={pageType === 'downloads' ? 'My Downloads' : 'My Loved Tracks'} />
         <TrackListingGroup trackListing={trackListing} />
       </React.Fragment>
     );
@@ -83,6 +105,7 @@ class MyLovedTracks extends Component {
 const mapStateToProps = state => {
   return {
     trackListing: state.trackListing,
+    downloadedTracks: state.downloadedTracks,
     lovedTracks: state.lovedTracks,
     isLoading: state.isLoading,
   }
@@ -92,4 +115,4 @@ const mapDispatchToProps = dispatch => {
   return bindActionCreators(Object.assign({}, { getTracksByIds, startAsync }), dispatch);
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(MyLovedTracks));
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(MyDownloadsAndLovedTracks));

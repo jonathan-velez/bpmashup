@@ -10,8 +10,7 @@ import ReleaseListingController from './ReleaseListingController';
 import Artist from './Artist';
 import Label from './Label';
 import TracksController from './TracksController';
-import MyDownloads from './MyDownloads';
-import MyLovedTracks from './MyLovedTracks';
+import MyDownloadsAndLovedTracks from './MyDownloadsAndLovedTracks';
 
 const Main = () => {
   const containerStyle = {
@@ -21,8 +20,8 @@ const Main = () => {
   return (
     <Container style={containerStyle} textAlign='center'>
       <Switch>
-        <Route exact path='/my-downloads' component={MyDownloads} />
-        <Route exact path='/my-loved-tracks' component={MyLovedTracks} />
+        <Route exact path='/history/:pageType' component={MyDownloadsAndLovedTracks} />
+        <Route exact path='/history/:pageType' component={MyDownloadsAndLovedTracks} />
         <Route exact path='/my-loves' component={MyLovedLabels} />
         <Route exact path='/artist/:artistName/:artistId' component={Artist} />
         <Route exact path='/label/:labelName/:labelId' component={Label} />
