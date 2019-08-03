@@ -22,7 +22,9 @@ const Navigation = () => {
         <Menu.Item>
           <SearchTracks />
         </Menu.Item>
-        <Auth />
+        <Menu.Item position='right'>
+          <Auth />
+        </Menu.Item>
       </Container>
     </Menu>
   )

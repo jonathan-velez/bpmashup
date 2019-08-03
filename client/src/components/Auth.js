@@ -1,8 +1,9 @@
 import React from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { firebaseConnect } from 'react-redux-firebase';
-import { Image, Icon, Menu } from 'semantic-ui-react';
+import { Image, Icon, Dropdown } from 'semantic-ui-react';
 
 import store from '../store';
 import { clearPlaylists, openLoginModalWindow } from '../actions/ActionCreators';
@@ -17,48 +18,56 @@ class Auth extends React.Component {
       store.dispatch(clearPlaylists());
     });
   }
-  
+
   render() {
     const { auth } = this.props;
-    const { photoURL } = auth;
+    const { photoURL, displayName } = auth;
 
-    const logOutButton = (
-      <React.Fragment>
-        <Menu.Item
-          position='right'
-          link
-          onClick={() => this.logOut()}
-        >
-          <Image
-            src={photoURL}
-            size='mini'
-            circular
-          />&nbsp;
-        <span>Log out</span>
-          <Icon
-            name='sign out'
-            size='large'
-          />
-        </Menu.Item >
-      </React.Fragment>
-    );
-
-    const logInButton = (
-      <Menu.Item
-        position='right'
-        link
-        onClick={() => this.logIn()}
-      >
-        <span>Log in</span>
-        <Icon
-          name='sign in'
-          size='large'
-        />
-      </Menu.Item >
-    );
+    const trigger = auth.isEmpty ?
+      <Icon name='user outline' />
+      :
+      <Image
+        src={photoURL}
+        size='mini'
+        circular
+      />
 
     return (
-      <React.Fragment>{auth.isEmpty ? logInButton : logOutButton}</React.Fragment>
+      <React.Fragment>
+        <Dropdown
+          item
+          scrolling
+          trigger={trigger}
+          direction='left'
+        >
+          <Dropdown.Menu>
+            {!auth.isEmpty ?
+              <React.Fragment>
+                <Dropdown.Item
+                  disabled
+                  text={displayName && displayName.toUpperCase()}
+                />
+                <Dropdown.Item
+                  as={Link} to='/my-downloads'
+                  text='My Downloads'
+                />
+                <Dropdown.Divider />
+                <Dropdown.Item
+                  text='Log out'
+                  onClick={() => this.logOut()}
+                />
+              </React.Fragment>
+              :
+              <React.Fragment>
+                <Dropdown.Item
+                  text='Log in'
+                  onClick={() => this.logIn()}
+                />
+              </React.Fragment>
+            }
+          </Dropdown.Menu>
+        </Dropdown>
+      </React.Fragment>
     );
   }
 }

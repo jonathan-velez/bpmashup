@@ -12,7 +12,7 @@ const TracklistingHeader = ({ headerPrefix, headerTitle, headerId, headerType })
 
   return (
     <Header size='huge' className='tracklistHeader' textAlign='left' dividing>
-      <span className='tracklistHeaderPrefix'>{headerPrefix} </span>
+      {headerPrefix ? <span className='tracklistHeaderPrefix'>{headerPrefix} </span> : null}
       {deslugify(headerTitle.toUpperCase())} {headerType === 'artist' || headerType === 'label' ? <LoveItem itemType={item} type={headerType} item='button' /> : null}
     </Header>
   );

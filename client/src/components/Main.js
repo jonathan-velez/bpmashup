@@ -14,7 +14,7 @@ import MyDownloads from './MyDownloads';
 
 const Main = () => {
   const containerStyle = {
-    marginTop: '5em',
+    marginTop: '7em',
     marginBottom: '8em'
   };
   return (

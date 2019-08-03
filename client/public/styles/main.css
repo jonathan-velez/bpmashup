@@ -283,10 +283,11 @@
 
   .ui.menu .dropdown.item .menu {
     background: #1b1d1c!important;
+    color: #fff!important;
   }
 
   .ui.menu .dropdown.item .menu .text {
-    color: #fff!important;
+    color: hsla(0, 0%, 100%, .7)!important;
   }
 
   .ui.popup {
@@ -346,4 +347,8 @@
 
   .item-header {
     text-transform: uppercase!important;
+  }
+
+  .ui.dropdown .menu>.divider {
+    border-top: 1px solid hsla(0, 0%, 78.4%, .15)!important;
   }

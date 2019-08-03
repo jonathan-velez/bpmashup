@@ -70,8 +70,8 @@ export const fetchMostPopularTracks = async (type = 'genre', id, name, page = 1,
   }
 }
 
-export const getTracksByIds = async(ids, page=1, perPage=20) => {
-  return async(dispatch) => {
+export const getTracksByIds = async (ids, page = 1, perPage = 25) => {
+  return async (dispatch) => {
     const requestResult = await callAPIorCache(`${API_GET_TRACKS}?ids=${ids}&page=${page}&perPage=${perPage}`);
 
     dispatch({
