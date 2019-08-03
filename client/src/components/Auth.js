@@ -26,11 +26,14 @@ class Auth extends React.Component {
     const trigger = auth.isEmpty ?
       <Icon name='user outline' />
       :
-      <Image
-        src={photoURL}
-        size='mini'
-        circular
-      />
+      photoURL ?
+        <Image
+          src={photoURL}
+          size='mini'
+          circular
+        />
+        :
+        <Icon name='user' />
 
     return (
       <React.Fragment>
