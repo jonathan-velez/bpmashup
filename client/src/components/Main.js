@@ -11,6 +11,7 @@ import Artist from './Artist';
 import Label from './Label';
 import TracksController from './TracksController';
 import MyDownloads from './MyDownloads';
+import MyLovedTracks from './MyLovedTracks';
 
 const Main = () => {
   const containerStyle = {
@@ -21,6 +22,7 @@ const Main = () => {
     <Container style={containerStyle} textAlign='center'>
       <Switch>
         <Route exact path='/my-downloads' component={MyDownloads} />
+        <Route exact path='/my-loved-tracks' component={MyLovedTracks} />
         <Route exact path='/my-loves' component={MyLovedLabels} />
         <Route exact path='/artist/:artistName/:artistId' component={Artist} />
         <Route exact path='/label/:labelName/:labelId' component={Label} />
