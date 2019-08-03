@@ -21,7 +21,7 @@ class Auth extends React.Component {
 
   render() {
     const { auth } = this.props;
-    const { photoURL, displayName } = auth;
+    const { photoURL, displayName, email } = auth;
 
     const trigger = auth.isEmpty ?
       <Icon name='user outline' />
@@ -48,7 +48,7 @@ class Auth extends React.Component {
               <React.Fragment>
                 <Dropdown.Item
                   disabled
-                  text={displayName && displayName.toUpperCase()}
+                  text={displayName ? displayName.toUpperCase() : email}
                 />
                 <Dropdown.Item
                   as={Link} to='/history/loved-tracks'
@@ -67,7 +67,7 @@ class Auth extends React.Component {
               :
               <React.Fragment>
                 <Dropdown.Item
-                  text='Log in'
+                  text='Log in / Sign up'
                   onClick={() => this.logIn()}
                 />
               </React.Fragment>
