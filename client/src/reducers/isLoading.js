@@ -11,6 +11,7 @@ import {
   GET_LABEL_DETAIL,
   GENERAL_ERROR,
   GET_TRACKS,
+  LOAD_LOVED_LABELS_DETAILS,
 } from '../constants/actionTypes';
 
 const isLoading = (state = false, action) => {
@@ -28,6 +29,7 @@ const isLoading = (state = false, action) => {
     case GET_LABEL_DETAIL:
     case GET_TRACKS:
     case GENERAL_ERROR:
+    case LOAD_LOVED_LABELS_DETAILS:
       if(action.error) console.log(GENERAL_ERROR, action.error);
       return false;
     default:

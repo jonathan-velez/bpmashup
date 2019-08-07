@@ -3,7 +3,7 @@ import { removeFromPlaylist, addToPlaylist, editPlaylistName, deletePlaylist, ad
 import { downloadTrack } from './downloadTrackThunk';
 import { toggleLoveTrack } from './loveTrackThunk';
 import { toggleLoveItem } from './loveItemThunk';
-import { getMyFavoriteLabels } from './myFavoritesThunk';
+import { getMyFavoriteLabels, getLabelsById } from './myFavoritesThunk';
 import { searchEverything } from './searchEverythingThunk';
 import { fetchReleaseData } from './releaseThunk';
 import { getArtistDetails } from './artistThunk';
@@ -27,4 +27,5 @@ export {
   getArtistDetails,
   getLabelDetail,
   getTracks,
+  getLabelsById,
 };

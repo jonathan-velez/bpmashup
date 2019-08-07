@@ -1,8 +1,14 @@
 import _ from 'lodash';
+import { LOAD_LOVED_LABELS_DETAILS } from '../constants/actionTypes';
 
-const lovedLabelsDetails = (state = [], action) => {
+const defaultState = {
+  metadata: {},
+  labels: {},
+}
+
+const lovedLabelsDetails = (state = defaultState, action) => {
   switch (action.type) {
-    case 'LOAD_LOVED_LABELS_DETAILS': {
+    case LOAD_LOVED_LABELS_DETAILS: {
       if (!_.has(action.payload.data, 'metadata') || !_.has(action.payload.data, 'results')) {
         return [];
       }

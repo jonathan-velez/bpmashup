@@ -1,6 +1,6 @@
 import { TOGGLE_LOVE_LABEL, LOAD_LOVED_LABELS } from '../constants/actionTypes';
 
-const lovedArtists = (state = [], action) => {
+const lovedLabels = (state = [], action) => {
   switch (action.type) {
     case TOGGLE_LOVE_LABEL: {
       if (!action.payload) {
@@ -24,4 +24,4 @@ const lovedArtists = (state = [], action) => {
   }
 }
 
-export default lovedArtists;
+export default lovedLabels;

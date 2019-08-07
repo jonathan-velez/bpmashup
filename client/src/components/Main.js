@@ -20,9 +20,9 @@ const Main = () => {
   return (
     <Container style={containerStyle} textAlign='center'>
       <Switch>
+        <Route exact path='/history/loved-labels' component={MyLovedLabels} />
         <Route exact path='/history/:pageType' component={MyDownloadsAndLovedTracks} />
         <Route exact path='/history/:pageType' component={MyDownloadsAndLovedTracks} />
-        <Route exact path='/my-loves' component={MyLovedLabels} />
         <Route exact path='/artist/:artistName/:artistId' component={Artist} />
         <Route exact path='/label/:labelName/:labelId' component={Label} />
         <Route exact path="/most-popular/:type/:searchString/:searchId" component={TrackListingController} />
