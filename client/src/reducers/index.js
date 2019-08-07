@@ -14,6 +14,7 @@ import confirmModal from './confirmModal';
 import downloadedTracks from './downloadedTracks';
 import lovedTracks from './lovedTracks';
 import lovedArtists from './lovedArtists';
+import lovedArtistsDetails from './lovedArtistsDetails';
 import lovedLabels from './lovedLabels';
 import lovedLabelsDetails from './lovedLabelsDetails';
 import searchResults from './searchResults';
@@ -43,6 +44,7 @@ const rootReducer = combineReducers({
   artistDetail,
   labelDetail,
   userDetail,
+  lovedArtistsDetails,
 });
 
 export default rootReducer;

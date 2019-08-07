@@ -15,3 +15,4 @@ export const API_GET_LABEL_BY_ID = `${API_ROOT}/labels`;
 export const API_MOST_POPULAR_BY_LABEL = `${API_ROOT}/most-popular/label`;
 export const API_MOST_POPULAR_RELEASES_BY_LABEL = `${API_ROOT}/most-popular-releases/label`;
 export const API_MY_BEATPORT = `${API_ROOT}/my-beatport`;
+export const API_GET_LOVED_ARTISTS = `${API_ROOT}/artists`;
