@@ -16,7 +16,7 @@ import ShowMore from './ShowMore';
 class Artist extends Component {
   state = {
     activeItem: 'biography',
-    activeItem2: 'releases',
+    activeItem2: 'tracks',
   }
 
   componentDidMount() {
@@ -141,18 +141,18 @@ class Artist extends Component {
         <Menu secondary pointing>
           <Menu.Item
             link
-            name='releases'
-            className='item-header'
-            active={activeItem2 === 'releases'}
-            onClick={this.handleItemClick2}
-          >Featured Releases</Menu.Item>
-          <Menu.Item
-            link
             name='tracks'
             className='item-header'
             active={activeItem2 === 'tracks'}
             onClick={this.handleItemClick2}
           >Top 10 Tracks</Menu.Item>
+          <Menu.Item
+            link
+            name='releases'
+            className='item-header'
+            active={activeItem2 === 'releases'}
+            onClick={this.handleItemClick2}
+          >Featured Releases</Menu.Item>
           <Menu.Item position='right'>
             <Button as={Link} to={`${pathname}/tracks`}>
               View All Tracks

@@ -14,7 +14,7 @@ import TrackListingGroup from './TrackListingGroup';
 
 class Label extends Component {
   state = {
-    activeItem: 'releases',
+    activeItem: 'tracks',
   }
 
   componentDidMount() {
@@ -89,18 +89,19 @@ class Label extends Component {
         <Menu secondary pointing>
           <Menu.Item
             link
-            name='releases'
-            className='item-header'
-            active={activeItem === 'releases'}
-            onClick={this.handleItemClick}
-          >Featured Releases</Menu.Item>
-          <Menu.Item
-            link
             name='tracks'
             className='item-header'
             active={activeItem === 'tracks'}
             onClick={this.handleItemClick}
           >Top 10 Tracks</Menu.Item>
+          <Menu.Item
+            link
+            name='releases'
+            className='item-header'
+            active={activeItem === 'releases'}
+            onClick={this.handleItemClick}
+          >Featured Releases</Menu.Item>
+
           <Menu.Item position='right'>
             <Button as={Link} to={`${pathname}/tracks`}>
               View All Tracks
@@ -108,7 +109,6 @@ class Label extends Component {
           </Menu.Item>
         </Menu>
         {activeItemContent}
-
       </Fragment>
     );
   }
