@@ -24,7 +24,7 @@ const Footer = ({ seekChange, seekMouseUp, seekMouseDown, playPause, setVolume, 
       duration: 750,
       delay: 50,
       smooth: true,
-      offset: -65,
+      offset: -85,
     });
   }
 
