@@ -1,12 +1,13 @@
 import { DOWNLOAD_TRACK, LOAD_DOWNLOADED_TRACKS } from '../constants/actionTypes';
 
 const downloadedTracks = (state = [], action) => {
-  switch (action.type) {
+  const { payload: track, type } = action;
+  switch (type) {
     case DOWNLOAD_TRACK: {
-      if (!action.payload) {
+      if (!track) {
         return state;
       }
-      return [...state, action.payload];
+      return [...state, track.id];
     }
     case LOAD_DOWNLOADED_TRACKS: {
       const { payload: newTracks = [] } = action;

@@ -11,65 +11,59 @@ import {
   REMOVE_FROM_PLAYLIST,
   EDIT_PLAYLIST_NAME,
   DELETE_PLAYLIST,
-  TOGGLE_LOVE_ARTIST
+  TOGGLE_LOVE_ARTIST,
+  DOWNLOAD_TRACK,
+  ADD_TRACK_TO_NO_DOWNLOAD_LIST,
 } from '../constants/actionTypes';
 import { openLoginModalWindow } from '../actions/ActionCreators';
 
 export const activityLogger = store => next => action => {
-  const logTrack = (track, userId) => {
-    const { genres, artists, label, id } = track;
+  const logTrack = (track, userId, type) => {
+    const logTypes = ['downloads', 'trackPlaysAll', 'noDownloads'];
+    if(!logTypes.includes(type)) {
+      return;
+    }
 
+    const db = firebase.database();
+    const downloadRef = db.ref(`${type}/users/${userId}`);
+
+    // total count for all downloads by user
+    downloadRef.child('totalCount').transaction(currentValue => {
+      return (currentValue || 0) + 1;
+    });
+
+    // total count for all downloads by all ussers
+    downloadRef.parent.parent.child('totalCount').transaction(currentValue => {
+      return (currentValue || 0) + 1;
+    });
+
+    const { id: trackId, genres, artists, label } = track;
+
+    // track object
+    downloadRef.child('tracks').child(trackId).set(track);
+    // trackId with timestamp
+    downloadRef.child('trackIds').child(moment().format()).set(trackId);
+
+    // genres
     genres.forEach(genre => {
-      const genreRef = firebase.database().ref(`allTrackPlays/genres/${genre.slug}|${genre.id}`);
-      genreRef.transaction(currentValue => {
-        return (currentValue || 0) + 1;
-      });
+      // genre name
+      downloadRef.child('genresNames').child(genre.slug).transaction(currentValue => (currentValue || 0) + 1);
+      // genre ids
+      downloadRef.child('genresIds').child(genre.id).transaction(currentValue => (currentValue || 0) + 1);
+    })
 
-      if (userId) {
-        const genreRefUser = firebase.database().ref(`users/${userId}/trackPlays/genres/${genre.slug}|${genre.id}`);
-        genreRefUser.transaction(currentValue => {
-          return (currentValue || 0) + 1;
-        });
-      }
-    });
-
+    // artists
     artists.forEach(artist => {
-      const artistRef = firebase.database().ref(`allTrackPlays/artists/${artist.slug}|${artist.id}`);
-      artistRef.transaction(currentValue => {
-        return (currentValue || 0) + 1;
-      });
-
-      if (userId) {
-        const artistRefUser = firebase.database().ref(`users/${userId}/trackPlays/artists/${artist.slug}|${artist.id}`);
-        artistRefUser.transaction(currentValue => {
-          return (currentValue || 0) + 1;
-        });
-      }
-    });
-
-    const labelRef = firebase.database().ref(`allTrackPlays/label/${label.slug}|${label.id}`);
-    labelRef.transaction(currentValue => {
-      return (currentValue || 0) + 1;
-    });
-
-    if (userId) {
-      const labelRefUser = firebase.database().ref(`users/${userId}/trackPlays/label/${label.slug}|${label.id}`);
-      labelRefUser.transaction(currentValue => {
-        return (currentValue || 0) + 1;
-      });
-    }
-
-    const trackIdRef = firebase.database().ref(`allTrackPlays/tracks/${id}`);
-    trackIdRef.transaction(currentValue => {
-      return (currentValue || 0) + 1;
-    });
-
-    if (userId) {
-      const trackIdRefUser = firebase.database().ref(`users/${userId}/trackPlays/tracks/${id}`);
-      trackIdRefUser.transaction(currentValue => {
-        return (currentValue || 0) + 1;
-      });
-    }
+      // artist name
+      downloadRef.child('artistsNames').child(artist.slug).transaction(currentValue => (currentValue || 0) + 1);
+      // artist id
+      downloadRef.child('artistsIds').child(artist.id).transaction(currentValue => (currentValue || 0) + 1);
+    })
+    
+    // label name
+    downloadRef.child('labelsNames').child(label.slug).transaction(currentValue => (currentValue || 0) + 1); // TODO, abstract transaction out
+    // label name
+    downloadRef.child('labelsIds').child(label.id).transaction(currentValue => (currentValue || 0) + 1);
   }
 
   const id = v4();
@@ -78,29 +72,30 @@ export const activityLogger = store => next => action => {
   let userId = 0;
   const { auth } = state.firebaseState;
 
+  const { payload: track, type } = action;
+
   if (auth.isLoaded && !auth.isEmpty) {
     userId = auth.uid
   }
 
-  switch (action.type) {
+  switch (type) {
     case LOAD_TRACK:
-      firebase.set(`/trackPlays/${id}`, {
-        id,
-        userId,
-        track: action.payload,
-        timeStamp: moment().format(),
-      });
-
-      logTrack(action.payload, userId); // TODO use a setTimeout or something to delay the execution of the log until after 5 seconds of play time.
+      logTrack(track, userId, 'trackPlaysAll');
       break;
     case GET_YOUTUBE_LINK:
       firebase.set(`/trackPlaysYouTube/${id}`, {
         id,
         userId,
         track: state.mediaPlayer.loadedTrack,
-        youTubeId: action.payload.data[0].id.videoId,
+        youTubeId: track.data[0].id.videoId,
         timeStamp: moment().format(),
       });
+      break;
+    case DOWNLOAD_TRACK:
+      logTrack(track, userId, 'downloads');
+      break;
+    case ADD_TRACK_TO_NO_DOWNLOAD_LIST:
+      logTrack(track, userId, 'noDownloads');
       break;
     default:
       break;

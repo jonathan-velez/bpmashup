@@ -5,8 +5,8 @@ import { scroller } from 'react-scroll';
 import _ from 'lodash';
 
 import store from '../store';
-import * as actionCreators from '../actions/ActionCreators';
-import { downloadTrack as downloadTrackThunk } from '../thunks';
+import { startAsync, stopAsync, openModalWindow, loadTrack } from '../actions/ActionCreators';
+import { downloadTrack as downloadTrackThunk, addTrackToNoDownloadList } from '../thunks';
 
 export const constructLinks = (listItem, type, limit = 0) => {
   // takes in an array of genres or artists and contructs individual Link objects
@@ -34,14 +34,16 @@ export const constructLinks = (listItem, type, limit = 0) => {
 
 export const downloadTrack = track => {
   const handleNoDownload = () => {
-    store.dispatch(actionCreators.stopAsync());
+    store.dispatch(stopAsync());
 
-    store.dispatch(actionCreators.openModalWindow({
+    store.dispatch(openModalWindow({
       open: true,
       title: 'Sorry!',
       body: 'No download link found.',
       headerIcon: 'exclamation',
     }));
+
+    store.dispatch(addTrackToNoDownloadList(track));
   }
 
   if (typeof track === 'object') {
@@ -49,15 +51,15 @@ export const downloadTrack = track => {
     let { name, mixName } = track;
     mixName = mixName.replace('Original', '').replace('Mix', '').replace('Version', '').replace('Remix', '');
 
-    store.dispatch(actionCreators.startAsync());
+    store.dispatch(startAsync());
 
     axios.get(`/api/download-track?artists=${encodeURIComponent(artists)}&name=${encodeURIComponent(name)}&mixName=${encodeURIComponent(mixName)}`)
       .then(res => {
-        store.dispatch(actionCreators.stopAsync());
+        store.dispatch(stopAsync());
         if (res.data.href) {
           const downloadWindow = window.open('/downloadLink.html', '_blank');
           downloadWindow.location = res.data.href;
-          store.dispatch(downloadTrackThunk(track.id));
+          store.dispatch(downloadTrackThunk(track));
         } else {
           handleNoDownload();
         }
@@ -75,7 +77,7 @@ export const scrollToTrack = (trackId) => {
     duration: 750,
     delay: 50,
     smooth: true,
-    offset: -65,
+    offset: -85,
   });
 }
 
@@ -109,7 +111,7 @@ export const getNextTrack = (incrementBy = 1) => {
 }
 
 export const loadNextTrack = (incrementBy = 1) => {
-  store.dispatch(actionCreators.loadTrack(getNextTrack(incrementBy)));
+  store.dispatch(loadTrack(getNextTrack(incrementBy)));
 }
 
 export const genreLabel = genres => (`Genre${(genres.length > 1 ? "s" : "")}`);
