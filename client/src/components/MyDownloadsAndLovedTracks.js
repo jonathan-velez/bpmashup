@@ -13,12 +13,16 @@ import { DEFAULT_PAGE, DEFAULT_PER_PAGE } from '../constants/defaults';
 
 class MyDownloadsAndLovedTracks extends Component {
   componentDidMount() {
-    const { match, downloadedTracks, lovedTracks } = this.props;
+    const { match, downloadedTracks, lovedTracks, noDownloadList } = this.props;
     const { pageType } = match.params;
 
     if (pageType === 'downloads') {
       if (downloadedTracks.length > 0) {
         this.fetchTracks(downloadedTracks);
+      }
+    } else if (pageType === 'no-downloads') {
+      if (noDownloadList.length > 0) {
+        this.fetchTracks(noDownloadList);
       }
     } else {
       if (lovedTracks.length > 0) {
@@ -29,7 +33,7 @@ class MyDownloadsAndLovedTracks extends Component {
 
   componentWillReceiveProps(nextProps) {
     const { location, isLoading, match } = this.props;
-    const { downloadedTracks, lovedTracks, trackListing, location: nextLocation, match: nextMatch } = nextProps;
+    const { downloadedTracks, lovedTracks, trackListing, location: nextLocation, match: nextMatch, noDownloadList } = nextProps;
     const { tracks } = trackListing;
 
     // what type of page to render
@@ -66,6 +70,14 @@ class MyDownloadsAndLovedTracks extends Component {
           this.fetchTracks(downloadedTracks, newPage, newPerPage);
         }
       }
+    } else if (nextPageType === 'no-downloads') {
+      if (nextPageType !== thisPageType || (noDownloadList.length > 0 && tracks && Object.keys(tracks).length === 0 && !isLoading)) {
+        this.fetchTracks(noDownloadList, newPage, newPerPage);
+      } else {
+        if ((thisPage !== newPage || thisPerPage !== newPerPage) && !isLoading) {
+          this.fetchTracks(noDownloadList, newPage, newPerPage);
+        }
+      }
     } else {
       if (nextPageType !== thisPageType || (lovedTracks.length > 0 && tracks && Object.keys(tracks).length === 0)) {
         this.fetchTracks(lovedTracks, newPage, newPerPage);
@@ -90,12 +102,28 @@ class MyDownloadsAndLovedTracks extends Component {
     let { match, trackListing, isLoading } = this.props;
     const { pageType } = match.params;
 
+    let headerTitle = '';
+
+    switch (pageType) {
+      case 'downloads':
+        headerTitle = 'My Downloads'
+        break;
+      case 'no-downloads':
+        headerTitle = 'No Downloads Found'
+        break;
+      case 'loved-tracks':
+        headerTitle = 'My Loved Tracks'
+        break;
+      default:
+        headerTitle = '';
+    }
+
     return (
       <React.Fragment>
         <Dimmer active={isLoading} page>
           <Loader content='Loading' />
         </Dimmer>
-        <TracklistingHeader headerTitle={pageType === 'downloads' ? 'My Downloads' : 'My Loved Tracks'} />
+        <TracklistingHeader headerTitle={headerTitle} />
         <TrackListingGroup trackListing={trackListing} />
       </React.Fragment>
     );
@@ -108,6 +136,7 @@ const mapStateToProps = state => {
     downloadedTracks: state.downloadedTracks,
     lovedTracks: state.lovedTracks,
     isLoading: state.isLoading,
+    noDownloadList: state.noDownloadList,
   }
 }
 

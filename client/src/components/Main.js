@@ -22,7 +22,6 @@ const Main = () => {
       <Switch>
         <Route exact path='/history/loved-labels' component={MyLovedLabels} />
         <Route exact path='/history/:pageType' component={MyDownloadsAndLovedTracks} />
-        <Route exact path='/history/:pageType' component={MyDownloadsAndLovedTracks} />
         <Route exact path='/artist/:artistName/:artistId' component={Artist} />
         <Route exact path='/label/:labelName/:labelId' component={Label} />
         <Route exact path="/most-popular/:type/:searchString/:searchId" component={TrackListingController} />

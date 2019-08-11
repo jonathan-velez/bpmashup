@@ -40,7 +40,8 @@ import {
   OPEN_MODAL,
   STOP_ASYNC,
   TOGGLE_TRACKLIST_VIEW,
-  CLEAR_PLAYLISTS
+  CLEAR_PLAYLISTS,
+  ADD_TRACK_TO_NO_DOWNLOAD_LIST,
 } from '../constants/actionTypes';
 
 export const startAsync = () => {
@@ -256,5 +257,12 @@ export const openLoginModalWindow = actionPending => {
       headerIcon: 'sign in',
       actionPending,
     }
+  }
+}
+
+export const addTrackToNoDownloadList = payload => {
+  return {
+    type: ADD_TRACK_TO_NO_DOWNLOAD_LIST,
+    payload,
   }
 }

@@ -11,7 +11,7 @@ import _ from 'lodash';
 import rootReducer from './reducers/index';
 import { loadStorage, setStorage } from './localStorage';
 import { activityLogger, checkProtectedAction } from './middleware';
-import { LOAD_PLAYLISTS, LOAD_DOWNLOADED_TRACKS, LOAD_LOVED_TRACKS, LOAD_LOVED_ARTISTS, LOAD_LOVED_LABELS, LOAD_PERMS } from './constants/actionTypes';
+import { LOAD_PLAYLISTS, LOAD_DOWNLOADED_TRACKS, LOAD_LOVED_TRACKS, LOAD_LOVED_ARTISTS, LOAD_LOVED_LABELS, LOAD_PERMS, LOAD_NO_DOWNLOADS_TRACKS } from './constants/actionTypes';
 
 const persistedStorage = loadStorage();
 
@@ -73,6 +73,19 @@ store.firebaseAuthIsReady.then(() => {
       });
     }
   });
+
+  // load missing downloads into Redux
+  const noDownloadssRef = db.ref(`noDownloads/users/${uid}/trackIds`);
+  noDownloadssRef.on('value', snapshot => {
+    const noDownloads = snapshot.val();
+
+    if (noDownloads) {
+      store.dispatch({
+        type: LOAD_NO_DOWNLOADS_TRACKS,
+        payload: Object.keys(noDownloads).map(Number),
+      })
+    }
+  })
 
   // load loved tracks into Redux, filter out previously loved tracks
   const lovedTracksRef = db.ref(`users/${uid}/lovedTracks`);
