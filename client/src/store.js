@@ -82,7 +82,7 @@ store.firebaseAuthIsReady.then(() => {
     if (noDownloads) {
       store.dispatch({
         type: LOAD_NO_DOWNLOADS_TRACKS,
-        payload: Object.keys(noDownloads).map(Number),
+        payload: Object.values(noDownloads).map(Number),
       })
     }
   })
