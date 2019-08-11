@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import Scroll from 'react-scroll';
 
 import { getLabelsById } from '../thunks';
-import { startAsync } from '../actions/ActionCreators';
 import LovedLabelsTable from './LovedLabelsTable';
 import Pager from './Pager';
 
@@ -54,8 +53,7 @@ class MyLovedLabels extends React.Component {
 
   fetchMyFavoriteLabels(labelIds = [], page = 1, perPage = 10) {
     if (labelIds && labelIds.length > 0) {
-      const { getLabelsById, startAsync } = this.props;
-      startAsync();
+      const { getLabelsById } = this.props;
       Scroll.animateScroll.scrollToTop({ duration: 1000 });
       getLabelsById(labelIds.join(','), page, perPage);
     }
@@ -94,7 +92,7 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => {
-  return bindActionCreators(Object.assign({}, { getLabelsById, startAsync }), dispatch);
+  return bindActionCreators(Object.assign({}, { getLabelsById }), dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(MyLovedLabels);

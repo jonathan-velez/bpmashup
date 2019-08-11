@@ -5,30 +5,26 @@ import { Grid, Header } from 'semantic-ui-react';
 import Scroll from 'react-scroll';
 import _ from 'lodash';
 
-// TODO: Clean this shit up
-import * as actionCreators from '../actions/ActionCreators';
-import * as thunks from '../thunks';
+import { searchEverything } from '../thunks';
 import ResponsiveTrackListing from './ResponsiveTrackListing';
 import ItemCards from './ItemCards';
 
 class SearchResultsController extends Component {
   componentDidMount() {
-    const { match, startAsync, searchEverything } = this.props;
+    const { match, searchEverything } = this.props;
     const { searchTerm } = match.params;
 
     Scroll.animateScroll.scrollToTop({ duration: 1500 });
-    startAsync();
     searchEverything(searchTerm);
   }
 
   componentWillReceiveProps(nextProps) {
-    const { isLoading, match, startAsync, searchEverything } = this.props;
+    const { isLoading, match, searchEverything } = this.props;
     const { searchTerm: nextSearchTerm } = nextProps.match.params;
     const { searchTerm: thisSearchTerm } = match.params;
 
     if ((nextSearchTerm && nextSearchTerm !== thisSearchTerm) && !isLoading) {
       Scroll.animateScroll.scrollToTop({ duration: 1500 });
-      startAsync();
       searchEverything(nextSearchTerm);
     }
   }
@@ -38,7 +34,7 @@ class SearchResultsController extends Component {
     const { artists, tracks, releases, labels } = searchResults;
 
     if (isLoading || _.isEmpty(searchResults)) return null;
-    
+
     return (
       <Grid stackable>
         {artists.length > 0 ?
@@ -75,8 +71,7 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => {
-  return bindActionCreators(Object.assign({}, actionCreators, thunks), dispatch);
+  return bindActionCreators(Object.assign({}, { searchEverything }), dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(SearchResultsController);
-// TODO: Clean up down here, shouldn't need to bind everything, can call dispatch from within manually

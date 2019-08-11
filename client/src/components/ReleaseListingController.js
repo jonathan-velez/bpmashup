@@ -6,22 +6,20 @@ import { Item, Placeholder } from 'semantic-ui-react';
 import Scroll from 'react-scroll';
 
 import ResponsiveTrackListing from './ResponsiveTrackListing';
-import * as actionCreators from '../actions/ActionCreators';
-import * as thunks from '../thunks';
+import { fetchReleaseData } from '../thunks';
 import { constructLinks } from '../utils/trackUtils';
 
 class ReleaseListingController extends Component {
   componentDidMount() {
-    const { match } = this.props;
+    const { match, fetchReleaseData } = this.props;
     const { releaseId } = match.params;
-    this.props.startAsync();
-    this.props.fetchReleaseData(releaseId);
+    fetchReleaseData(releaseId);
     Scroll.animateScroll.scrollToTop({ duration: 1500 });
   }
 
   render() {
     const { releaseListing, isLoading } = this.props;
-    
+
     return (
       <Fragment>
         <Item.Group>
@@ -74,7 +72,7 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => {
-  return bindActionCreators(Object.assign({}, actionCreators, thunks), dispatch);
+  return bindActionCreators(Object.assign({}, { fetchReleaseData }), dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ReleaseListingController);

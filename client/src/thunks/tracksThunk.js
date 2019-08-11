@@ -1,11 +1,10 @@
-import { API_MY_BEATPORT } from '../constants/apiPaths';
-import { START_ASYNC, GET_TRACKS, FETCH_TRACKS } from '../constants/actionTypes';
 import queryString from 'query-string';
 import _ from 'lodash';
 
-import { API_MOST_POPULAR, API_GET_TRACKS } from '../constants/apiPaths';
-import { callAPIorCache } from '../seessionStorageCache';
+import { START_ASYNC, GET_TRACKS, FETCH_TRACKS, SEARCH_TRACKS, GET_YOUTUBE_LINK } from '../constants/actionTypes';
+import { API_MY_BEATPORT, API_MOST_POPULAR, API_GET_TRACKS, API_SIMILAR_TRACKS, API_GET_YOUTUBE_LINK } from '../constants/apiPaths';
 import { DEFAULT_PAGE, DEFAULT_PER_PAGE } from '../constants/defaults';
+import { callAPIorCache } from '../seessionStorageCache';
 
 export const getTracks = async (searchFacets) => {
   return async (dispatch) => {
@@ -62,6 +61,10 @@ export const getTracks = async (searchFacets) => {
 
 export const fetchMostPopularTracks = async (type = 'genre', id, name, page = DEFAULT_PAGE, perPage = DEFAULT_PER_PAGE, endPoint = API_MOST_POPULAR) => {
   return async (dispatch) => {
+    dispatch({
+      type: START_ASYNC,
+    });
+
     const requestResult = await callAPIorCache(`${endPoint}/${type}?s=${name}&id=${id}&page=${page}&perPage=${perPage}`);
 
     dispatch({
@@ -73,11 +76,44 @@ export const fetchMostPopularTracks = async (type = 'genre', id, name, page = DE
 
 export const getTracksByIds = async (ids, page = DEFAULT_PAGE, perPage = DEFAULT_PER_PAGE) => {
   return async (dispatch) => {
+    dispatch({
+      type: START_ASYNC,
+    });
+
     const requestResult = await callAPIorCache(`${API_GET_TRACKS}?ids=${ids}&page=${page}&perPage=${perPage}`);
 
     dispatch({
       type: FETCH_TRACKS,
       payload: requestResult,
+    })
+  }
+}
+
+export const fetchTracksSimilar = async (trackId, page = 1, perPage = 20) => {
+  return async (dispatch) => {
+    dispatch({
+      type: START_ASYNC,
+    });
+
+    const request = await callAPIorCache(`${API_SIMILAR_TRACKS}?id=${trackId}&perPage=${perPage}&page=${page}`);
+
+    dispatch({
+      type: SEARCH_TRACKS,
+      payload: request
+    })
+  }
+}
+
+export const getYoutubeLink = async searchString => {
+  return async (dispatch) => {
+    dispatch({
+      type: START_ASYNC,
+    });
+
+    const request = await callAPIorCache(`${API_GET_YOUTUBE_LINK}?q=${encodeURIComponent(searchString)}`);
+    dispatch({
+      type: GET_YOUTUBE_LINK,
+      payload: request
     })
   }
 }

@@ -6,7 +6,6 @@ import { Dimmer, Loader } from 'semantic-ui-react';
 import Scroll from 'react-scroll';
 
 import { getTracksByIds } from '../thunks/tracksThunk';
-import { startAsync } from '../actions/ActionCreators';
 import TracklistingHeader from './TracklistingHeader';
 import TrackListingGroup from './TrackListingGroup';
 import { DEFAULT_PAGE, DEFAULT_PER_PAGE } from '../constants/defaults';
@@ -91,8 +90,7 @@ class MyDownloadsAndLovedTracks extends Component {
 
   fetchTracks(ids = [], page, perPage) {
     if (ids.length > 0) {
-      const { getTracksByIds, startAsync } = this.props;
-      startAsync();
+      const { getTracksByIds } = this.props;
       Scroll.animateScroll.scrollToTop({ duration: 1000 });
       getTracksByIds(ids.join(','), page, perPage);
     }
@@ -141,7 +139,7 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => {
-  return bindActionCreators(Object.assign({}, { getTracksByIds, startAsync }), dispatch);
+  return bindActionCreators(Object.assign({}, { getTracksByIds }), dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(MyDownloadsAndLovedTracks));

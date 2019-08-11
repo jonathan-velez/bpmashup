@@ -3,8 +3,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import Scroll from 'react-scroll';
 
-import * as actionCreators from '../actions/ActionCreators';
-import { fetchMostPopularTracks } from '../thunks/tracksThunk';
+import { fetchMostPopularTracks, searchTracks, fetchTracksSimilar } from '../thunks';
 import { deslugify } from '../utils/helpers';
 import { DEFAULT_PAGE, DEFAULT_PER_PAGE } from '../constants/defaults';
 import TrackListingGroup from './TrackListingGroup';
@@ -16,7 +15,7 @@ class TrackListingController extends React.Component {
   }
 
   componentDidMount() {
-    const { location, match, startAsync, searchTracks, fetchTracksSimilar, fetchMostPopularTracks } = this.props;
+    const { location, match, searchTracks, fetchTracksSimilar, fetchMostPopularTracks } = this.props;
     const { type, searchId, searchString, searchTerm, trackId } = match.params;
     const { search: thisSearch } = location;
 
@@ -30,7 +29,6 @@ class TrackListingController extends React.Component {
     const { page = DEFAULT_PAGE, perPage = DEFAULT_PER_PAGE } = params;
 
     Scroll.animateScroll.scrollToTop({ duration: 1500 });
-    startAsync();
 
     // determine if it's a search page, similar tracks or not
     if (searchTerm) {
@@ -43,7 +41,7 @@ class TrackListingController extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { isLoading, location, match, startAsync, searchTracks, fetchTracksSimilar, fetchMostPopularTracks } = this.props;
+    const { isLoading, location, match, searchTracks, fetchTracksSimilar, fetchMostPopularTracks } = this.props;
     const { type, searchId, searchString, searchTerm, trackId } = nextProps.match.params;
     const { search: nextSearch } = nextProps.location;
     const { search: thisSearch } = location;
@@ -72,7 +70,6 @@ class TrackListingController extends React.Component {
     // fetch if we have a new query or new params
     if (((searchId && searchId !== thisSearchId) || (newPage && newPage !== thisPage) || (searchTerm && searchTerm !== thisSearchTerm) || (trackId && trackId !== thisTrackId) || (newPerPage && newPerPage !== thisPerPage)) && !isLoading) {
       Scroll.animateScroll.scrollToTop({ duration: 1500 });
-      startAsync();
 
       if (searchTerm) {
         searchTracks(deslugify(searchTerm), newPage, newPerPage);
@@ -133,7 +130,7 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => {
-  return bindActionCreators(Object.assign(actionCreators, { fetchMostPopularTracks }), dispatch);
+  return bindActionCreators(Object.assign({ fetchMostPopularTracks, searchTracks, fetchTracksSimilar }), dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(TrackListingController);

@@ -1,9 +1,28 @@
 import { callAPIorCache } from '../seessionStorageCache';
-import { SEARCH_EVERYTHING, LOAD_TRACKS } from '../constants/actionTypes';
-import { API_SEARCH_EVERYTHING } from '../constants/apiPaths';
+import { SEARCH_TRACKS, SEARCH_EVERYTHING, LOAD_TRACKS, START_ASYNC } from '../constants/actionTypes';
+import { API_SEARCH_EVERYTHING, API_SEARCH } from '../constants/apiPaths';
+
+export const searchTracks = async (searchTerm, page = 1, perPage = 20) => {
+  return async (dispatch) => {
+    const request = await callAPIorCache(`${API_SEARCH}?query=${searchTerm}&facets=fieldType:track&sortBy=publishDate+DESC&perPage=${perPage}&page=${page}`);
+
+    dispatch({
+      type: START_ASYNC,
+    });
+
+    dispatch({
+      type: SEARCH_TRACKS,
+      payload: request
+    })
+  }
+}
 
 export const searchEverything = searchBy => {
   return async (dispatch) => {
+    dispatch({
+      type: START_ASYNC,
+    });
+
     // parse search results and group by type. load tracks into trackListing reducer
     const searchResponse = await callAPIorCache(`${API_SEARCH_EVERYTHING}?query=${searchBy}&perPage=50`);
 

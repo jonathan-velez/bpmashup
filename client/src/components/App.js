@@ -8,6 +8,7 @@ import { Dimmer, Loader } from 'semantic-ui-react';
 
 import { downloadTrack } from '../utils/trackUtils';
 import * as actionCreators from '../actions/ActionCreators';
+import { getYoutubeLink } from '../thunks';
 import { getNextTrack } from '../utils/trackUtils';
 import Navigation from './Navigation';
 import Main from './Main';
@@ -37,7 +38,6 @@ class App extends React.Component {
           break;
         case 'f':
           if (!loadedTrack.title || !loadedTrack.artists) return;
-          this.props.startAsync();
           this.props.getYoutubeLink(`${loadedTrack.artists[0].name} ${loadedTrack.title}`);
           break;
         case 'm':
@@ -167,7 +167,7 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => {
-  return bindActionCreators(actionCreators, dispatch);
+  return bindActionCreators(Object.assign({}, { getYoutubeLink }, actionCreators), dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

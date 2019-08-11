@@ -4,11 +4,11 @@ import { downloadTrack, addTrackToNoDownloadList } from './downloadTrackThunk';
 import { toggleLoveTrack } from './loveTrackThunk';
 import { toggleLoveItem } from './loveItemThunk';
 import { getMyFavoriteLabels, getLabelsById } from './myFavoritesThunk';
-import { searchEverything } from './searchEverythingThunk';
+import { searchEverything, searchTracks } from './searchEverythingThunk';
 import { fetchReleaseData } from './releaseThunk';
 import { getArtistDetails } from './artistThunk';
 import { getLabelDetail } from './labelThunk';
-import { getTracks } from './tracksThunk';
+import { getTracks, fetchTracksSimilar, fetchMostPopularTracks, getYoutubeLink } from './tracksThunk';
 
 export {
   loadTrackThunk,
@@ -29,4 +29,8 @@ export {
   getTracks,
   getLabelsById,
   addTrackToNoDownloadList,
+  searchTracks,
+  fetchTracksSimilar,
+  fetchMostPopularTracks,
+  getYoutubeLink,
 };

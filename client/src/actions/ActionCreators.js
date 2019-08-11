@@ -4,12 +4,8 @@ import LoginForm from '../components/LoginForm';
 import { callAPIorCache } from '../seessionStorageCache';
 
 import {
-  API_MOST_POPULAR,
   API_GENRES,
-  API_SEARCH,
   API_AUTOCOMPLETE,
-  API_GET_YOUTUBE_LINK,
-  API_SIMILAR_TRACKS
 } from '../constants/apiPaths';
 
 import {
@@ -23,14 +19,11 @@ import {
   UPDATE_TRACK_PROGRESS,
   SET_DURATION,
   START_ASYNC,
-  FETCH_TRACKS,
   FETCH_GENRES,
-  SEARCH_TRACKS,
   UPDATE_SUGGESTION_INPUT_VALUE,
   CLEAR_SUGGESTIONS,
   LOAD_SUGGESTIONS,
   TOGGLE_MUTE,
-  GET_YOUTUBE_LINK,
   LOAD_YOUTUBE_URL,
   SET_VOLUME,
   LOAD_TRACKS,
@@ -41,7 +34,6 @@ import {
   STOP_ASYNC,
   TOGGLE_TRACKLIST_VIEW,
   CLEAR_PLAYLISTS,
-  ADD_TRACK_TO_NO_DOWNLOAD_LIST,
 } from '../constants/actionTypes';
 
 export const startAsync = () => {
@@ -53,24 +45,6 @@ export const startAsync = () => {
 export const stopAsync = () => {
   return {
     type: STOP_ASYNC
-  }
-}
-
-export const fetchTracks = async (type = 'genre', id, name, page = 1, perPage = 20, endPoint = API_MOST_POPULAR) => {
-  const request = await callAPIorCache(`${endPoint}/${type}?s=${name}&id=${id}&page=${page}&perPage=${perPage}`);
-
-  return {
-    type: FETCH_TRACKS,
-    payload: request
-  }
-}
-
-export const searchTracks = async (searchTerm, page = 1, perPage = 20) => {
-  const request = await callAPIorCache(`${API_SEARCH}?query=${searchTerm}&facets=fieldType:track&sortBy=publishDate+DESC&perPage=${perPage}&page=${page}`);
-
-  return {
-    type: SEARCH_TRACKS,
-    payload: request
   }
 }
 
@@ -169,14 +143,6 @@ export const toggleMute = () => {
   }
 }
 
-export const getYoutubeLink = async searchString => {
-  const request = await callAPIorCache(`${API_GET_YOUTUBE_LINK}?q=${encodeURIComponent(searchString)}`);
-  return {
-    type: GET_YOUTUBE_LINK,
-    payload: request
-  }
-}
-
 export const loadYoutubeLink = youTubeLink => {
   return {
     type: LOAD_YOUTUBE_URL,
@@ -218,15 +184,6 @@ export const setConfirm = payload => {
   }
 }
 
-export const fetchTracksSimilar = async (trackId, page = 1, perPage = 20) => {
-  const request = await callAPIorCache(`${API_SIMILAR_TRACKS}?id=${trackId}&perPage=${perPage}&page=${page}`);
-
-  return {
-    type: SEARCH_TRACKS,
-    payload: request
-  }
-}
-
 export const openModalWindow = payload => {
   return {
     type: OPEN_MODAL,
@@ -257,12 +214,5 @@ export const openLoginModalWindow = actionPending => {
       headerIcon: 'sign in',
       actionPending,
     }
-  }
-}
-
-export const addTrackToNoDownloadList = payload => {
-  return {
-    type: ADD_TRACK_TO_NO_DOWNLOAD_LIST,
-    payload,
   }
 }

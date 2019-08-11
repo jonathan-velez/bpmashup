@@ -6,6 +6,7 @@ import { Menu, Image, Container, Card } from 'semantic-ui-react';
 import _ from 'lodash';
 
 import * as actionCreators from '../actions/ActionCreators';
+import { getYoutubeLink } from '../thunks';
 import { constructLinks, getNextTrack } from '../utils/trackUtils';
 import PrevNextTrack from './PrevNextTrack';
 import PlayPauseButton from './PlayPauseButton';
@@ -16,7 +17,7 @@ import VolumeBar from './VolumeBar';
 import YouTubeButton from './YouTubeButton';
 import TrackActionDropdown from './TrackActionDropdown';
 
-const Footer = ({ seekChange, seekMouseUp, seekMouseDown, playPause, setVolume, startAsync, getYoutubeLink, mediaPlayer, playerRef, loadTrack }) => {
+const Footer = ({ seekChange, seekMouseUp, seekMouseDown, playPause, setVolume, getYoutubeLink, mediaPlayer, playerRef, loadTrack }) => {
 
   // TODO: Refactor these functions into a module
   const scrollToTrack = (trackId) => {
@@ -43,7 +44,6 @@ const Footer = ({ seekChange, seekMouseUp, seekMouseDown, playPause, setVolume, 
 
   const getYouTube = loadedTrack => {
     if (loadedTrack.id) {
-      startAsync();
       getYoutubeLink(`${loadedTrack.artists[0].name} ${loadedTrack.title}`);
     }
   }
@@ -124,7 +124,7 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => {
-  return bindActionCreators(actionCreators, dispatch);
+  return bindActionCreators(Object.assign({}, actionCreators, { getYoutubeLink }), dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Footer);
