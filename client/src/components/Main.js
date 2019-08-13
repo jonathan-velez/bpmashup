@@ -11,6 +11,7 @@ import Artist from './Artist';
 import Label from './Label';
 import TracksController from './TracksController';
 import MyDownloadsAndLovedTracks from './MyDownloadsAndLovedTracks';
+import MyActivity from './MyActivity';
 
 const Main = () => {
   const containerStyle = {
@@ -20,6 +21,7 @@ const Main = () => {
   return (
     <Container style={containerStyle} textAlign='center'>
       <Switch>
+        <Route exact path='/history/my-activity' component={MyActivity} />
         <Route exact path='/history/loved-labels' component={MyLovedLabels} />
         <Route exact path='/history/:pageType' component={MyDownloadsAndLovedTracks} />
         <Route exact path='/artist/:artistName/:artistId' component={Artist} />
