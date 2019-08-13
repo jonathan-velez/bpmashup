@@ -98,16 +98,17 @@ async function scrape(req, res) {
       }
 
       // count how many search words are in the title
-      const searchWords = searchString.split(' ').filter(Boolean);
-      const titleWords = [...new Set(pageTitle.split(' ').filter(Boolean))];
-      const artistWords = [...new Set(artists.split(' ').filter(Boolean))];
-      const trackNameWords = [...new Set(trackName.split(' ').filter(Boolean))];
-      const mixNameWords = [...new Set(mixName.split(' ').filter(Boolean))];
+      const searchWords = searchString.split(/[\s-]+/).filter(Boolean);
+      const titleWords = [...new Set(pageTitle.split(/[\s-]+/).filter(Boolean))];
+      const artistWords = [...new Set(artists.split(/[\s-]+/).filter(Boolean))];
+      const trackNameWords = [...new Set(trackName.split(/[\s-]+/).filter(Boolean))];
+      const mixNameWords = [...new Set(mixName.split(/[\s-]+/).filter(Boolean))];
       
       const matchedArtistsWords = [];
       const matchedTrackNameWords = [];
       const matchedMixNameWords = [];
 
+      console.log('titleWords', titleWords);
       console.log('searchWords', searchWords);
       console.log('artistWords', artistWords);
       console.log('trackNameWords', trackNameWords);
