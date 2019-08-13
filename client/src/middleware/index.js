@@ -18,69 +18,83 @@ import {
 import { openLoginModalWindow } from '../actions/ActionCreators';
 
 export const activityLogger = store => next => action => {
-  const logTrack = (track, userId, type) => {
+  const logTrack = (track, userData, type) => {
+    const { userId, userDisplayName, userEmail } = userData;
+
     const logTypes = ['downloads', 'trackPlaysAll', 'noDownloads'];
-    if(!logTypes.includes(type)) {
+    if (!logTypes.includes(type)) {
       return;
     }
 
     const db = firebase.database();
-    const downloadRef = db.ref(`${type}/users/${userId}`);
+    const userDataRef = db.ref(`${type}/users/${userId}`);
+
+    // set user's name and email
+    userDataRef.child('userData').set({ userDisplayName, userEmail });
 
     // total count for all downloads by user
-    downloadRef.child('totalCount').transaction(currentValue => {
+    userDataRef.child('totalCount').transaction(currentValue => {
       return (currentValue || 0) + 1;
     });
 
     // total count for all downloads by all ussers
-    downloadRef.parent.parent.child('totalCount').transaction(currentValue => {
+    userDataRef.parent.parent.child('totalCount').transaction(currentValue => {
       return (currentValue || 0) + 1;
     });
 
     const { id: trackId, genres, artists, label } = track;
 
     // track object
-    downloadRef.child('tracks').child(trackId).set(track);
+    userDataRef.child('tracks').child(trackId).set(track);
     // trackId with timestamp
-    downloadRef.child('trackIds').child(moment().format()).set(trackId);
+    userDataRef.child('trackIds').child(moment().format()).set(trackId);
 
     // genres
     genres.forEach(genre => {
       // genre name
-      downloadRef.child('genresNames').child(genre.slug).transaction(currentValue => (currentValue || 0) + 1);
+      userDataRef.child('genresNames').child(genre.slug).transaction(currentValue => (currentValue || 0) + 1);
       // genre ids
-      downloadRef.child('genresIds').child(genre.id).transaction(currentValue => (currentValue || 0) + 1);
+      userDataRef.child('genresIds').child(genre.id).transaction(currentValue => (currentValue || 0) + 1);
     })
 
     // artists
     artists.forEach(artist => {
       // artist name
-      downloadRef.child('artistsNames').child(artist.slug).transaction(currentValue => (currentValue || 0) + 1);
+      userDataRef.child('artistsNames').child(artist.slug).transaction(currentValue => (currentValue || 0) + 1);
       // artist id
-      downloadRef.child('artistsIds').child(artist.id).transaction(currentValue => (currentValue || 0) + 1);
+      userDataRef.child('artistsIds').child(artist.id).transaction(currentValue => (currentValue || 0) + 1);
     })
-    
+
     // label name
-    downloadRef.child('labelsNames').child(label.slug).transaction(currentValue => (currentValue || 0) + 1); // TODO, abstract transaction out
+    userDataRef.child('labelsNames').child(label.slug).transaction(currentValue => (currentValue || 0) + 1); // TODO, abstract transaction out
     // label name
-    downloadRef.child('labelsIds').child(label.id).transaction(currentValue => (currentValue || 0) + 1);
+    userDataRef.child('labelsIds').child(label.id).transaction(currentValue => (currentValue || 0) + 1);
   }
 
   const id = v4();
   const state = store.getState();
 
   let userId = 0;
+  let userDisplayName = '';
+  let userEmail = '';
+  const userData = {};
   const { auth } = state.firebaseState;
 
   const { payload: track, type } = action;
 
   if (auth.isLoaded && !auth.isEmpty) {
-    userId = auth.uid
+    const { uid, displayName, email } = auth;
+
+    userId = uid;
+    userDisplayName = displayName;
+    userEmail = email;
+
+    Object.assign(userData, { userId, userDisplayName, userEmail });
   }
 
   switch (type) {
     case LOAD_TRACK:
-      logTrack(track, userId, 'trackPlaysAll');
+      logTrack(track, userData, 'trackPlaysAll');
       break;
     case GET_YOUTUBE_LINK:
       firebase.set(`/trackPlaysYouTube/${id}`, {
@@ -92,10 +106,10 @@ export const activityLogger = store => next => action => {
       });
       break;
     case DOWNLOAD_TRACK:
-      logTrack(track, userId, 'downloads');
+      logTrack(track, userData, 'downloads');
       break;
     case ADD_TRACK_TO_NO_DOWNLOAD_LIST:
-      logTrack(track, userId, 'noDownloads');
+      logTrack(track, userData, 'noDownloads');
       break;
     default:
       break;
