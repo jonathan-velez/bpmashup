@@ -38,42 +38,60 @@ class MyActivity extends Component {
       trackDownloadsCount: 0,
     },
     pieData: {
-      genres: {
-        options: {
-          labels: [],
-          title: {
-            text: 'GENRES',
-            style: {
-              fontSize: '28px',
-              color: '#263238'
+      trackPlays: {
+        genres: {
+          options: {
+            labels: [],
+            title: {
+              text: 'Tracks played by Genre',
+              style: {
+                fontSize: '28px',
+                color: '#263238'
+              },
+            },
+            theme: {
+              // monochrome: {
+              //   enabled: true
+              // }
+              // mode: 'dark',
+              palette: 'palette4',
+            },
+            legend: {
+              show: true,
+              horizontalAlign: 'center',
+              position: 'bottom',
             },
           },
-          theme: {
-            // monochrome: {
-            //   enabled: true
-            // }
-            // mode: 'dark',
-            palette: 'palette4',
-          },
-          legend: {
-            show: true,
-            horizontalAlign: 'left',
-            position: 'bottom',
-          },
-          responsive: [{
-            breakpoint: 480,
-            options: {
-              chart: {
-                width: 200
+          series: [],
+        }
+      },
+      trackDownloads: {
+        genres: {
+          options: {
+            labels: [],
+            title: {
+              text: 'Tracks played by Genre',
+              style: {
+                fontSize: '28px',
+                color: '#263238'
               },
-              legend: {
-                position: 'bottom'
-              }
-            }
-          }]
-        },
-        series: [],
-      }
+            },
+            theme: {
+              // monochrome: {
+              //   enabled: true
+              // }
+              // mode: 'dark',
+              palette: 'palette4',
+            },
+            legend: {
+              show: true,
+              horizontalAlign: 'center',
+              position: 'bottom',
+            },
+          },
+          series: [],
+        }
+      },
     }
   }
 
@@ -114,17 +132,6 @@ class MyActivity extends Component {
       })
 
       downloadsUserRef.on('value', snapshot => {
-        this.setState({
-          ...this.state,
-          userActivityData: {
-            trackDownloads: snapshot.val(),
-          }
-        })
-        this.refreshThePie();
-      })
-
-      trackPlaysUserRef.on('value', snapshot => {
-        console.log('trackPlaysUserRef updated');
         const userTrackData = snapshot.val();
         // eslint-disable-next-line no-unused-vars
         const { tracks, ...rest } = userTrackData;
@@ -132,48 +139,99 @@ class MyActivity extends Component {
         this.setState({
           ...this.state,
           userActivityData: {
-            trackPlays: {
+            ...this.state.userActivityData,
+            trackDownloads: {
               ...rest,
             }
           }
+        })
+        this.refreshThePie('trackDownloads');
+      })
+
+      trackPlaysUserRef.on('value', snapshot => {
+        const userTrackData = snapshot.val();
+        // eslint-disable-next-line no-unused-vars
+        const { tracks, ...rest } = userTrackData;
+
+        this.setState({
+          ...this.state,
+          userActivityData: {
+            ...this.state.userActivityData,
+            trackPlays: {
+              ...rest,
+            },
+          }
         });
 
-        this.refreshThePie();
+        this.refreshThePie('trackPlays');
       })
     }
   }
 
-  refreshThePie() {
+  refreshThePie(pieName) {
+    const pieNameList = ['trackPlays', 'trackDownloads'];
+    if (!pieNameList.includes(pieName)) return;
+
     console.log('refreshing the pie');
     const { userActivityData = {}, pieData = {} } = this.state;
-    const { trackPlays = {} } = userActivityData;
-    const { genresNames } = trackPlays;
-    const { genres: pieDataGenres } = pieData;
+    const { trackPlays = {}, trackDownloads = {} } = userActivityData;
+    const { genresNames: trackPlaysGenreNames } = trackPlays;
+    const { genreNames: trackDownloadsGenresNames } = trackDownloads;
+    const { trackPlays: pieDataTrackPlays, trackDownloads: pieDataTrackDownloads } = pieData;
+    const { genres: pieDataTrackPlaysGenres } = pieDataTrackPlays;
+    const { genres: pieDataTrackDownloadsGenres } = pieDataTrackDownloads;
 
-    const genreNamesList = genresNames && Object.keys(genresNames);
-    const genreSeriesList = genresNames && Object.values(genresNames);
+    if (pieName === 'trackPlays') {
+      const trackPlaysGenreNamesList = trackPlaysGenreNames && Object.keys(trackPlaysGenreNames);
+      const trackPlaysGenreSeriesList = trackPlaysGenreNames && Object.values(trackPlaysGenreNames);
 
-    this.setState({
-      ...this.state,
-      pieData: {
-        ...pieData,
-        genres: {
-          ...pieDataGenres,
-          options: {
-            ...pieDataGenres.options,
-            labels: genreNamesList,
+      this.setState({
+        ...this.state,
+        pieData: {
+          ...pieData,
+          trackPlays: {
+            ...pieDataTrackPlays,
+            genres: {
+              ...pieDataTrackPlaysGenres,
+              options: {
+                ...pieDataTrackPlaysGenres.options,
+                labels: trackPlaysGenreNamesList,
+              },
+              series: trackPlaysGenreSeriesList,
+            }
           },
-          series: genreSeriesList,
-        }
-      },
-    })
+        },
+      });
+    } else if (pieName === 'trackDownloads') {
+      const trackDownloadsGenreNamesList = trackDownloadsGenresNames && Object.keys(trackDownloadsGenresNames);
+      const trackDownloadsGenreSeriesList = trackDownloadsGenresNames && Object.values(trackDownloadsGenresNames);
+
+      this.setState({
+        ...this.state,
+        pieData: {
+          ...pieData,
+          trackDownloads: {
+            ...pieDataTrackDownloads,
+            genres: {
+              ...pieDataTrackDownloadsGenres,
+              options: {
+                ...pieDataTrackDownloadsGenres.options,
+                labels: trackDownloadsGenreNamesList,
+              },
+              series: trackDownloadsGenreSeriesList,
+            }
+          },
+        },
+      });
+    }
   }
 
   render() {
     const { userActivityData = {}, pieData = {}, userData = {} } = this.state;
     const { trackPlays = {} } = userActivityData;
     const { totalCount: totalTrackPlayCount = 0 } = trackPlays;
-    const { genres: pieDataGenres } = pieData;
+    const { trackPlays: pieDataTrackPlays } = pieData;
+    const { genres: pieDataTrackPlaysGenres } = pieDataTrackPlays;
     const { userDisplayName } = userData;
 
     if (totalTrackPlayCount <= 0) return null; //TODO: display something nicer here
@@ -183,10 +241,10 @@ class MyActivity extends Component {
         <h1>My Activity - {userDisplayName}</h1>
         <div>{totalTrackPlayCount > 0 && `You've played ${totalTrackPlayCount} tracks`}</div>
 
-        {pieDataGenres.options.labels && pieDataGenres.options.labels.length > 0 &&
+        {pieDataTrackPlaysGenres.options.labels && pieDataTrackPlaysGenres.options.labels.length > 0 &&
           <ReactApexChart
-            options={pieDataGenres.options}
-            series={pieDataGenres.series}
+            options={pieDataTrackPlaysGenres.options}
+            series={pieDataTrackPlaysGenres.series}
             type="pie"
             width="600"
             legend={{ horizontalAlign: 'right' }}
