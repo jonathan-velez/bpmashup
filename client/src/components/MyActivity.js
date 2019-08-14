@@ -8,6 +8,7 @@ import { Header, Message, Grid, Divider } from 'semantic-ui-react';
 
 class MyActivity extends Component {
   state = {
+    fbRegistered: false,
     userData: {
       userDisplayName: '',
       userEmail: '',
@@ -67,11 +68,6 @@ class MyActivity extends Component {
               horizontalAlign: 'center',
               position: 'right',
             },
-            markers: {
-              onClick: (chart, seriesIndex, opts) => {
-                console.log(`${seriesIndex} was clicked`);
-              }
-            },
           },
           series: [],
         }
@@ -89,10 +85,6 @@ class MyActivity extends Component {
               },
             },
             theme: {
-              // monochrome: {
-              //   enabled: true
-              // }
-              // mode: 'dark',
               palette: 'palette4',
             },
             legend: {
@@ -120,11 +112,9 @@ class MyActivity extends Component {
     if (!auth.isLoaded || (auth.isLoaded && auth.isEmpty)) return;
     const { uid } = auth;
 
-    const { userActivityData = {} } = this.state;
-    const { trackPlays = {} } = userActivityData;
-    const { totalCount } = trackPlays;
+    const { fbRegistered } = this.state;
 
-    if (totalCount === 0) {
+    if (!fbRegistered) {
       this.registerFbListeners(uid);
     }
   }
@@ -185,6 +175,8 @@ class MyActivity extends Component {
 
       this.refreshThePie('trackPlays');
     })
+
+    this.setState({ fbRegistered: true });
   }
 
   componentWillUnmount() {
@@ -266,7 +258,7 @@ class MyActivity extends Component {
   }
 
   render() {
-    const { userActivityData = {}, pieData = {}, userData = {} } = this.state;
+    const { userActivityData = {}, pieData = {}, userData = {}, fbRegistered } = this.state;
     const { trackPlays = {}, trackDownloads = {} } = userActivityData;
     const { totalCount: totalTrackPlayCount = 0 } = trackPlays;
     const { totalCount: totalTrackDownloadCount = 0 } = trackDownloads;
@@ -275,9 +267,18 @@ class MyActivity extends Component {
     const { genres: pieDataTrackDownloadsGenres } = pieDataTrackDownloads;
     const { userDisplayName } = userData;
 
-    if (totalTrackPlayCount <= 0 && totalTrackDownloadCount <= 0) {
+    if (!fbRegistered) {
       return(
-        <Message error>
+        <Message warning>
+          <Header size='huge'>Loading</Header>
+          <p>Loading data...</p>
+        </Message>
+      )
+    }
+    
+    if (totalTrackPlayCount <= 0 && totalTrackDownloadCount <= 0 && fbRegistered) {
+      return (
+        <Message warning>
           <Header size='huge'>No Activity!</Header>
           <p>It looks like you haven't done shit! Go play some music and come back.</p>
         </Message>
@@ -291,26 +292,24 @@ class MyActivity extends Component {
           <Divider vertical hidden />
           <Grid.Row verticalAlign='middle' textAlign='center'>
             <Grid.Column>
-              {/* <div>{totalTrackPlayCount > 0 && `You've played ${totalTrackPlayCount} tracks`}</div> */}
               {pieDataTrackPlaysGenres.options.labels && pieDataTrackPlaysGenres.options.labels.length > 0 &&
                 <ReactApexChart
                   options={pieDataTrackPlaysGenres.options}
                   series={pieDataTrackPlaysGenres.series}
-                  type="pie"
-                  width="600"
-                  legend={{ horizontalAlign: 'center', floating: true,  }}
+                  type="donut"
+                  width="550"
+                  legend={{ horizontalAlign: 'center', floating: true, }}
                 />
               }
             </Grid.Column>
             <Grid.Column>
-              {/* <div>{totalTrackDownloadCount > 0 && `You've downloaded ${totalTrackDownloadCount} tracks`}</div> */}
               {pieDataTrackDownloadsGenres.options.labels && pieDataTrackDownloadsGenres.options.labels.length > 0 &&
                 <ReactApexChart
                   options={pieDataTrackDownloadsGenres.options}
                   series={pieDataTrackDownloadsGenres.series}
                   type="donut"
-                  width="600"
-                  legend={{ horizontalAlign: 'center', floating: true,  }}
+                  width="550"
+                  legend={{ horizontalAlign: 'center', floating: true, }}
                 />
               }
             </Grid.Column>
