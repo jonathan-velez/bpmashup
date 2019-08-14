@@ -66,6 +66,10 @@ class Auth extends React.Component {
                   as={Link} to='/history/no-downloads'
                   text='No Downloads'
                 />
+                <Dropdown.Item
+                  as={Link} to='/history/my-activity'
+                  text='My Activity'
+                />
                 <Dropdown.Divider />
                 <Dropdown.Item
                   text='Log out'
