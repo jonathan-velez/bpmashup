@@ -4,12 +4,14 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { firebaseConnect } from 'react-redux-firebase';
 import ReactApexChart from 'react-apexcharts';
+import { Header, Message, Grid, Divider } from 'semantic-ui-react';
 
 class MyActivity extends Component {
   state = {
     userData: {
       userDisplayName: '',
       userEmail: '',
+      uid: null,
     },
     userActivityData: {
       trackPlays: {
@@ -45,21 +47,30 @@ class MyActivity extends Component {
             title: {
               text: 'Tracks played by Genre',
               style: {
-                fontSize: '28px',
-                color: '#263238'
+                fontSize: '20px',
+                color: '#263238',
+                align: 'center',
               },
             },
+            subtitle: {
+              text: 'Subtitle here',
+              style: {
+                fontSize: '12px',
+                align: 'center',
+              }
+            },
             theme: {
-              // monochrome: {
-              //   enabled: true
-              // }
-              // mode: 'dark',
               palette: 'palette4',
             },
             legend: {
               show: true,
               horizontalAlign: 'center',
-              position: 'bottom',
+              position: 'right',
+            },
+            markers: {
+              onClick: (chart, seriesIndex, opts) => {
+                console.log(`${seriesIndex} was clicked`);
+              }
             },
           },
           series: [],
@@ -70,10 +81,11 @@ class MyActivity extends Component {
           options: {
             labels: [],
             title: {
-              text: 'Tracks played by Genre',
+              text: 'Tracks downloaded by Genre',
               style: {
-                fontSize: '28px',
-                color: '#263238'
+                fontSize: '20px',
+                color: '#263238',
+                align: 'center',
               },
             },
             theme: {
@@ -86,7 +98,7 @@ class MyActivity extends Component {
             legend: {
               show: true,
               horizontalAlign: 'center',
-              position: 'bottom',
+              position: 'right',
             },
           },
           series: [],
@@ -96,7 +108,11 @@ class MyActivity extends Component {
   }
 
   componentDidMount() {
-    console.log('auth', this.props.auth)
+    const { auth } = this.props;
+    if (!auth.isLoaded || (auth.isLoaded && auth.isEmpty)) return;
+    const { uid } = auth;
+
+    this.registerFbListeners(uid);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -108,75 +124,90 @@ class MyActivity extends Component {
     const { trackPlays = {} } = userActivityData;
     const { totalCount } = trackPlays;
 
-    if (totalCount > 0) {
-      this.refreshThePie();
-    } else {
-      const db = firebase.database();
-
-      const downloadsUserRef = db.ref(`downloads/users/${uid}`);
-      const downloadsAllCountRef = db.ref(`downloads/totalCount`);
-
-      const trackPlaysUserRef = db.ref(`trackPlaysAll/users/${uid}`);
-      const trackPlaysCountRef = db.ref(`trackPlaysAll/totalCount`);
-
-      const userDataRef = trackPlaysUserRef.child('userData');
-      userDataRef.once('value', snapshot => {
-        const { userDisplayName, userEmail } = snapshot.val();
-
-        this.setState({
-          userData: {
-            userDisplayName,
-            userEmail,
-          }
-        })
-      })
-
-      downloadsUserRef.on('value', snapshot => {
-        const userTrackData = snapshot.val();
-        // eslint-disable-next-line no-unused-vars
-        const { tracks, ...rest } = userTrackData;
-
-        this.setState({
-          ...this.state,
-          userActivityData: {
-            ...this.state.userActivityData,
-            trackDownloads: {
-              ...rest,
-            }
-          }
-        })
-        this.refreshThePie('trackDownloads');
-      })
-
-      trackPlaysUserRef.on('value', snapshot => {
-        const userTrackData = snapshot.val();
-        // eslint-disable-next-line no-unused-vars
-        const { tracks, ...rest } = userTrackData;
-
-        this.setState({
-          ...this.state,
-          userActivityData: {
-            ...this.state.userActivityData,
-            trackPlays: {
-              ...rest,
-            },
-          }
-        });
-
-        this.refreshThePie('trackPlays');
-      })
+    if (totalCount === 0) {
+      this.registerFbListeners(uid);
     }
+  }
+
+  registerFbListeners(uid) {
+    const db = firebase.database();
+
+    const downloadsUserRef = db.ref(`downloads/users/${uid}`);
+    const trackPlaysUserRef = db.ref(`trackPlaysAll/users/${uid}`);
+    const userDataRef = db.ref(`users/${uid}`);
+
+    // const downloadsAllCountRef = db.ref(`downloads/totalCount`);
+    // const trackPlaysCountRef = db.ref(`trackPlaysAll/totalCount`);
+
+    userDataRef.once('value', snapshot => {
+      const { displayName: userDisplayName, email: userEmail } = snapshot.val();
+
+      this.setState({
+        userData: {
+          userDisplayName,
+          userEmail,
+          uid,
+        }
+      })
+    })
+
+    downloadsUserRef.on('value', snapshot => {
+      const userTrackData = snapshot.val();
+      // eslint-disable-next-line no-unused-vars
+      const { tracks, ...rest } = userTrackData;
+
+      this.setState({
+        ...this.state,
+        userActivityData: {
+          ...this.state.userActivityData,
+          trackDownloads: {
+            ...rest,
+          }
+        }
+      })
+      this.refreshThePie('trackDownloads');
+    })
+
+    trackPlaysUserRef.on('value', snapshot => {
+      const userTrackData = snapshot.val();
+      // eslint-disable-next-line no-unused-vars
+      const { tracks, ...rest } = userTrackData;
+
+      this.setState({
+        ...this.state,
+        userActivityData: {
+          ...this.state.userActivityData,
+          trackPlays: {
+            ...rest,
+          },
+        }
+      });
+
+      this.refreshThePie('trackPlays');
+    })
+  }
+
+  componentWillUnmount() {
+    const { uid } = this.state.userData;
+
+    const db = firebase.database();
+    const downloadsUserRef = db.ref(`downloads/users/${uid}`);
+    const trackPlaysUserRef = db.ref(`trackPlaysAll/users/${uid}`);
+    const userDataRef = trackPlaysUserRef.child('userData');
+
+    downloadsUserRef.off('value');
+    trackPlaysUserRef.off('value');
+    userDataRef.off('value');
   }
 
   refreshThePie(pieName) {
     const pieNameList = ['trackPlays', 'trackDownloads'];
     if (!pieNameList.includes(pieName)) return;
 
-    console.log('refreshing the pie');
     const { userActivityData = {}, pieData = {} } = this.state;
     const { trackPlays = {}, trackDownloads = {} } = userActivityData;
-    const { genresNames: trackPlaysGenreNames } = trackPlays;
-    const { genreNames: trackDownloadsGenresNames } = trackDownloads;
+    const { genresNames: trackPlaysGenreNames, totalCount: totalTrackPlayCount = 0 } = trackPlays;
+    const { genresNames: trackDownloadsGenresNames, totalCount: totalTrackDownloadCount = 0 } = trackDownloads;
     const { trackPlays: pieDataTrackPlays, trackDownloads: pieDataTrackDownloads } = pieData;
     const { genres: pieDataTrackPlaysGenres } = pieDataTrackPlays;
     const { genres: pieDataTrackDownloadsGenres } = pieDataTrackDownloads;
@@ -196,6 +227,10 @@ class MyActivity extends Component {
               options: {
                 ...pieDataTrackPlaysGenres.options,
                 labels: trackPlaysGenreNamesList,
+                subtitle: {
+                  ...pieDataTrackPlaysGenres.subtitle,
+                  text: `You've played ${totalTrackPlayCount} tracks`,
+                }
               },
               series: trackPlaysGenreSeriesList,
             }
@@ -217,6 +252,10 @@ class MyActivity extends Component {
               options: {
                 ...pieDataTrackDownloadsGenres.options,
                 labels: trackDownloadsGenreNamesList,
+                subtitle: {
+                  ...pieDataTrackPlaysGenres.subtitle,
+                  text: `You've downloaded ${totalTrackDownloadCount} tracks`,
+                }
               },
               series: trackDownloadsGenreSeriesList,
             }
@@ -228,28 +267,56 @@ class MyActivity extends Component {
 
   render() {
     const { userActivityData = {}, pieData = {}, userData = {} } = this.state;
-    const { trackPlays = {} } = userActivityData;
+    const { trackPlays = {}, trackDownloads = {} } = userActivityData;
     const { totalCount: totalTrackPlayCount = 0 } = trackPlays;
-    const { trackPlays: pieDataTrackPlays } = pieData;
+    const { totalCount: totalTrackDownloadCount = 0 } = trackDownloads;
+    const { trackPlays: pieDataTrackPlays, trackDownloads: pieDataTrackDownloads } = pieData;
     const { genres: pieDataTrackPlaysGenres } = pieDataTrackPlays;
+    const { genres: pieDataTrackDownloadsGenres } = pieDataTrackDownloads;
     const { userDisplayName } = userData;
 
-    if (totalTrackPlayCount <= 0) return null; //TODO: display something nicer here
+    if (totalTrackPlayCount <= 0 && totalTrackDownloadCount <= 0) {
+      return(
+        <Message error>
+          <Header size='huge'>No Activity!</Header>
+          <p>It looks like you haven't done shit! Go play some music and come back.</p>
+        </Message>
+      )
+    }
 
     return (
       <React.Fragment>
-        <h1>My Activity - {userDisplayName}</h1>
-        <div>{totalTrackPlayCount > 0 && `You've played ${totalTrackPlayCount} tracks`}</div>
+        <Header size='huge' className='tracklistHeader' textAlign='left' dividing>Activity Report - {userDisplayName}</Header>
+        <Grid columns={2} stackable textAlign='center' centered>
+          <Divider vertical hidden />
+          <Grid.Row verticalAlign='middle' textAlign='center'>
+            <Grid.Column>
+              {/* <div>{totalTrackPlayCount > 0 && `You've played ${totalTrackPlayCount} tracks`}</div> */}
+              {pieDataTrackPlaysGenres.options.labels && pieDataTrackPlaysGenres.options.labels.length > 0 &&
+                <ReactApexChart
+                  options={pieDataTrackPlaysGenres.options}
+                  series={pieDataTrackPlaysGenres.series}
+                  type="pie"
+                  width="600"
+                  legend={{ horizontalAlign: 'center', floating: true,  }}
+                />
+              }
+            </Grid.Column>
+            <Grid.Column>
+              {/* <div>{totalTrackDownloadCount > 0 && `You've downloaded ${totalTrackDownloadCount} tracks`}</div> */}
+              {pieDataTrackDownloadsGenres.options.labels && pieDataTrackDownloadsGenres.options.labels.length > 0 &&
+                <ReactApexChart
+                  options={pieDataTrackDownloadsGenres.options}
+                  series={pieDataTrackDownloadsGenres.series}
+                  type="donut"
+                  width="600"
+                  legend={{ horizontalAlign: 'center', floating: true,  }}
+                />
+              }
+            </Grid.Column>
+          </Grid.Row>
+        </Grid>
 
-        {pieDataTrackPlaysGenres.options.labels && pieDataTrackPlaysGenres.options.labels.length > 0 &&
-          <ReactApexChart
-            options={pieDataTrackPlaysGenres.options}
-            series={pieDataTrackPlaysGenres.series}
-            type="pie"
-            width="600"
-            legend={{ horizontalAlign: 'right' }}
-          />
-        }
       </React.Fragment>
     );
   }
