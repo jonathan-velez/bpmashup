@@ -143,6 +143,7 @@ class MyActivity extends Component {
 
     downloadsUserRef.on('value', snapshot => {
       const userTrackData = snapshot.val();
+      if (!userTrackData) return;
       // eslint-disable-next-line no-unused-vars
       const { tracks, ...rest } = userTrackData;
 
@@ -160,6 +161,7 @@ class MyActivity extends Component {
 
     trackPlaysUserRef.on('value', snapshot => {
       const userTrackData = snapshot.val();
+      if (!userTrackData) return;
       // eslint-disable-next-line no-unused-vars
       const { tracks, ...rest } = userTrackData;
 
