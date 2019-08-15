@@ -6,7 +6,7 @@ import { withRouter } from 'react-router';
 import Scroll from 'react-scroll';
 import _ from 'lodash';
 
-import { getTracks } from '../thunks';
+import { getTracks, clearTracklist } from '../thunks';
 import TrackListingGroup from './TrackListingGroup';
 import { KeyCamelot } from '../constants/musicalKeys';
 
@@ -38,6 +38,10 @@ class Tracks extends Component {
     if (!_.isEqual(prevSearchParams, newSearchParams)) {
       this.fetchTracks(Object.assign({}, this.parseParams(), newSearchParams));
     }
+  }
+
+  componentWillUnmount() {
+    this.props.clearTracklist();
   }
 
   parseParams() {
@@ -153,7 +157,7 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => {
-  return bindActionCreators({ getTracks }, dispatch);
+  return bindActionCreators({ getTracks, clearTracklist }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Tracks));

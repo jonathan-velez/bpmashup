@@ -8,7 +8,7 @@ import { searchEverything, searchTracks } from './searchEverythingThunk';
 import { fetchReleaseData } from './releaseThunk';
 import { getArtistDetails } from './artistThunk';
 import { getLabelDetail } from './labelThunk';
-import { getTracks, fetchTracksSimilar, fetchMostPopularTracks, getYoutubeLink } from './tracksThunk';
+import { getTracks, fetchTracksSimilar, fetchMostPopularTracks, getYoutubeLink, getTracksByIds, clearTracklist } from './tracksThunk';
 
 export {
   loadTrackThunk,
@@ -33,4 +33,6 @@ export {
   fetchTracksSimilar,
   fetchMostPopularTracks,
   getYoutubeLink,
+  getTracksByIds,
+  clearTracklist,
 };

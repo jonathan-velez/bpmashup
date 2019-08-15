@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { FETCH_TRACKS, SEARCH_TRACKS, LOAD_TRACKS, TOGGLE_TRACKLIST_VIEW } from '../constants/actionTypes';
+import { FETCH_TRACKS, SEARCH_TRACKS, LOAD_TRACKS, TOGGLE_TRACKLIST_VIEW, CLEAR_TRACKLIST } from '../constants/actionTypes';
 
 const defaultState = {
   metadata: {},
@@ -48,6 +48,11 @@ const trackListing = (state = defaultState, action) => {
       return {
         ...state,
         tracklistView,
+      }
+    }
+    case CLEAR_TRACKLIST: {
+      return {
+        ...defaultState
       }
     }
     default:

@@ -1,7 +1,7 @@
 import queryString from 'query-string';
 import _ from 'lodash';
 
-import { START_ASYNC, GET_TRACKS, FETCH_TRACKS, SEARCH_TRACKS, GET_YOUTUBE_LINK } from '../constants/actionTypes';
+import { START_ASYNC, GET_TRACKS, FETCH_TRACKS, SEARCH_TRACKS, GET_YOUTUBE_LINK, CLEAR_TRACKLIST } from '../constants/actionTypes';
 import { API_MY_BEATPORT, API_MOST_POPULAR, API_GET_TRACKS, API_SIMILAR_TRACKS, API_GET_YOUTUBE_LINK } from '../constants/apiPaths';
 import { DEFAULT_PAGE, DEFAULT_PER_PAGE } from '../constants/defaults';
 import { callAPIorCache } from '../seessionStorageCache';
@@ -114,6 +114,14 @@ export const getYoutubeLink = async searchString => {
     dispatch({
       type: GET_YOUTUBE_LINK,
       payload: request
+    })
+  }
+}
+
+export const clearTracklist = () => {
+  return (dispatch) => {
+    dispatch({
+      type: CLEAR_TRACKLIST,
     })
   }
 }

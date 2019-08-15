@@ -3,7 +3,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import Scroll from 'react-scroll';
 
-import { fetchMostPopularTracks, searchTracks, fetchTracksSimilar } from '../thunks';
+import { fetchMostPopularTracks, searchTracks, fetchTracksSimilar, clearTracklist } from '../thunks';
 import { deslugify } from '../utils/helpers';
 import { DEFAULT_PAGE, DEFAULT_PER_PAGE } from '../constants/defaults';
 import TrackListingGroup from './TrackListingGroup';
@@ -81,6 +81,10 @@ class TrackListingController extends React.Component {
     }
   }
 
+  componentWillUnmount() {
+    this.props.clearTracklist();
+  }
+
   render() {
     const { trackListing, match } = this.props;
     const { url, params } = match;
@@ -130,7 +134,7 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => {
-  return bindActionCreators(Object.assign({ fetchMostPopularTracks, searchTracks, fetchTracksSimilar }), dispatch);
+  return bindActionCreators(Object.assign({ fetchMostPopularTracks, searchTracks, fetchTracksSimilar, clearTracklist }), dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(TrackListingController);

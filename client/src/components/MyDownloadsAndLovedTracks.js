@@ -5,7 +5,7 @@ import { withRouter } from 'react-router-dom';
 import { Dimmer, Loader } from 'semantic-ui-react';
 import Scroll from 'react-scroll';
 
-import { getTracksByIds } from '../thunks/tracksThunk';
+import { getTracksByIds, clearTracklist } from '../thunks';
 import TracklistingHeader from './TracklistingHeader';
 import TrackListingGroup from './TrackListingGroup';
 import { DEFAULT_PAGE, DEFAULT_PER_PAGE } from '../constants/defaults';
@@ -88,6 +88,10 @@ class MyDownloadsAndLovedTracks extends Component {
     }
   }
 
+  componentWillUnmount() {
+    this.props.clearTracklist();
+  }
+
   fetchTracks(ids = [], page, perPage) {
     if (ids.length > 0) {
       const { getTracksByIds } = this.props;
@@ -139,7 +143,7 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => {
-  return bindActionCreators(Object.assign({}, { getTracksByIds }), dispatch);
+  return bindActionCreators(Object.assign({}, { getTracksByIds, clearTracklist }), dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(MyDownloadsAndLovedTracks));
