@@ -62,14 +62,14 @@ store.firebaseAuthIsReady.then(() => {
   });
 
   // load downloaded tracks into Redux
-  const downloadsRef = db.ref(`users/${uid}/downloads`);
+  const downloadsRef = db.ref(`downloads/users/${uid}/trackIds`);
   downloadsRef.on('value', snapshot => {
     const downloads = snapshot.val();
 
     if (downloads) {
       store.dispatch({
         type: LOAD_DOWNLOADED_TRACKS,
-        payload: Object.keys(downloads).map(Number),
+        payload: Object.values(downloads).map(Number),
       });
     }
   });
