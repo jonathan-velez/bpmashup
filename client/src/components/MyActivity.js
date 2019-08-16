@@ -121,13 +121,9 @@ class MyActivity extends Component {
 
   registerFbListeners(uid) {
     const db = firebase.database();
-
-    const downloadsUserRef = db.ref(`downloads/users/${uid}`);
-    const trackPlaysUserRef = db.ref(`trackPlaysAll/users/${uid}`);
     const userDataRef = db.ref(`users/${uid}`);
-
-    // const downloadsAllCountRef = db.ref(`downloads/totalCount`);
-    // const trackPlaysCountRef = db.ref(`trackPlaysAll/totalCount`);
+    const downloadsByGenreNameRef = db.ref(`downloads/users/${uid}/genresNames`);
+    const trackPlaysByGenreNameRef = db.ref(`trackPlaysAll/users/${uid}/genresNames`);
 
     userDataRef.once('value', snapshot => {
       const { displayName: userDisplayName, email: userEmail } = snapshot.val();
@@ -141,37 +137,38 @@ class MyActivity extends Component {
       })
     })
 
-    downloadsUserRef.on('value', snapshot => {
-      const userTrackData = snapshot.val();
-      if (!userTrackData) return;
-      // eslint-disable-next-line no-unused-vars
-      const { tracks, ...rest } = userTrackData;
+    downloadsByGenreNameRef.on('value', snapshot => {
+      const genresNames = snapshot.val();
+      if (!genresNames) return;
 
       this.setState({
         ...this.state,
         userActivityData: {
           ...this.state.userActivityData,
           trackDownloads: {
-            ...rest,
+            ...this.state.userActivityData.trackDownloads,
+            genresNames,
+            totalCount: Object.values(genresNames).reduce((acc, val) => (acc += val), 0),
           }
         }
-      })
+      });
+
       this.refreshThePie('trackDownloads');
     })
 
-    trackPlaysUserRef.on('value', snapshot => {
-      const userTrackData = snapshot.val();
-      if (!userTrackData) return;
-      // eslint-disable-next-line no-unused-vars
-      const { tracks, ...rest } = userTrackData;
+    trackPlaysByGenreNameRef.on('value', snapshot => {
+      const genresNames = snapshot.val();
+      if (!genresNames) return;
 
       this.setState({
         ...this.state,
         userActivityData: {
           ...this.state.userActivityData,
           trackPlays: {
-            ...rest,
-          },
+            ...this.state.userActivityData.trackPlays,
+            genresNames,
+            totalCount: Object.values(genresNames).reduce((acc, val) => (acc += val), 0),
+          }
         }
       });
 
@@ -185,13 +182,13 @@ class MyActivity extends Component {
     const { uid } = this.state.userData;
 
     const db = firebase.database();
-    const downloadsUserRef = db.ref(`downloads/users/${uid}`);
-    const trackPlaysUserRef = db.ref(`trackPlaysAll/users/${uid}`);
-    const userDataRef = trackPlaysUserRef.child('userData');
+    const userDataRef = db.ref(`users/${uid}`);
+    const downloadsByGenreNameRef = db.ref(`downloads/users/${uid}/genresNames`);
+    const trackPlaysByGenreNameRef = db.ref(`trackPlaysAll/users/${uid}/genresNames`);
 
-    downloadsUserRef.off('value');
-    trackPlaysUserRef.off('value');
     userDataRef.off('value');
+    downloadsByGenreNameRef.off('value');
+    trackPlaysByGenreNameRef.off('value');
   }
 
   refreshThePie(pieName) {
@@ -270,14 +267,14 @@ class MyActivity extends Component {
     const { userDisplayName } = userData;
 
     if (!fbRegistered) {
-      return(
+      return (
         <Message warning>
           <Header size='huge'>Loading</Header>
           <p>Loading data...</p>
         </Message>
       )
     }
-    
+
     if (totalTrackPlayCount <= 0 && totalTrackDownloadCount <= 0 && fbRegistered) {
       return (
         <Message warning>
