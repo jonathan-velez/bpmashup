@@ -4,7 +4,9 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { firebaseConnect } from 'react-redux-firebase';
 import ReactApexChart from 'react-apexcharts';
-import { Header, Message, Grid, Divider } from 'semantic-ui-react';
+import { Header, Message, Grid, Divider, List } from 'semantic-ui-react';
+
+import { sortObject, deslugify } from '../utils/helpers';
 
 class MyActivity extends Component {
   state = {
@@ -18,6 +20,7 @@ class MyActivity extends Component {
       trackPlays: {
         genresNames: {},
         genresIds: {},
+        genresSortedDesc: [],
         artistsNames: {},
         artistsIds: {},
         labelsNames: {},
@@ -28,6 +31,7 @@ class MyActivity extends Component {
       trackDownloads: {
         genresNames: {},
         genresIds: {},
+        genresSortedDesc: [],
         artistsNames: {},
         artistsIds: {},
         labelsNames: {},
@@ -149,6 +153,7 @@ class MyActivity extends Component {
             ...this.state.userActivityData.trackDownloads,
             genresNames,
             totalCount: Object.values(genresNames).reduce((acc, val) => (acc += val), 0),
+            genresSortedDesc: sortObject(genresNames, 'desc'),
           }
         }
       });
@@ -168,6 +173,7 @@ class MyActivity extends Component {
             ...this.state.userActivityData.trackPlays,
             genresNames,
             totalCount: Object.values(genresNames).reduce((acc, val) => (acc += val), 0),
+            genresSortedDesc: sortObject(genresNames, 'desc'),
           }
         }
       });
@@ -259,8 +265,8 @@ class MyActivity extends Component {
   render() {
     const { userActivityData = {}, pieData = {}, userData = {}, fbRegistered } = this.state;
     const { trackPlays = {}, trackDownloads = {} } = userActivityData;
-    const { totalCount: totalTrackPlayCount = 0 } = trackPlays;
-    const { totalCount: totalTrackDownloadCount = 0 } = trackDownloads;
+    const { totalCount: totalTrackPlayCount = 0, genresSortedDesc: genresSortedDescTrackPlays = [] } = trackPlays;
+    const { totalCount: totalTrackDownloadCount = 0, genresSortedDesc: genresSortedDescTrackDownloads = [] } = trackDownloads;
     const { trackPlays: pieDataTrackPlays, trackDownloads: pieDataTrackDownloads } = pieData;
     const { genres: pieDataTrackPlaysGenres } = pieDataTrackPlays;
     const { genres: pieDataTrackDownloadsGenres } = pieDataTrackDownloads;
@@ -314,7 +320,51 @@ class MyActivity extends Component {
             </Grid.Column>
           </Grid.Row>
         </Grid>
-
+        <Grid columns={2} stackable textAlign='center' centered>
+          <Divider vertical hidden />
+          <Grid.Row verticalAlign='top' textAlign='center'>
+            <Grid.Column>
+              <List selection verticalAlign='top'>
+                {genresSortedDescTrackPlays.length > 0 &&
+                  genresSortedDescTrackPlays.map(genre => {
+                    return (
+                      <List.Item key={genre.key}>
+                        <List.Content floated='left'>
+                          <List.Header>
+                            {deslugify(genre.key).toUpperCase()}
+                          </List.Header>
+                        </List.Content>
+                        <List.Content floated='right'>
+                          {genre.value} play{+genre.value > 1 && 's'}
+                        </List.Content>
+                      </List.Item>
+                    )
+                  })
+                }
+              </List>
+            </Grid.Column>
+            <Grid.Column>
+              <List selection verticalAlign='top'>
+                {genresSortedDescTrackDownloads.length > 0 &&
+                  genresSortedDescTrackDownloads.map(genre => {
+                    return (
+                      <List.Item key={genre.key}>
+                        <List.Content floated='left'>
+                          <List.Header>
+                            {deslugify(genre.key).toUpperCase()}
+                          </List.Header>
+                        </List.Content>
+                        <List.Content floated='right'>
+                          {genre.value} download{+genre.value > 1 && 's'}
+                        </List.Content>
+                      </List.Item>
+                    )
+                  })
+                }
+              </List>
+            </Grid.Column>
+          </Grid.Row>
+        </Grid>
       </React.Fragment>
     );
   }

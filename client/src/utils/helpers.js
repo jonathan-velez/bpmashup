@@ -1,7 +1,3 @@
-export const someFunction = (someVal) => {
-  return someVal + " sssss";
-}
-
 export const dashlessFilter = (input) => {
   if (input) {
     return input.replace(/-/g, ' ');
@@ -154,4 +150,27 @@ export const transposeArray = (array, numOfColumns = 2) => {
   }
 
   return finalResult;
+}
+
+export const sortObject = (obj, direction = 'asc') => {
+  const arr = [];
+
+  for (let prop in obj) {
+    if (obj.hasOwnProperty(prop)) {
+      arr.push({
+        'key': prop,
+        'value': obj[prop]
+      });
+    }
+  }
+
+  arr.sort(function (a, b) {
+    if (direction === 'desc') {
+      return b.value - a.value;
+    } else {
+      return a.value - b.value;
+    }
+  });
+
+  return arr; // returns array
 }
