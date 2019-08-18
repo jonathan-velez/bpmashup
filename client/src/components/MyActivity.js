@@ -4,7 +4,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { firebaseConnect } from 'react-redux-firebase';
 import ReactApexChart from 'react-apexcharts';
-import { Header, Message, Grid, Divider, List } from 'semantic-ui-react';
+import { Header, Message, Grid, Divider, List, Label } from 'semantic-ui-react';
 
 import { sortObject, deslugify } from '../utils/helpers';
 
@@ -335,7 +335,7 @@ class MyActivity extends Component {
                           </List.Header>
                         </List.Content>
                         <List.Content floated='right'>
-                          {genre.value} play{+genre.value > 1 && 's'}
+                          <Label circular color='grey'>{genre.value} play{+genre.value > 1 && 's'}</Label>
                         </List.Content>
                       </List.Item>
                     )
@@ -355,7 +355,7 @@ class MyActivity extends Component {
                           </List.Header>
                         </List.Content>
                         <List.Content floated='right'>
-                          {genre.value} download{+genre.value > 1 && 's'}
+                          <Label circular color='grey'>{genre.value} download{+genre.value > 1 && 's'}</Label>
                         </List.Content>
                       </List.Item>
                     )
