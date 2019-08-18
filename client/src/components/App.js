@@ -17,9 +17,10 @@ import ModalView from './ModalView';
 import ConfirmController from './ConfirmController';
 
 class App extends React.Component {
-  componentWillMount() {
+  componentDidMount() {
     window.addEventListener('keydown', _.throttle((e) => {
       if (e.target.type === 'text') return;
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
 
       const { loadedTrack } = this.props.mediaPlayer;
 
@@ -63,6 +64,10 @@ class App extends React.Component {
             this.changeVolume(-.15);
           }
           break;
+        case 'Shift':
+        case 'Control':
+        case 'Alt':
+        case 'Meta':
         default:
           break;
       }
