@@ -33,7 +33,8 @@ const PlaylistDropdownControl = ({ playlistList }) => {
     <Dropdown
       item
       scrolling
-      text='Playlists'
+      text='PLAYLISTS'
+      className='navbar-dropdown'
     >
       <Dropdown.Menu>
         {firstListItem}

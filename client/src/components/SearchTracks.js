@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { withRouter } from 'react-router';
 
-import { Form, Input } from 'semantic-ui-react';
+import { Form, Input, Icon } from 'semantic-ui-react';
 
 class SearchTracks extends React.Component {
   state = {
@@ -42,10 +42,13 @@ class SearchTracks extends React.Component {
           ref={this.setInputRef}
           size='medium'
           onChange={(e) => this.handleChange(e)}
-          onFocus={this.selectInputText}
-          placeholder="Search..."
+          onFocus={this.selectInputText} 
           style={inputStyle}
-        />
+          iconPosition='left'
+        >
+          <Icon name='search' />
+          <input />
+        </Input>
       </Form>
     );
   }

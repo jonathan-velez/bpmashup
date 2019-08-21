@@ -2,7 +2,7 @@ import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { scroller } from 'react-scroll';
-import { Menu, Image, Container, Card } from 'semantic-ui-react';
+import { Menu, Image, Responsive, Card } from 'semantic-ui-react';
 import _ from 'lodash';
 
 import * as actionCreators from '../actions/ActionCreators';
@@ -57,61 +57,59 @@ const Footer = ({ seekChange, seekMouseUp, seekMouseDown, playPause, setVolume, 
 
   return (
     <Menu fixed='bottom' className='footer-menu' borderless size='tiny' compact>
-      <Container textAlign='center'>
-        <Menu.Item>
-          <Card>
-            <Card.Content textAlign='left'>
-              <Card.Header>{loadedTrack.title}</Card.Header>
-              <Card.Meta>{constructLinks(loadedTrack.artists, 'artist')}</Card.Meta>
-            </Card.Content>
-          </Card>
-        </Menu.Item>
-        <Menu.Item>
-          <TrackActionDropdown
-            ellipsisOrientation='horizontal'
-            upward
-            track={loadedTrack}
-          />
-        </Menu.Item>
-        <Menu.Item>
-          <Image
-            src={loadedTrack.images && loadedTrack.images.large.secureUrl}
-            circular
-            size='mini'
-            onClick={() => scrollToTrack(loadedTrack.id)}
-            className={`vinyl${playing ? ' vinyl-animate' : ''}`}
-            title='Scroll to track'
-          />
-        </Menu.Item>
-        <Menu.Item>
-          <YouTubeButton getYouTube={getYouTube} loadedTrack={loadedTrack} isLoaded={youTubeUrl ? true : false} />
-        </Menu.Item>
-        <Menu.Item>
-          <Duration seconds={duration * played} />
-        </Menu.Item>
-        <SeekBar
-          played={played}
-          seekMouseDown={seekMouseDown}
-          seekChange={handleSeekChange}
-          seekMouseUp={handleSeekMouseUp}
+      <Responsive minWidth={960} as={Menu.Item}>
+        <Card>
+          <Card.Content textAlign='left'>
+            <Card.Header>{loadedTrack.title}</Card.Header>
+            <Card.Meta>{constructLinks(loadedTrack.artists, 'artist')}</Card.Meta>
+          </Card.Content>
+        </Card>
+      </Responsive>
+      <Menu.Item>
+        <TrackActionDropdown
+          ellipsisOrientation='horizontal'
+          upward
+          track={loadedTrack}
         />
-        <Menu.Item>
-          <Duration seconds={duration} />
-        </Menu.Item>
-        <Menu.Item>
-          <PrevNextTrack buttonType='prev' handlePrevNextTrack={loadNextTrack} />
-        </Menu.Item>
-        <Menu.Item>
-          <PlayPauseButton isPlaying={playing} playPause={playPause} />
-        </Menu.Item>
-        <Menu.Item>
-          <PrevNextTrack buttonType='next' handlePrevNextTrack={loadNextTrack} />
-        </Menu.Item >
-        <Menu.Item>
-          <MutePlayer />
-          <VolumeBar volume={mediaPlayer.volume} setVolume={(e) => setVolume(+e.target.value)} />
-        </Menu.Item>
-      </Container>
+      </Menu.Item>
+      <Menu.Item>
+        <Image
+          src={loadedTrack.images && loadedTrack.images.large.secureUrl}
+          circular
+          size='mini'
+          onClick={() => scrollToTrack(loadedTrack.id)}
+          className={`vinyl${playing ? ' vinyl-animate' : ''}`}
+          title={`${loadedTrack.artists.map(artist => artist.name).join(', ')} - ${loadedTrack.title}`}
+        />
+      </Menu.Item>
+      <Menu.Item>
+        <YouTubeButton getYouTube={getYouTube} loadedTrack={loadedTrack} isLoaded={youTubeUrl ? true : false} />
+      </Menu.Item>
+      <Menu.Item>
+        <Duration seconds={duration * played} />
+      </Menu.Item>
+      <SeekBar
+        played={played}
+        seekMouseDown={seekMouseDown}
+        seekChange={handleSeekChange}
+        seekMouseUp={handleSeekMouseUp}
+      />
+      <Menu.Item>
+        <Duration seconds={duration} />
+      </Menu.Item>
+      <Menu.Item>
+        <PrevNextTrack buttonType='prev' handlePrevNextTrack={loadNextTrack} />
+      </Menu.Item>
+      <Menu.Item>
+        <PlayPauseButton isPlaying={playing} playPause={playPause} />
+      </Menu.Item>
+      <Menu.Item>
+        <PrevNextTrack buttonType='next' handlePrevNextTrack={loadNextTrack} />
+      </Menu.Item >
+      <Responsive minWidth={960} as={Menu.Item}>
+        <MutePlayer />
+        <VolumeBar volume={mediaPlayer.volume} setVolume={(e) => setVolume(+e.target.value)} />
+      </Responsive>
     </Menu>
   );
 }

@@ -58,7 +58,7 @@ class GenreList extends React.Component {
     return (
       <React.Fragment>
         <Popup
-          trigger={<Menu.Item>Genres<Icon name='dropdown' /></Menu.Item>}
+          trigger={<Menu.Item>GENRES<Icon name='dropdown' /></Menu.Item>}
           position='bottom left'
           wide='very'
           on='click'
@@ -67,13 +67,11 @@ class GenreList extends React.Component {
           onOpen={this.openPopup}
           basic
           verticalOffset={-10}
-          inverted
           size='small'
-          hideOnScroll
           flowing
           className='genre-popup'
         >
-          <Table padded='very' basic='very' fixed inverted>
+          <Table padded='very' basic='very' fixed>
             <Table.Body>
               {tableList}
             </Table.Body>
