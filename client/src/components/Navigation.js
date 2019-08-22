@@ -12,7 +12,7 @@ const Navigation = () => {
   return (
     <Menu fixed='top' borderless>
       <Menu.Item header>
-        <Link to="/"><img src={logo} height='62' width='100' /></Link>
+        <Link to="/"><img src={logo} height='62' width='100' alt='BPMashup' /></Link>
       </Menu.Item>
       <GenreControl />
       <PlaylistDropdownControl />
