@@ -364,3 +364,7 @@
   .navbar-dropdown, .ui.inverted.menu .active.item, .navbar-dropdown:hover {
     color: #616163!important;
   }
+
+  .menu .item {
+    padding: 0.5em 0.5em!important;
+  }
