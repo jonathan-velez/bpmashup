@@ -7,15 +7,15 @@ const TrackListingTableHeader = ({ isPlaylist }) => {
       <Table.Row>
         <Table.HeaderCell>&nbsp;</Table.HeaderCell>
         <Table.HeaderCell>&nbsp;</Table.HeaderCell>
-        <Table.HeaderCell>Title</Table.HeaderCell>
-        <Table.HeaderCell>Artists</Table.HeaderCell>
-        <Table.HeaderCell>Label</Table.HeaderCell>
-        <Table.HeaderCell>Genre</Table.HeaderCell>
+        <Table.HeaderCell>TITLE</Table.HeaderCell>
+        <Table.HeaderCell>ARTISTS</Table.HeaderCell>
+        <Table.HeaderCell>LABEL</Table.HeaderCell>
+        <Table.HeaderCell>GENRE</Table.HeaderCell>
         <Table.HeaderCell>BPM</Table.HeaderCell>
-        <Table.HeaderCell>Key</Table.HeaderCell>
-        <Table.HeaderCell>Released</Table.HeaderCell>
+        <Table.HeaderCell>KEY</Table.HeaderCell>
+        <Table.HeaderCell>RELEASED</Table.HeaderCell>
         {isPlaylist && 
-          <Table.HeaderCell>Date Added</Table.HeaderCell>
+          <Table.HeaderCell>DATE ADDED</Table.HeaderCell>
         }
         <Table.HeaderCell>&nbsp;</Table.HeaderCell>
       </Table.Row>
