@@ -1,10 +1,11 @@
 import _ from 'lodash';
 import { FETCH_TRACKS, SEARCH_TRACKS, LOAD_TRACKS, TOGGLE_TRACKLIST_VIEW, CLEAR_TRACKLIST } from '../constants/actionTypes';
+import { DEFAULT_PAGE_VIEW } from '../constants/defaults';
 
 const defaultState = {
   metadata: {},
   tracks: {},
-  tracklistView: 'cards',
+  tracklistView: DEFAULT_PAGE_VIEW,
 }
 
 const trackListing = (state = defaultState, action) => {

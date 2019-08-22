@@ -10,10 +10,6 @@ import TrackListingGroup from './TrackListingGroup';
 import TracklistingHeader from './TracklistingHeader';
 
 class TrackListingController extends React.Component {
-  state = {
-    selectedView: 'table',
-  }
-
   componentDidMount() {
     const { location, match, searchTracks, fetchTracksSimilar, fetchMostPopularTracks } = this.props;
     const { type, searchId, searchString, searchTerm, trackId } = match.params;
