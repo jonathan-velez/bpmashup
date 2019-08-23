@@ -18,6 +18,7 @@ class PlaylistController extends React.Component {
   state = {
     playlistNameEditMode: false,
     deletePlaylist: false,
+    clearPlaylist: false,
     playlistName: '',
   }
 
@@ -57,6 +58,13 @@ class PlaylistController extends React.Component {
     // handle confirm modal update to delete
     if (nextProps.confirmModal.confirm && this.state.deletePlaylist) {
       this.actuallyDeletePlaylists();
+      this.props.resetConfirm();
+      return;
+    }
+
+    // handle confirm modal update to clear playlist
+    if (nextProps.confirmModal.confirm && this.state.clearPlaylist) {
+      this.actuallyClearPlaylist();
       this.props.resetConfirm();
       return;
     }
@@ -119,6 +127,25 @@ class PlaylistController extends React.Component {
     }
   }
 
+  clearPlaylist = () => {
+    this.setState({ clearPlaylist: true });
+
+    this.props.openConfirm({
+      content: 'Are you sure you want to clear this playlist?',
+      confirmButtonText: 'Yes',
+      cancelButtonText: 'No',
+    });
+  }
+
+  actuallyClearPlaylist = () => {
+    const { clearPlaylist } = this.state;
+
+    if (clearPlaylist) {
+      this.props.clearPlaylist(this.playlistId);
+      this.setState({ clearPlaylist: false });
+    }
+  }
+
   handleRef = (c) => {
     this.inputRef = c;
   }
@@ -167,7 +194,12 @@ class PlaylistController extends React.Component {
               transparent
             />
           </Form> :
-          <PlaylistHeader playlistName={playlist.name} editHeader={this.togglePlaylistNameEditMode} deletePlaylist={this.deletePlaylist} />
+          <PlaylistHeader
+            playlistName={playlist.name}
+            editHeader={this.togglePlaylistNameEditMode}
+            deletePlaylist={this.deletePlaylist}
+            clearPlaylist={this.clearPlaylist}
+          />
         }
         <TrackListingTable
           trackListing={tracks}

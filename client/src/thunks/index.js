@@ -1,5 +1,5 @@
 import loadTrackThunk from './loadTrackThunk';
-import { removeFromPlaylist, addToPlaylist, editPlaylistName, deletePlaylist, addNewPlaylist, loadPlaylists, } from './playlistThunk';
+import { removeFromPlaylist, addToPlaylist, editPlaylistName, deletePlaylist, addNewPlaylist, loadPlaylists, clearPlaylist, } from './playlistThunk';
 import { downloadTrack, addTrackToNoDownloadList } from './downloadTrackThunk';
 import { toggleLoveTrack } from './loveTrackThunk';
 import { toggleLoveItem } from './loveItemThunk';
@@ -35,4 +35,5 @@ export {
   getYoutubeLink,
   getTracksByIds,
   clearTracklist,
+  clearPlaylist,
 };

@@ -10,7 +10,8 @@ import {
   EDIT_PLAYLIST_NAME,
   DELETE_PLAYLIST,
   LOAD_PLAYLISTS,
-  CLEAR_PLAYLISTS
+  CLEAR_PLAYLISTS,
+  CLEAR_PLAYLIST,
 } from '../constants/actionTypes';
 
 const playlistList = (state = {}, action) => {
@@ -85,6 +86,16 @@ const playlistList = (state = {}, action) => {
     case DELETE_PLAYLIST: {
       const { [action.payload]: deletedPlaylist, ...restOfPlaylists } = state;
       return restOfPlaylists;
+    }
+    case CLEAR_PLAYLIST: {
+      return {
+        ...state,
+        [action.payload]: {
+          ...state[action.payload],
+          listOfTracks: [],
+          tracks: {},
+        }
+      }
     }
     case LOAD_PLAYLISTS:
       return action.payload;

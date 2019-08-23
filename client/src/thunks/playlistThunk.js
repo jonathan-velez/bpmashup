@@ -1,5 +1,5 @@
 import firebase from 'firebase';
-import { ADD_PLAYLIST, REMOVE_FROM_PLAYLIST, ADD_TO_PLAYLIST, EDIT_PLAYLIST_NAME, DELETE_PLAYLIST, LOAD_PLAYLISTS } from '../constants/actionTypes';
+import { ADD_PLAYLIST, REMOVE_FROM_PLAYLIST, ADD_TO_PLAYLIST, EDIT_PLAYLIST_NAME, DELETE_PLAYLIST, LOAD_PLAYLISTS, CLEAR_PLAYLIST } from '../constants/actionTypes';
 
 const setFirebase = (state) => {
   const { uid } = state.firebaseState.auth;
@@ -58,6 +58,17 @@ export const deletePlaylist = payload => {
   return (dispatch, getState) => {
     dispatch({
       type: DELETE_PLAYLIST,
+      payload
+    });
+
+    setFirebase(getState());
+  }
+}
+
+export const clearPlaylist = payload => {
+  return (dispatch, getState) => {
+    dispatch({
+      type: CLEAR_PLAYLIST,
       payload
     });
 
