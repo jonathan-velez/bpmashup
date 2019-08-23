@@ -106,7 +106,7 @@ class AddToPlaylist extends React.Component {
 
     const playlistDropdownItem = <Dropdown.Item>{playlistIcon}Playlists</Dropdown.Item>
 
-    const playlistItems = _.map(this.props.playlistList, playlist => {
+    const playlistItems = _.map(_.sortBy(this.props.playlistList, 'dateAdded'), playlist => {
       const added = playlist.listOfTracks && playlist.listOfTracks.includes(this.props.track.id);
       const { tracks = {} } = playlist;
 
