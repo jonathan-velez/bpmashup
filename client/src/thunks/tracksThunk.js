@@ -18,6 +18,7 @@ export const getTracks = async (searchFacets) => {
       genre: null,
       artistId: null,
       labelId: null,
+      bpm: null,
     };
 
     const facetsParams = !_.isEmpty(searchFacets) && Object.keys(facetsModel).reduce((obj, key) => {
@@ -30,6 +31,8 @@ export const getTracks = async (searchFacets) => {
     const pageModel = {
       page: DEFAULT_PAGE,
       perPage: DEFAULT_PER_PAGE,
+      publishDateStart: null,
+      publishDateEnd: null,
     }
 
     const pageParams = queryString.stringify(Object.keys(pageModel).reduce((obj, key) => {
