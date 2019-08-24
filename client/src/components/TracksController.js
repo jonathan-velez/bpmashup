@@ -10,13 +10,17 @@ import { getTracks, clearTracklist } from '../thunks';
 import TrackListingGroup from './TrackListingGroup';
 import { KeyCamelot } from '../constants/musicalKeys';
 
-import { Dropdown, Button, Grid } from 'semantic-ui-react'
+import { Form, Icon, Accordion } from 'semantic-ui-react'
 
 class Tracks extends Component {
   state = {
-    selectedGenre: +queryString.parse(this.props.location.search).genre || null,
-    selectedMusicalKey: +queryString.parse(this.props.location.search).key || null,
-    selectedPerPage: +queryString.parse(this.props.location.search).perPage || null,
+    activeIndex: -1,
+    selectedGenre: +queryString.parse(this.props.location.search).genre || '',
+    selectedMusicalKey: +queryString.parse(this.props.location.search).key || '',
+    selectedPerPage: +queryString.parse(this.props.location.search).perPage || '',
+    selectedPublishDateStart: +queryString.parse(this.props.location.search).publishDateStart || '',
+    selectedPublishDateEnd: +queryString.parse(this.props.location.search).publishDateEnd || '',
+    selectedBPM: +queryString.parse(this.props.location.search).bpm || '',
   }
 
   componentDidMount() {
@@ -25,9 +29,12 @@ class Tracks extends Component {
 
   componentWillReceiveProps(nextProps) {
     this.setState({
-      selectedGenre: +queryString.parse(nextProps.location.search).genre || null,
-      selectedMusicalKey: +queryString.parse(nextProps.location.search).key || null,
-      selectedPerPage: +queryString.parse(nextProps.location.search).perPage || null,
+      selectedGenre: +queryString.parse(nextProps.location.search).genre || '',
+      selectedMusicalKey: +queryString.parse(nextProps.location.search).key || '',
+      selectedPerPage: +queryString.parse(nextProps.location.search).perPage || '',
+      selectedPublishDateStart: queryString.parse(nextProps.location.search).publishDateStart || '',
+      selectedPublishDateEnd: queryString.parse(nextProps.location.search).publishDateEnd || '',
+      selectedBPM: +queryString.parse(nextProps.location.search).bpm || '',
     })
   }
 
@@ -74,20 +81,45 @@ class Tracks extends Component {
     this.setState({ selectedMusicalKey: value });
   }
 
+  handleBPMChange = (e, { value }) => {
+    this.setState({ selectedBPM: value });
+  }
+
+  handleTimeframeChange = (e, { value }) => {
+    const values = queryString.parse(value);
+    const { publishDateStart, publishDateEnd } = values;
+
+    this.setState({
+      selectedPublishDateStart: publishDateStart,
+      selectedPublishDateEnd: publishDateEnd,
+    });
+  }
+
+  handleAccordionClick = (e, titleProps) => {
+    const { index } = titleProps
+    const { activeIndex } = this.state
+    const newIndex = activeIndex === index ? -1 : index
+
+    this.setState({ activeIndex: newIndex })
+  }
+
   filterTracks = () => {
-    const { selectedGenre: genre, selectedMusicalKey: key, selectedPerPage: perPage } = this.state;
+    const { selectedGenre: genre, selectedMusicalKey: key, selectedPerPage: perPage, selectedPublishDateStart: publishDateStart, selectedPublishDateEnd: publishDateEnd, selectedBPM: bpm } = this.state;
 
     // use _.pickBy to remove non-filtered options
     this.props.history.push(`?${queryString.stringify(_.pickBy({
       genre,
       key,
       perPage,
+      publishDateStart,
+      publishDateEnd,
+      bpm,
     }))}`);
   }
 
   render() {
     const { trackListing, genreListing } = this.props;
-    const { selectedGenre, selectedMusicalKey } = this.state;
+    const { activeIndex, selectedGenre, selectedMusicalKey, selectedPublishDateStart, selectedPublishDateEnd, selectedBPM } = this.state;
 
     const genreOptions = genreListing.map(genre => {
       return (
@@ -110,39 +142,101 @@ class Tracks extends Component {
       )
     });
 
+    const timeframeOptions = [
+      {
+        key: "today",
+        value: "publishDateStart=2019-08-23&publishDateEnd=2019-08-23",
+        text: "Today",
+      },
+      {
+        key: "yesterday",
+        value: "publishDateStart=2019-08-22&publishDateEnd=2019-08-23",
+        text: "Yesterday",
+      },
+      {
+        key: "weekToDate",
+        value: "publishDateStart=2019-08-16&publishDateEnd=2019-08-23",
+        text: "Past Week",
+      },
+      {
+        key: "monthToDate",
+        value: "publishDateStart=2019-07-23&publishDateEnd=2019-08-23",
+        text: "Past Month",
+      },
+      {
+        key: "yearToDate",
+        value: "publishDateStart=2018-08-23&publishDateEnd=2019-08-23",
+        text: "Past Year",
+      }
+    ];
+
+    const selectedTimeframe = selectedPublishDateStart && selectedPublishDateEnd && `publishDateStart=${selectedPublishDateStart}&publishDateEnd=${selectedPublishDateEnd}`;
+
     return (
       <Fragment>
-        <Grid columns={4} textAlign='left'>
-          <Grid.Row>
-            <Grid.Column>
-              <Dropdown
-                placeholder='Genres'
-                clearable
-                fluid
-                search
-                selection
-                options={genreOptions}
-                onChange={this.handleGenreChange}
-                value={selectedGenre}
-              />
-            </Grid.Column>
-            <Grid.Column>
-              <Dropdown
-                placeholder='Key'
-                clearable
-                fluid
-                search
-                selection
-                options={keyOptions}
-                onChange={this.handleKeyChange}
-                value={selectedMusicalKey}
-              />
-            </Grid.Column>
-            <Grid.Column>
-              <Button onClick={this.filterTracks}>Filter</Button>
-            </Grid.Column>
-          </Grid.Row>
-        </Grid>
+        <Accordion fluid>
+          <Accordion.Title
+            active={activeIndex === 0}
+            index={0}
+            onClick={this.handleAccordionClick}
+            style={{ textAlign: 'left' }}
+          >
+            <Icon name='dropdown' />
+            Filters
+        </Accordion.Title>
+          <Accordion.Content active={activeIndex === 0}>
+            <Form>
+              <Form.Group style={{ textAlign: 'left' }}>
+                <Form.Select
+                  label='Genre'
+                  placeholder='House'
+                  clearable
+                  fluid
+                  search
+                  selection
+                  options={genreOptions}
+                  onChange={this.handleGenreChange}
+                  value={selectedGenre}
+                  width={4}
+                />
+                <Form.Input
+                  type='number'
+                  fluid
+                  label='BPM'
+                  placeholder='128'
+                  width={2}
+                  onChange={this.handleBPMChange}
+                  value={selectedBPM}
+                />
+                <Form.Select
+                  label='Key'
+                  placeholder='11A'
+                  clearable
+                  fluid
+                  search
+                  selection
+                  options={keyOptions}
+                  onChange={this.handleKeyChange}
+                  value={selectedMusicalKey}
+                  width={2}
+                />
+                <Form.Select
+                  label='Timeframe'
+                  placeholder='All time'
+                  clearable
+                  fluid
+                  search
+                  selection
+                  options={timeframeOptions}
+                  onChange={this.handleTimeframeChange}
+                  value={selectedTimeframe}
+                  width={3}
+                />
+                <Form.Button label='Go' color='red' onClick={this.filterTracks}><Icon name='filter' />Filter</Form.Button>
+              </Form.Group>
+            </Form>
+          </Accordion.Content>
+        </Accordion>
         <TrackListingGroup trackListing={trackListing} />
       </Fragment>
     );
