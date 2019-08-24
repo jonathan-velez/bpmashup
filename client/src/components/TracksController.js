@@ -10,7 +10,7 @@ import { getTracks, clearTracklist } from '../thunks';
 import TrackListingGroup from './TrackListingGroup';
 import { KeyCamelot } from '../constants/musicalKeys';
 
-import { Dropdown, Button, Grid } from 'semantic-ui-react'
+import { Form, Icon } from 'semantic-ui-react'
 
 class Tracks extends Component {
   state = {
@@ -110,39 +110,65 @@ class Tracks extends Component {
       )
     });
 
+    const bpmStyle = {
+      textAlign: 'left',
+    }
+
     return (
       <Fragment>
-        <Grid columns={4} textAlign='left'>
-          <Grid.Row>
-            <Grid.Column>
-              <Dropdown
-                placeholder='Genres'
-                clearable
-                fluid
-                search
-                selection
-                options={genreOptions}
-                onChange={this.handleGenreChange}
-                value={selectedGenre}
-              />
-            </Grid.Column>
-            <Grid.Column>
-              <Dropdown
-                placeholder='Key'
-                clearable
-                fluid
-                search
-                selection
-                options={keyOptions}
-                onChange={this.handleKeyChange}
-                value={selectedMusicalKey}
-              />
-            </Grid.Column>
-            <Grid.Column>
-              <Button onClick={this.filterTracks}>Filter</Button>
-            </Grid.Column>
-          </Grid.Row>
-        </Grid>
+        <Form>
+          <Form.Group style={bpmStyle}>
+            <Form.Select
+              label='Genre'
+              placeholder='House'
+              clearable
+              fluid
+              search
+              selection
+              options={genreOptions}
+              onChange={this.handleGenreChange}
+              value={selectedGenre}
+              width={4}
+            />
+            <Form.Input
+              fluid
+              label='BPM from'
+              placeholder='120'
+              width={2}
+            />
+            <Form.Input
+              fluid
+              label='BPM to'
+              placeholder='135'
+              width={2}
+            />
+            <Form.Select
+              label='Key'
+              placeholder='11A'
+              clearable
+              fluid
+              search
+              selection
+              options={keyOptions}
+              onChange={this.handleKeyChange}
+              value={selectedMusicalKey}
+              width={2}
+            />
+            <Form.Select
+              label='Timeframe'
+              placeholder='All time'
+              clearable
+              fluid
+              search
+              selection
+              options={keyOptions}
+              onChange={this.handleKeyChange}
+              value={selectedMusicalKey}
+              width={3}
+            />
+            <Form.Button label='Go' color='red'><Icon name='filter' />Filter</Form.Button>
+          </Form.Group>
+        </Form>
         <TrackListingGroup trackListing={trackListing} />
       </Fragment>
     );
