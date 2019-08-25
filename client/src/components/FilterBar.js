@@ -75,6 +75,17 @@ class FilterBar extends Component {
     }))}`);
   }
 
+  clearFilters = () => {
+    this.setState({
+      selectedGenre: '',
+      selectedMusicalKey: '',
+      selectedPerPage: '',
+      selectedPublishDateStart: '',
+      selectedPublishDateEnd: '',
+      selectedBPM: '',
+    });
+  }
+
   render() {
     const { activeIndex, selectedGenre, selectedMusicalKey, selectedPublishDateStart, selectedPublishDateEnd, selectedBPM } = this.state;
     const { genreListing } = this.props;
@@ -190,6 +201,7 @@ class FilterBar extends Component {
                 width={3}
               />
               <Form.Button label='Go' color='red' onClick={this.filterTracks}><Icon name='filter' />Filter</Form.Button>
+              <Form.Button basic label='Clear' onClick={this.clearFilters}><Icon name='delete' />Clear</Form.Button>
             </Form.Group>
           </Form>
         </Accordion.Content>
