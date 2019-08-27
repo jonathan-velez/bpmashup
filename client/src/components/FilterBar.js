@@ -150,17 +150,17 @@ class FilterBar extends Component {
           style={{ textAlign: 'left' }}
         >
           <Icon name='dropdown' />
-          Filters
+          <Icon name='filter' />
+          FILTERS
         </Accordion.Title>
         <Accordion.Content active={activeIndex === 0}>
           <Form>
             <Form.Group style={{ textAlign: 'left' }}>
               <Form.Select
-                label='Genre'
+                label='GENRE'
                 placeholder='House'
                 clearable
                 fluid
-                search
                 selection
                 options={genreOptions}
                 onChange={this.handleGenreChange}
@@ -177,11 +177,10 @@ class FilterBar extends Component {
                 value={selectedBPM}
               />
               <Form.Select
-                label='Key'
+                label='KEY'
                 placeholder='11A'
                 clearable
                 fluid
-                search
                 selection
                 options={keyOptions}
                 onChange={this.handleKeyChange}
@@ -189,19 +188,18 @@ class FilterBar extends Component {
                 width={2}
               />
               <Form.Select
-                label='Timeframe'
+                label='TIMEFRAME'
                 placeholder='All time'
                 clearable
                 fluid
-                search
                 selection
                 options={timeframeOptions}
                 onChange={this.handleTimeframeChange}
                 value={selectedTimeframe}
                 width={3}
               />
-              <Form.Button label='Go' color='red' onClick={this.filterTracks}><Icon name='filter' />Filter</Form.Button>
-              <Form.Button basic label='Clear' onClick={this.clearFilters}><Icon name='delete' />Clear</Form.Button>
+              <Form.Button label='GO' color='red' onClick={this.filterTracks}><Icon name='filter' />Filter</Form.Button>
+              <Form.Button basic label='CLEAR' onClick={this.clearFilters}><Icon name='delete' />Clear</Form.Button>
             </Form.Group>
           </Form>
         </Accordion.Content>

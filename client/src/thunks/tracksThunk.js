@@ -49,7 +49,7 @@ export const getTracks = async (searchFacets) => {
       }
     }
 
-    const tracksRequest = await callAPIorCache(`${API_MY_BEATPORT}?${pageParams}${facetsParams ? `&facets=${facetsString}` : ''}&sortBy=publishDate%20DESC`);
+    const tracksRequest = await callAPIorCache(`${API_MY_BEATPORT}?${pageParams}${facetsParams ? `&facets=${facetsString}` : ''}`);
 
     dispatch({
       type: FETCH_TRACKS,

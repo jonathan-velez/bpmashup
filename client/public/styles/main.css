@@ -366,5 +366,6 @@
   }
 
   .menu .item {
-    padding: 0.5em 0.5em!important;
+    /* padding: 0.5em 0.5em!important; */
+    margin-right: 5px!important;
   }
