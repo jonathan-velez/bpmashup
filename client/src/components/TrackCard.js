@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 
 import TrackAlbum from './TrackAlbum';
 import TrackCardActionRow from './TrackCardActionRow';
-import { constructLinks, trackGenreColors } from '../utils/trackUtils';
+import { constructLinks, trackGenreColors, constructTrackLink } from '../utils/trackUtils';
 import { musicalKeyFilter } from '../utils/helpers';
 
 class TrackCard extends React.Component {
@@ -34,7 +34,7 @@ class TrackCard extends React.Component {
         />
         <Card.Content>
           {track.position && <Label attached='top left' color='grey' ribbon>{track.position}</Label>}
-          <Card.Header className='track-title'>{track.title}</Card.Header>
+          <Card.Header className='track-title'>{constructTrackLink(track)}</Card.Header>
           <Card.Content>{constructLinks(track.artists, 'artist')}</Card.Content>
           <Card.Content><Link to={`/label/${track.label.slug}/${track.label.id}`}>[{track.label.name}]</Link></Card.Content>
           <Card.Content>{constructLinks(track.genres, 'genre')}</Card.Content>
