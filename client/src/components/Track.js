@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Grid, Image, Header, Statistic, Card, Divider, Transition } from 'semantic-ui-react';
+import { Grid, Image, Header, Statistic, Card, Divider, Transition, Message } from 'semantic-ui-react';
 import Scroll from 'react-scroll';
 
 import TrackAlbum from './TrackAlbum';
@@ -18,9 +18,10 @@ class Track extends React.Component {
   }
 
   componentDidMount() {
-    const { location } = this.props;
-    const { track } = location.state;
-    const { charts } = track;
+    const { location = {} } = this.props;
+    const { state = {} } = location;
+    const { track = {} } = state;
+    const { charts = [] } = track;
 
     this.setState({
       visible: true,
@@ -60,16 +61,26 @@ class Track extends React.Component {
   }
 
   render() {
-    const { location, userDetail } = this.props;
+    const { location = {}, userDetail = {} } = this.props;
     const { visible, chartData } = this.state;
-    const { permissions } = userDetail;
+    const { permissions = [] } = userDetail;
     const canZip = Array.isArray(permissions) && permissions.includes('zipZip');
-    const { track } = location.state;
+    const { state = {} } = location;
+    const { track = {} } = state;
     const { images, title, artists, length, bpm, label, key, releaseDate, genres, release } = track;
 
     const trackTitleHeader = {
       textAlign: 'left',
       textTransform: 'uppercase',
+    }
+
+    if (Object.keys(track).length === 0) {
+      return (
+        <Message warning>
+          <Header size='huge'>Hey!</Header>
+          <p>Nothing to display.</p>
+        </Message>
+      )
     }
 
     return (
