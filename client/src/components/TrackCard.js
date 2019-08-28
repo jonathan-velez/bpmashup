@@ -3,14 +3,12 @@ import { Link } from 'react-router-dom';
 import { Card, Label } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 
-import AddToPlaylist from './AddToPlaylist';
 import TrackAlbum from './TrackAlbum';
-import DownloadTrack from './DownloadTrack';
-import LoveItem from './LoveItem';
+import TrackCardActionRow from './TrackCardActionRow';
 import { constructLinks, trackGenreColors } from '../utils/trackUtils';
 import { musicalKeyFilter } from '../utils/helpers';
 
-class Track extends React.Component {
+class TrackCard extends React.Component {
   state = {
     active: false,
   }
@@ -22,7 +20,6 @@ class Track extends React.Component {
     const { track, userDetail } = this.props;
     const { permissions } = userDetail;
     const canZip = Array.isArray(permissions) && permissions.includes('zipZip');
-    const numOfButtons = canZip ? 'three' : 'two';
 
     return (
       <Card
@@ -46,11 +43,7 @@ class Track extends React.Component {
           <Card.Content><Link to={`/similar-tracks/${track.slug}/${track.id}`}>Similar tracks</Link></Card.Content>
         </Card.Content>
         <Card.Content extra>
-          <div className={`ui ${numOfButtons} buttons`}>
-            {canZip && <DownloadTrack track={track} />}
-            <LoveItem itemType='track' item={track} type='button' />
-            <AddToPlaylist track={track} />
-          </div>
+          <TrackCardActionRow canZip={canZip} numOfButtons={canZip ? 'three' : 'two'} track={track} />
         </Card.Content>
       </Card >
     )
@@ -63,4 +56,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps, null)(Track);
+export default connect(mapStateToProps, null)(TrackCard);
