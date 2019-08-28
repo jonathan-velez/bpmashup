@@ -32,6 +32,11 @@ export const constructLinks = (listItem, type, limit = 0) => {
   });
 }
 
+export const constructTrackLink = (track) => {
+  const { slug, id, title } = track;
+  return (<Link to={{ pathname: `/track/${slug}/${id}`, state: { track } }}>{title}</Link>)
+}
+
 export const downloadTrack = track => {
   const handleNoDownload = () => {
     store.dispatch(stopAsync());

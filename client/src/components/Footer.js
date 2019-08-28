@@ -7,7 +7,7 @@ import _ from 'lodash';
 
 import * as actionCreators from '../actions/ActionCreators';
 import { getYoutubeLink } from '../thunks';
-import { constructLinks, getNextTrack } from '../utils/trackUtils';
+import { constructLinks, getNextTrack, constructTrackLink } from '../utils/trackUtils';
 import PrevNextTrack from './PrevNextTrack';
 import PlayPauseButton from './PlayPauseButton';
 import Duration from './Duration';
@@ -68,7 +68,7 @@ const Footer = ({ seekChange, seekMouseUp, seekMouseDown, playPause, setVolume, 
       <Responsive minWidth={960} as={Menu.Item}>
         <Card>
           <Card.Content textAlign='left'>
-            <Card.Header>{loadedTrack.title}</Card.Header>
+            <Card.Header>{constructTrackLink(loadedTrack)}</Card.Header>
             <Card.Meta>{constructLinks(loadedTrack.artists, 'artist')}</Card.Meta>
           </Card.Content>
         </Card>

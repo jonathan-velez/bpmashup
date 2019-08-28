@@ -7,7 +7,7 @@ import { Link, withRouter } from 'react-router-dom';
 
 import TrackAlbum from './TrackAlbum';
 import TrackActionDropdown from './TrackActionDropdown';
-import { constructLinks } from '../utils/trackUtils';
+import { constructLinks, constructTrackLink } from '../utils/trackUtils';
 import { musicalKeyFilter } from '../utils/helpers';
 
 const TrackListingTableBody = ({ trackListing, downloadedTracks, isPlaylist }) => {
@@ -19,7 +19,7 @@ const TrackListingTableBody = ({ trackListing, downloadedTracks, isPlaylist }) =
     const orderedTracks = _.orderBy(trackListing, orderBy, 'asc');
 
     trackListingBody = _.map(orderedTracks, (track, idx) => {
-      const { id, images, title, artists, genres, label, bpm, key, releaseDate, position, dateAdded, slug } = track;
+      const { id, images, artists, genres, label, bpm, key, releaseDate, position, dateAdded } = track;
       const hasBeenDownloaded = downloadedTracks.includes(id);
       const dateAddedFormatted = dateAdded ? moment.unix(dateAdded).format('YYYY-MM-DD') : '????-??-??';
 
@@ -36,7 +36,7 @@ const TrackListingTableBody = ({ trackListing, downloadedTracks, isPlaylist }) =
               track={track}
             />
           </Table.Cell>
-          <Table.Cell><Link to={{ pathname: `/track/${slug}/${id}`, state: { track } }}>{title}</Link></Table.Cell>
+          <Table.Cell>{constructTrackLink(track)}</Table.Cell>
           <Table.Cell>{constructLinks(artists, 'artist')}</Table.Cell>
           <Table.Cell><Link to={`/label/${label.slug}/${label.id}`}>{label.name}</Link></Table.Cell>
           <Table.Cell>{constructLinks(genres, 'genre')}</Table.Cell>
