@@ -59,7 +59,7 @@ class Track extends React.Component {
     const { permissions } = userDetail;
     const canZip = Array.isArray(permissions) && permissions.includes('zipZip');
     const { track } = location.state;
-    const { images, title, artists, length, bpm, label, key, releaseDate, genres } = track;
+    const { images, title, artists, length, bpm, label, key, releaseDate, genres, release } = track;
 
     const trackTitleHeader = {
       textAlign: 'left',
@@ -79,7 +79,17 @@ class Track extends React.Component {
             }
           </Grid.Column>
           <Grid.Column width={12}>
-            <Header as='h1' style={trackTitleHeader} content={title} subheader={constructLinks(artists, 'artist')} />
+            <Header as='h1' style={trackTitleHeader}>
+              {title}
+              <Header.Subheader>
+                {constructLinks(artists, 'artist')}
+              </Header.Subheader>
+              <Header.Subheader>
+                {release.id &&
+                  <Link to={`/release/${release.slug}/${release.id}`}>{release.name}</Link>
+                }
+              </Header.Subheader>
+            </Header>
             <Image src={images.waveform.secureUrl} />
           </Grid.Column>
           <Grid.Column width={4}>
@@ -152,7 +162,7 @@ class Track extends React.Component {
       </Grid>
     );
   }
-};
+}
 
 const mapStateToProps = state => {
   return {
