@@ -9,6 +9,7 @@ import { fetchReleaseData } from './releaseThunk';
 import { getArtistDetails } from './artistThunk';
 import { getLabelDetail } from './labelThunk';
 import { getTracks, fetchTracksSimilar, fetchMostPopularTracks, getYoutubeLink, getTracksByIds, clearTracklist } from './tracksThunk';
+import { fetchChartData } from './chartThunk';
 
 export {
   loadTrackThunk,
@@ -36,4 +37,5 @@ export {
   getTracksByIds,
   clearTracklist,
   clearPlaylist,
+  fetchChartData,
 };

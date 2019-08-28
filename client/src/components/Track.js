@@ -10,6 +10,7 @@ import TrackCardActionRow from './TrackCardActionRow';
 import { constructLinks } from '../utils/trackUtils';
 import { musicalKeyFilter } from '../utils/helpers';
 import { callAPIorCache } from '../seessionStorageCache';
+import { API_GET_TRACKS, API_GET_CHART } from '../constants/apiPaths';
 
 class Track extends React.Component {
   state = {
@@ -27,7 +28,7 @@ class Track extends React.Component {
 
     if (Object.keys(track).length === 0) {
       const { trackId } = this.props.match.params;
-      const trackData = await callAPIorCache(`/api/tracks?id=${trackId}`);
+      const trackData = await callAPIorCache(`${API_GET_TRACKS}?id=${trackId}`);
       const { data = {}, status } = trackData;
       if (status !== 200) return;
 
@@ -53,7 +54,7 @@ class Track extends React.Component {
   }
 
   fetchChartData = async (chartIds) => {
-    const chartData = await callAPIorCache(`/api/charts?ids=${chartIds}`);
+    const chartData = await callAPIorCache(`${API_GET_CHART}?ids=${chartIds}`);
     const { data, status } = chartData;
     if (status !== 200) return;
 
@@ -182,7 +183,7 @@ class Track extends React.Component {
                 {chartData && chartData.length > 0 &&
                   chartData.map((chart, idx) =>
                     idx < 8 ?
-                      <Card className='flex-card' key={chart.sku}>
+                      <Card className='flex-card' key={chart.sku} as={Link} to={`/chart/${chart.slug}/${chart.id}`}>
                         <Image src={chart.images.xlarge.secureUrl} className='flex-card' />
                         <Card.Content>
                           {chart.name}
@@ -211,7 +212,7 @@ class Track extends React.Component {
             </Grid.Column>
           </Grid.Row>
         </Grid>
-      </Transition>
+      </Transition >
     );
   }
 }
