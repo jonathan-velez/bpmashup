@@ -49,7 +49,7 @@ class ReleaseListingController extends Component {
                   {releaseListing.catalogNumber} [<Link to={`/label/${releaseListing.label.slug}/${releaseListing.label.id}`}>{releaseListing.label.name}</Link>]
                 </Item.Meta>
                 <Item.Description>{releaseListing.description}</Item.Description>
-                <Item.Extra>{releaseListing.releaseDate}</Item.Extra>
+                <Item.Extra>Released: {releaseListing.releaseDate}</Item.Extra>
               </Item.Content>
             }
           </Item>

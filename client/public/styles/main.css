@@ -333,7 +333,7 @@
 
   .releaseHeaderContent {
     text-align: left;
-    font-size: 1.25em !important;
+    /* font-size: 1.25em !important; */
   }
 
   .genre-label {
