@@ -12,6 +12,7 @@ import { callAPIorCache } from '../seessionStorageCache';
 
 class Track extends React.Component {
   state = {
+    trackData: {},
     chartData: [],
     similarTracksData: [],
     visible: false,
@@ -25,6 +26,7 @@ class Track extends React.Component {
 
     this.setState({
       visible: true,
+      trackData: track,
     });
 
     Scroll.animateScroll.scrollToTop({ duration: 1500 });
@@ -62,11 +64,11 @@ class Track extends React.Component {
 
   render() {
     const { location = {}, userDetail = {} } = this.props;
-    const { visible, chartData } = this.state;
+    const { visible, chartData, trackData } = this.state;
     const { permissions = [] } = userDetail;
     const canZip = Array.isArray(permissions) && permissions.includes('zipZip');
     const { state = {} } = location;
-    const { track = {} } = state;
+    const { track = trackData } = state;
     const { images, title, artists, length, bpm, label, key, releaseDate, genres, release } = track;
 
     const trackTitleHeader = {
@@ -164,7 +166,7 @@ class Track extends React.Component {
                 {chartData && chartData.length > 0 &&
                   chartData.map((chart, idx) =>
                     idx < 4 ?
-                      <Card className='flex-card' key={chart.slug}>
+                      <Card className='flex-card' key={chart.sku}>
                         <Image src={chart.images.xlarge.secureUrl} className='flex-card' />
                         <Card.Content extra>
                           {chart.name}

@@ -55,6 +55,7 @@ const chart = [
   'id',
   'name',
   'slug',
+  'sku',
   'description',
   'publishDate',
   'genres',
