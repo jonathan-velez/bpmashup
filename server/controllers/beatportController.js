@@ -53,7 +53,7 @@ async function callApi(req, res) {
   let reqQuery = req.query;
 
   try {
-    const model = bpAPIConfig[reqPath].model;
+    const model = bpAPIConfig[reqPath] && bpAPIConfig[reqPath].model; 
 
     // encode facets string
     if (reqQuery.facets) {
