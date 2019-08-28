@@ -18,7 +18,9 @@ const track = [
   'sampleSecureUrl',
   'position',
   'preview',
-  'lengthMs'
+  'lengthMs',
+  'release',
+  'charts',
 ];
 
 const label = [
@@ -49,6 +51,18 @@ const release = [
   'images',
 ]
 
+const chart = [
+  'id',
+  'name',
+  'slug',
+  'description',
+  'publishDate',
+  'genres',
+  'images',
+  'chartOwner',
+]
+
 exports.track = track;
 exports.label = label;
 exports.release = release;
+exports.chart = chart;

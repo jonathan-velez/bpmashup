@@ -535,6 +535,42 @@ const apiConfig = {
         required: false
       }
     ]
+  },
+  'charts': {
+    model: bpAPIModels.chart,
+    params: [
+      {
+        name: 'id',
+        dataType: 'string',
+        required: false,
+      }, {
+        name: 'ids',
+        dataType: 'string',
+        required: false,
+      }, {
+        name: 'facets',
+        dataType: 'string',
+        required: false,
+      }, {
+        name: 'returnFacets',
+        dataType: 'string',
+        required: false,
+      }, {
+        name: 'page',
+        dataType: 'string',
+        required: false,
+      },
+      {
+        name: 'perPage',
+        dataType: 'string',
+        required: false,
+      },
+      {
+        name: 'sortBy',
+        dataType: 'string',
+        required: false,
+      },
+    ]
   }
 }
 

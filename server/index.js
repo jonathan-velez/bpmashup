@@ -30,6 +30,7 @@ app.get(`${API_BASE_URL}/releases`, bpController.callApi);
 app.get(`${API_BASE_URL}/artist`, bpController.getArtistData);
 app.get(`${API_BASE_URL}/most-popular-releases/:type`, bpController.callApi);
 app.get(`${API_BASE_URL}/my-beatport`, bpController.callApi);
+app.get(`${API_BASE_URL}/charts`, bpController.callApi);
 
 app.get(`${API_BASE_URL}/download-track`, zippyController.zippyScrape);
 app.get(`${API_BASE_URL}/youtube/search`, ytController.Youtube);
