@@ -17,7 +17,7 @@ class TrackCard extends React.Component {
   handleHide = () => this.setState({ active: false });
 
   render() {
-    const { track, userDetail } = this.props;
+    const { track, userDetail, showPosition = true } = this.props;
     const { permissions } = userDetail;
     const canZip = Array.isArray(permissions) && permissions.includes('zipZip');
 
@@ -33,7 +33,7 @@ class TrackCard extends React.Component {
           track={track}
         />
         <Card.Content>
-          {track.position && <Label attached='top left' color='grey' ribbon>{track.position}</Label>}
+          {track.position && showPosition && <Label attached='top left' color='grey' ribbon>{track.position}</Label>}
           <Card.Header className='track-title'>{constructTrackLink(track)}</Card.Header>
           <Card.Content>{constructLinks(track.artists, 'artist')}</Card.Content>
           <Card.Content><Link to={`/label/${track.label.slug}/${track.label.id}`}>[{track.label.name}]</Link></Card.Content>

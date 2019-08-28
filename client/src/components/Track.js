@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { Grid, Image, Header, Statistic, Card, Divider, Transition, Message } from 'semantic-ui-react';
 import Scroll from 'react-scroll';
 
+import TrackListingCards from './TrackListingCards';
 import TrackAlbum from './TrackAlbum';
 import TrackCardActionRow from './TrackCardActionRow';
 import { constructLinks } from '../utils/trackUtils';
@@ -77,7 +78,7 @@ class Track extends React.Component {
 
   render() {
     const { location = {}, userDetail = {} } = this.props;
-    const { visible, chartData, trackData } = this.state;
+    const { visible, chartData, trackData, similarTracksData } = this.state;
     const { permissions = [] } = userDetail;
     const canZip = Array.isArray(permissions) && permissions.includes('zipZip');
     const { state = {} } = location;
@@ -167,21 +168,23 @@ class Track extends React.Component {
               </Statistic>
             </Grid.Column>
           </Grid.Row>
-          <Divider />
           {chartData && chartData.length > 0 &&
-            <Grid.Row width={16}>
-              <Header as='h3' style={trackTitleHeader}>Appears on</Header>
-            </Grid.Row>
+            <React.Fragment>
+              <Divider />
+              <Grid.Row width={16}>
+                <Header as='h3' style={trackTitleHeader}>Appears on these Charts</Header>
+              </Grid.Row>
+            </React.Fragment>
           }
           <Grid.Row>
             <Grid.Column width={16}>
-              <Card.Group stackable itemsPerRow={4} className='trackListingCardGroup'>
+              <Card.Group stackable itemsPerRow={8} className='trackListingCardGroup'>
                 {chartData && chartData.length > 0 &&
                   chartData.map((chart, idx) =>
-                    idx < 4 ?
+                    idx < 8 ?
                       <Card className='flex-card' key={chart.sku}>
                         <Image src={chart.images.xlarge.secureUrl} className='flex-card' />
-                        <Card.Content extra>
+                        <Card.Content>
                           {chart.name}
                         </Card.Content>
                       </Card>
@@ -190,6 +193,21 @@ class Track extends React.Component {
                   )
                 }
               </Card.Group>
+            </Grid.Column>
+          </Grid.Row>
+          {similarTracksData && similarTracksData.length > 0 &&
+            <React.Fragment>
+              <Divider />
+              <Grid.Row width={16}>
+                <Header as='h3' style={trackTitleHeader}>Similar Tracks</Header>
+              </Grid.Row>
+            </React.Fragment>
+          }
+          <Grid.Row>
+            <Grid.Column width={16}>
+              {similarTracksData && similarTracksData.length > 0 &&
+                <TrackListingCards trackListing={similarTracksData} itemsPerRow={4} showPosition={false} />
+              }
             </Grid.Column>
           </Grid.Row>
         </Grid>
