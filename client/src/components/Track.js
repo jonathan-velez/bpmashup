@@ -18,11 +18,24 @@ class Track extends React.Component {
     visible: false,
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     const { location = {} } = this.props;
     const { state = {} } = location;
     const { track = {} } = state;
     const { charts = [] } = track;
+
+    if (Object.keys(track).length === 0) {
+      const { trackId } = this.props.match.params;
+      const trackData = await callAPIorCache(`/api/tracks?id=${trackId}`);
+      const { data = {}, status } = trackData;
+      if (status !== 200) return;
+
+      const { results = [] } = data;
+
+      if (results && results.length > 0) {
+        Object.assign(track, data.results[0]);
+      }
+    }
 
     this.setState({
       visible: true,
@@ -51,7 +64,7 @@ class Track extends React.Component {
   }
 
   fetchSimilarTracksData = async (trackId) => {
-    const tracksData = await callAPIorCache(`api/tracks/similar?id=${trackId}&perPage=10&page=1`);
+    const tracksData = await callAPIorCache(`/api/tracks/similar?id=${trackId}&perPage=10&page=1`);
     const { data, status } = tracksData;
     if (status !== 200) return;
 
