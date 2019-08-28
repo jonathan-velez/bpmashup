@@ -61,11 +61,11 @@ class Label extends Component {
 
     return (
       <Fragment>
-        <Grid divided stackable>
+        <Grid stackable>
           {imageSrc &&
             <Grid.Row columns={2}>
               <Grid.Column>
-                <Image src={imageSrc} />
+                <Image src={imageSrc} size='medium' />
               </Grid.Column>
               <Grid.Column textAlign='right'>
                 <Header size='huge' className='item-header'>{name} <LoveItem itemType='label' item={{ id }} type='button' /></Header>
