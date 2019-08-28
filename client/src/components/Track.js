@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Grid, Image, Header, Statistic, Card, Divider } from 'semantic-ui-react';
+import { Grid, Image, Header, Statistic, Card, Divider, Transition } from 'semantic-ui-react';
 import Scroll from 'react-scroll';
 
 import TrackAlbum from './TrackAlbum';
@@ -14,12 +14,17 @@ class Track extends React.Component {
   state = {
     chartData: [],
     similarTracksData: [],
+    visible: false,
   }
 
   componentDidMount() {
     const { location } = this.props;
     const { track } = location.state;
     const { charts } = track;
+
+    this.setState({
+      visible: true,
+    });
 
     Scroll.animateScroll.scrollToTop({ duration: 1500 });
 
@@ -56,6 +61,7 @@ class Track extends React.Component {
 
   render() {
     const { location, userDetail } = this.props;
+    const { visible, chartData } = this.state;
     const { permissions } = userDetail;
     const canZip = Array.isArray(permissions) && permissions.includes('zipZip');
     const { track } = location.state;
@@ -67,99 +73,101 @@ class Track extends React.Component {
     }
 
     return (
-      <Grid stackable>
-        <Grid.Row stretched>
-          <Grid.Column width={4}>
-            {track &&
-              <TrackAlbum
-                imageUrl={images.large.secureUrl}
-                track={track}
-                imageSize='medium'
-              />
-            }
-          </Grid.Column>
-          <Grid.Column width={12}>
-            <Header as='h1' style={trackTitleHeader}>
-              {title}
-              <Header.Subheader>
-                {constructLinks(artists, 'artist')}
-              </Header.Subheader>
-              <Header.Subheader>
-                {release.id &&
-                  <Link to={`/release/${release.slug}/${release.id}`}>{release.name}</Link>
-                }
-              </Header.Subheader>
-            </Header>
-            <Image src={images.waveform.secureUrl} />
-          </Grid.Column>
-          <Grid.Column width={4}>
-            <TrackCardActionRow canZip={canZip} numOfButtons={canZip ? 'three' : 'two'} track={track} />
-          </Grid.Column>
-        </Grid.Row>
-        <Grid.Row columns='equal' divided>
-          <Grid.Column>
-            <Statistic size='mini'>
-              <Statistic.Label>LENGTH</Statistic.Label>
-              <Statistic.Value>{length}</Statistic.Value>
-            </Statistic>
-          </Grid.Column>
-          <Grid.Column>
-            <Statistic size='mini'>
-              <Statistic.Label>RELEASED</Statistic.Label>
-              <Statistic.Value>{releaseDate}</Statistic.Value>
-            </Statistic>
-          </Grid.Column>
-          <Grid.Column>
-            <Statistic size='mini'>
-              <Statistic.Label>BPM</Statistic.Label>
-              <Statistic.Value>{bpm}</Statistic.Value>
-            </Statistic>
-          </Grid.Column>
-          <Grid.Column>
-            <Statistic size='mini'>
-              <Statistic.Label>KEY</Statistic.Label>
-              <Statistic.Value>{musicalKeyFilter(key && key.shortName)}</Statistic.Value>
-            </Statistic>
-          </Grid.Column>
-          <Grid.Column>
-            <Statistic size='mini'>
-              <Statistic.Label>GENRE</Statistic.Label>
-              <Statistic.Value>{constructLinks(genres, 'genre')}</Statistic.Value>
-            </Statistic>
-          </Grid.Column>
-          <Grid.Column>
-            <Statistic size='mini'>
-              <Statistic.Label>LABEL</Statistic.Label>
-              <Statistic.Value><Link to={`/label/${label.slug}/${label.id}`}>{label.name}</Link></Statistic.Value>
-            </Statistic>
-          </Grid.Column>
-        </Grid.Row>
-        <Divider />
-        {this.state.chartData && this.state.chartData.length > 0 &&
-          <Grid.Row width={16}>
-            <Header as='h3' style={trackTitleHeader}>Appears on</Header>
-          </Grid.Row>
-        }
-        <Grid.Row>
-          <Grid.Column width={16}>
-            <Card.Group stackable itemsPerRow={4} className='trackListingCardGroup'>
-              {this.state.chartData && this.state.chartData.length > 0 &&
-                this.state.chartData.map((chart, idx) =>
-                  idx < 4 ?
-                    <Card className='flex-card' key={chart.slug}>
-                      <Image src={chart.images.xlarge.secureUrl} className='flex-card' />
-                      <Card.Content extra>
-                        {chart.name}
-                      </Card.Content>
-                    </Card>
-                    :
-                    null
-                )
+      <Transition visible={visible} animation='fade' duration={500}>
+        <Grid stackable>
+          <Grid.Row stretched>
+            <Grid.Column width={4}>
+              {track &&
+                <TrackAlbum
+                  imageUrl={images.large.secureUrl}
+                  track={track}
+                  imageSize='medium'
+                />
               }
-            </Card.Group>
-          </Grid.Column>
-        </Grid.Row>
-      </Grid>
+            </Grid.Column>
+            <Grid.Column width={12}>
+              <Header as='h1' style={trackTitleHeader}>
+                {title}
+                <Header.Subheader>
+                  {constructLinks(artists, 'artist')}
+                </Header.Subheader>
+                <Header.Subheader>
+                  {release.id &&
+                    <Link to={`/release/${release.slug}/${release.id}`}>{release.name}</Link>
+                  }
+                </Header.Subheader>
+              </Header>
+              <Image src={images.waveform.secureUrl} />
+            </Grid.Column>
+            <Grid.Column width={4}>
+              <TrackCardActionRow canZip={canZip} numOfButtons={canZip ? 'three' : 'two'} track={track} />
+            </Grid.Column>
+          </Grid.Row>
+          <Grid.Row columns='equal' divided>
+            <Grid.Column>
+              <Statistic size='mini'>
+                <Statistic.Label>LENGTH</Statistic.Label>
+                <Statistic.Value>{length}</Statistic.Value>
+              </Statistic>
+            </Grid.Column>
+            <Grid.Column>
+              <Statistic size='mini'>
+                <Statistic.Label>RELEASED</Statistic.Label>
+                <Statistic.Value>{releaseDate}</Statistic.Value>
+              </Statistic>
+            </Grid.Column>
+            <Grid.Column>
+              <Statistic size='mini'>
+                <Statistic.Label>BPM</Statistic.Label>
+                <Statistic.Value>{bpm}</Statistic.Value>
+              </Statistic>
+            </Grid.Column>
+            <Grid.Column>
+              <Statistic size='mini'>
+                <Statistic.Label>KEY</Statistic.Label>
+                <Statistic.Value>{musicalKeyFilter(key && key.shortName)}</Statistic.Value>
+              </Statistic>
+            </Grid.Column>
+            <Grid.Column>
+              <Statistic size='mini'>
+                <Statistic.Label>GENRE</Statistic.Label>
+                <Statistic.Value>{constructLinks(genres, 'genre')}</Statistic.Value>
+              </Statistic>
+            </Grid.Column>
+            <Grid.Column>
+              <Statistic size='mini'>
+                <Statistic.Label>LABEL</Statistic.Label>
+                <Statistic.Value><Link to={`/label/${label.slug}/${label.id}`}>{label.name}</Link></Statistic.Value>
+              </Statistic>
+            </Grid.Column>
+          </Grid.Row>
+          <Divider />
+          {chartData && chartData.length > 0 &&
+            <Grid.Row width={16}>
+              <Header as='h3' style={trackTitleHeader}>Appears on</Header>
+            </Grid.Row>
+          }
+          <Grid.Row>
+            <Grid.Column width={16}>
+              <Card.Group stackable itemsPerRow={4} className='trackListingCardGroup'>
+                {chartData && chartData.length > 0 &&
+                  chartData.map((chart, idx) =>
+                    idx < 4 ?
+                      <Card className='flex-card' key={chart.slug}>
+                        <Image src={chart.images.xlarge.secureUrl} className='flex-card' />
+                        <Card.Content extra>
+                          {chart.name}
+                        </Card.Content>
+                      </Card>
+                      :
+                      null
+                  )
+                }
+              </Card.Group>
+            </Grid.Column>
+          </Grid.Row>
+        </Grid>
+      </Transition>
     );
   }
 }
