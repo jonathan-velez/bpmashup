@@ -19,7 +19,7 @@ import { openLoginModalWindow } from '../actions/ActionCreators';
 
 export const activityLogger = store => next => action => {
   const logTrack = (track, userData, type) => {
-    const { userId, userDisplayName, userEmail } = userData;
+    const { userId = 0, userDisplayName = '', userEmail = '' } = userData;
 
     const logTypes = ['downloads', 'trackPlaysAll', 'noDownloads'];
     if (!logTypes.includes(type)) {
