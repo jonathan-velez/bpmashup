@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Grid, Image, Header, Statistic, Card, Divider, Transition, Message } from 'semantic-ui-react';
+import { Grid, Image, Header, Statistic, Card, Divider, Transition, Message, Pagination } from 'semantic-ui-react';
 import Scroll from 'react-scroll';
 
 import TrackListingCards from './TrackListingCards';
@@ -11,11 +11,15 @@ import { constructLinks } from '../utils/trackUtils';
 import { musicalKeyFilter } from '../utils/helpers';
 import { callAPIorCache } from '../seessionStorageCache';
 import { API_GET_TRACKS, API_GET_CHART } from '../constants/apiPaths';
+const chartsPerPage = 8;
 
 class Track extends React.Component {
   state = {
     trackData: {},
-    chartData: [],
+    chartData: {
+      metadata: {},
+      results: [],
+    },
     similarTracksData: [],
     visible: false,
   }
@@ -24,7 +28,7 @@ class Track extends React.Component {
     const { location = {} } = this.props;
     const { state = {} } = location;
     const { track = {} } = state;
-    const { charts = [] } = track;
+    let { charts = [] } = track;
 
     if (Object.keys(track).length === 0) {
       const { trackId } = this.props.match.params;
@@ -36,6 +40,7 @@ class Track extends React.Component {
 
       if (results && results.length > 0) {
         Object.assign(track, data.results[0]);
+        charts = track.charts;
       }
     }
 
@@ -53,14 +58,14 @@ class Track extends React.Component {
     this.fetchSimilarTracksData(track.id);
   }
 
-  fetchChartData = async (chartIds) => {
-    const chartData = await callAPIorCache(`${API_GET_CHART}?ids=${chartIds}`);
+  fetchChartData = async (chartIds, page = 1, perPage = chartsPerPage) => {
+    const chartData = await callAPIorCache(`${API_GET_CHART}?ids=${chartIds}&page=${page}&perPage=${perPage}`);
     const { data, status } = chartData;
     if (status !== 200) return;
 
     if (data.results && data.results.length > 0) {
       this.setState({
-        chartData: data.results,
+        chartData: data,
       })
     }
   }
@@ -77,6 +82,15 @@ class Track extends React.Component {
     }
   }
 
+  handleChartPageChange = (e, data) => {
+    const { activePage = 1 } = data;
+    const { trackData = {} } = this.state;
+    const { charts = [] } = trackData;
+    if (charts.length === 0) return;
+
+    this.fetchChartData(charts.map(chart => chart.id).join(','), activePage);
+  }
+
   render() {
     const { location = {}, userDetail = {} } = this.props;
     const { visible, chartData, trackData, similarTracksData } = this.state;
@@ -85,6 +99,10 @@ class Track extends React.Component {
     const { state = {} } = location;
     const { track = trackData } = state;
     const { images, title, artists, length, bpm, label, key, releaseDate, genres, release } = track;
+
+    const { results: chartDataResults, metadata: chartDataMetadata } = chartData;
+    const chartTotalPages = (chartDataMetadata && chartDataMetadata.totalPages) || 0;
+
 
     const trackTitleHeader = {
       textAlign: 'left',
@@ -169,33 +187,50 @@ class Track extends React.Component {
               </Statistic>
             </Grid.Column>
           </Grid.Row>
-          {chartData && chartData.length > 0 &&
+          {chartTotalPages > 0 &&
             <React.Fragment>
               <Divider />
               <Grid.Row width={16}>
                 <Header as='h3' style={trackTitleHeader}>Appears on these Charts</Header>
               </Grid.Row>
+              <Grid.Row>
+                <Grid.Column width={16}>
+                  <Card.Group
+                    stackable
+                    itemsPerRow={chartsPerPage}
+                    className='trackListingCardGroup'
+                  >
+                    {chartDataResults && chartDataResults.length > 0 &&
+                      chartDataResults.map((chart, idx) =>
+                        idx < chartsPerPage &&
+                        <Card className='flex-card' key={chart.sku} as={Link} to={`/chart/${chart.slug}/${chart.id}`}>
+                          <Image src={chart.images.xlarge.secureUrl} className='flex-card' />
+                          <Card.Content>
+                            {chart.name}
+                          </Card.Content>
+                        </Card>
+                      )
+                    }
+                  </Card.Group>
+                </Grid.Column>
+              </Grid.Row>
+              {chartTotalPages > 1 &&
+                <Grid.Row>
+                  <Grid.Column width={16}>
+                    <Pagination
+                      defaultActivePage={1}
+                      firstItem={null}
+                      lastItem={null}
+                      pointing
+                      secondary
+                      totalPages={chartTotalPages}
+                      onPageChange={this.handleChartPageChange}
+                    />
+                  </Grid.Column>
+                </Grid.Row>
+              }
             </React.Fragment>
           }
-          <Grid.Row>
-            <Grid.Column width={16}>
-              <Card.Group stackable itemsPerRow={8} className='trackListingCardGroup'>
-                {chartData && chartData.length > 0 &&
-                  chartData.map((chart, idx) =>
-                    idx < 8 ?
-                      <Card className='flex-card' key={chart.sku} as={Link} to={`/chart/${chart.slug}/${chart.id}`}>
-                        <Image src={chart.images.xlarge.secureUrl} className='flex-card' />
-                        <Card.Content>
-                          {chart.name}
-                        </Card.Content>
-                      </Card>
-                      :
-                      null
-                  )
-                }
-              </Card.Group>
-            </Grid.Column>
-          </Grid.Row>
           {similarTracksData && similarTracksData.length > 0 &&
             <React.Fragment>
               <Divider />
