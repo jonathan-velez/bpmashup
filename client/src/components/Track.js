@@ -7,7 +7,7 @@ import Scroll from 'react-scroll';
 import TrackListingCards from './TrackListingCards';
 import TrackAlbum from './TrackAlbum';
 import TrackCardActionRow from './TrackCardActionRow';
-import { constructLinks } from '../utils/trackUtils';
+import { constructLinks, constructTrackLink } from '../utils/trackUtils';
 import { musicalKeyFilter } from '../utils/helpers';
 import { callAPIorCache } from '../seessionStorageCache';
 import { API_GET_TRACKS, API_GET_CHART } from '../constants/apiPaths';
@@ -98,16 +98,10 @@ class Track extends React.Component {
     const canZip = Array.isArray(permissions) && permissions.includes('zipZip');
     const { state = {} } = location;
     const { track = trackData } = state;
-    const { images, title, artists, length, bpm, label, key, releaseDate, genres, release } = track;
+    const { images, artists, length, bpm, label, key, releaseDate, genres, release } = track;
 
     const { results: chartDataResults, metadata: chartDataMetadata } = chartData;
     const chartTotalPages = (chartDataMetadata && chartDataMetadata.totalPages) || 0;
-
-
-    const trackTitleHeader = {
-      textAlign: 'left',
-      textTransform: 'uppercase',
-    }
 
     if (Object.keys(track).length === 0) {
       return (
@@ -132,8 +126,8 @@ class Track extends React.Component {
               }
             </Grid.Column>
             <Grid.Column width={12}>
-              <Header as='h1' style={trackTitleHeader}>
-                {title}
+              <Header as='h1' className='track-title'>
+                {constructTrackLink(track, 'black-font')}
                 <Header.Subheader>
                   {constructLinks(artists, 'artist')}
                 </Header.Subheader>
@@ -191,7 +185,7 @@ class Track extends React.Component {
             <React.Fragment>
               <Divider />
               <Grid.Row width={16}>
-                <Header as='h3' style={trackTitleHeader}>Appears on these Charts</Header>
+                <Header as='h3' className='track-title'>Appears on these Charts</Header>
               </Grid.Row>
               <Grid.Row>
                 <Grid.Column width={16}>
@@ -235,7 +229,7 @@ class Track extends React.Component {
             <React.Fragment>
               <Divider />
               <Grid.Row width={16}>
-                <Header as='h3' style={trackTitleHeader}>Similar Tracks</Header>
+                <Header as='h3' className='track-title'>Similar Tracks</Header>
               </Grid.Row>
             </React.Fragment>
           }

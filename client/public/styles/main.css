@@ -366,10 +366,14 @@
   }
 
   .track-title {
-    text-transform: uppercase;
-    /* padding-bottom: 8px; */
+    text-transform: uppercase!important;
+    text-align: left;
   }
 
   .track-mix-name {
     font-weight: 100;
+  }
+
+  .black-font {
+    color: #000!important;
   }
