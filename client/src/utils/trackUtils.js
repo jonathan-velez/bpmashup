@@ -33,8 +33,8 @@ export const constructLinks = (listItem, type, limit = 0) => {
 }
 
 export const constructTrackLink = (track) => {
-  const { slug, id, title } = track;
-  return (<Link to={{ pathname: `/track/${slug}/${id}`, state: { track } }}>{title}</Link>)
+  const { slug, id, name, mixName } = track;
+  return (<Link to={{ pathname: `/track/${slug}/${id}`, state: { track } }}>{name} <span className='track-mix-name'>({mixName})</span></Link>)
 }
 
 export const downloadTrack = track => {

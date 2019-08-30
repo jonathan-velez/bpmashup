@@ -37,10 +37,6 @@ class TrackCard extends React.Component {
           <Card.Header className='track-title'>{constructTrackLink(track)}</Card.Header>
           <Card.Content>{constructLinks(track.artists, 'artist')}</Card.Content>
           <Card.Content><Link to={`/label/${track.label.slug}/${track.label.id}`}>[{track.label.name}]</Link></Card.Content>
-          <Card.Content>{constructLinks(track.genres, 'genre')}</Card.Content>
-          <Card.Meta><b>BPM:</b> {track.bpm} <b>Key:</b> {musicalKeyFilter(track.key && track.key.shortName)}</Card.Meta>
-          <Card.Meta><b>Released:</b> {track.releaseDate}</Card.Meta>
-          <Card.Content><Link to={`/similar-tracks/${track.slug}/${track.id}`}>Similar tracks</Link></Card.Content>
         </Card.Content>
         <Card.Content extra>
           <TrackCardActionRow canZip={canZip} numOfButtons={canZip ? 'three' : 'two'} track={track} />
