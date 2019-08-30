@@ -11,6 +11,7 @@ import { constructLinks, constructTrackLink } from '../utils/trackUtils';
 import { musicalKeyFilter } from '../utils/helpers';
 import { callAPIorCache } from '../seessionStorageCache';
 import { API_GET_TRACKS, API_GET_CHART } from '../constants/apiPaths';
+import { DEFAULT_BP_ITEM_IMAGE_URL } from '../constants/defaults';
 const chartsPerPage = 8;
 
 class Track extends React.Component {
@@ -98,7 +99,7 @@ class Track extends React.Component {
     const canZip = Array.isArray(permissions) && permissions.includes('zipZip');
     const { state = {} } = location;
     const { track = trackData } = state;
-    const { images, artists, length, bpm, label, key, releaseDate, genres, release } = track;
+    const { images = {}, artists = [], length = '', bpm = '', label = '', key = {}, releaseDate = '', genres = [], release = '' } = track;
 
     const { results: chartDataResults, metadata: chartDataMetadata } = chartData;
     const chartTotalPages = (chartDataMetadata && chartDataMetadata.totalPages) || 0;
@@ -119,7 +120,7 @@ class Track extends React.Component {
             <Grid.Column width={4}>
               {track &&
                 <TrackAlbum
-                  imageUrl={images.large.secureUrl}
+                  imageUrl={images.large ? images.large.secureUrl : DEFAULT_BP_ITEM_IMAGE_URL}
                   track={track}
                   imageSize='medium'
                 />
@@ -198,7 +199,7 @@ class Track extends React.Component {
                       chartDataResults.map((chart, idx) =>
                         idx < chartsPerPage &&
                         <Card className='flex-card' key={chart.sku} as={Link} to={`/chart/${chart.slug}/${chart.id}`}>
-                          <Image src={chart.images.xlarge.secureUrl} className='flex-card' />
+                          <Image src={chart.images && chart.images.xlarge ? chart.images.xlarge.secureUrl : DEFAULT_BP_ITEM_IMAGE_URL} className='flex-card' />
                           <Card.Content>
                             {chart.name}
                           </Card.Content>
