@@ -26,21 +26,18 @@ class Track extends React.Component {
   }
 
   async componentDidMount() {
-    const { location = {} } = this.props;
+    const { location = {}, match = {} } = this.props;
+    const { params = {} } = match;
     const { state = {} } = location;
     const { track = {} } = state;
     let { charts = [] } = track;
 
     if (Object.keys(track).length === 0) {
-      const { trackId } = this.props.match.params;
-      const trackData = await callAPIorCache(`${API_GET_TRACKS}?id=${trackId}`);
-      const { data = {}, status } = trackData;
-      if (status !== 200) return;
+      const { trackId } = params;
+      const trackData = await this.fetchTrackData(trackId);
 
-      const { results = [] } = data;
-
-      if (results && results.length > 0) {
-        Object.assign(track, data.results[0]);
+      if (trackData) {
+        Object.assign(track, trackData);
         charts = track.charts;
       }
     }
@@ -57,6 +54,61 @@ class Track extends React.Component {
     }
 
     this.fetchSimilarTracksData(track.id);
+  }
+
+  async componentWillReceiveProps(nextProps) {
+    const { match = {} } = this.props;
+    const { params = {} } = match;
+    const { trackId } = params;
+
+    const { match: nextMatch = {} } = nextProps;
+    const { params: nextParams = {} } = nextMatch;
+    const { trackId: nextTrackId } = nextParams;
+
+    if (trackId === nextTrackId) {
+      return;
+    }
+
+    const trackData = await this.fetchTrackData(trackId);
+
+    if (!trackData) {
+      return;
+    }
+
+    this.setState({
+      visible: true,
+      trackData,
+    });
+
+    const { charts } = trackData;
+
+    Scroll.animateScroll.scrollToTop({ duration: 1500 });
+
+    if (charts && charts.length > 0) {
+      this.fetchChartData(charts.map(chart => chart.id).join(','));
+    }
+
+    this.fetchSimilarTracksData(trackId);
+  }
+
+  fetchTrackData = async (trackId) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const trackData = await callAPIorCache(`${API_GET_TRACKS}?id=${trackId}`);
+        const { data = {}, status } = trackData;
+        if (status !== 200) {
+          return reject();
+        }
+
+        const { results = [] } = data;
+
+        if (results && results.length > 0) {
+          return resolve(data.results[0]);
+        }
+      } catch (error) {
+        return reject(error);
+      }
+    })
   }
 
   fetchChartData = async (chartIds, page = 1, perPage = chartsPerPage) => {
