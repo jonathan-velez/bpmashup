@@ -93,7 +93,7 @@ class Label extends Component {
             className='item-header'
             active={activeItem === 'tracks'}
             onClick={this.handleItemClick}
-          >Top 10 Tracks</Menu.Item>
+          >Top Tracks</Menu.Item>
           <Menu.Item
             link
             name='releases'
