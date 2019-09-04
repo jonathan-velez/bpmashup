@@ -27,9 +27,10 @@ class ChartListingController extends Component {
   render() {
     const { chartListing = {}, isLoading } = this.props;
     const { visible } = this.state;
-    const { tracks = [], images = {}, name, description, genres, publishDate } = chartListing;
+    const { tracks = [], images = {}, name, description, genres, publishDate, chartOwner = {} } = chartListing;
     const { xlarge = {} } = images;
     const { secureUrl } = xlarge;
+    const { name: chartOwnerName } = chartOwner;
 
     const trackTitleHeader = {
       textAlign: 'left',
@@ -46,7 +47,8 @@ class ChartListingController extends Component {
             <Grid.Column width={8} textAlign='left'>
               <Header as='h1' style={trackTitleHeader}>
                 {name}
-                <Header.Subheader>{publishDate && `Publish Date:  ${publishDate}`}</Header.Subheader>
+                {chartOwnerName && <Header.Subheader>Owner: {chartOwnerName}</Header.Subheader>}
+                {publishDate && <Header.Subheader>{`Publish Date:  ${publishDate}`}</Header.Subheader>}
               </Header>
               {genres && genres.map((genre, idx) => {
                 return (
