@@ -48,8 +48,8 @@ class Chart extends Component {
               <Grid.Column width={8} textAlign='left'>
                 <Header as='h1' style={trackTitleHeader}>
                   {name}
-                  {chartOwnerName && <Header.Subheader>Owner: {chartOwnerName}</Header.Subheader>}
-                  {publishDate && <Header.Subheader>{`Publish Date:  ${publishDate}`}</Header.Subheader>}
+                  {chartOwnerName && <Header.Subheader>{chartOwnerName}</Header.Subheader>}
+                  {publishDate && <Header.Subheader>{publishDate}</Header.Subheader>}
                 </Header>
                 {genres && genres.map((genre, idx) => {
                   return (
