@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Grid, Image, Header, Statistic, Card, Divider, Transition, Message, Pagination } from 'semantic-ui-react';
+import { Grid, Image, Header, Statistic, Card, Divider, Transition, Message, Pagination, Segment } from 'semantic-ui-react';
 import Scroll from 'react-scroll';
 
 import TrackListingCards from './TrackListingCards';
@@ -167,134 +167,140 @@ class Track extends React.Component {
 
     return (
       <Transition visible={visible} animation='fade' duration={500}>
-        <Grid stackable>
-          <Grid.Row stretched>
-            <Grid.Column width={4}>
-              {track &&
-                <TrackAlbum
-                  imageUrl={images.large ? images.large.secureUrl : DEFAULT_BP_ITEM_IMAGE_URL}
-                  track={track}
-                  imageSize='medium'
-                />
-              }
-            </Grid.Column>
-            <Grid.Column width={12}>
-              <Header as='h1' className='track-title'>
-                {constructTrackLink(track, 'black-font')}
-                <Header.Subheader>
-                  {constructLinks(artists, 'artist')}
-                </Header.Subheader>
-                <Header.Subheader>
-                  {release.id &&
-                    <Link to={`/release/${release.slug}/${release.id}`}>{release.name}</Link>
+        <React.Fragment>
+          <Segment placeholder padded='very'>
+            <Grid stackable>
+              <Grid.Row stretched>
+                <Grid.Column width={4}>
+                  {track &&
+                    <TrackAlbum
+                      imageUrl={images.large ? images.large.secureUrl : DEFAULT_BP_ITEM_IMAGE_URL}
+                      track={track}
+                      imageSize='medium'
+                    />
                   }
-                </Header.Subheader>
-              </Header>
-              <Image src={images.waveform.secureUrl} />
-            </Grid.Column>
-            <Grid.Column width={4}>
-              <TrackCardActionRow canZip={canZip} numOfButtons={canZip ? 'three' : 'two'} track={track} />
-            </Grid.Column>
-          </Grid.Row>
-          <Grid.Row columns='equal' divided>
-            <Grid.Column>
-              <Statistic size='mini'>
-                <Statistic.Label>LENGTH</Statistic.Label>
-                <Statistic.Value>{length}</Statistic.Value>
-              </Statistic>
-            </Grid.Column>
-            <Grid.Column>
-              <Statistic size='mini'>
-                <Statistic.Label>RELEASED</Statistic.Label>
-                <Statistic.Value>{releaseDate}</Statistic.Value>
-              </Statistic>
-            </Grid.Column>
-            <Grid.Column>
-              <Statistic size='mini'>
-                <Statistic.Label>BPM</Statistic.Label>
-                <Statistic.Value>{bpm}</Statistic.Value>
-              </Statistic>
-            </Grid.Column>
-            <Grid.Column>
-              <Statistic size='mini'>
-                <Statistic.Label>KEY</Statistic.Label>
-                <Statistic.Value>{musicalKeyFilter(key && key.shortName)}</Statistic.Value>
-              </Statistic>
-            </Grid.Column>
-            <Grid.Column>
-              <Statistic size='mini'>
-                <Statistic.Label>GENRE</Statistic.Label>
-                <Statistic.Value>{constructLinks(genres, 'genre')}</Statistic.Value>
-              </Statistic>
-            </Grid.Column>
-            <Grid.Column>
-              <Statistic size='mini'>
-                <Statistic.Label>LABEL</Statistic.Label>
-                <Statistic.Value><Link to={`/label/${label.slug}/${label.id}`}>{label.name}</Link></Statistic.Value>
-              </Statistic>
-            </Grid.Column>
-          </Grid.Row>
-          {chartTotalPages > 0 &&
-            <React.Fragment>
-              <Divider />
-              <Grid.Row width={16}>
-                <Header as='h3' className='track-title'>Appears on these Charts</Header>
-              </Grid.Row>
-              <Grid.Row>
-                <Grid.Column width={16}>
-                  <Card.Group
-                    stackable
-                    itemsPerRow={chartsPerPage}
-                    className='trackListingCardGroup'
-                  >
-                    {chartDataResults && chartDataResults.length > 0 &&
-                      chartDataResults.map((chart, idx) =>
-                        idx < chartsPerPage &&
-                        <Card className='flex-card' key={chart.sku} as={Link} to={`/chart/${chart.slug}/${chart.id}`}>
-                          <Image src={chart.images && chart.images.xlarge ? chart.images.xlarge.secureUrl : DEFAULT_BP_ITEM_IMAGE_URL} className='flex-card' />
-                          <Card.Content>
-                            {chart.name}
-                          </Card.Content>
-                        </Card>
-                      )
-                    }
-                  </Card.Group>
+                </Grid.Column>
+                <Grid.Column width={12}>
+                  <Header as='h1' className='track-title'>
+                    {constructTrackLink(track, 'black-font')}
+                    <Header.Subheader>
+                      {constructLinks(artists, 'artist')}
+                    </Header.Subheader>
+                    <Header.Subheader>
+                      {release.id &&
+                        <Link to={`/release/${release.slug}/${release.id}`}>{release.name}</Link>
+                      }
+                    </Header.Subheader>
+                  </Header>
+                  <Image src={images.waveform.secureUrl} />
+                </Grid.Column>
+                <Grid.Column width={4}>
+                  <TrackCardActionRow canZip={canZip} numOfButtons={canZip ? 'three' : 'two'} track={track} />
                 </Grid.Column>
               </Grid.Row>
-              {chartTotalPages > 1 &&
+              <Grid.Row columns='equal' divided>
+                <Grid.Column>
+                  <Statistic size='mini'>
+                    <Statistic.Label>LENGTH</Statistic.Label>
+                    <Statistic.Value>{length}</Statistic.Value>
+                  </Statistic>
+                </Grid.Column>
+                <Grid.Column>
+                  <Statistic size='mini'>
+                    <Statistic.Label>RELEASED</Statistic.Label>
+                    <Statistic.Value>{releaseDate}</Statistic.Value>
+                  </Statistic>
+                </Grid.Column>
+                <Grid.Column>
+                  <Statistic size='mini'>
+                    <Statistic.Label>BPM</Statistic.Label>
+                    <Statistic.Value>{bpm}</Statistic.Value>
+                  </Statistic>
+                </Grid.Column>
+                <Grid.Column>
+                  <Statistic size='mini'>
+                    <Statistic.Label>KEY</Statistic.Label>
+                    <Statistic.Value>{musicalKeyFilter(key && key.shortName)}</Statistic.Value>
+                  </Statistic>
+                </Grid.Column>
+                <Grid.Column>
+                  <Statistic size='mini'>
+                    <Statistic.Label>GENRE</Statistic.Label>
+                    <Statistic.Value>{constructLinks(genres, 'genre')}</Statistic.Value>
+                  </Statistic>
+                </Grid.Column>
+                <Grid.Column>
+                  <Statistic size='mini'>
+                    <Statistic.Label>LABEL</Statistic.Label>
+                    <Statistic.Value><Link to={`/label/${label.slug}/${label.id}`}>{label.name}</Link></Statistic.Value>
+                  </Statistic>
+                </Grid.Column>
+              </Grid.Row>
+            </Grid>
+          </Segment>
+          <Divider />
+          <Grid>
+            {chartTotalPages > 0 &&
+              <React.Fragment>
+                <Grid.Row width={16}>
+                  <Header as='h3' className='track-title'>Appears on these Charts</Header>
+                </Grid.Row>
                 <Grid.Row>
                   <Grid.Column width={16}>
-                    <Pagination
-                      defaultActivePage={1}
-                      firstItem={null}
-                      lastItem={null}
-                      pointing
-                      secondary
-                      totalPages={chartTotalPages}
-                      onPageChange={this.handleChartPageChange}
-                    />
+                    <Card.Group
+                      stackable
+                      itemsPerRow={chartsPerPage}
+                      className='trackListingCardGroup'
+                    >
+                      {chartDataResults && chartDataResults.length > 0 &&
+                        chartDataResults.map((chart, idx) =>
+                          idx < chartsPerPage &&
+                          <Card className='flex-card' key={chart.sku} as={Link} to={`/chart/${chart.slug}/${chart.id}`}>
+                            <Image src={chart.images && chart.images.xlarge ? chart.images.xlarge.secureUrl : DEFAULT_BP_ITEM_IMAGE_URL} className='flex-card' />
+                            <Card.Content>
+                              {chart.name}
+                            </Card.Content>
+                          </Card>
+                        )
+                      }
+                    </Card.Group>
                   </Grid.Column>
                 </Grid.Row>
-              }
-            </React.Fragment>
-          }
-          {similarTracksData && similarTracksData.length > 0 &&
-            <React.Fragment>
-              <Divider />
-              <Grid.Row width={16}>
-                <Header as='h3' className='track-title'>Similar Tracks</Header>
-              </Grid.Row>
-            </React.Fragment>
-          }
-          <Grid.Row>
-            <Grid.Column width={16}>
-              {similarTracksData && similarTracksData.length > 0 &&
-                <TrackListingCards trackListing={similarTracksData} itemsPerRow={4} showPosition={false} />
-              }
-            </Grid.Column>
-          </Grid.Row>
-        </Grid>
-      </Transition >
+                {chartTotalPages > 1 &&
+                  <Grid.Row>
+                    <Grid.Column width={16}>
+                      <Pagination
+                        defaultActivePage={1}
+                        firstItem={null}
+                        lastItem={null}
+                        pointing
+                        secondary
+                        totalPages={chartTotalPages}
+                        onPageChange={this.handleChartPageChange}
+                      />
+                    </Grid.Column>
+                  </Grid.Row>
+                }
+              </React.Fragment>
+            }
+            {similarTracksData && similarTracksData.length > 0 &&
+              <React.Fragment>
+                <Divider />
+                <Grid.Row width={16}>
+                  <Header as='h3' className='track-title'>Similar Tracks</Header>
+                </Grid.Row>
+              </React.Fragment>
+            }
+            <Grid.Row>
+              <Grid.Column width={16}>
+                {similarTracksData && similarTracksData.length > 0 &&
+                  <TrackListingCards trackListing={similarTracksData} itemsPerRow={4} showPosition={false} />
+                }
+              </Grid.Column>
+            </Grid.Row>
+          </Grid>
+        </React.Fragment>
+      </Transition>
     );
   }
 }
