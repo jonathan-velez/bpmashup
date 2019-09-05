@@ -13,7 +13,7 @@ import TracksController from './TracksController';
 import MyDownloadsAndLovedTracks from './MyDownloadsAndLovedTracks';
 import MyActivity from './MyActivity';
 import Track from './Track';
-import ChartListingController from './ChartListingController';
+import Chart from './Chart';
 
 const Main = () => {
   const containerStyle = {
@@ -23,7 +23,7 @@ const Main = () => {
   return (
     <Container style={containerStyle} textAlign='center'>
       <Switch>
-        <Route exact path='/chart/:chartName/:chartId' component={ChartListingController} />
+        <Route exact path='/chart/:chartName/:chartId' component={Chart} />
         <Route exact path='/track/:trackName/:trackId' component={Track} />
         <Route exact path='/history/my-activity' component={MyActivity} />
         <Route exact path='/history/loved-labels' component={MyLovedLabels} />

@@ -8,7 +8,7 @@ import ResponsiveTrackListing from './ResponsiveTrackListing';
 import GenreLabel from './GenreLabel';
 import { fetchChartData } from '../thunks';
 
-class ChartListingController extends Component {
+class Chart extends Component {
   state = {
     visible: false,
   }
@@ -86,4 +86,4 @@ const mapDispatchToProps = dispatch => {
   return bindActionCreators(Object.assign({}, { fetchChartData }), dispatch);
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ChartListingController);
+export default connect(mapStateToProps, mapDispatchToProps)(Chart);
