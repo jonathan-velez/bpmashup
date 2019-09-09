@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { LOAD_LOVED_LABELS_DETAILS } from '../constants/actionTypes';
+import { LOAD_LOVED_LABELS_DETAILS, CLEAR_LOVED_LABELS_DETAILS } from '../constants/actionTypes';
 
 const defaultState = {
   metadata: {},
@@ -22,6 +22,9 @@ const lovedLabelsDetails = (state = defaultState, action) => {
         metadata,
         labels: keyedLabels
       }
+    }
+    case CLEAR_LOVED_LABELS_DETAILS: {
+      return defaultState;
     }
     default:
       return state;

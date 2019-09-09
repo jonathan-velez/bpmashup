@@ -34,6 +34,13 @@ import {
   STOP_ASYNC,
   TOGGLE_TRACKLIST_VIEW,
   CLEAR_PLAYLISTS,
+  CLEAR_DOWNLOADS,
+  CLEAR_NO_DOWNLOADS,
+  CLEAR_LOVED_TRACKS,
+  CLEAR_LOVED_ARTISTS,
+  CLEAR_LOVED_ARTISTS_DETAILS,
+  CLEAR_LOVED_LABELS,
+  CLEAR_LOVED_LABELS_DETAILS,
 } from '../constants/actionTypes';
 
 export const startAsync = () => {
@@ -214,5 +221,47 @@ export const openLoginModalWindow = actionPending => {
       headerIcon: 'sign in',
       actionPending,
     }
+  }
+}
+
+export const clearDownloads = () => {
+  return {
+    type: CLEAR_DOWNLOADS,
+  }
+}
+
+export const clearNoDownloads = () => {
+  return {
+    type: CLEAR_NO_DOWNLOADS,
+  }
+}
+
+export const clearLovedTracks = () => {
+  return {
+    type: CLEAR_LOVED_TRACKS,
+  }
+}
+
+export const clearLovedArtists = () => {
+  return {
+    type: CLEAR_LOVED_ARTISTS,
+  }
+}
+
+export const clearLovedArtistsDetails = () => {
+  return {
+    type: CLEAR_LOVED_ARTISTS_DETAILS,
+  }
+}
+
+export const clearLovedLabels = () => {
+  return {
+    type: CLEAR_LOVED_LABELS,
+  }
+}
+
+export const clearLovedLabelsDetails = () => {
+  return {
+    type: CLEAR_LOVED_LABELS_DETAILS,
   }
 }

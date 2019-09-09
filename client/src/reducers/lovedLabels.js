@@ -1,4 +1,4 @@
-import { TOGGLE_LOVE_LABEL, LOAD_LOVED_LABELS } from '../constants/actionTypes';
+import { TOGGLE_LOVE_LABEL, LOAD_LOVED_LABELS, CLEAR_LOVED_LABELS } from '../constants/actionTypes';
 
 const lovedLabels = (state = [], action) => {
   switch (action.type) {
@@ -18,6 +18,9 @@ const lovedLabels = (state = [], action) => {
     case LOAD_LOVED_LABELS: {
       const { payload: newTracks = [] } = action;
       return [...new Set(state.concat(newTracks))];
+    }
+    case CLEAR_LOVED_LABELS: {
+      return [];
     }
     default:
       return state;

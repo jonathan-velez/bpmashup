@@ -1,4 +1,4 @@
-import { TOGGLE_LOVE_ARTIST, LOAD_LOVED_ARTISTS } from '../constants/actionTypes';
+import { TOGGLE_LOVE_ARTIST, LOAD_LOVED_ARTISTS, CLEAR_LOVED_ARTISTS } from '../constants/actionTypes';
 
 const lovedArtists = (state = [], action) => {
   switch (action.type) {
@@ -18,6 +18,9 @@ const lovedArtists = (state = [], action) => {
     case LOAD_LOVED_ARTISTS: {
       const { payload: newTracks = [] } = action;
       return [...new Set(state.concat(newTracks))];
+    }
+    case CLEAR_LOVED_ARTISTS: {
+      return [];
     }
     default:
       return state;

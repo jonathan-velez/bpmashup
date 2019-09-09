@@ -1,12 +1,22 @@
 import React from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import { firebaseConnect } from 'react-redux-firebase';
 import { Image, Icon, Dropdown } from 'semantic-ui-react';
 
 import store from '../store';
-import { clearPlaylists, openLoginModalWindow } from '../actions/ActionCreators';
+import {
+  openLoginModalWindow,
+  clearPlaylists,
+  clearDownloads,
+  clearNoDownloads,
+  clearLovedTracks,
+  clearLovedArtists,
+  clearLovedArtistsDetails,
+  clearLovedLabels,
+  clearLovedLabelsDetails,
+} from '../actions/ActionCreators';
 
 class Auth extends React.Component {
   logIn = () => {
@@ -16,6 +26,14 @@ class Auth extends React.Component {
   logOut = () => {
     this.props.firebase.logout().then(() => {
       store.dispatch(clearPlaylists());
+      store.dispatch(clearDownloads());
+      store.dispatch(clearNoDownloads());
+      store.dispatch(clearLovedTracks());
+      store.dispatch(clearLovedArtists());
+      store.dispatch(clearLovedArtistsDetails());
+      store.dispatch(clearLovedLabels());
+      store.dispatch(clearLovedLabelsDetails());
+      this.props.history.push(`/`);      
     });
   }
 
@@ -94,4 +112,4 @@ class Auth extends React.Component {
 export default compose(
   firebaseConnect(),
   connect(({ firebaseState: { auth } }) => ({ auth }))
-)(Auth);
+)(withRouter(Auth));

@@ -1,4 +1,4 @@
-import { DOWNLOAD_TRACK, LOAD_DOWNLOADED_TRACKS } from '../constants/actionTypes';
+import { DOWNLOAD_TRACK, LOAD_DOWNLOADED_TRACKS, CLEAR_DOWNLOADS } from '../constants/actionTypes';
 
 const downloadedTracks = (state = [], action) => {
   const { payload: track, type } = action;
@@ -12,6 +12,9 @@ const downloadedTracks = (state = [], action) => {
     case LOAD_DOWNLOADED_TRACKS: {
       const { payload: newTracks = [] } = action;
       return [...new Set(state.concat(newTracks))];
+    }
+    case CLEAR_DOWNLOADS: {
+      return [];
     }
     default:
       return state;

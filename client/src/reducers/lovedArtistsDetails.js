@@ -1,9 +1,10 @@
 import _ from 'lodash';
+import { LOAD_LOVED_ARTISTS_DETAILS, CLEAR_LOVED_ARTISTS_DETAILS } from '../constants/actionTypes';
 
 const lovedArtistsDetails = (state = [], action) => {
-  
+
   switch (action.type) {
-    case 'LOAD_LOVED_ARTISTS_DETAILS': {
+    case LOAD_LOVED_ARTISTS_DETAILS: {
       if (!_.has(action.payload.data, 'metadata') || !_.has(action.payload.data, 'results')) {
         return [];
       }
@@ -17,6 +18,9 @@ const lovedArtistsDetails = (state = [], action) => {
         metadata,
         artists: keyedArtists
       }
+    }
+    case CLEAR_LOVED_ARTISTS_DETAILS: {
+      return [];
     }
     default:
       return state;
