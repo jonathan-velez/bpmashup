@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { firebaseConnect } from 'react-redux-firebase';
 
 import store from '../store';
-import { loadPlaylists } from '../thunks/';
+import { loadPlaylists, loadDownloads, loadNoDownloads, loadLovedTracks, loadLovedArtists, loadLovedLabels, loadPermissions, } from '../thunks/';
 import { openModalWindow } from '../actions/ActionCreators';
 import SignupForm from './SignupForm';
 import ForgotPasswordForm from './ForgotPasswordForm';
@@ -54,9 +54,16 @@ class LoginForm extends Component {
       });
   }
 
-  afterLogin = () => {
-    // load playlists into reducer
-    store.dispatch(loadPlaylists());
+  afterLogin = user => {
+    const { uid } = user && user;
+    // load user activitaty data into reducer
+    store.dispatch(loadPlaylists(uid));
+    store.dispatch(loadDownloads(uid));
+    store.dispatch(loadNoDownloads(uid));
+    store.dispatch(loadLovedTracks(uid));
+    store.dispatch(loadLovedArtists(uid));
+    store.dispatch(loadLovedLabels(uid));
+    store.dispatch(loadPermissions(uid));
 
     // dispatch pending action if login form popped up on user action
     const { actionPending } = store.getState().openModal;
@@ -156,7 +163,7 @@ class LoginForm extends Component {
               <Button type="button" disabled circular color='linkedin' icon='github alternate' />
             </Message.Content>
           </Message>
-          {errorCode.length > 0 && isPristine ?
+          {errorCode && errorCode.length > 0 && isPristine ?
             <Form.Field className='form-field-centered'>
               <Message negative>{(errorCode && this.errorCodes[errorCode]) || errorCode}</Message>
             </Form.Field>

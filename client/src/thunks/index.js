@@ -1,5 +1,5 @@
 import loadTrackThunk from './loadTrackThunk';
-import { removeFromPlaylist, addToPlaylist, editPlaylistName, deletePlaylist, addNewPlaylist, loadPlaylists, clearPlaylist, } from './playlistThunk';
+import { removeFromPlaylist, addToPlaylist, editPlaylistName, deletePlaylist, addNewPlaylist, clearPlaylist, } from './playlistThunk';
 import { downloadTrack, addTrackToNoDownloadList } from './downloadTrackThunk';
 import { toggleLoveTrack } from './loveTrackThunk';
 import { toggleLoveItem } from './loveItemThunk';
@@ -10,6 +10,7 @@ import { getArtistDetails } from './artistThunk';
 import { getLabelDetail } from './labelThunk';
 import { getTracks, fetchTracksSimilar, fetchMostPopularTracks, getYoutubeLink, getTracksByIds, clearTracklist } from './tracksThunk';
 import { fetchChartData } from './chartThunk';
+import { loadPlaylists, loadDownloads, loadNoDownloads, loadLovedTracks, loadLovedArtists, loadLovedLabels, loadPermissions } from './userSessionThunk';
 
 export {
   loadTrackThunk,
@@ -18,7 +19,6 @@ export {
   editPlaylistName,
   deletePlaylist,
   addNewPlaylist,
-  loadPlaylists,
   downloadTrack,
   toggleLoveTrack,
   toggleLoveItem,
@@ -38,4 +38,11 @@ export {
   clearTracklist,
   clearPlaylist,
   fetchChartData,
+  loadPlaylists,
+  loadDownloads,
+  loadNoDownloads,
+  loadLovedTracks,
+  loadLovedArtists,
+  loadLovedLabels,
+  loadPermissions,
 };
