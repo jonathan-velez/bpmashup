@@ -1,12 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Grid, Image, Header, Statistic, Card, Divider, Transition, Message, Pagination, Segment } from 'semantic-ui-react';
+import { Grid, Image, Header, Statistic, Card, Divider, Transition, Pagination, Segment } from 'semantic-ui-react';
 import Scroll from 'react-scroll';
 
 import TrackListingCards from './TrackListingCards';
 import TrackAlbum from './TrackAlbum';
 import TrackCardActionRow from './TrackCardActionRow';
+import NothingHereMessage from './NothingHereMessage';
 import { constructLinks, constructTrackLink } from '../utils/trackUtils';
 import { musicalKeyFilter } from '../utils/helpers';
 import { callAPIorCache } from '../seessionStorageCache';
@@ -157,12 +158,7 @@ class Track extends React.Component {
     const chartTotalPages = (chartDataMetadata && chartDataMetadata.totalPages) || 0;
 
     if (Object.keys(track).length === 0) {
-      return (
-        <Message warning>
-          <Header size='huge'>Hey!</Header>
-          <p>Nothing to display.</p>
-        </Message>
-      )
+      return <NothingHereMessage />
     }
 
     return (

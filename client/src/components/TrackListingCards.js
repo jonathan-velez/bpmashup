@@ -1,17 +1,13 @@
 import React from 'react';
 import _ from 'lodash';
-import { Card, Message, Header } from 'semantic-ui-react';
-import TrackCard from './TrackCard';
+import { Card } from 'semantic-ui-react';
 
-const noTracksMessage =
-  <Message warning>
-    <Header size='huge'>Hey!</Header>
-    <p>Nothing to display.</p>
-  </Message>
+import TrackCard from './TrackCard';
+import NothingHereMessage from './NothingHereMessage';
 
 const TrackListingCards = ({ trackListing, isLoading, itemsPerRow = 3, showPosition = true }) => {
   if (isLoading || !trackListing) {
-    return noTracksMessage;
+    return <NothingHereMessage />
   }
 
   let orderedTracks = [];
@@ -27,7 +23,7 @@ const TrackListingCards = ({ trackListing, isLoading, itemsPerRow = 3, showPosit
   }
 
   if (orderedTracks.length === 0) {
-    return noTracksMessage;
+    return <NothingHereMessage />
   }
 
   return (
