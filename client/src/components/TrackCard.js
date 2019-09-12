@@ -6,7 +6,6 @@ import { connect } from 'react-redux';
 import TrackAlbum from './TrackAlbum';
 import TrackCardActionRow from './TrackCardActionRow';
 import { constructLinks, trackGenreColors, constructTrackLink } from '../utils/trackUtils';
-import { musicalKeyFilter } from '../utils/helpers';
 
 class TrackCard extends React.Component {
   state = {
