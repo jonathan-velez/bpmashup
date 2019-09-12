@@ -2,13 +2,14 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { Dimmer, Loader } from 'semantic-ui-react';
 import Scroll from 'react-scroll';
+import _ from 'lodash';
 
-import { getTracksByIds, clearTracklist } from '../thunks';
 import TracklistingHeader from './TracklistingHeader';
 import TrackListingGroup from './TrackListingGroup';
+import NothingHereMessage from './NothingHereMessage';
 import { DEFAULT_PAGE, DEFAULT_PER_PAGE } from '../constants/defaults';
+import { getTracksByIds, clearTracklist } from '../thunks';
 
 class MyDownloadsAndLovedTracks extends Component {
   componentDidMount() {
@@ -31,9 +32,12 @@ class MyDownloadsAndLovedTracks extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { location, isLoading, match } = this.props;
-    const { downloadedTracks, lovedTracks, trackListing, location: nextLocation, match: nextMatch, noDownloadList } = nextProps;
-    const { tracks } = trackListing;
+    if (_.isEqual(this.props, nextProps)) return;
+
+    const { location, match } = this.props;
+    const { downloadedTracks, lovedTracks, trackListing, location: nextLocation, match: nextMatch, noDownloadList, isLoading } = nextProps;
+    const { metadata = {} } = trackListing;
+    const { count: trackCount = 0 } = metadata;
 
     // what type of page to render
     const { pageType: thisPageType } = match.params;
@@ -61,29 +65,24 @@ class MyDownloadsAndLovedTracks extends Component {
     const thisPerPage = +thisParams.perPage || DEFAULT_PER_PAGE;
     const newPerPage = +nextParams.perPage || DEFAULT_PER_PAGE;
 
-    if (nextPageType === 'downloads') {
-      if (nextPageType !== thisPageType || (downloadedTracks.length > 0 && tracks && Object.keys(tracks).length === 0 && !isLoading)) {
-        this.fetchTracks(downloadedTracks, newPage, newPerPage);
-      } else {
-        if ((thisPage !== newPage || thisPerPage !== newPerPage) && !isLoading) {
+    if (((trackCount === 0 && lovedTracks.length > 0) || // if tracks details weren't loaded on mount. usually due to firebase not loaded yet.
+      (thisPageType !== nextPageType || thisPage !== newPage || thisPerPage !== newPerPage)) && // if pagination or per page changes or a new page type is called
+      !isLoading) {  // ensure there's not already an xhr in progress
+      switch (nextPageType) {
+        case 'downloads': {
           this.fetchTracks(downloadedTracks, newPage, newPerPage);
+          break;
         }
-      }
-    } else if (nextPageType === 'no-downloads') {
-      if (nextPageType !== thisPageType || (noDownloadList.length > 0 && tracks && Object.keys(tracks).length === 0 && !isLoading)) {
-        this.fetchTracks(noDownloadList, newPage, newPerPage);
-      } else {
-        if ((thisPage !== newPage || thisPerPage !== newPerPage) && !isLoading) {
+        case 'no-downloads': {
           this.fetchTracks(noDownloadList, newPage, newPerPage);
+          break;
         }
-      }
-    } else {
-      if (nextPageType !== thisPageType || (lovedTracks.length > 0 && tracks && Object.keys(tracks).length === 0)) {
-        this.fetchTracks(lovedTracks, newPage, newPerPage);
-      } else {
-        if (thisPage !== newPage || thisPerPage !== newPerPage) {
+        case 'loved-tracks': {
           this.fetchTracks(lovedTracks, newPage, newPerPage);
+          break;
         }
+        default:
+          break;
       }
     }
   }
@@ -93,7 +92,7 @@ class MyDownloadsAndLovedTracks extends Component {
   }
 
   fetchTracks(ids = [], page, perPage) {
-    if (ids.length > 0) {
+    if (Array.isArray(ids) && ids.length > 0) {
       const { getTracksByIds } = this.props;
       Scroll.animateScroll.scrollToTop({ duration: 1000 });
       getTracksByIds(ids.join(','), page, perPage);
@@ -101,8 +100,14 @@ class MyDownloadsAndLovedTracks extends Component {
   }
 
   render() {
-    let { match, trackListing, isLoading } = this.props;
+    const { match, trackListing } = this.props;
+    const { metadata = {} } = trackListing;
+    const { count: trackCount = 0 } = metadata;
     const { pageType } = match.params;
+
+    if (trackCount === 0) {
+      return <NothingHereMessage />
+    }
 
     let headerTitle = '';
 
@@ -122,9 +127,6 @@ class MyDownloadsAndLovedTracks extends Component {
 
     return (
       <React.Fragment>
-        <Dimmer active={isLoading} page>
-          <Loader content='Loading' />
-        </Dimmer>
         <TracklistingHeader headerTitle={headerTitle} />
         <TrackListingGroup trackListing={trackListing} />
       </React.Fragment>

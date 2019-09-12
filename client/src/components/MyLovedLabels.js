@@ -2,9 +2,11 @@ import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import Scroll from 'react-scroll';
+import _ from 'lodash';
 
 import { getLabelsById } from '../thunks';
 import LovedLabelsTable from './LovedLabelsTable';
+import NothingHereMessage from './NothingHereMessage';
 import Pager from './Pager';
 
 class MyLovedLabels extends React.Component {
@@ -17,10 +19,10 @@ class MyLovedLabels extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { location, isLoading } = this.props;
-    const { lovedLabels = [], lovedLabelsDetails, location: nextLocation } = nextProps;
-    const { metadata } = lovedLabelsDetails;
-    const { count: loadedCount = 0 } = metadata;
+    if (_.isEqual(this.props, nextProps)) return;
+    const { location, lovedLabelsDetails = {} } = this.props;
+    const { lovedLabels = [], location: nextLocation, isLoading } = nextProps;
+    const { labels } = lovedLabelsDetails;
 
     if (isLoading) return;
 
@@ -46,7 +48,9 @@ class MyLovedLabels extends React.Component {
     const thisPerPage = +thisParams.perPage || 10;
     const newPerPage = +nextParams.perPage || 10;
 
-    if (lovedLabels.length !== loadedCount || (thisPage !== newPage || thisPerPage !== newPerPage)) {
+    if (((Object.keys(labels).length === 0 && lovedLabels.length > 0) || // if label details weren't loaded on mount. usually due to firebase not loaded yet.
+      (thisPage !== newPage || thisPerPage !== newPerPage)) && // if pagination or per page changes
+      !isLoading) { // ensure there's not already an xhr in progress
       this.fetchMyFavoriteLabels(lovedLabels, newPage, newPerPage);
     }
   }
@@ -61,11 +65,11 @@ class MyLovedLabels extends React.Component {
 
   render() {
     const { lovedLabelsDetails } = this.props;
-    const { labels, metadata } = lovedLabelsDetails;
+    const { labels = {}, metadata = {} } = lovedLabelsDetails;
     const { totalPages, page, perPage, query } = metadata;
 
-    if (Object.keys(labels) === 0) {
-      return null;
+    if (Object.keys(labels).length === 0) {
+      return <NothingHereMessage />
     }
 
     return (
