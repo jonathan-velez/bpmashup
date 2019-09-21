@@ -26,22 +26,28 @@ class App extends React.Component {
 
       switch (e.key) {
         case 'p':
+        case 'P':
           this.props.playPause();
           break;
         case 'n':
+        case 'N':
           if (loadedTrack.id) this.loadNextTrack(1);
           break;
         case 'b':
+        case 'B':
           if (loadedTrack.id) this.loadNextTrack(-1);
           break;
         case 'd':
+        case 'D':
           if (loadedTrack.id) downloadTrack(loadedTrack);
           break;
         case 'f':
+        case 'F':
           if (!loadedTrack.title || !loadedTrack.artists) return;
           this.props.getYoutubeLink(`${loadedTrack.artists[0].name} ${loadedTrack.title}`);
           break;
         case 'm':
+        case 'M':
           if (loadedTrack.id) this.props.toggleMute();
           break;
         case 'ArrowRight':
