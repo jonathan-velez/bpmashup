@@ -64,7 +64,7 @@ class TrackListingController extends React.Component {
     const newPerPage = +nextParams.perPage || DEFAULT_PER_PAGE;
 
     // fetch if we have a new query or new params
-    if (((searchId && searchId !== thisSearchId) || (newPage && newPage !== thisPage) || (searchTerm && searchTerm !== thisSearchTerm) || (trackId && trackId !== thisTrackId) || (newPerPage && newPerPage !== thisPerPage)) && !isLoading) {
+    if (((searchId !== thisSearchId) || (newPage !== thisPage) || (searchTerm !== thisSearchTerm) || (trackId !== thisTrackId) || (newPerPage !== thisPerPage)) && !isLoading) {
       Scroll.animateScroll.scrollToTop({ duration: 1500 });
 
       if (searchTerm) {
