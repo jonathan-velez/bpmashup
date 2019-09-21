@@ -381,4 +381,11 @@
   .ui.placeholder .header:not(:first-child):before, .ui.placeholder .image:not(:first-child):before, .ui.placeholder .paragraph:not(:first-child):before {
     height: 0px!important;
   }
+
+  /* for navbar dropdowns such as Playlists */
+  @media only screen and (min-width: 992px) {
+    .ui.dropdown .scrolling.menu, .ui.scrolling.dropdown .menu {
+      max-height: 100vh!important;
+    }
+  }
   
