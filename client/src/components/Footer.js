@@ -17,102 +17,105 @@ import VolumeBar from './VolumeBar';
 import YouTubeButton from './YouTubeButton';
 import TrackActionDropdown from './TrackActionDropdown';
 
-const Footer = ({ seekChange, seekMouseUp, seekMouseDown, playPause, setVolume, getYoutubeLink, mediaPlayer, playerRef, loadTrack }) => {
+class Footer extends React.PureComponent {
+  render() {
+    const { seekChange, seekMouseUp, seekMouseDown, playPause, setVolume, getYoutubeLink, mediaPlayer, playerRef, loadTrack } = this.props;
 
-  // TODO: Refactor these functions into a module
-  const scrollToTrack = (trackId) => {
-    scroller.scrollTo(`track-${trackId}`, {
-      duration: 750,
-      delay: 50,
-      smooth: true,
-      offset: -85,
-    });
-  }
-
-  const handleSeekChange = e => {
-    seekChange(+e.target.value);
-  }
-
-  const handleSeekMouseUp = e => {
-    playerRef.seekTo(+e.target.value)
-    seekMouseUp();
-  }
-
-  const loadNextTrack = (incrementBy = 1) => {
-    loadTrack(getNextTrack(incrementBy));
-  }
-
-  const getYouTube = loadedTrack => {
-    if (loadedTrack.id) {
-      getYoutubeLink(`${loadedTrack.artists[0].name} ${loadedTrack.title}`);
+    // TODO: Refactor these functions into a module
+    const scrollToTrack = (trackId) => {
+      scroller.scrollTo(`track-${trackId}`, {
+        duration: 750,
+        delay: 50,
+        smooth: true,
+        offset: -85,
+      });
     }
-  }
 
-  const { playing, played, duration, loadedTrack } = mediaPlayer;
-  const youTubeUrl = _.get(mediaPlayer, 'youTubeObject.youTubeUrl');
+    const handleSeekChange = e => {
+      seekChange(+e.target.value);
+    }
 
-  if (_.isEmpty(loadedTrack)) {
-    return null;
-  }
+    const handleSeekMouseUp = e => {
+      playerRef.seekTo(+e.target.value)
+      seekMouseUp();
+    }
 
-  const trackImage = <Image
-    src={loadedTrack.images && loadedTrack.images.large.secureUrl}
-    circular
-    size='mini'
-    onClick={() => scrollToTrack(loadedTrack.id)}
-    className={`vinyl${playing ? ' vinyl-animate' : ''}`}
-  />
+    const loadNextTrack = (incrementBy = 1) => {
+      loadTrack(getNextTrack(incrementBy));
+    }
 
-  return (
-    <Menu fixed='bottom' className='footer-menu' borderless size='tiny' compact>
-      <Responsive minWidth={960} as={Menu.Item}>
-        <Card>
-          <Card.Content textAlign='left'>
-            <Card.Header>{constructTrackLink(loadedTrack)}</Card.Header>
-            <Card.Meta>{constructLinks(loadedTrack.artists, 'artist')}</Card.Meta>
-          </Card.Content>
-        </Card>
-      </Responsive>
-      <Menu.Item>
-        <TrackActionDropdown
-          ellipsisOrientation='horizontal'
-          upward
-          track={loadedTrack}
+    const getYouTube = loadedTrack => {
+      if (loadedTrack.id) {
+        getYoutubeLink(`${loadedTrack.artists[0].name} ${loadedTrack.title}`);
+      }
+    }
+
+    const { playing, played, duration, loadedTrack } = mediaPlayer;
+    const youTubeUrl = _.get(mediaPlayer, 'youTubeObject.youTubeUrl');
+
+    if (_.isEmpty(loadedTrack)) {
+      return null;
+    }
+
+    const trackImage = <Image
+      src={loadedTrack.images && loadedTrack.images.large.secureUrl}
+      circular
+      size='mini'
+      onClick={() => scrollToTrack(loadedTrack.id)}
+      className={`vinyl${playing ? ' vinyl-animate' : ''}`}
+    />
+
+    return (
+      <Menu fixed='bottom' className='footer-menu' borderless size='tiny' compact>
+        <Responsive minWidth={960} as={Menu.Item}>
+          <Card>
+            <Card.Content textAlign='left'>
+              <Card.Header>{constructTrackLink(loadedTrack)}</Card.Header>
+              <Card.Meta>{constructLinks(loadedTrack.artists, 'artist')}</Card.Meta>
+            </Card.Content>
+          </Card>
+        </Responsive>
+        <Menu.Item>
+          <TrackActionDropdown
+            ellipsisOrientation='horizontal'
+            upward
+            track={loadedTrack}
+          />
+        </Menu.Item>
+        <Menu.Item>
+          <Popup size='tiny' trigger={trackImage} content={`${loadedTrack.artists.map(artist => artist.name).join(', ')} - ${loadedTrack.title}`} />
+        </Menu.Item>
+        <Menu.Item>
+          <YouTubeButton getYouTube={getYouTube} loadedTrack={loadedTrack} isLoaded={youTubeUrl ? true : false} />
+        </Menu.Item>
+        <Menu.Item>
+          <Duration seconds={duration * played} />
+        </Menu.Item>
+        <SeekBar
+          played={played}
+          seekMouseDown={seekMouseDown}
+          seekChange={handleSeekChange}
+          seekMouseUp={handleSeekMouseUp}
         />
-      </Menu.Item>
-      <Menu.Item>
-        <Popup size='tiny' trigger={trackImage} content={`${loadedTrack.artists.map(artist => artist.name).join(', ')} - ${loadedTrack.title}`} />
-      </Menu.Item>
-      <Menu.Item>
-        <YouTubeButton getYouTube={getYouTube} loadedTrack={loadedTrack} isLoaded={youTubeUrl ? true : false} />
-      </Menu.Item>
-      <Menu.Item>
-        <Duration seconds={duration * played} />
-      </Menu.Item>
-      <SeekBar
-        played={played}
-        seekMouseDown={seekMouseDown}
-        seekChange={handleSeekChange}
-        seekMouseUp={handleSeekMouseUp}
-      />
-      <Menu.Item>
-        <Duration seconds={duration} />
-      </Menu.Item>
-      <Menu.Item>
-        <PrevNextTrack buttonType='prev' handlePrevNextTrack={loadNextTrack} />
-      </Menu.Item>
-      <Menu.Item>
-        <PlayPauseButton isPlaying={playing} playPause={playPause} />
-      </Menu.Item>
-      <Menu.Item>
-        <PrevNextTrack buttonType='next' handlePrevNextTrack={loadNextTrack} />
-      </Menu.Item >
-      <Responsive minWidth={960} as={Menu.Item}>
-        <MutePlayer />
-        <VolumeBar volume={mediaPlayer.volume} setVolume={(e) => setVolume(+e.target.value)} />
-      </Responsive>
-    </Menu>
-  );
+        <Menu.Item>
+          <Duration seconds={duration} />
+        </Menu.Item>
+        <Menu.Item>
+          <PrevNextTrack buttonType='prev' handlePrevNextTrack={loadNextTrack} />
+        </Menu.Item>
+        <Menu.Item>
+          <PlayPauseButton isPlaying={playing} playPause={playPause} />
+        </Menu.Item>
+        <Menu.Item>
+          <PrevNextTrack buttonType='next' handlePrevNextTrack={loadNextTrack} />
+        </Menu.Item >
+        <Responsive minWidth={960} as={Menu.Item}>
+          <MutePlayer />
+          <VolumeBar volume={mediaPlayer.volume} setVolume={(e) => setVolume(+e.target.value)} />
+        </Responsive>
+      </Menu>
+    );
+  }
 }
 
 const mapStateToProps = state => {

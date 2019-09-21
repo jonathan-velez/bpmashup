@@ -11,7 +11,7 @@ import * as actionCreators from '../actions/ActionCreators';
 import * as thunks from '../thunks';
 import { getAllPlaylistsTrackCount, getPlaylistCount } from '../utils/playlistUtils';
 
-class AddToPlaylist extends React.Component {
+class AddToPlaylist extends React.PureComponent {
   state = {
     popupOpen: false,
     modalOpen: false,
