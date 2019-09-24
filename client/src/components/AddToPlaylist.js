@@ -18,7 +18,7 @@ class AddToPlaylist extends React.PureComponent {
     newPlaylistName: ''
   }
 
-  addToPlaylist = (playlist) => {
+  handleAddToPlaylist = (playlist) => {
     const timeStamp = moment().unix();
     const track = Object.assign({}, this.props.track, {
       timeStamp
@@ -105,7 +105,7 @@ class AddToPlaylist extends React.PureComponent {
         <PlaylistListItems
           playlistList={playlistList}
           track={track}
-          addToPlaylist={this.addToPlaylist}
+          addToPlaylist={this.handleAddToPlaylist}
         />
         <List.Item>
           <Button
