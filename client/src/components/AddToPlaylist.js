@@ -1,15 +1,15 @@
 import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Popup, List, Button, Icon, Checkbox, Dropdown } from 'semantic-ui-react';
-import _ from 'lodash'
+import { Popup, List, Button, Icon, Dropdown } from 'semantic-ui-react';
 import moment from 'moment';
 
 import ModalView from './ModalView';
 import AddToPlaylistForm from './AddNewPlaylistForm';
-import * as actionCreators from '../actions/ActionCreators';
-import * as thunks from '../thunks';
+import PlaylistListItems from './PlaylistListItems';
+import { addToPlaylist, removeFromPlaylist } from '../thunks';
 import { getAllPlaylistsTrackCount, getPlaylistCount } from '../utils/playlistUtils';
+import { listOfTracksAddedToPlaylist, listOfPlaylists } from '../selectors';
 
 class AddToPlaylist extends React.PureComponent {
   state = {
@@ -57,14 +57,13 @@ class AddToPlaylist extends React.PureComponent {
     e.preventDefault();
 
     const timeStamp = moment().unix();
-    const trackId = this.props.track.id
-    const track = Object.assign({}, this.props.trackListing.tracks[trackId], {
-      timeStamp
-    })
 
     this.props.addNewPlaylist({
       name: this.state.newPlaylistName,
-      track
+      track: {
+        ...this.props.track,
+        timeStamp,
+      }
     });
 
     this.setState({ modalOpen: false })
@@ -75,23 +74,18 @@ class AddToPlaylist extends React.PureComponent {
   }
 
   render() {
-    let isAdded = false;
+    const { tracksInPlaylist, track, playlistList, type } = this.props;
+    const { modalOpen, newPlaylistName } = this.state;
+    const isAdded = tracksInPlaylist.includes(track.id);
 
-    _.mapValues(this.props.playlistList, playlist => {
-      if (playlist.listOfTracks && playlist.listOfTracks.includes(this.props.track.id)) {
-        isAdded = true;
-        return;
-      }
-    })
-
-    if (this.state.modalOpen) {
+    if (modalOpen) {
       return (
         <ModalView
           headerIcon={'write'}
-          open={this.state.modalOpen}
+          open={modalOpen}
           handleClose={this.handleModalClose}
           modalHeader='New Playlist'
-          modalContent={<AddToPlaylistForm newPlaylistName={this.state.newPlaylistName} handleInputChange={this.handleInputChange} handleSubmit={this.handleSubmit} />}
+          modalContent={<AddToPlaylistForm newPlaylistName={newPlaylistName} handleInputChange={this.handleInputChange} handleSubmit={this.handleSubmit} />}
         />
       )
     }
@@ -106,23 +100,13 @@ class AddToPlaylist extends React.PureComponent {
 
     const playlistDropdownItem = <Dropdown.Item>{playlistIcon}Playlists</Dropdown.Item>
 
-    const playlistItems = _.map(_.sortBy(this.props.playlistList, 'dateAdded'), playlist => {
-      const added = playlist.listOfTracks && playlist.listOfTracks.includes(this.props.track.id);
-      const { tracks = {} } = playlist;
-
-      return (
-        <List.Item key={playlist.id}>
-          <List.Content floated='right'>
-            <Checkbox onClick={() => this.addToPlaylist({ id: playlist.id, added })} checked={added} />
-          </List.Content>
-          <List.Content className={added ? 'boldedText' : ''}>{playlist.name} ({Object.keys(tracks).length})</List.Content>
-        </List.Item>
-      )
-    });
-
     const playlistButtonContent =
       <List divided relaxed verticalAlign='middle'>
-        {playlistItems}
+        <PlaylistListItems
+          playlistList={playlistList}
+          track={track}
+          addToPlaylist={this.addToPlaylist}
+        />
         <List.Item>
           <Button
             size='mini'
@@ -137,8 +121,8 @@ class AddToPlaylist extends React.PureComponent {
 
     return (
       <Popup
-        header={`${getPlaylistCount(this.props.playlistList)} playlists, ${getAllPlaylistsTrackCount(this.props.playlistList)} tracks`}
-        trigger={this.props.type === 'dropdownItem' ? playlistDropdownItem : playlistButton}
+        header={`${getPlaylistCount(playlistList)} playlists, ${getAllPlaylistsTrackCount(playlistList)} tracks`}
+        trigger={type === 'dropdownItem' ? playlistDropdownItem : playlistButton}
         content={playlistButtonContent}
         on='click'
         onClick={(e) => e.stopPropagation()}
@@ -154,12 +138,13 @@ class AddToPlaylist extends React.PureComponent {
 const mapStateToProps = state => {
   return {
     playlistList: state.playlistList,
-    trackListing: state.trackListing
+    tracksInPlaylist: listOfTracksAddedToPlaylist(state),
+    playlistNames: listOfPlaylists(state),
   }
 }
 
 const mapDispatchToProps = dispatch => {
-  return bindActionCreators(Object.assign({}, actionCreators, thunks), dispatch);
+  return bindActionCreators({ addToPlaylist, removeFromPlaylist }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddToPlaylist);

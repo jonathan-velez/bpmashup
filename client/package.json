@@ -30,6 +30,7 @@
     "redux-logger": "^3.0.6",
     "redux-promise": "^0.5.3",
     "redux-thunk": "^2.2.0",
+    "reselect": "^4.0.0",
     "semantic-ui-react": "^0.83.0",
     "store": "^2.0.12"
   },
