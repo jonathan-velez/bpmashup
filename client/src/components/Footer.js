@@ -5,7 +5,7 @@ import { scroller } from 'react-scroll';
 import { Menu, Image, Responsive, Card, Popup } from 'semantic-ui-react';
 import _ from 'lodash';
 
-import * as actionCreators from '../actions/ActionCreators';
+import { seekChange, seekMouseUp, seekMouseDown, playPause, setVolume, loadTrack } from '../actions/ActionCreators';
 import { getYoutubeLink } from '../thunks';
 import { constructLinks, getNextTrack, constructTrackLink } from '../utils/trackUtils';
 import PrevNextTrack from './PrevNextTrack';
@@ -120,13 +120,12 @@ class Footer extends React.PureComponent {
 
 const mapStateToProps = state => {
   return {
-    trackListing: state.trackListing,
     mediaPlayer: state.mediaPlayer,
   }
 }
 
 const mapDispatchToProps = dispatch => {
-  return bindActionCreators(Object.assign({}, actionCreators, { getYoutubeLink }), dispatch);
+  return bindActionCreators({ seekChange, seekMouseUp, seekMouseDown, playPause, setVolume, loadTrack, getYoutubeLink }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Footer);

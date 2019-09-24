@@ -6,7 +6,7 @@ import * as actionCreators from '../actions/ActionCreators';
 import { Dimmer, Icon, Image } from 'semantic-ui-react';
 import * as thunks from '../thunks';
 
-class TrackAlbum extends React.Component {
+class TrackAlbum extends React.PureComponent {
   state = {
     active: false
   }
