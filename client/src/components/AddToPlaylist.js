@@ -7,7 +7,7 @@ import moment from 'moment';
 import ModalView from './ModalView';
 import AddToPlaylistForm from './AddNewPlaylistForm';
 import PlaylistListItems from './PlaylistListItems';
-import { addToPlaylist, removeFromPlaylist } from '../thunks';
+import { addToPlaylist, removeFromPlaylist, addNewPlaylist } from '../thunks';
 import { getAllPlaylistsTrackCount, getPlaylistCount } from '../utils/playlistUtils';
 import { listOfTracksAddedToPlaylist, listOfPlaylists } from '../selectors';
 
@@ -37,7 +37,7 @@ class AddToPlaylist extends React.PureComponent {
     }
   }
 
-  addNewPlaylist = () => {
+  handleAddNewPlaylist = () => {
     this.setState({ popupOpen: false, modalOpen: true })
   }
 
@@ -114,7 +114,7 @@ class AddToPlaylist extends React.PureComponent {
             icon='add'
             labelPosition='left'
             content='New Playlist'
-            onClick={this.addNewPlaylist}
+            onClick={this.handleAddNewPlaylist}
           />
         </List.Item>
       </List>
@@ -144,7 +144,7 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => {
-  return bindActionCreators({ addToPlaylist, removeFromPlaylist }, dispatch);
+  return bindActionCreators({ addToPlaylist, removeFromPlaylist, addNewPlaylist }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddToPlaylist);
