@@ -8,8 +8,13 @@ import ModalView from './ModalView';
 import AddToPlaylistForm from './AddNewPlaylistForm';
 import PlaylistListItems from './PlaylistListItems';
 import { addToPlaylist, removeFromPlaylist, addNewPlaylist } from '../thunks';
-import { getAllPlaylistsTrackCount, getPlaylistCount } from '../utils/playlistUtils';
-import { listOfTracksAddedToPlaylist, listOfPlaylists } from '../selectors';
+import {
+  listOfTracksAddedToPlaylist,
+  listOfPlaylists,
+  numOfPlaylists,
+  numOfTracksInPlaylists,
+  getPlaylistsSortedByAddedDate
+} from '../selectors';
 
 class AddToPlaylist extends React.PureComponent {
   state = {
@@ -74,7 +79,7 @@ class AddToPlaylist extends React.PureComponent {
   }
 
   render() {
-    const { tracksInPlaylist, track, playlistList, type } = this.props;
+    const { tracksInPlaylist, track, playlistList, type, playlistCount, tracksInPlaylistsCount } = this.props;
     const { modalOpen, newPlaylistName } = this.state;
     const isAdded = tracksInPlaylist.includes(track.id);
 
@@ -121,7 +126,7 @@ class AddToPlaylist extends React.PureComponent {
 
     return (
       <Popup
-        header={`${getPlaylistCount(playlistList)} playlists, ${getAllPlaylistsTrackCount(playlistList)} tracks`}
+        header={`${playlistCount} playlists, ${tracksInPlaylistsCount} tracks`}
         trigger={type === 'dropdownItem' ? playlistDropdownItem : playlistButton}
         content={playlistButtonContent}
         on='click'
@@ -137,9 +142,11 @@ class AddToPlaylist extends React.PureComponent {
 
 const mapStateToProps = state => {
   return {
-    playlistList: state.playlistList,
+    playlistList: getPlaylistsSortedByAddedDate(state),
     tracksInPlaylist: listOfTracksAddedToPlaylist(state),
     playlistNames: listOfPlaylists(state),
+    playlistCount: numOfPlaylists(state),
+    tracksInPlaylistsCount: numOfTracksInPlaylists(state),
   }
 }
 

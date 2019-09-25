@@ -1,9 +1,8 @@
 import React from 'react';
 import { List, Checkbox } from 'semantic-ui-react';
-import _ from 'lodash';
 
 const PlaylistListItems = ({ playlistList, track, addToPlaylist }) => {
-  const playlistItems = _.map(_.sortBy(playlistList, 'dateAdded'), playlist => {
+  const playlistItems = playlistList.map(playlist => {
     const added = playlist.listOfTracks && playlist.listOfTracks.includes(track.id);
     const { tracks = {} } = playlist;
 

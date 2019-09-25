@@ -1,21 +1,20 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import _ from 'lodash';
 import { Link } from 'react-router-dom';
 import { Dropdown } from 'semantic-ui-react';
 
-import { getAllPlaylistsTrackCount, getPlaylistCount } from '../utils/playlistUtils';
+import { numOfPlaylists, numOfTracksInPlaylists, getPlaylistsSortedByAddedDate } from '../selectors';
 import { slugify } from '../utils/helpers';
 
 class PlaylistDropdownControl extends React.PureComponent {
   render() {
-    const { playlistList } = this.props;
+    const { playlistList, playlistCount, tracksInPlaylistsCount } = this.props;
     let playlistItems = '';
 
-    const firstListItem = <Dropdown.Item disabled text={`${getPlaylistCount(playlistList)} playlists, ${getAllPlaylistsTrackCount(playlistList)} tracks`} />
+    const firstListItem = <Dropdown.Item disabled text={`${playlistCount} playlists, ${tracksInPlaylistsCount} tracks`} />
 
-    if (playlistList && Object.keys(playlistList).length > 0) {
-      playlistItems = _.map(_.sortBy(playlistList, 'dateAdded'), playlist => {
+    if (Array.isArray(playlistList) && playlistList.length > 0) {
+      playlistItems = playlistList.map(playlist => {
         const { name, id } = playlist;
         const url = `/playlist/${slugify(name)}/${id}`;
 
@@ -49,7 +48,9 @@ class PlaylistDropdownControl extends React.PureComponent {
 
 const mapStateToProps = state => {
   return {
-    playlistList: state.playlistList
+    playlistList: getPlaylistsSortedByAddedDate(state),
+    playlistCount: numOfPlaylists(state),
+    tracksInPlaylistsCount: numOfTracksInPlaylists(state),
   }
 }
 
