@@ -3,7 +3,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Confirm } from 'semantic-ui-react';
 
-import * as actionCreators from '../actions/ActionCreators';
+import { setConfirm } from '../actions/ActionCreators';
 
 class ConfirmController extends Component {
   state = {
@@ -42,7 +42,7 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => {
-  return bindActionCreators(actionCreators, dispatch);
+  return bindActionCreators({ setConfirm }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ConfirmController);

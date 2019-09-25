@@ -3,7 +3,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Icon } from 'semantic-ui-react';
 
-import * as actionCreators from '../actions/ActionCreators';
+import { toggleMute } from '../actions/ActionCreators';
 
 const MutePlayer = ({ mediaPlayer, toggleMute }) => {
   const { muted } = mediaPlayer;
@@ -26,7 +26,7 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => {
-  return bindActionCreators(actionCreators, dispatch);
+  return bindActionCreators({ toggleMute }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(MutePlayer);

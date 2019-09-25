@@ -6,10 +6,15 @@ import { Header, Message, Form, Input } from 'semantic-ui-react';
 import Scroll from 'react-scroll';
 import { withRouter } from 'react-router-dom';
 
-import * as actionCreators from '../actions/ActionCreators';
+import { loadTracks, openConfirm, resetConfirm } from '../actions/ActionCreators';
 import TrackListingTable from './TrackListingTable';
 import PlaylistHeader from './PlaylistHeader';
-import * as thunks from '../thunks';
+import {
+  removeFromPlaylist,
+  clearPlaylist,
+  deletePlaylist,
+  editPlaylistName
+} from '../thunks';
 
 class PlaylistController extends React.Component {
   playlistId = this.props.match.params.playlistId;
@@ -221,7 +226,15 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => {
-  return bindActionCreators(Object.assign({}, actionCreators, thunks), dispatch);
+  return bindActionCreators({
+    loadTracks,
+    openConfirm,
+    removeFromPlaylist,
+    clearPlaylist,
+    deletePlaylist,
+    editPlaylistName,
+    resetConfirm
+  }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(PlaylistController));

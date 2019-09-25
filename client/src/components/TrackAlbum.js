@@ -2,9 +2,9 @@ import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import * as actionCreators from '../actions/ActionCreators';
+import { playPause } from '../actions/ActionCreators';
 import { Dimmer, Icon, Image } from 'semantic-ui-react';
-import * as thunks from '../thunks';
+import { loadTrackThunk } from '../thunks';
 
 class TrackAlbum extends React.PureComponent {
   state = {
@@ -31,7 +31,7 @@ class TrackAlbum extends React.PureComponent {
         <Dimmer active={active}>
           <Icon
             link
-            name={isPlaying && isLoaded ? 'pause' : 'play'}            
+            name={isPlaying && isLoaded ? 'pause' : 'play'}
             size={iconSize}
           />
         </Dimmer>
@@ -48,7 +48,7 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => {
-  return bindActionCreators(Object.assign({}, actionCreators, thunks), dispatch);
+  return bindActionCreators({ playPause, loadTrackThunk }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(TrackAlbum);

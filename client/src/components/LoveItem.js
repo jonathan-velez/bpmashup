@@ -3,7 +3,7 @@ import { Button, Icon, Dropdown } from 'semantic-ui-react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import * as thunks from '../thunks';
+import { toggleLoveItem } from '../thunks';
 
 const LoveItem = ({ itemType, item, toggleLoveItem, lovedTracks, lovedArtists, lovedLabels, type = 'button' }) => {
   let isLoved = false;
@@ -50,7 +50,7 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => {
-  return bindActionCreators(thunks, dispatch);
+  return bindActionCreators({ toggleLoveItem }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(LoveItem);
