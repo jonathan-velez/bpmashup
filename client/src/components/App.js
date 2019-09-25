@@ -8,6 +8,7 @@ import Main from './Main';
 import Footer from './Footer';
 import ModalView from './ModalView';
 import ConfirmController from './ConfirmController';
+import { openModalWindow } from '../actions/ActionCreators';
 
 class App extends React.PureComponent {
   render() {
@@ -42,4 +43,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps, {})(App);
+export default connect(mapStateToProps, { openModalWindow })(App);
