@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import _ from 'lodash';
 
 import App from './App';
+import ActionMessage from './ActionMessage';
 import {
   play,
   pause,
@@ -157,6 +158,7 @@ class AppWrapper extends Component {
           onProgress={updateTrackProgress}
           onDuration={setDuration}
         />
+        <ActionMessage />
       </React.Fragment>
     );
   }

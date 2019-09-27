@@ -41,6 +41,8 @@ import {
   CLEAR_LOVED_ARTISTS_DETAILS,
   CLEAR_LOVED_LABELS,
   CLEAR_LOVED_LABELS_DETAILS,
+  ADD_ACTION_MESSAGE,
+  REMOVE_ACTION_MESSAGE,
 } from '../constants/actionTypes';
 
 export const startAsync = () => {
@@ -263,5 +265,19 @@ export const clearLovedLabels = () => {
 export const clearLovedLabelsDetails = () => {
   return {
     type: CLEAR_LOVED_LABELS_DETAILS,
+  }
+}
+
+export const setActionMessage = payload => {
+  return {
+    type: ADD_ACTION_MESSAGE,
+    payload
+  }
+}
+
+export const removeActionMessage = id => {
+  return {
+    type: REMOVE_ACTION_MESSAGE,
+    payload: id,
   }
 }

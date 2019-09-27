@@ -388,4 +388,17 @@
       max-height: 100vh!important;
     }
   }
-  
+
+  .action-message-list {
+    left: 50%;
+    transform: translate(-50%);
+    position: fixed!important;
+    top: 78px;
+    text-align: center;
+    z-index: 101;
+  }
+
+  .action-message-list-item {
+    padding-left: 50px!important;
+    padding-right: 50px!important;
+  }

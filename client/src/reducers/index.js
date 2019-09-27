@@ -24,6 +24,7 @@ import labelDetail from './labelDetail';
 import userDetail from './userDetail';
 import noDownloadList from './noDownloadList';
 import chartListing from './chartListing';
+import actionMessage from './actionMessage';
 
 const rootReducer = combineReducers({
   trackListing,
@@ -49,6 +50,7 @@ const rootReducer = combineReducers({
   lovedArtistsDetails,
   noDownloadList,
   chartListing,
+  actionMessage,
 });
 
 export default rootReducer;

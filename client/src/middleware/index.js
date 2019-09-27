@@ -15,7 +15,11 @@ import {
   DOWNLOAD_TRACK,
   ADD_TRACK_TO_NO_DOWNLOAD_LIST,
 } from '../constants/actionTypes';
-import { openLoginModalWindow } from '../actions/ActionCreators';
+import {
+  openLoginModalWindow,
+  setActionMessage,
+  removeActionMessage
+} from '../actions/ActionCreators';
 
 export const activityLogger = store => next => action => {
   const logTrack = (track, userData, type) => {
@@ -71,6 +75,18 @@ export const activityLogger = store => next => action => {
     userDataRef.child('labelsIds').child(label.id).transaction(currentValue => (currentValue || 0) + 1);
   }
 
+  // TODO: take in optional positive/negative and icon parameters. Icon would be cool to send a music one for track playing
+  const generateActivityMessage = message => {
+    const id = v4();
+    store.dispatch(setActionMessage({
+      id,
+      message,
+    }));
+    setTimeout(() => {
+      store.dispatch(removeActionMessage(id));
+    }, 4000)
+  }
+
   const id = v4();
   const state = store.getState();
 
@@ -95,6 +111,7 @@ export const activityLogger = store => next => action => {
   switch (type) {
     case LOAD_TRACK:
       logTrack(track, userData, 'trackPlaysAll');
+      generateActivityMessage(`Playing track - ${track.title}`);
       break;
     case GET_YOUTUBE_LINK:
       firebase.set(`/trackPlaysYouTube/${id}`, {
@@ -110,6 +127,22 @@ export const activityLogger = store => next => action => {
       break;
     case ADD_TRACK_TO_NO_DOWNLOAD_LIST:
       logTrack(track, userData, 'noDownloads');
+      break;
+    case TOGGLE_LOVE_TRACK: {
+      let message;
+      if (action.payload.add) {
+        message = 'Track added to your Love list';
+      } else {
+        message = 'Track removed from your Love list'
+      }
+      generateActivityMessage(message);
+    }
+      break;
+    case ADD_TO_PLAYLIST:
+      generateActivityMessage('Track added to playlist');
+      break;
+    case REMOVE_FROM_PLAYLIST:
+      generateActivityMessage('Track removed from playlist');
       break;
     default:
       break;
