@@ -1,7 +1,6 @@
 import loadTrackThunk from './loadTrackThunk';
 import { removeFromPlaylist, addToPlaylist, editPlaylistName, deletePlaylist, addNewPlaylist, clearPlaylist, } from './playlistThunk';
 import { downloadTrack, addTrackToNoDownloadList } from './downloadTrackThunk';
-import { toggleLoveTrack } from './loveTrackThunk';
 import { toggleLoveItem } from './loveItemThunk';
 import { getMyFavoriteLabels, getLabelsById } from './myFavoritesThunk';
 import { searchEverything, searchTracks } from './searchEverythingThunk';
@@ -20,7 +19,6 @@ export {
   deletePlaylist,
   addNewPlaylist,
   downloadTrack,
-  toggleLoveTrack,
   toggleLoveItem,
   getMyFavoriteLabels,
   searchEverything,
