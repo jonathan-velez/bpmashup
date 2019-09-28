@@ -1,4 +1,9 @@
-import { LOAD_NO_DOWNLOADS_TRACKS, ADD_TRACK_TO_NO_DOWNLOAD_LIST, CLEAR_NO_DOWNLOADS } from '../constants/actionTypes';
+import {
+  LOAD_NO_DOWNLOADS_TRACKS,
+  ADD_TRACK_TO_NO_DOWNLOAD_LIST,
+  CLEAR_NO_DOWNLOADS,
+  REMOVE_TRACK_FROM_NO_DOWNLOAD_LIST,
+} from '../constants/actionTypes';
 
 const noDownloadList = (state = [], action) => {
   const { type, payload } = action;
@@ -18,6 +23,9 @@ const noDownloadList = (state = [], action) => {
       return [...state, payload.id];
     case CLEAR_NO_DOWNLOADS: {
       return [];
+    }
+    case REMOVE_TRACK_FROM_NO_DOWNLOAD_LIST: {
+      return state.filter(val => val === payload ? false : true);
     }
     default:
       return state;
