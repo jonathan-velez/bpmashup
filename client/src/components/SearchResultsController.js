@@ -3,11 +3,11 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Grid, Header } from 'semantic-ui-react';
 import Scroll from 'react-scroll';
-import _ from 'lodash';
 
 import { searchEverything } from '../thunks';
 import ResponsiveTrackListing from './ResponsiveTrackListing';
 import ItemCards from './ItemCards';
+import NothingHereMessage from './NothingHereMessage';
 
 class SearchResultsController extends Component {
   componentDidMount() {
@@ -33,7 +33,9 @@ class SearchResultsController extends Component {
     const { isLoading, searchResults } = this.props;
     const { artists, tracks, releases, labels } = searchResults;
 
-    if (isLoading || _.isEmpty(searchResults)) return null;
+    if (isLoading || Object.values(searchResults).reduce((a, b) => b).length === 0) {
+      return <NothingHereMessage />
+    }
 
     return (
       <Grid stackable>
