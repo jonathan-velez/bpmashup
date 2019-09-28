@@ -35,7 +35,7 @@ class MyDownloadsAndLovedTracks extends Component {
     if (_.isEqual(this.props, nextProps)) return;
 
     const { location, match } = this.props;
-    const { downloadedTracks, lovedTracks, trackListing, location: nextLocation, match: nextMatch, noDownloadList, isLoading } = nextProps;
+    const { downloadedTracks = [], lovedTracks = [], trackListing = {}, location: nextLocation = {}, match: nextMatch = {}, noDownloadList = [], isLoading = false } = nextProps;
     const { metadata = {} } = trackListing;
     const { count: trackCount = 0 } = metadata;
 
@@ -134,18 +134,22 @@ class MyDownloadsAndLovedTracks extends Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state, ownProps) => {
+  const { match } = ownProps;
+  const { params } = match;
+  const { pageType } = params;
+
   return {
-    trackListing: state.trackListing,
-    downloadedTracks: state.downloadedTracks,
-    lovedTracks: state.lovedTracks,
     isLoading: state.isLoading,
-    noDownloadList: state.noDownloadList,
+    trackListing: state.trackListing,
+    ...(pageType === 'downloads' && { downloadedTracks: state.downloadedTracks }),
+    ...(pageType === 'loved-tracks' && { lovedTracks: state.lovedTracks }),
+    ...(pageType === 'no-downloads' && { noDownloadList: state.noDownloadList }),
   }
 }
 
 const mapDispatchToProps = dispatch => {
-  return bindActionCreators(Object.assign({}, { getTracksByIds, clearTracklist }), dispatch);
+  return bindActionCreators({ getTracksByIds, clearTracklist }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(MyDownloadsAndLovedTracks));
