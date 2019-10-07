@@ -12,7 +12,7 @@ export const downloadTrack = payload => {
     })
 
     const { noDownloadList } = getState();
-    const trackId = payload.track.id;
+    const trackId = payload.id;
 
     if (noDownloadList.includes(trackId)) {
       dispatch({
