@@ -36,7 +36,7 @@ class TrackListingTableBody extends React.Component {
             </Table.Cell>
             <Table.Cell>
               <TrackAlbum
-                imageUrl={images.large.secureUrl}
+                imageUrl={images.medium.secureUrl}
                 imageSize='tiny'
                 iconSize='big'
                 track={track}
