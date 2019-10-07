@@ -2,19 +2,37 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Header, Message, Form, Input } from 'semantic-ui-react';
+import {
+  Form,
+  Input,
+  Label,
+  Menu,
+  Statistic,
+  Icon,
+} from 'semantic-ui-react';
 import Scroll from 'react-scroll';
 import { withRouter } from 'react-router-dom';
+import _ from 'lodash';
+import { v4 } from 'node-uuid'
 
-import { loadTracks, openConfirm, resetConfirm } from '../actions/ActionCreators';
+import {
+  loadTracks,
+  openConfirm,
+  resetConfirm,
+} from '../actions/ActionCreators';
 import TrackListingTable from './TrackListingTable';
 import PlaylistHeader from './PlaylistHeader';
+import NothingHereMessage from './NothingHereMessage';
 import {
   removeFromPlaylist,
   clearPlaylist,
   deletePlaylist,
   editPlaylistName
 } from '../thunks';
+import {
+  getPlaylistGenreCount,
+  getPlaylistTrackCount,
+} from '../selectors';
 
 class PlaylistController extends React.Component {
   playlistId = this.props.match.params.playlistId;
@@ -25,6 +43,8 @@ class PlaylistController extends React.Component {
     deletePlaylist: false,
     clearPlaylist: false,
     playlistName: '',
+    selectedGenreFilters: {},
+    filteredTrackListing: {},
   }
 
   componentDidMount() {
@@ -32,7 +52,10 @@ class PlaylistController extends React.Component {
 
     if (this.playlist) {
       this.props.loadTracks(this.playlist.tracks);
-      this.setState({ playlistName: this.playlist.name });
+      this.setState({
+        ...this.state,
+        playlistName: this.playlist.name,
+      });
     }
   }
 
@@ -41,12 +64,21 @@ class PlaylistController extends React.Component {
     this.playlist = this.props.playlistList && this.props.playlistList[this.playlistId];
 
     if (!this.state.playlistName && this.playlist && this.playlist.tracks) {
+      this.setState({
+        ...this.state,
+        playlistName: this.playlist.name,
+        filteredTrackListing: {},
+        selectedGenreFilters: {},
+      });
       this.props.loadTracks(this.playlist.tracks);
-      this.setState({ playlistName: this.playlist.name });
     }
 
     if (!prevState.playlistNameEditMode && this.state.playlistNameEditMode) {
       this.focus();
+    }
+
+    if (!_.isEqual(this.state.selectedGenreFilters, prevState.selectedGenreFilters)) {
+      this.filterGenres();
     }
   }
 
@@ -76,8 +108,13 @@ class PlaylistController extends React.Component {
 
     // something new to load
     if (currentPlaylistId && currentPlaylistId !== newPlaylistId && newPlaylistObj) {
+      this.setState({
+        ...this.state,
+        playlistName: newPlaylistObj.name,
+        filteredTrackListing: {},
+        selectedGenreFilters: {},
+      });
       this.props.loadTracks(newPlaylistTracks);
-      this.setState({ playlistName: newPlaylistObj.name });
       return;
     }
 
@@ -101,19 +138,28 @@ class PlaylistController extends React.Component {
   }
 
   togglePlaylistNameEditMode = () => {
-    this.setState({ playlistNameEditMode: !this.state.playlistNameEditMode });
+    this.setState({
+      ...this.state,
+      playlistNameEditMode: !this.state.playlistNameEditMode,
+    });
   }
 
   handlePlaylistNameChange = evt => {
     const playlistName = evt.target.value;
 
     if (this.validatePlaylistName(playlistName)) {
-      this.setState({ playlistName });
+      this.setState({
+        ...this.state,
+        playlistName,
+      });
     }
   }
 
   deletePlaylist = () => {
-    this.setState({ deletePlaylist: true });
+    this.setState({
+      ...this.state,
+      deletePlaylist: true,
+    });
 
     this.props.openConfirm({
       content: 'Are you sure you want to delete this playlist?',
@@ -127,7 +173,10 @@ class PlaylistController extends React.Component {
 
     if (deletePlaylist) {
       this.props.deletePlaylist(this.playlistId);
-      this.setState({ deletePlaylist: false });
+      this.setState({
+        ...this.state,
+        deletePlaylist: false,
+      });
       this.props.history.push(`/`);
     }
   }
@@ -147,7 +196,10 @@ class PlaylistController extends React.Component {
 
     if (clearPlaylist) {
       this.props.clearPlaylist(this.playlistId);
-      this.setState({ clearPlaylist: false });
+      this.setState({
+        ...this.state,
+        clearPlaylist: false,
+      });
     }
   }
 
@@ -169,21 +221,72 @@ class PlaylistController extends React.Component {
     this.togglePlaylistNameEditMode();
   }
 
-  render() {
-    const { playlistId } = this.props.match.params;
-    const playlist = this.props.playlistList && this.props.playlistList[playlistId];
+  handleSelectGenreFilter = genreId => {
+    this.setState({
+      ...this.state,
+      selectedGenreFilters: {
+        ...this.state.selectedGenreFilters,
+        [genreId]: !this.state.selectedGenreFilters[genreId],
+      }
+    })
+  }
 
-    if (!playlist) {
-      return (
-        <Message error>
-          <Header size='huge'>Invalid Playlist</Header>
-          <p>Oops! Looks like this playlist does not exist.</p>
-        </Message>
-      )
+  filterGenres = () => {
+    const { selectedGenreFilters } = this.state;
+    const { trackListing } = this.props;
+    const { tracks } = trackListing;
+    const selectedGenreFiltersIds = Object.keys(selectedGenreFilters);
+
+    if (selectedGenreFiltersIds.length === 0 || !trackListing) return;
+
+    const selectedGenreFiltersArray = selectedGenreFiltersIds.filter(genre => selectedGenreFilters[genre]);
+    if (selectedGenreFiltersArray.length === 0) {
+      this.setState({
+        ...this.state,
+        filteredTrackListing: {},
+      })
+
+      return;
     }
 
-    let { trackListing, isLoading } = this.props;
-    const { tracks } = trackListing;
+    const newTracks = {};
+    const trackIds = Object.keys(tracks);
+
+    trackIds.forEach(trackId => {
+      if (Array.isArray(tracks[trackId].genres) && tracks[trackId].genres.some(genre => selectedGenreFiltersArray.includes(genre.id.toString()))) {
+        newTracks[trackId] = tracks[trackId];
+      }
+    })
+
+    const filteredTrackListing = {
+      ...trackListing,
+      tracks: newTracks,
+    }
+
+    this.setState({
+      ...this.state,
+      filteredTrackListing,
+    })
+  }
+
+  handleClearGenreFilter = () => {
+    this.setState({
+      ...this.state,
+      filteredTrackListing: {},
+      selectedGenreFilters: {},
+    })
+  }
+
+  render() {
+    const { playlistList, playlistGenreCount, match, trackListing, isLoading, playlistTrackCount } = this.props;
+    const { filteredTrackListing, selectedGenreFilters } = this.state;
+    const { playlistId } = match.params;
+    const playlist = playlistList && playlistList[playlistId];
+    const selectedGenreFiltersIds = Object.keys(selectedGenreFilters).filter(genreId => selectedGenreFilters[genreId]);
+
+    if (!playlist) return <NothingHereMessage />
+
+    const { tracks } = Object.keys(filteredTrackListing).length > 0 ? filteredTrackListing : trackListing;
 
     return (
       <React.Fragment>
@@ -206,7 +309,40 @@ class PlaylistController extends React.Component {
             clearPlaylist={this.clearPlaylist}
           />
         }
+        <Statistic.Group size='mini'>
+          <Statistic>
+            <Statistic.Value>{playlistTrackCount}</Statistic.Value>
+            <Statistic.Label>{`Track${playlistTrackCount > 1 ? 's' : ''}`} </Statistic.Label>
+          </Statistic>
+          <Statistic>
+            <Statistic.Value>{Object.keys(playlistGenreCount).length}</Statistic.Value>
+            <Statistic.Label>{`Genre${Object.keys(playlistGenreCount).length > 1 ? 's' : ''}`} </Statistic.Label>
+          </Statistic>
+        </Statistic.Group>
+        <Menu>
+          <Menu.Item header>Genres</Menu.Item>
+          {playlistGenreCount && Object.keys(playlistGenreCount).map(genreId => {
+            const genre = playlistGenreCount[genreId];
+
+            return (
+              <Menu.Item
+                key={genreId}
+                active={selectedGenreFiltersIds.includes(genreId)}
+                onClick={() => this.handleSelectGenreFilter(genreId)}>
+                {genre.name}
+                <Label
+                  floating
+                  size='mini'
+                  color='black'>
+                  {genre.count}
+                </Label>
+              </Menu.Item>
+            )
+          })}
+          {selectedGenreFiltersIds.length > 0 && <Menu.Item as='a' onClick={this.handleClearGenreFilter}><Icon name='delete' />Clear Filter</Menu.Item>}
+        </Menu>
         <TrackListingTable
+          key={v4()}
           trackListing={tracks}
           isLoading={isLoading}
           removeFromPlaylist={this.callRemoveFromPlaylist}
@@ -217,11 +353,13 @@ class PlaylistController extends React.Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state, props) => {
   return {
     playlistList: state.playlistList,
     trackListing: state.trackListing,
     confirmModal: state.confirmModal,
+    playlistGenreCount: getPlaylistGenreCount(state, props),
+    playlistTrackCount: getPlaylistTrackCount(state, props),
   }
 }
 
