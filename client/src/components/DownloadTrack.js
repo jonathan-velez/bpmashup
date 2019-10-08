@@ -1,12 +1,11 @@
 import React from 'react';
-import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import { Button, Icon, Dropdown } from 'semantic-ui-react';
 import { downloadTrack } from '../utils/trackUtils';
+import { hasBeenDownloaded } from '../selectors';
 
-const DownloadTrack = ({ track, downloadedTracks, type }) => {
-  const hasBeenDownloaded = downloadedTracks.includes(track.id);
+const DownloadTrack = ({ track, type, hasBeenDownloaded }) => {
   const downloadIcon = <Icon name='download' color={hasBeenDownloaded ? 'red' : 'grey'} title={hasBeenDownloaded ? 'Download it again' : 'Download it'} />
   const downloadButton =
     <Button
@@ -24,14 +23,10 @@ const DownloadTrack = ({ track, downloadedTracks, type }) => {
   );
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state, ownProps) => {
   return {
-    downloadedTracks: state.downloadedTracks,
+    hasBeenDownloaded: hasBeenDownloaded(state, ownProps.track.id),
   }
 }
 
-const mapDispatchToProps = dispatch => {
-  return bindActionCreators({}, dispatch);
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(DownloadTrack);
+export default connect(mapStateToProps)(DownloadTrack);

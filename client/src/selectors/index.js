@@ -10,6 +10,10 @@ const getPlaylistTracks = (state = {}, props = {}) => {
 
   return playlistId ? state.playlistList[playlistId] && state.playlistList[playlistId].tracks : {};
 }
+const _hasBeenDownloaded = (state, trackId) => {
+  const { downloadedTracks } = state;
+  return downloadedTracks.includes(trackId);
+}
 
 export const listOfTracksAddedToPlaylist = createSelector([getPlaylists], playlists => _.map(playlists, playlist => playlist.listOfTracks).flat());
 export const listOfPlaylists = createSelector([getPlaylists], playlists => _.map(playlists, playlist => playlist.name));
@@ -40,3 +44,5 @@ export const getPlaylistTrackCount = createSelector([getPlaylistTracks], tracks 
 })
 
 export const hasZippyPermission = createSelector([getUserPermissions], permissions => Array.isArray(permissions) && permissions.includes('zipZip'));
+
+export const hasBeenDownloaded = createSelector([_hasBeenDownloaded], downloaded => downloaded);
