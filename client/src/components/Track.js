@@ -13,6 +13,7 @@ import { musicalKeyFilter } from '../utils/helpers';
 import { callAPIorCache } from '../seessionStorageCache';
 import { API_GET_TRACKS, API_GET_CHART } from '../constants/apiPaths';
 import { DEFAULT_BP_ITEM_IMAGE_URL } from '../constants/defaults';
+import { hasZippyPermission } from '../selectors';
 const chartsPerPage = 8;
 
 class Track extends React.Component {
@@ -146,10 +147,11 @@ class Track extends React.Component {
   }
 
   render() {
-    const { location = {}, userDetail = {} } = this.props;
+    const {
+      location = {},
+      canZip,
+    } = this.props;
     const { visible, chartData, trackData, similarTracksData } = this.state;
-    const { permissions = [] } = userDetail;
-    const canZip = Array.isArray(permissions) && permissions.includes('zipZip');
     const { state = {} } = location;
     const { track = trackData } = state;
     const { images = {}, artists = [], length = '', bpm = '', label = '', key = {}, releaseDate = '', genres = [], release = '' } = track;
@@ -303,7 +305,7 @@ class Track extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    userDetail: state.userDetail,
+    canZip: hasZippyPermission(state),
   }
 }
 

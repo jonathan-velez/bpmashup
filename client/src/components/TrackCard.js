@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import TrackAlbum from './TrackAlbum';
 import TrackCardActionRow from './TrackCardActionRow';
 import { constructLinks, trackGenreColors, constructTrackLink } from '../utils/trackUtils';
+import { hasZippyPermission } from '../selectors';
 
 class TrackCard extends React.Component {
   state = {
@@ -16,9 +17,11 @@ class TrackCard extends React.Component {
   handleHide = () => this.setState({ active: false });
 
   render() {
-    const { track, userDetail, showPosition = true } = this.props;
-    const { permissions } = userDetail;
-    const canZip = Array.isArray(permissions) && permissions.includes('zipZip');
+    const { 
+      track,
+      showPosition = true,
+      canZip,
+    } = this.props;
 
     return (
       <Card
@@ -47,7 +50,7 @@ class TrackCard extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    userDetail: state.userDetail,
+    canZip: hasZippyPermission(state),
   }
 }
 
