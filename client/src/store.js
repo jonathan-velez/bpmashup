@@ -32,7 +32,8 @@ const rrfConfig = {
 
 firebase.initializeApp(firebaseConfig);
 
-const createStoreWithFirebase = compose(
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+const createStoreWithFirebase = composeEnhancers(
   reactReduxFirebase(firebase, rrfConfig),
   applyMiddleware(ReduxPromise, thunk, logger, activityLogger, checkProtectedAction)
 )(createStore);
