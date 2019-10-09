@@ -41,7 +41,7 @@ class TrackCard extends React.Component {
           <Card.Content><Link to={`/label/${track.label.slug}/${track.label.id}`}>[{track.label.name}]</Link></Card.Content>
         </Card.Content>
         <Card.Content extra>
-          <TrackCardActionRow canZip={canZip} numOfButtons={canZip ? 'three' : 'two'} track={track} />
+          <TrackCardActionRow canZip={canZip} numOfButtons={'three'} track={track} />
         </Card.Content>
       </Card >
     )

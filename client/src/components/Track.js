@@ -193,7 +193,7 @@ class Track extends React.Component {
                   <Image src={images.waveform.secureUrl} />
                 </Grid.Column>
                 <Grid.Column width={4}>
-                  <TrackCardActionRow canZip={canZip} numOfButtons={canZip ? 'three' : 'two'} track={track} />
+                  <TrackCardActionRow canZip={canZip} numOfButtons={'three'} track={track} />
                 </Grid.Column>
               </Grid.Row>
               <Grid.Row columns='equal' divided>

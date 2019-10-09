@@ -128,3 +128,7 @@ export const trackGenreColors = {
   'house': 'green',
   'trance': 'blue',
 }
+
+export const generateBPTrackLink = ({ slug, id }) => {
+  return `https://beatport.com/track/${slug}/${id}`;
+}
