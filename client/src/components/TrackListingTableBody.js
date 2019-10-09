@@ -20,7 +20,7 @@ class TrackListingTableBody extends React.Component {
 
       trackListingBody = _.map(orderedTracks, (track, idx) => {
         return (
-          <TrackListingTableRow idx={idx} track={track} isPlaylist={isPlaylist} />
+          <TrackListingTableRow key={`${track.id}-${idx}`} idx={idx} track={track} isPlaylist={isPlaylist} />
         )
       });
     } else {
