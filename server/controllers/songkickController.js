@@ -38,11 +38,10 @@ async function getUpcomingEvents(req, res) {
     const { resultsPage } = data;
     let events = [];
 
-    if (resultsPage) {
+    if (resultsPage && resultsPage.results && Object.keys(resultsPage.results).length > 0) {
       const { artist } = resultsPage.results;
       if (artist && artist.length === 0) {
         return res.json({ success: true, events });
-        
       }
 
       const { identifier } = artist[0];
