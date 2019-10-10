@@ -1,5 +1,6 @@
 const axios = require('axios');
 const { SONGKICK_API_KEY } = process.env;
+const { deslugify } = require('../utils');
 
 // Searches the Songkick API for an artist ID by a search string
 async function getArtistId(req, res) {
@@ -31,7 +32,7 @@ async function getUpcomingEvents(req, res) {
     res.json({ success: false, error: 'No artist name provided' });
   }
 
-  const url = `https://api.songkick.com/api/3.0/search/artists.json?apikey=${SONGKICK_API_KEY}&query=${artistName}`;
+  const url = `https://api.songkick.com/api/3.0/search/artists.json?apikey=${SONGKICK_API_KEY}&query=${deslugify(artistName)}`;
   try {
     const response = await axios.get(url);
     const { data } = response;

@@ -46,3 +46,9 @@ exports.filterPath = (fullPath) => {
   // e.g. '/api/most-popular/genre?id=5&page=1' => 'most-popular/genre'
   return fullPath.substr(5).match('^[^?]*')[0];
 }
+
+exports.deslugify = (input) => {
+  if (input) {
+    return input.replace(/-/g, ' ');
+  }
+}
