@@ -80,51 +80,50 @@ class PlaylistController extends React.Component {
     if (!_.isEqual(this.state.selectedGenreFilters, prevState.selectedGenreFilters)) {
       this.filterGenres();
     }
-  }
 
-  componentWillReceiveProps(nextProps) {
-    const { playlistId: newPlaylistId } = nextProps.match.params;
-    const { playlistId: currentPlaylistId } = this.props.match.params;
+    // TODO: Figure out why clearing a playlist doesn't refresh the now empty playlist.
+    const { playlistId: prevPlaylistId } = prevProps.match.params;
+    const { playlistId: thisPlaylistId } = this.props.match.params;
 
-    const newPlaylistObj = (nextProps.playlistList && nextProps.playlistList[newPlaylistId]) || {};
-    const currentPlaylistObj = (this.props.playlistList && this.props.playlistList[currentPlaylistId]) || {};
+    const prevPlaylistObj = (prevProps.playlistList && prevProps.playlistList[prevPlaylistId]) || {};
+    const thisPlaylistObj = (this.props.playlistList && this.props.playlistList[thisPlaylistId]) || {};
 
-    const { tracks: newPlaylistTracks = {} } = newPlaylistObj;
-    const { tracks: currentPlaylistTracks = {} } = currentPlaylistObj;
+    const { tracks: prevPlaylistTracks = {} } = prevPlaylistObj;
+    const { tracks: thisPlaylistTracks = {} } = thisPlaylistObj;
 
     // handle confirm modal update to delete
-    if (nextProps.confirmModal.confirm && this.state.deletePlaylist) {
+    if (this.props.confirmModal.confirm && this.state.deletePlaylist) {
       this.actuallyDeletePlaylists();
       this.props.resetConfirm();
       return;
     }
 
     // handle confirm modal update to clear playlist
-    if (nextProps.confirmModal.confirm && this.state.clearPlaylist) {
+    if (this.props.confirmModal.confirm && this.state.clearPlaylist) {
       this.actuallyClearPlaylist();
       this.props.resetConfirm();
       return;
     }
 
     // something new to load
-    if (currentPlaylistId && currentPlaylistId !== newPlaylistId && newPlaylistObj) {
+    if (thisPlaylistId && thisPlaylistId !== prevPlaylistId && thisPlaylistObj) {
       this.setState({
         ...this.state,
-        playlistName: newPlaylistObj.name,
+        playlistName: thisPlaylistObj.name,
         filteredTrackListing: {},
         selectedGenreFilters: {},
       });
-      this.props.loadTracks(newPlaylistTracks);
+      this.props.loadTracks(thisPlaylistTracks);
       return;
     }
 
     // if num of tracks changed, loadTracks again
-    if (newPlaylistId && newPlaylistObj && currentPlaylistObj) {
-      const currentTrackListLength = Object.keys(currentPlaylistTracks).length;
-      const newTrackListLength = Object.keys(newPlaylistTracks).length;
+    if (thisPlaylistId && thisPlaylistObj && prevPlaylistObj) {
+      const thisTrackListLength = Object.keys(thisPlaylistTracks).length;
+      const prevTrackListLength = Object.keys(prevPlaylistTracks).length;
 
-      if (currentTrackListLength && currentTrackListLength !== newTrackListLength) {
-        this.props.loadTracks(newPlaylistTracks);
+      if (thisTrackListLength !== prevTrackListLength) {
+        this.props.loadTracks(thisPlaylistTracks);
       }
     }
   }

@@ -16,18 +16,20 @@ class FilterBar extends Component {
     selectedBPM: +queryString.parse(this.props.location.search).bpm || '',
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.location.search === this.props.location.search) {
+  componentDidUpdate(prevProps) {
+    if (prevProps.location.search === this.props.location.search) {
       return;
     }
 
+    const { search } = this.props.location;
+
     this.setState({
-      selectedGenre: +queryString.parse(nextProps.location.search).genre || '',
-      selectedMusicalKey: +queryString.parse(nextProps.location.search).key || '',
-      selectedPerPage: +queryString.parse(nextProps.location.search).perPage || '',
-      selectedPublishDateStart: queryString.parse(nextProps.location.search).publishDateStart || '',
-      selectedPublishDateEnd: queryString.parse(nextProps.location.search).publishDateEnd || '',
-      selectedBPM: +queryString.parse(nextProps.location.search).bpm || '',
+      selectedGenre: +queryString.parse(search).genre || '',
+      selectedMusicalKey: +queryString.parse(search).key || '',
+      selectedPerPage: +queryString.parse(search).perPage || '',
+      selectedPublishDateStart: queryString.parse(search).publishDateStart || '',
+      selectedPublishDateEnd: queryString.parse(search).publishDateEnd || '',
+      selectedBPM: +queryString.parse(search).bpm || '',
     })
   }
 

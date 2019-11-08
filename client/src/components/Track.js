@@ -58,19 +58,20 @@ class Track extends React.Component {
     this.fetchSimilarTracksData(track.id);
   }
 
-  async componentWillReceiveProps(nextProps) {
+  async componentDidUpdate(prevProps) {
     const { match = {} } = this.props;
     const { params = {} } = match;
     const { trackId } = params;
 
-    const { match: nextMatch = {} } = nextProps;
-    const { params: nextParams = {} } = nextMatch;
-    const { trackId: nextTrackId } = nextParams;
+    const { match: prevMatch = {} } = prevProps;
+    const { params: prevParams = {} } = prevMatch;
+    const { trackId: prevTrackId } = prevParams;
 
-    if (trackId === nextTrackId) {
+    if (trackId === prevTrackId) {
       return;
     }
 
+    // TODO: Put this in a thunk
     const trackData = await this.fetchTrackData(trackId);
 
     if (!trackData) {

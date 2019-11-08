@@ -2,6 +2,7 @@ import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import Scroll from 'react-scroll';
+import _ from 'lodash';
 
 import { fetchMostPopularTracks, searchTracks, fetchTracksSimilar, clearTracklist } from '../thunks';
 import { deslugify } from '../utils/helpers';
@@ -36,12 +37,15 @@ class TrackListingController extends React.Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentDidUpdate(prevProps) {
+    if (_.isEqual(prevProps, this.props)) {
+      return;
+    }
     const { isLoading, location, match, searchTracks, fetchTracksSimilar, fetchMostPopularTracks } = this.props;
-    const { type, searchId, searchString, searchTerm, trackId } = nextProps.match.params;
-    const { search: nextSearch } = nextProps.location;
+    const { searchId: prevSearchId, searchTerm: prevSearchTerm, trackId: prevTrackId } = prevProps.match.params;
+    const { search: prevSearch } = prevProps.location;
     const { search: thisSearch } = location;
-    const { searchTerm: thisSearchTerm, trackId: thisTrackId, searchId: thisSearchId } = match.params;
+    const { type: thisType, searchString: thisSearchString, searchTerm: thisSearchTerm, trackId: thisTrackId, searchId: thisSearchId } = match.params;
 
     // parse params
     const thisParams = {};
@@ -49,30 +53,30 @@ class TrackListingController extends React.Component {
       const splitParam = param.split('=');
       thisParams[splitParam[0]] = splitParam[1];
     });
-    const nextParams = {};
-    nextSearch.replace('?', '').split('&').forEach(param => {
+    const prevParams = {};
+    prevSearch.replace('?', '').split('&').forEach(param => {
       const splitParam = param.split('=');
-      nextParams[splitParam[0]] = splitParam[1];
+      prevParams[splitParam[0]] = splitParam[1];
     });
 
     // which page are we loading?
     const thisPage = +thisParams.page || DEFAULT_PAGE;
-    const newPage = +nextParams.page || DEFAULT_PAGE;
+    const prevPage = +prevParams.page || DEFAULT_PAGE;
 
     // how many tracks per page?
     const thisPerPage = +thisParams.perPage || DEFAULT_PER_PAGE;
-    const newPerPage = +nextParams.perPage || DEFAULT_PER_PAGE;
+    const prevPerPage = +prevParams.perPage || DEFAULT_PER_PAGE;
 
     // fetch if we have a new query or new params
-    if (((searchId !== thisSearchId) || (newPage !== thisPage) || (searchTerm !== thisSearchTerm) || (trackId !== thisTrackId) || (newPerPage !== thisPerPage)) && !isLoading) {
+    if (((prevSearchId !== thisSearchId) || (prevPage !== thisPage) || (prevSearchTerm !== thisSearchTerm) || (prevTrackId !== thisTrackId) || (prevPerPage !== thisPerPage)) && !isLoading) {
       Scroll.animateScroll.scrollToTop({ duration: 1500 });
 
-      if (searchTerm) {
-        searchTracks(deslugify(searchTerm), newPage, newPerPage);
-      } else if (trackId) {
-        fetchTracksSimilar(trackId, newPage, newPerPage);
+      if (thisSearchTerm) {
+        searchTracks(deslugify(thisSearchTerm), thisPage, thisPerPage);
+      } else if (thisTrackId) {
+        fetchTracksSimilar(thisTrackId, thisPage, thisPerPage);
       } else {
-        fetchMostPopularTracks(type, searchId, searchString, newPage, newPerPage);
+        fetchMostPopularTracks(thisType, thisSearchId, thisSearchString, thisPage, thisPerPage);
       }
     }
   }

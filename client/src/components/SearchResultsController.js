@@ -18,14 +18,14 @@ class SearchResultsController extends Component {
     searchEverything(searchTerm);
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentDidUpdate(prevProps) {
     const { isLoading, match, searchEverything } = this.props;
-    const { searchTerm: nextSearchTerm } = nextProps.match.params;
+    const { searchTerm: prevSearchTerm } = prevProps.match.params;
     const { searchTerm: thisSearchTerm } = match.params;
 
-    if ((nextSearchTerm && nextSearchTerm !== thisSearchTerm) && !isLoading) {
+    if ((thisSearchTerm && prevSearchTerm !== thisSearchTerm) && !isLoading) {
       Scroll.animateScroll.scrollToTop({ duration: 1500 });
-      searchEverything(nextSearchTerm);
+      searchEverything(thisSearchTerm);
     }
   }
 

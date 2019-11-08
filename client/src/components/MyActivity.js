@@ -111,8 +111,8 @@ class MyActivity extends Component {
     this.registerFbListeners(uid);
   }
 
-  componentWillReceiveProps(nextProps) {
-    const { auth } = nextProps;
+  componentDidUpdate() {
+    const { auth } = this.props;
     if (!auth.isLoaded || (auth.isLoaded && auth.isEmpty)) return;
     const { uid } = auth;
 

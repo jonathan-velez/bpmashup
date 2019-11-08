@@ -18,40 +18,46 @@ class MyLovedLabels extends React.Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (_.isEqual(this.props, nextProps)) return;
-    const { location, lovedLabelsDetails = {} } = this.props;
-    const { lovedLabels = [], location: nextLocation, isLoading } = nextProps;
+  componentDidUpdate(prevProps) {
+    if (_.isEqual(this.props, prevProps)) return;
+
+    const {
+      location: thisLocation,
+      lovedLabelsDetails = {},
+      lovedLabels = [],
+      isLoading,
+    } = this.props;
+    const { location: prevLocation } = prevProps;
     const { labels } = lovedLabelsDetails;
 
     if (isLoading) return;
 
     // parse query params
-    const { search: nextSearch } = nextLocation;
-    const { search: thisSearch } = location;
+    const { search: prevSearch } = prevLocation;
+    const { search: thisSearch } = thisLocation;
     const thisParams = {};
     thisSearch.replace('?', '').split('&').forEach(param => {
       const splitParam = param.split('=');
       thisParams[splitParam[0]] = splitParam[1];
     });
-    const nextParams = {};
-    nextSearch.replace('?', '').split('&').forEach(param => {
+    const prevParams = {};
+    prevSearch.replace('?', '').split('&').forEach(param => {
       const splitParam = param.split('=');
-      nextParams[splitParam[0]] = splitParam[1];
+      prevParams[splitParam[0]] = splitParam[1];
     });
 
     // which page are we loading?
     const thisPage = +thisParams.page || 1;
-    const newPage = +nextParams.page || 1;
+    const prevPage = +prevParams.page || 1;
 
     // how many per page?
     const thisPerPage = +thisParams.perPage || 10;
-    const newPerPage = +nextParams.perPage || 10;
+    const prevPerPage = +prevParams.perPage || 10;
 
     if (((Object.keys(labels).length === 0 && lovedLabels.length > 0) || // if label details weren't loaded on mount. usually due to firebase not loaded yet.
-      (thisPage !== newPage || thisPerPage !== newPerPage)) && // if pagination or per page changes
+      (thisPage !== prevPage || thisPerPage !== prevPerPage)) && // if pagination or per page changes
       !isLoading) { // ensure there's not already an xhr in progress
-      this.fetchMyFavoriteLabels(lovedLabels, newPage, newPerPage);
+      this.fetchMyFavoriteLabels(lovedLabels, thisPage, thisPerPage);
     }
   }
 
