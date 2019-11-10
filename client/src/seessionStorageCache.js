@@ -2,10 +2,27 @@ import moment from 'moment';
 import axios from 'axios';
 
 const setStorage = (path, payload) => {
-  const stamp = moment().format();
-
+  const stamp = Date.now();
   const serializedPayload = JSON.stringify(Object.assign(payload, { stamp }));
-  sessionStorage.setItem(path, serializedPayload);
+
+  try {
+    sessionStorage.setItem(path, serializedPayload);
+  } catch (error) {
+    makeRoomForStorageAndRetry(path, payload);
+  }
+}
+
+const removeItemFromStorageByKey = (key) => {
+  sessionStorage.removeItem(key);
+}
+
+const makeRoomForStorageAndRetry = (path, payload) => {
+  // call this function when caching fails due to sessionStorage exceeding its limit
+  // remove the oldest cached item and try to store payload, repeat until successful
+
+  const sortedItemKeys = Object.keys(sessionStorage).sort((a, b) => (JSON.parse(sessionStorage[a]).stamp) - (JSON.parse(sessionStorage[b]).stamp));
+  removeItemFromStorageByKey(sortedItemKeys[0]);
+  setStorage(path, payload);
 }
 
 const getStorage = path => {
@@ -23,7 +40,7 @@ const getStorage = path => {
 
 const getCachedResult = path => {
   const cachedResult = getStorage(path);
-  const isStillAlive = cachedResult && moment(cachedResult.stamp).add(1, 'hour').isAfter(moment().format()); // set it to 1 hr for now
+  const isStillAlive = cachedResult && moment(cachedResult.stamp).add(1, 'hour').isAfter(moment());
   return (cachedResult && isStillAlive) ? cachedResult : undefined;
 }
 
@@ -37,10 +54,9 @@ export const callAPIorCache = path => {
           setStorage(path, requestResult);
         }
       }
-      resolve(requestResult);
-      return;
+      return resolve(requestResult);
     } catch (error) {
-      reject(error);
+      return reject(error);
     }
   })
 }
