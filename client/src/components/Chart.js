@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import Scroll from 'react-scroll';
@@ -8,71 +8,62 @@ import ResponsiveTrackListing from './ResponsiveTrackListing';
 import GenreLabel from './GenreLabel';
 import { fetchChartData } from '../thunks';
 
-class Chart extends Component {
-  state = {
-    visible: false,
-  }
+const Chart = ({ match, fetchChartData, chartListing = {}, isLoading }) => {
+  const [visible, setVisible] = useState(false);
 
-  componentDidMount() {
-    const { match, fetchChartData } = this.props;
+  useEffect(() => {
     const { chartId } = match.params;
-
+    if (!chartId) return;
+    
     fetchChartData(chartId);
     Scroll.animateScroll.scrollToTop({ duration: 1500 });
-    this.setState({
-      visible: true,
-    })
+    setVisible(true);
+  }, []);
+
+  const { tracks = [], images = {}, name, description, genres, publishDate, chartOwner = {} } = chartListing;
+  const { xlarge = {} } = images;
+  const { secureUrl } = xlarge;
+  const { name: chartOwnerName } = chartOwner;
+
+  const trackTitleHeader = {
+    textAlign: 'left',
+    textTransform: 'uppercase',
   }
 
-  render() {
-    const { chartListing = {}, isLoading } = this.props;
-    const { visible } = this.state;
-    const { tracks = [], images = {}, name, description, genres, publishDate, chartOwner = {} } = chartListing;
-    const { xlarge = {} } = images;
-    const { secureUrl } = xlarge;
-    const { name: chartOwnerName } = chartOwner;
-
-    const trackTitleHeader = {
-      textAlign: 'left',
-      textTransform: 'uppercase',
-    }
-
-    return (
-      <React.Fragment>
-        <Segment placeholder padded='very'>
-          <Grid>
-            <Grid.Row>
-              <Grid.Column width={4}>
-                <Image src={secureUrl} />
-              </Grid.Column>
-              <Grid.Column width={8} textAlign='left'>
-                <Header as='h1' style={trackTitleHeader}>
-                  {name}
-                  {chartOwnerName && <Header.Subheader>{chartOwnerName}</Header.Subheader>}
-                  {publishDate && <Header.Subheader>{publishDate}</Header.Subheader>}
-                </Header>
-                {genres && genres.map((genre, idx) => {
-                  return (
-                    <GenreLabel key={idx} genreName={genre.name} genreSlug={genre.slug} genreId={genre.id} />
-                  )
-                })}
-                <p>{description}</p>
-              </Grid.Column>
-            </Grid.Row>
-          </Grid>
-        </Segment>
-        {
-          tracks.length > 0 ?
-            <Transition visible={visible} animation='fade' duration={1500}>
-              <ResponsiveTrackListing trackListing={tracks} isPlaylist={false} isLoading={isLoading} page={1} perPage={50} />
-            </Transition>
-            :
-            null
-        }
-
-      </React.Fragment>
-    );
-  }
+  return (
+    <React.Fragment>
+      <Segment placeholder padded='very'>
+        <Grid>
+          <Grid.Row>
+            <Grid.Column width={4}>
+              <Image src={secureUrl} />
+            </Grid.Column>
+            <Grid.Column width={8} textAlign='left'>
+              <Header as='h1' style={trackTitleHeader}>
+                {name}
+                {chartOwnerName && <Header.Subheader>{chartOwnerName}</Header.Subheader>}
+                {publishDate && <Header.Subheader>{publishDate}</Header.Subheader>}
+              </Header>
+              {genres && genres.map((genre, idx) => {
+                return (
+                  <GenreLabel key={idx} genreName={genre.name} genreSlug={genre.slug} genreId={genre.id} />
+                )
+              })}
+              <p>{description}</p>
+            </Grid.Column>
+          </Grid.Row>
+        </Grid>
+      </Segment>
+      {
+        tracks.length > 0 ?
+          <Transition visible={visible} animation='fade' duration={1500}>
+            <ResponsiveTrackListing trackListing={tracks} isPlaylist={false} isLoading={isLoading} page={1} perPage={50} />
+          </Transition>
+          :
+          null
+      }
+    </React.Fragment>
+  );
 }
 
 const mapStateToProps = state => {
