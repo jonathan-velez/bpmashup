@@ -1,6 +1,7 @@
 import { callAPIorCache } from '../seessionStorageCache';
 import { GET_CHART_DATA, LOAD_TRACKS, START_ASYNC } from '../constants/actionTypes';
 import { API_GET_CHART, API_GET_TRACKS } from '../constants/apiPaths';
+import { DEFAULT_PER_PAGE } from '../constants/defaults';
 
 // For a given chartId, fetch its metadata and then fetch the tracks within it
 // Requires two separate BP API calls
@@ -12,11 +13,11 @@ export async function fetchChartData(chartId) {
       type: START_ASYNC,
     });
 
-    const chartMetadata = await callAPIorCache(`${API_GET_CHART}?id=${chartId}&perPage=50`);
-    const chartObject = chartMetadata.data.results[0];
+    const chartMetadata = await callAPIorCache(`${API_GET_CHART}?id=${chartId}&perPage=${DEFAULT_PER_PAGE}`);
+    const chartObject = chartMetadata.data.results && Array.isArray(chartMetadata.data.results) && chartMetadata.data.results[0];
 
-    const chartTracks = await callAPIorCache(`${API_GET_TRACKS}?chartId=${chartId}&perPage=50`);
-    chartObject.tracks = chartTracks.data.results;
+    const chartTracks = await callAPIorCache(`${API_GET_TRACKS}?chartId=${chartId}&perPage=${DEFAULT_PER_PAGE}`);
+    chartObject.tracks = chartTracks.data && chartTracks.data.results;
 
     dispatch({
       type: GET_CHART_DATA,
