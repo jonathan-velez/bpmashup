@@ -77,7 +77,7 @@ class MyDownloadsAndLovedTracks extends Component {
     const thisPerPage = +thisParams.perPage || DEFAULT_PER_PAGE;
     const prevPerPage = +prevParams.perPage || DEFAULT_PER_PAGE;
 
-    if (((trackCount === 0 && thisLovedTracks.length > 0) || // if tracks details weren't loaded on mount. usually due to firebase not loaded yet.
+    if (((trackCount === 0 && (thisLovedTracks.length > 0 || thisDownloadedTracks.length > 0 || thisNoDownloadList.length > 0)) || // if tracks details weren't loaded on mount. usually due to firebase not loaded yet.
       (thisPageType !== prevPageType || thisPage !== prevPage || thisPerPage !== prevPerPage)) && // if pagination or per page changes or a new page type is called
       !thisIsLoading) {  // ensure there's not already an xhr in progress
       switch (thisPageType) {
