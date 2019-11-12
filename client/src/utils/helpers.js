@@ -1,3 +1,6 @@
+import { DEFAULT_PER_PAGE } from '../constants/defaults';
+import { getStorage, setStorage } from '../localStorage';
+
 export const dashlessFilter = (input) => {
   if (input) {
     return input.replace(/-/g, ' ');
@@ -173,4 +176,12 @@ export const sortObject = (obj, direction = 'asc') => {
   });
 
   return arr; // returns array
+}
+
+export const getPerPageSetting = () => {
+  return getStorage('perPage') || DEFAULT_PER_PAGE;
+}
+
+export const setPerPageSetting = (perPage) => {
+  setStorage('perPage', perPage);
 }

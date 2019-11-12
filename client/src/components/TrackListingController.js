@@ -5,8 +5,8 @@ import Scroll from 'react-scroll';
 import _ from 'lodash';
 
 import { fetchMostPopularTracks, searchTracks, fetchTracksSimilar, clearTracklist } from '../thunks';
-import { deslugify } from '../utils/helpers';
-import { DEFAULT_PAGE, DEFAULT_PER_PAGE } from '../constants/defaults';
+import { deslugify, getPerPageSetting } from '../utils/helpers';
+import { DEFAULT_PAGE } from '../constants/defaults';
 import TrackListingGroup from './TrackListingGroup';
 import TracklistingHeader from './TracklistingHeader';
 
@@ -23,7 +23,7 @@ class TrackListingController extends React.Component {
       params[splitParam[0]] = splitParam[1];
     });
 
-    const { page = DEFAULT_PAGE, perPage = DEFAULT_PER_PAGE } = params;
+    const { page = DEFAULT_PAGE, perPage = getPerPageSetting() } = params;
 
     Scroll.animateScroll.scrollToTop({ duration: 1500 });
 
@@ -64,8 +64,8 @@ class TrackListingController extends React.Component {
     const prevPage = +prevParams.page || DEFAULT_PAGE;
 
     // how many tracks per page?
-    const thisPerPage = +thisParams.perPage || DEFAULT_PER_PAGE;
-    const prevPerPage = +prevParams.perPage || DEFAULT_PER_PAGE;
+    const thisPerPage = +thisParams.perPage || getPerPageSetting();
+    const prevPerPage = +prevParams.perPage || getPerPageSetting();
 
     // fetch if we have a new query or new params
     if (((prevSearchId !== thisSearchId) || (prevPage !== thisPage) || (prevSearchTerm !== thisSearchTerm) || (prevTrackId !== thisTrackId) || (prevPerPage !== thisPerPage)) && !isLoading) {

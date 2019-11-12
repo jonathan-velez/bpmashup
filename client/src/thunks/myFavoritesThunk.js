@@ -1,7 +1,8 @@
 import { API_GET_LOVED_LABELS, API_GET_LOVED_ARTISTS } from '../constants/apiPaths';
 import { LOAD_LOVED_LABELS_DETAILS, START_ASYNC } from '../constants/actionTypes';
 import { callAPIorCache } from '../seessionStorageCache';
-import { DEFAULT_PAGE, DEFAULT_PER_PAGE } from '../constants/defaults';
+import { DEFAULT_PAGE } from '../constants/defaults';
+import { getPerPageSetting } from '../utils/helpers';
 
 export const getMyFavoriteLabels = (labels) => {
   return (dispatch) => {
@@ -36,7 +37,7 @@ export const getMyFavoriteArtists = (artists) => {
   }
 }
 
-export const getLabelsById = async (ids, page = DEFAULT_PAGE, perPage = DEFAULT_PER_PAGE) => {
+export const getLabelsById = async (ids, page = DEFAULT_PAGE, perPage = getPerPageSetting()) => {
   return (dispatch) => {
     dispatch({
       type: START_ASYNC,

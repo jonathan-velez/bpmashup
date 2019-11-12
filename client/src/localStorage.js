@@ -1,23 +1,24 @@
-export const loadStorage = () => {
+export const getStorage = (key) => {
   try {
-    const serializedState = sessionStorage.getItem('state');
+    const payload = sessionStorage.getItem(key);
 
-    if (serializedState === null) {
+    if (payload === null) {
       return undefined;
     }
 
-    return JSON.parse(serializedState);
+    // parse payload as JSON if pulling state for store load
+    return key === 'state' ? JSON.parse(payload) : payload;
   } catch (err) {
     return undefined;
   }
 };
 
-export const setStorage = state => {
+export const setStorage = (key, value) => {
   try {
-    const serializedState = JSON.stringify(state);
+    const serializedValue = key === 'state' ? JSON.stringify(value) : value;
 
-    sessionStorage.setItem('state', serializedState);
+    sessionStorage.setItem(key, serializedValue);
   } catch (err) {
-    console.log('error with setState', err, state);
+    console.log('error with setState', err, value);
   }
 };

@@ -8,8 +8,9 @@ import _ from 'lodash';
 import TracklistingHeader from './TracklistingHeader';
 import TrackListingGroup from './TrackListingGroup';
 import NothingHereMessage from './NothingHereMessage';
-import { DEFAULT_PAGE, DEFAULT_PER_PAGE } from '../constants/defaults';
+import { DEFAULT_PAGE } from '../constants/defaults';
 import { getTracksByIds, clearTracklist } from '../thunks';
+import { getPerPageSetting } from '../utils/helpers';
 
 class MyDownloadsAndLovedTracks extends Component {
   componentDidMount() {
@@ -74,8 +75,8 @@ class MyDownloadsAndLovedTracks extends Component {
     const prevPage = +prevParams.page || DEFAULT_PAGE;
 
     // how many tracks per page?
-    const thisPerPage = +thisParams.perPage || DEFAULT_PER_PAGE;
-    const prevPerPage = +prevParams.perPage || DEFAULT_PER_PAGE;
+    const thisPerPage = +thisParams.perPage || getPerPageSetting();
+    const prevPerPage = +prevParams.perPage || getPerPageSetting();
 
     if (((trackCount === 0 && (thisLovedTracks.length > 0 || thisDownloadedTracks.length > 0 || thisNoDownloadList.length > 0)) || // if tracks details weren't loaded on mount. usually due to firebase not loaded yet.
       (thisPageType !== prevPageType || thisPage !== prevPage || thisPerPage !== prevPerPage)) && // if pagination or per page changes or a new page type is called

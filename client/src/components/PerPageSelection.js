@@ -3,9 +3,11 @@ import { withRouter } from 'react-router-dom';
 import { Button } from 'semantic-ui-react';
 import queryString from 'query-string';
 
+import { getPerPageSetting, setPerPageSetting } from '../utils/helpers';
+
 class PerPageSelection extends React.PureComponent {
   render() {
-    const { activePage = 1, totalPages, perPage = 25, history } = this.props;
+    const { activePage = 1, totalPages, perPage = getPerPageSetting(), history } = this.props;
     if (!totalPages) return null;
 
     const updatePerPage = (perPage) => {
@@ -22,6 +24,8 @@ class PerPageSelection extends React.PureComponent {
         pathname,
         search: newSearchString,
       }
+
+      setPerPageSetting(perPage);
       history.push(pushObject);
     }
 

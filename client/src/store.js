@@ -9,11 +9,11 @@ import logger from 'redux-logger'
 import _ from 'lodash';
 
 import rootReducer from './reducers/index';
-import { loadStorage, setStorage } from './localStorage';
+import { getStorage, setStorage } from './localStorage';
 import { activityLogger, checkProtectedAction } from './middleware';
 import { LOAD_PLAYLISTS, LOAD_DOWNLOADED_TRACKS, LOAD_LOVED_TRACKS, LOAD_LOVED_ARTISTS, LOAD_LOVED_LABELS, LOAD_PERMS, LOAD_NO_DOWNLOADS_TRACKS } from './constants/actionTypes';
 
-const persistedStorage = loadStorage();
+const persistedStorage = getStorage('state');
 
 const firebaseConfig = {
   apiKey: "AIzaSyB64LWcBgz5xhtwii5LQDRlfBFivZk6GOU",
@@ -42,7 +42,7 @@ const store = createStoreWithFirebase(rootReducer, persistedStorage);
 
 store.subscribe(() => {
   const state = store.getState();
-  setStorage({
+  setStorage('state', {
     mediaPlayer: state.mediaPlayer,
   });
 });

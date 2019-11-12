@@ -4,7 +4,8 @@ import TrackListingActionRow from './TrackListingActionRow';
 import TrackListingCards from './TrackListingCards';
 import TrackListingTable from './TrackListingTable';
 import Pager from './Pager';
-import { DEFAULT_PER_PAGE } from '../constants/defaults';
+
+import { getPerPageSetting } from '../utils/helpers';
 
 const TrackListingGroup = ({ trackListing = {} }) => {
   const { tracks, metadata, tracklistView } = trackListing;
@@ -22,7 +23,7 @@ const TrackListingGroup = ({ trackListing = {} }) => {
         <TrackListingTable trackListing={tracks} isPlaylist={false} page={page} perPage={perPage} />
       }
       {totalPages > 1 ?
-        <Pager activePage={page} totalPages={totalPages} firstItem={null} lastItem={null} perPage={perPage || DEFAULT_PER_PAGE} query={query} />
+        <Pager activePage={page} totalPages={totalPages} firstItem={null} lastItem={null} perPage={perPage || getPerPageSetting()} query={query} />
         :
         null
       }

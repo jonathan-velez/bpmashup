@@ -3,8 +3,9 @@ import _ from 'lodash';
 
 import { START_ASYNC, GET_TRACKS, FETCH_TRACKS, SEARCH_TRACKS, GET_YOUTUBE_LINK, CLEAR_TRACKLIST } from '../constants/actionTypes';
 import { API_MY_BEATPORT, API_MOST_POPULAR, API_GET_TRACKS, API_SIMILAR_TRACKS, API_GET_YOUTUBE_LINK } from '../constants/apiPaths';
-import { DEFAULT_PAGE, DEFAULT_PER_PAGE } from '../constants/defaults';
+import { DEFAULT_PAGE } from '../constants/defaults';
 import { callAPIorCache } from '../seessionStorageCache';
+import { getPerPageSetting } from '../utils/helpers';
 
 export const getTracks = async (searchFacets) => {
   return async (dispatch) => {
@@ -30,7 +31,7 @@ export const getTracks = async (searchFacets) => {
 
     const pageModel = {
       page: DEFAULT_PAGE,
-      perPage: DEFAULT_PER_PAGE,
+      perPage: getPerPageSetting(),
       publishDateStart: null,
       publishDateEnd: null,
     }
@@ -62,7 +63,7 @@ export const getTracks = async (searchFacets) => {
   }
 }
 
-export const fetchMostPopularTracks = async (type = 'genre', id, name, page = DEFAULT_PAGE, perPage = DEFAULT_PER_PAGE, endPoint = API_MOST_POPULAR) => {
+export const fetchMostPopularTracks = async (type = 'genre', id, name, page = DEFAULT_PAGE, perPage = getPerPageSetting(), endPoint = API_MOST_POPULAR) => {
   return async (dispatch) => {
     dispatch({
       type: START_ASYNC,
@@ -77,7 +78,7 @@ export const fetchMostPopularTracks = async (type = 'genre', id, name, page = DE
   }
 }
 
-export const getTracksByIds = async (ids, page = DEFAULT_PAGE, perPage = DEFAULT_PER_PAGE) => {
+export const getTracksByIds = async (ids, page = DEFAULT_PAGE, perPage = getPerPageSetting()) => {
   return async (dispatch) => {
     dispatch({
       type: START_ASYNC,
