@@ -6,10 +6,14 @@ const PlaylistListItems = ({ playlistList, track, addToPlaylist }) => {
     const added = playlist.listOfTracks && playlist.listOfTracks.includes(track.id);
     const { tracks = {} } = playlist;
 
+    const listItemStyle = {
+      cursor: 'pointer',
+    }
+
     return (
-      <List.Item key={playlist.id}>
+      <List.Item onClick={() => addToPlaylist({ id: playlist.id, added })} style={listItemStyle}>
         <List.Content floated='right'>
-          <Checkbox onClick={() => addToPlaylist({ id: playlist.id, added })} checked={added} />
+          <Checkbox checked={added} />
         </List.Content>
         <List.Content className={added ? 'boldedText' : ''}>{playlist.name} ({Object.keys(tracks).length})</List.Content>
       </List.Item>
