@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { Fragment, useState, useEffect } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Grid, Image, Header, Menu, Button } from 'semantic-ui-react';
@@ -12,106 +12,83 @@ import GenreLabel from './GenreLabel';
 import ItemCards from './ItemCards';
 import TrackListingGroup from './TrackListingGroup';
 
-class Label extends Component {
-  state = {
-    activeItem: 'tracks',
-  }
+const Label = ({ match, labelDetail, trackListing, location, getLabelDetail }) => {
+  const { labelId } = match.params;
+  const { labelData, releasesData } = labelDetail;
+  const { images, name, id, biography, genres } = labelData;
+  const imageSrc = images && images.large && images.large.secureUrl;
+  const { pathname } = location;
 
-  componentDidMount() {
-    this.fetchLabelDetails();
-  }
+  const [activeItem, setActiveItem] = useState('tracks');
 
-  componentDidUpdate(prevProps) {
-    if (+prevProps.match.params.labelId !== +this.props.match.params.labelId) {
-      this.fetchLabelDetails();
-    }
-  }
+  useEffect(() => {
+    fetchLabelDetails();
+  }, [labelId])
 
-  fetchLabelDetails() {
+  const fetchLabelDetails = () => {
     Scroll.animateScroll.scrollToTop({ duration: 1500 });
-    this.props.getLabelDetail(this.props.match.params.labelId);
+    getLabelDetail(labelId);
   }
 
-  handleItemClick = (e, { name }) => {
-    this.setState({ activeItem: name });
+  const handleItemClick = (e, { name }) => {
+    setActiveItem(name);
   }
 
-  render() {
-    const { labelDetail, trackListing, location } = this.props;
-    const { activeItem } = this.state;
-    const { labelData, releasesData } = labelDetail;
-    const { images, name, id, biography, genres } = labelData;
-    const imageSrc = images && images.large.secureUrl;
-    const { pathname } = location;
+  return (
+    <Fragment>
+      <Grid stackable>
+        {imageSrc &&
+          <Grid.Row columns={2}>
+            <Grid.Column>
+              <Image src={imageSrc} size='medium' />
+            </Grid.Column>
+            <Grid.Column textAlign='right'>
+              <Header size='huge' className='item-header'>{name} <LoveItem itemType='label' item={{ id }} type='button' /></Header>
+              {biography && <ShowMore content={biography} />}
+            </Grid.Column>
+          </Grid.Row>
+        }
+        {genres &&
+          <Grid.Row columns={1}>
+            <Grid.Column>
+              <Header textAlign='left' dividing>GENRES</Header>
+              {genres && genres.map((genre, idx) => {
+                return (
+                  <GenreLabel key={idx} genreName={genre.name} genreSlug={genre.slug} genreId={genre.id} />
+                )
+              })}
+            </Grid.Column>
+          </Grid.Row>
+        }
+      </Grid>
+      <Menu secondary pointing>
+        <Menu.Item
+          link
+          name='tracks'
+          className='item-header'
+          active={activeItem === 'tracks'}
+          onClick={handleItemClick}
+        >Top Tracks</Menu.Item>
+        <Menu.Item
+          link
+          name='releases'
+          className='item-header'
+          active={activeItem === 'releases'}
+          onClick={handleItemClick}
+        >Featured Releases</Menu.Item>
 
-    let activeItemContent = null;
-    switch (activeItem) {
-      case 'releases':
-        activeItemContent =
-          releasesData &&
-          <ItemCards items={releasesData} itemType='release' showHeader={false} />
-        break;
-      case 'tracks':
-        activeItemContent =
-          trackListing &&
-          <TrackListingGroup trackListing={trackListing} />
-        break;
-      default:
-    }
-
-    return (
-      <Fragment>
-        <Grid stackable>
-          {imageSrc &&
-            <Grid.Row columns={2}>
-              <Grid.Column>
-                <Image src={imageSrc} size='medium' />
-              </Grid.Column>
-              <Grid.Column textAlign='right'>
-                <Header size='huge' className='item-header'>{name} <LoveItem itemType='label' item={{ id }} type='button' /></Header>
-                {biography && <ShowMore content={biography} />}
-              </Grid.Column>
-            </Grid.Row>
-          }
-          {genres &&
-            <Grid.Row columns={1}>
-              <Grid.Column>
-                <Header textAlign='left' dividing>GENRES</Header>
-                {genres && genres.map((genre, idx) => {
-                  return (
-                    <GenreLabel key={idx} genreName={genre.name} genreSlug={genre.slug} genreId={genre.id} />
-                  )
-                })}
-              </Grid.Column>
-            </Grid.Row>
-          }
-        </Grid>
-        <Menu secondary pointing>
-          <Menu.Item
-            link
-            name='tracks'
-            className='item-header'
-            active={activeItem === 'tracks'}
-            onClick={this.handleItemClick}
-          >Top Tracks</Menu.Item>
-          <Menu.Item
-            link
-            name='releases'
-            className='item-header'
-            active={activeItem === 'releases'}
-            onClick={this.handleItemClick}
-          >Featured Releases</Menu.Item>
-
-          <Menu.Item position='right'>
-            <Button as={Link} to={`${pathname}/tracks`}>
-              View All Tracks
+        <Menu.Item position='right'>
+          <Button as={Link} to={`${pathname}/tracks`}>
+            View All Tracks
             </Button>
-          </Menu.Item>
-        </Menu>
-        {activeItemContent}
-      </Fragment>
-    );
-  }
+        </Menu.Item>
+      </Menu>
+      {activeItem === 'tracks' ?
+        trackListing && <TrackListingGroup trackListing={trackListing} /> :
+        releasesData && <ItemCards items={releasesData} itemType='release' showHeader={false} />
+      }
+    </Fragment>
+  );
 }
 
 const mapStateToProps = state => {

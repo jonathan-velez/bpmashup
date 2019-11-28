@@ -1,36 +1,32 @@
-import React, { Component } from 'react';
+import React, { useEffect, useRef } from 'react';
 import ReactDOM from 'react-dom';
 import { Form, Input } from 'semantic-ui-react';
 
-class AddNewPlaylistForm extends Component {
-  componentDidMount() {
-    this.focus();
-  }
-  
-  handleRef = (input) => {
-    this.inputRef = input;
+const AddNewPlaylistForm = ({ handleSubmit, newPlaylistName, handleInputChange }) => {
+  useEffect(() => {
+    focusInput();
+  }, []);
+
+  const inputRef = useRef(null);
+
+  const focusInput = () => {
+    inputRef.current.focus();
+    ReactDOM.findDOMNode(inputRef.current).querySelector('input').select();
   }
 
-  focus = () => {
-    this.inputRef.focus();
-    ReactDOM.findDOMNode(this.inputRef).querySelector('input').select();
-  }
-
-  render() {
-    return (
-      <Form onSubmit={this.props.handleSubmit}>
-        <Input
-          placeholder='Playlist name'
-          size='large'
-          fluid
-          value={this.props.newPlaylistName}
-          onChange={(e) => this.props.handleInputChange(e)}
-          ref={this.handleRef}
-          action='Create Playlist'
-        />
-      </Form>
-    );
-  }
+  return (
+    <Form onSubmit={handleSubmit}>
+      <Input
+        placeholder='Playlist name'
+        size='large'
+        fluid
+        value={newPlaylistName}
+        onChange={(e) => handleInputChange(e)}
+        ref={inputRef}
+        action='Create Playlist'
+      />
+    </Form>
+  );
 }
 
 export default AddNewPlaylistForm;

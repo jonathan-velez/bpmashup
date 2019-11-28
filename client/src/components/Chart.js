@@ -6,16 +6,16 @@ import { Transition, Grid, Image, Header, Segment } from 'semantic-ui-react';
 
 import ResponsiveTrackListing from './ResponsiveTrackListing';
 import GenreLabel from './GenreLabel';
-import { fetchChartData } from '../thunks';
+import { fetchChartDataById } from '../thunks';
 
-const Chart = ({ match, fetchChartData, chartListing = {}, isLoading }) => {
+const Chart = ({ match, fetchChartDataById, chartListing = {}, isLoading }) => {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
     const { chartId } = match.params;
     if (!chartId) return;
     
-    fetchChartData(chartId);
+    fetchChartDataById(chartId);
     Scroll.animateScroll.scrollToTop({ duration: 1500 });
     setVisible(true);
   }, []);
@@ -74,7 +74,7 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => {
-  return bindActionCreators(Object.assign({}, { fetchChartData }), dispatch);
+  return bindActionCreators(Object.assign({}, { fetchChartDataById }), dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Chart);

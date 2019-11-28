@@ -1,58 +1,46 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import ReactDOM from 'react-dom';
 import { withRouter } from 'react-router';
 
 import { Form, Input, Icon } from 'semantic-ui-react';
 
-class SearchTracks extends React.Component {
-  state = {
-    searchString: '',
-  }
+const SearchTracks = ({ history }) => {
+  const [searchString, setSearchString] = useState('');
+  const inputRef = useRef(null);
 
-  handleFormSubmit = () => {
-    const { history } = this.props;
-    const { searchString } = this.state;
-
+  const handleFormSubmit = () => {
     const sluggedString = encodeURIComponent(searchString);
     history.push(`/search/${sluggedString}`);
   }
 
-  handleChange = ({ target }) => {
-    const { value } = target;
-    this.setState({
-      searchString: value,
-    })
+  const handleChange = ({ target }) => {
+    setSearchString(target.value);
   }
 
-  selectInputText = () => {
-    ReactDOM.findDOMNode(this.inputRef).querySelector('input').select();
+  const selectInputText = () => {
+    ReactDOM.findDOMNode(inputRef.current).querySelector('input').select();
   }
 
-  setInputRef = (input) => {
-    this.inputRef = input;
+  const inputStyle = {
+    width: '300px'
   }
 
-  render() {
-    const inputStyle = {
-      width: '300px'
-    }
-    return (
-      <Form onSubmit={this.handleFormSubmit}>
-        <Input
-          ref={this.setInputRef}
-          size='medium'
-          onChange={(e) => this.handleChange(e)}
-          onFocus={this.selectInputText} 
-          style={inputStyle}
-          iconPosition='left'
-        >
-          <Icon name='search' />
-          <input />
-        </Input>
-      </Form>
-    );
-  }
+  return (
+    <Form onSubmit={handleFormSubmit}>
+      <Input
+        ref={inputRef}
+        size='medium'
+        onChange={(e) => handleChange(e)}
+        onFocus={selectInputText}
+        style={inputStyle}
+        iconPosition='left'
+      >
+        <Icon name='search' />
+        <input />
+      </Input>
+    </Form>
+  );
+
 }
-
 
 export default (withRouter(SearchTracks));

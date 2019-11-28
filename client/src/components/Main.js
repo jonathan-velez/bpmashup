@@ -10,7 +10,7 @@ import ReleaseListingController from './ReleaseListingController';
 import Artist from './Artist';
 import Label from './Label';
 import TracksController from './TracksController';
-import MyDownloadsAndLovedTracks from './MyDownloadsAndLovedTracks';
+import MyHistoryTracksController from './MyHistoryTracksController';
 import MyActivity from './MyActivity';
 import Track from './Track';
 import Chart from './Chart';
@@ -27,7 +27,7 @@ const Main = () => {
         <Route exact path='/track/:trackName/:trackId' component={Track} />
         <Route exact path='/history/my-activity' component={MyActivity} />
         <Route exact path='/history/loved-labels' component={MyLovedLabels} />
-        <Route exact path='/history/:pageType' component={MyDownloadsAndLovedTracks} />
+        <Route exact path='/history/:pageType' component={MyHistoryTracksController} />
         <Route exact path='/artist/:artistName/:artistId' component={Artist} />
         <Route exact path='/label/:labelName/:labelId' component={Label} />
         <Route exact path="/most-popular/:type/:searchString/:searchId" component={TrackListingController} />

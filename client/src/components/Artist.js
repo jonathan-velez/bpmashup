@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { Fragment, useState, useEffect } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -13,156 +13,150 @@ import EventsList from './EventsList';
 import LoveItem from './LoveItem';
 import ShowMore from './ShowMore';
 
-class Artist extends Component {
-  state = {
-    activeItem: 'biography',
-    activeItem2: 'tracks',
+const Artist = ({ match, getArtistDetails, artistDetail, trackListing, location }) => {
+  const [activeItem, setActiveItem] = useState('biography');
+  const [activeItem2, setActiveItem2] = useState('tracks');
+
+  const { params } = match;
+  const { artistId, artistName } = params;
+  const { artistData = {}, eventsData = [] } = artistDetail;
+  const { name, id, biography, images, genres, featuredReleases } = artistData;
+  const imageSrc = images && images.large.secureUrl;
+  const { pathname } = location;
+  const eventStyle = {
+    maxHeight: '405px',
+    overflowY: 'scroll',
   }
 
-  componentDidMount() {
-    this.fetchArtistData();
-  }
 
-  componentDidUpdate(prevProps) {
-    if (+prevProps.match.params.artistId !== +this.props.match.params.artistId) {
-      this.fetchArtistData();
-    }
-  }
+  useEffect(() => {
+    fetchArtistData(artistId);
+  }, [artistId]);
 
-  fetchArtistData() {
+  const fetchArtistData = (artistId) => {
     Scroll.animateScroll.scrollToTop({ duration: 1500 });
+
     const artist = {
-      artistId: this.props.match.params.artistId,
-      artistName: this.props.match.params.artistName
+      artistId,
+      artistName,
     }
-    this.props.getArtistDetails(artist);
+
+    getArtistDetails(artist);
   }
 
-  handleItemClick = (e, { name }) => {
-    this.setState({ activeItem: name });
+  const handleItemClick = (e, { name }) => {
+    setActiveItem(name);
   }
 
-  handleItemClick2 = (e, { name }) => {
-    this.setState({ activeItem2: name });
+  const handleItemClick2 = (e, { name }) => {
+    setActiveItem2(name);
   }
 
-  render() {
-    const { artistDetail, trackListing, location } = this.props;
-    const { activeItem, activeItem2 } = this.state;
-    const { artistData = {}, eventsData = [] } = artistDetail;
-    const { name, id, biography, images, genres, featuredReleases } = artistData;
-    const imageSrc = images && images.large.secureUrl;
-    const { pathname } = location;
-    const stylez = {
-      maxHeight: '405px',
-      overflowY: 'scroll',
-    }
+  if (Object.keys(artistData).length === 0) return null; // TODO: do something nicer here
 
-    if (Object.keys(artistData).length === 0) return null; // TODO: do something nicer here
+  let activeItemContent = null;
+  switch (activeItem) {
+    case 'biography':
+      activeItemContent = biography && <ShowMore content={biography} />
+      break;
+    case 'genres':
+      activeItemContent = genres && genres.map((genre, idx) => {
+        return (
+          <GenreLabel key={idx} genreName={genre.name} genreSlug={genre.slug} genreId={genre.id} />
+        )
+      })
+      break;
+    case 'events':
+      activeItemContent = eventsData && eventsData.length > 0 &&
+        <div style={eventStyle}><EventsList eventsData={eventsData} /></div>
+      break;
+    default:
+  }
 
-    let activeItemContent = null;
-    switch (activeItem) {
-      case 'biography':
-        activeItemContent = biography && <ShowMore content={biography} />
-        break;
-      case 'genres':
-        activeItemContent = genres && genres.map((genre, idx) => {
-          return (
-            <GenreLabel key={idx} genreName={genre.name} genreSlug={genre.slug} genreId={genre.id} />
-          )
-        })
-        break;
-      case 'events':
-        activeItemContent = eventsData && eventsData.length > 0 &&
-          <div style={stylez}><EventsList eventsData={eventsData} /></div>
-        break;
-      default:
-    }
+  let activeItemContent2 = null;
+  switch (activeItem2) {
+    case 'releases':
+      activeItemContent2 =
+        featuredReleases &&
+        <ItemCards items={featuredReleases} itemType='release' showHeader={false} />
+      break;
+    case 'tracks':
+      activeItemContent2 =
+        trackListing &&
+        <TrackListingGroup trackListing={trackListing} />
+      break;
+    default:
+  }
 
-    let activeItemContent2 = null;
-    switch (activeItem2) {
-      case 'releases':
-        activeItemContent2 =
-          featuredReleases &&
-          <ItemCards items={featuredReleases} itemType='release' showHeader={false} />
-        break;
-      case 'tracks':
-        activeItemContent2 =
-          trackListing &&
-          <TrackListingGroup trackListing={trackListing} />
-        break;
-      default:
-    }
-
-    return (
-      <Fragment>
-        <Grid divided stackable>
-          {imageSrc &&
-            <React.Fragment>
-              <Grid.Row columns={1}>
-                <Grid.Column>
-                  <Header floated='right' size='huge' className='item-header'>{name} <LoveItem itemType='artist' item={{ id }} type='button' /></Header>
-                </Grid.Column>
-              </Grid.Row>
-              <Grid.Row columns={2}>
-                <Grid.Column>
-                  <Image src={imageSrc} />
-                </Grid.Column>
-                <Grid.Column textAlign='right'>
-                  <Menu secondary pointing>
-                    <Menu.Item
-                      link
-                      name='biography'
-                      className='item-header'
-                      active={activeItem === 'biography'}
-                      onClick={this.handleItemClick}
-                    >Biography</Menu.Item>
-                    <Menu.Item
-                      link
-                      name='genres'
-                      className='item-header'
-                      active={activeItem === 'genres'}
-                      onClick={this.handleItemClick}
-                    >Genres</Menu.Item>
-                    <Menu.Item
-                      link
-                      name='events'
-                      className='item-header'
-                      active={activeItem === 'events'}
-                      onClick={this.handleItemClick}
-                    >Events</Menu.Item>
-                  </Menu>
-                  {activeItemContent}
-                </Grid.Column>
-              </Grid.Row>
-            </React.Fragment>
-          }
-        </Grid>
-        <Menu secondary pointing>
-          <Menu.Item
-            link
-            name='tracks'
-            className='item-header'
-            active={activeItem2 === 'tracks'}
-            onClick={this.handleItemClick2}
-          >Top Tracks</Menu.Item>
-          <Menu.Item
-            link
-            name='releases'
-            className='item-header'
-            active={activeItem2 === 'releases'}
-            onClick={this.handleItemClick2}
-          >Featured Releases</Menu.Item>
-          <Menu.Item position='right'>
-            <Button as={Link} to={`${pathname}/tracks`}>
-              View All Tracks
+  return (
+    <Fragment>
+      <Grid divided stackable>
+        {imageSrc &&
+          <React.Fragment>
+            <Grid.Row columns={1}>
+              <Grid.Column>
+                <Header floated='right' size='huge' className='item-header'>{name} <LoveItem itemType='artist' item={{ id }} type='button' /></Header>
+              </Grid.Column>
+            </Grid.Row>
+            <Grid.Row columns={2}>
+              <Grid.Column>
+                <Image src={imageSrc} />
+              </Grid.Column>
+              <Grid.Column textAlign='right'>
+                <Menu secondary pointing>
+                  <Menu.Item
+                    link
+                    name='biography'
+                    className='item-header'
+                    active={activeItem === 'biography'}
+                    onClick={handleItemClick}
+                  >Biography</Menu.Item>
+                  <Menu.Item
+                    link
+                    name='genres'
+                    className='item-header'
+                    active={activeItem === 'genres'}
+                    onClick={handleItemClick}
+                  >Genres</Menu.Item>
+                  <Menu.Item
+                    link
+                    name='events'
+                    className='item-header'
+                    active={activeItem === 'events'}
+                    onClick={handleItemClick}
+                  >Events</Menu.Item>
+                </Menu>
+                {activeItemContent}
+              </Grid.Column>
+            </Grid.Row>
+          </React.Fragment>
+        }
+      </Grid>
+      <Menu secondary pointing>
+        <Menu.Item
+          link
+          name='tracks'
+          className='item-header'
+          active={activeItem2 === 'tracks'}
+          onClick={handleItemClick2}
+        >Top Tracks</Menu.Item>
+        <Menu.Item
+          link
+          name='releases'
+          className='item-header'
+          active={activeItem2 === 'releases'}
+          onClick={handleItemClick2}
+        >Featured Releases</Menu.Item>
+        <Menu.Item position='right'>
+          <Button as={Link} to={`${pathname}/tracks`}>
+            View All Tracks
             </Button>
-          </Menu.Item>
-        </Menu>
-        {activeItemContent2}
-      </Fragment>
-    );
-  }
+        </Menu.Item>
+      </Menu>
+      {activeItemContent2}
+    </Fragment>
+  );
+
 }
 
 const mapStateToProps = state => {

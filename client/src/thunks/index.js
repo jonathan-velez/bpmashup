@@ -8,7 +8,7 @@ import { fetchReleaseData } from './releaseThunk';
 import { getArtistDetails } from './artistThunk';
 import { getLabelDetail } from './labelThunk';
 import { getTracks, fetchTracksSimilar, fetchMostPopularTracks, getYoutubeLink, getTracksByIds, clearTracklist } from './tracksThunk';
-import { fetchChartData } from './chartThunk';
+import { fetchChartDataById, fetchChartMetadataByIds } from './chartThunk';
 import { loadPlaylists, loadDownloads, loadNoDownloads, loadLovedTracks, loadLovedArtists, loadLovedLabels, loadPermissions } from './userSessionThunk';
 
 export {
@@ -35,7 +35,7 @@ export {
   getTracksByIds,
   clearTracklist,
   clearPlaylist,
-  fetchChartData,
+  fetchChartDataById,
   loadPlaylists,
   loadDownloads,
   loadNoDownloads,
@@ -43,4 +43,5 @@ export {
   loadLovedArtists,
   loadLovedLabels,
   loadPermissions,
+  fetchChartMetadataByIds,
 };

@@ -1,20 +1,18 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import { fetchGenres } from '../actions/ActionCreators';
 import GenreList from '../components/GenreList';
 
-class GenreControl extends React.Component {
-  componentDidMount() {
-    this.props.fetchGenres();
-  }
+const GenreControl = ({ genreListing, fetchGenres }) => {
+  useEffect(() => {
+    fetchGenres();
+  }, []);
 
-  render() {
-    return (
-      <GenreList genres={this.props.genreListing} />
-    )
-  }
+  return (
+    <GenreList genres={genreListing} />
+  )
 }
 
 const mapStateToProps = state => {

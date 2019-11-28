@@ -1,6 +1,8 @@
 import { createSelector } from 'reselect';
 import _ from 'lodash';
 
+import { getUserHistoryPageSetup } from './userHistory';
+
 const getPlaylists = state => state.playlistList;
 const getUserPermissions = state => state.userDetail && state.userDetail.permissions;
 const getPlaylistTracks = (state = {}, props = {}) => {
@@ -46,3 +48,5 @@ export const getPlaylistTrackCount = createSelector([getPlaylistTracks], tracks 
 export const hasZippyPermission = createSelector([getUserPermissions], permissions => Array.isArray(permissions) && permissions.includes('zipZip'));
 
 export const hasBeenDownloaded = createSelector([_hasBeenDownloaded], downloaded => downloaded);
+
+export { getUserHistoryPageSetup };

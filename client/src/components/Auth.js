@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
@@ -18,13 +18,14 @@ import {
   clearLovedLabelsDetails,
 } from '../actions/ActionCreators';
 
-class Auth extends React.Component {
-  logIn = () => {
+// TODO: Dispatch through actions/thunks rather than importing store
+const Auth = ({ auth, firebase, history }) => {
+  const logIn = () => {
     store.dispatch(openLoginModalWindow());
   }
 
-  logOut = () => {
-    this.props.firebase.logout().then(() => {
+  const logOut = () => {
+    firebase.logout().then(() => {
       store.dispatch(clearPlaylists());
       store.dispatch(clearDownloads());
       store.dispatch(clearNoDownloads());
@@ -33,80 +34,77 @@ class Auth extends React.Component {
       store.dispatch(clearLovedArtistsDetails());
       store.dispatch(clearLovedLabels());
       store.dispatch(clearLovedLabelsDetails());
-      this.props.history.push(`/`);      
+      history.push(`/`);
     });
   }
 
-  render() {
-    const { auth } = this.props;
-    const { photoURL, displayName, email } = auth;
+  const { photoURL, displayName, email } = auth;
 
-    const trigger = auth.isEmpty ?
-      <Icon name='user outline' />
+  const trigger = auth.isEmpty ?
+    <Icon name='user outline' />
+    :
+    photoURL ?
+      <Image
+        src={photoURL}
+        size='mini'
+        circular
+      />
       :
-      photoURL ?
-        <Image
-          src={photoURL}
-          size='mini'
-          circular
-        />
-        :
-        <Icon name='user' />
+      <Icon name='user' />
 
-    return (
-      <React.Fragment>
-        <Dropdown
-          item
-          scrolling
-          trigger={trigger}
-          direction='left'
-        >
-          <Dropdown.Menu>
-            {!auth.isEmpty ?
-              <React.Fragment>
-                <Dropdown.Item
-                  disabled
-                  text={displayName ? displayName.toUpperCase() : email}
-                />
-                <Dropdown.Item
-                  as={Link} to='/history/loved-tracks'
-                  text='Loved Tracks'
-                />
-                <Dropdown.Item
-                  as={Link} to='/history/loved-labels'
-                  text='Loved Labels'
-                />
-                <Dropdown.Item
-                  as={Link} to='/history/downloads'
-                  text='Downloads'
-                />
-                <Dropdown.Item
-                  as={Link} to='/history/no-downloads'
-                  text='No Downloads'
-                />
-                <Dropdown.Item
-                  as={Link} to='/history/my-activity'
-                  text='My Activity'
-                />
-                <Dropdown.Divider />
-                <Dropdown.Item
-                  text='Log out'
-                  onClick={() => this.logOut()}
-                />
-              </React.Fragment>
-              :
-              <React.Fragment>
-                <Dropdown.Item
-                  text='Log in / Sign up'
-                  onClick={() => this.logIn()}
-                />
-              </React.Fragment>
-            }
-          </Dropdown.Menu>
-        </Dropdown>
-      </React.Fragment>
-    );
-  }
+  return (
+    <Fragment>
+      <Dropdown
+        item
+        scrolling
+        trigger={trigger}
+        direction='left'
+      >
+        <Dropdown.Menu>
+          {!auth.isEmpty ?
+            <Fragment>
+              <Dropdown.Item
+                disabled
+                text={displayName ? displayName.toUpperCase() : email}
+              />
+              <Dropdown.Item
+                as={Link} to='/history/loved-tracks'
+                text='Loved Tracks'
+              />
+              <Dropdown.Item
+                as={Link} to='/history/loved-labels'
+                text='Loved Labels'
+              />
+              <Dropdown.Item
+                as={Link} to='/history/downloads'
+                text='Downloads'
+              />
+              <Dropdown.Item
+                as={Link} to='/history/no-downloads'
+                text='No Downloads'
+              />
+              <Dropdown.Item
+                as={Link} to='/history/my-activity'
+                text='My Activity'
+              />
+              <Dropdown.Divider />
+              <Dropdown.Item
+                text='Log out'
+                onClick={() => logOut()}
+              />
+            </Fragment>
+            :
+            <Fragment>
+              <Dropdown.Item
+                text='Log in / Sign up'
+                onClick={() => logIn()}
+              />
+            </Fragment>
+          }
+        </Dropdown.Menu>
+      </Dropdown>
+    </Fragment>
+  );
 }
 
 export default compose(

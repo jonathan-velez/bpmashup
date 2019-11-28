@@ -1,108 +1,59 @@
-import React from 'react';
-import { bindActionCreators } from 'redux';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
-import Scroll from 'react-scroll';
-import _ from 'lodash';
+import { animateScroll } from 'react-scroll';
+import queryString from 'query-string';
 
+import { DEFAULT_PAGE } from '../constants/defaults';
 import { getLabelsById } from '../thunks';
+import { getPerPageSetting } from '../utils/helpers';
 import LovedLabelsTable from './LovedLabelsTable';
 import NothingHereMessage from './NothingHereMessage';
 import Pager from './Pager';
 
-class MyLovedLabels extends React.Component {
-  componentDidMount() {
-    const { lovedLabels } = this.props;
+const MyLovedLabels = ({ location, lovedLabels = [], lovedLabelsDetails, getLabelsById }) => {
+  const { page = DEFAULT_PAGE, perPage = getPerPageSetting() } = queryString.parse(location.search);
+  const { labels = {}, metadata = {} } = lovedLabelsDetails;
+  const { totalPages, query, page: activePage, perPage: activePerPage } = metadata;
 
+  if (lovedLabels.length === 0) {
+    return <NothingHereMessage />;
+  }
+
+  useEffect(() => {
     if (lovedLabels && lovedLabels.length > 0) {
-      this.fetchMyFavoriteLabels(lovedLabels);
+      fetchMyFavoriteLabels(lovedLabels, page, perPage);
     }
-  }
+  }, [lovedLabels, page, perPage]);
 
-  componentDidUpdate(prevProps) {
-    if (_.isEqual(this.props, prevProps)) return;
-
-    const {
-      location: thisLocation,
-      lovedLabelsDetails = {},
-      lovedLabels = [],
-      isLoading,
-    } = this.props;
-    const { location: prevLocation } = prevProps;
-    const { labels } = lovedLabelsDetails;
-
-    if (isLoading) return;
-
-    // parse query params
-    const { search: prevSearch } = prevLocation;
-    const { search: thisSearch } = thisLocation;
-    const thisParams = {};
-    thisSearch.replace('?', '').split('&').forEach(param => {
-      const splitParam = param.split('=');
-      thisParams[splitParam[0]] = splitParam[1];
-    });
-    const prevParams = {};
-    prevSearch.replace('?', '').split('&').forEach(param => {
-      const splitParam = param.split('=');
-      prevParams[splitParam[0]] = splitParam[1];
-    });
-
-    // which page are we loading?
-    const thisPage = +thisParams.page || 1;
-    const prevPage = +prevParams.page || 1;
-
-    // how many per page?
-    const thisPerPage = +thisParams.perPage || 10;
-    const prevPerPage = +prevParams.perPage || 10;
-
-    if (((Object.keys(labels).length === 0 && lovedLabels.length > 0) || // if label details weren't loaded on mount. usually due to firebase not loaded yet.
-      (thisPage !== prevPage || thisPerPage !== prevPerPage)) && // if pagination or per page changes
-      !isLoading) { // ensure there's not already an xhr in progress
-      this.fetchMyFavoriteLabels(lovedLabels, thisPage, thisPerPage);
-    }
-  }
-
-  fetchMyFavoriteLabels(labelIds = [], page = 1, perPage = 10) {
-    if (labelIds && labelIds.length > 0) {
-      const { getLabelsById } = this.props;
-      Scroll.animateScroll.scrollToTop({ duration: 1000 });
+  const fetchMyFavoriteLabels = (labelIds = [], page, perPage) => {
+    if (labelIds.length > 0) {
+      animateScroll.scrollToTop({ duration: 300 });
       getLabelsById(labelIds.join(','), page, perPage);
     }
   }
 
-  render() {
-    const { lovedLabelsDetails } = this.props;
-    const { labels = {}, metadata = {} } = lovedLabelsDetails;
-    const { totalPages, page, perPage, query } = metadata;
-
-    if (Object.keys(labels).length === 0) {
-      return <NothingHereMessage />
-    }
-
-    return (
-      <React.Fragment>
-        <LovedLabelsTable labels={labels} />
-        {totalPages && totalPages > 1 ?
-          <Pager activePage={page} totalPages={totalPages} firstItem={null} lastItem={null} perPage={perPage || 10} query={query} />
-          :
-          null
-        }
-      </React.Fragment>
-    )
-  }
+  return (
+    <React.Fragment>
+      <LovedLabelsTable labels={labels} />
+      {totalPages && totalPages > 1 ?
+        <Pager activePage={activePage} totalPages={totalPages} firstItem={null} lastItem={null} perPage={activePerPage} query={query} />
+        :
+        null
+      }
+    </React.Fragment>
+  )
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
+  const { lovedLabels, lovedLabelsDetails } = state;
   return {
-    lovedLabels: state.lovedLabels,
-    lovedLabelsDetails: state.lovedLabelsDetails,
-    lovedArtists: state.lovedArtists,
-    lovedArtistsDetails: state.lovedArtistsDetails,
-    isLoading: state.isLoading,
+    lovedLabels,
+    lovedLabelsDetails,
   }
 }
 
-const mapDispatchToProps = dispatch => {
-  return bindActionCreators(Object.assign({}, { getLabelsById }), dispatch);
+const mapDispatchToProps = {
+  getLabelsById,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(MyLovedLabels);

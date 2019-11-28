@@ -1,48 +1,40 @@
-import React, { Component, Fragment } from 'react';
+import React, { Fragment, useState, useEffect } from 'react';
 import { Button } from 'semantic-ui-react';
-import Scroll from 'react-scroll';
+import { animateScroll } from 'react-scroll';
 
-class ShowMore extends Component {
-  state = {
-    expanded: false,
-  }
+const ShowMore = ({ content, reducedSize = 1200 }) => {
+  const [expanded, setExpanded] = useState(false);
 
-  toggleExpanded = () => {
-    if (this.state.expanded) {
-      Scroll.animateScroll.scrollToTop({ duration: 1500 });
+  const toggleExpanded = () => {
+    if (expanded) {
+      animateScroll.scrollToTop({ duration: 300 });
     }
-    this.setState({ expanded: !this.state.expanded });
+    setExpanded(!expanded);
   }
 
-  componentDidUpdate(prevProps) {
-    if (prevProps.content !== this.props.content) {
-      this.setState({ expanded: false });
-    }
+  useEffect(() => {
+    setExpanded(false);
+  }, [content]);
+
+  if (!content) {
+    return null;
   }
 
-  render() {
-    const { content, reducedSize = 1200 } = this.props;
-    const { expanded } = this.state;
+  const reducedContent = content.length > reducedSize ? content.substr(0, reducedSize) : '';
 
-    if (!content) {
-      return null;
-    }
+  return (
+    <Fragment>
+      <div className='biography' id='biography'>
+        {expanded || reducedContent.length === 0 ? content : reducedContent}
+      </div>
+      {reducedContent.length > 0 ?
+        <Button basic onClick={toggleExpanded}>Show {expanded ? 'Less' : 'More'}</Button>
+        :
+        null
+      }
+    </Fragment>
+  );
 
-    const reducedContent = content.length > reducedSize ? content.substr(0, reducedSize) : '';
-
-    return (
-      <Fragment>
-        <div className='biography' id='biography'>
-          {expanded || reducedContent.length === 0 ? content : reducedContent}
-        </div>
-        {reducedContent.length > 0 ?
-          <Button basic onClick={this.toggleExpanded}>Show {expanded ? 'Less' : 'More'}</Button>
-          :
-          null
-        }
-      </Fragment>
-    );
-  }
 }
 
 export default ShowMore;

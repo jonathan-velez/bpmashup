@@ -1,35 +1,23 @@
-import React, { Component, Fragment } from 'react';
+import React, { Fragment, useEffect } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import queryString from 'query-string';
 import { withRouter } from 'react-router';
 import Scroll from 'react-scroll';
-import _ from 'lodash';
 
 import { getTracks, clearTracklist } from '../thunks';
 import TrackListingGroup from './TrackListingGroup';
 import FilterBar from './FilterBar';
 
-class Tracks extends Component {
-  componentDidMount() {
-    this.fetchTracks(Object.assign({}, this.parseParams(), queryString.parse(this.props.location.search)));
-  }
+const Tracks = ({ match, history, location, trackListing, genreListing, clearTracklist, getTracks }) => {
+  useEffect(() => {
+    fetchTracks(Object.assign({}, parseParams(), queryString.parse(location.search)));
 
-  componentDidUpdate(prevProps) {
-    const newSearchParams = queryString.parse(this.props.location.search);
-    const prevSearchParams = queryString.parse(prevProps.location.search);
+    return clearTracklist();
+  }, [location.search]);
 
-    if (!_.isEqual(prevSearchParams, newSearchParams)) {
-      this.fetchTracks(Object.assign({}, this.parseParams(), newSearchParams));
-    }
-  }
-
-  componentWillUnmount() {
-    this.props.clearTracklist();
-  }
-
-  parseParams() {
-    const { itemType, itemId } = this.props.match.params;
+  const parseParams = () => {
+    const { itemType, itemId } = match.params;
     const extraParams = {};
 
     switch (itemType) {
@@ -45,21 +33,18 @@ class Tracks extends Component {
     return extraParams;
   }
 
-  fetchTracks(payload) {
+  const fetchTracks = (payload) => {
     Scroll.animateScroll.scrollToTop({ duration: 1500 });
-    this.props.getTracks(payload);
+    getTracks(payload);
   }
 
-  render() {
-    const { trackListing, genreListing, history, location } = this.props;
+  return (
+    <Fragment>
+      <FilterBar genreListing={genreListing} history={history} location={location} />
+      <TrackListingGroup trackListing={trackListing} />
+    </Fragment>
+  );
 
-    return (
-      <Fragment>
-        <FilterBar genreListing={genreListing} history={history} location={location} />
-        <TrackListingGroup trackListing={trackListing} />
-      </Fragment>
-    );
-  }
 }
 
 const mapStateToProps = state => {

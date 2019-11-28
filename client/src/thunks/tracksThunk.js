@@ -78,13 +78,13 @@ export const fetchMostPopularTracks = async (type = 'genre', id, name, page = DE
   }
 }
 
-export const getTracksByIds = async (ids, page = DEFAULT_PAGE, perPage = getPerPageSetting()) => {
+export const getTracksByIds = async (ids = [], page = DEFAULT_PAGE, perPage = getPerPageSetting()) => {
   return async (dispatch) => {
     dispatch({
       type: START_ASYNC,
     });
 
-    const requestResult = await callAPIorCache(`${API_GET_TRACKS}?ids=${ids}&page=${page}&perPage=${perPage}`);
+    const requestResult = await callAPIorCache(`${API_GET_TRACKS}?ids=${ids.join(',')}&page=${page}&perPage=${perPage}`);
 
     dispatch({
       type: FETCH_TRACKS,

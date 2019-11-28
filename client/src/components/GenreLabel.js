@@ -5,7 +5,7 @@ import { Label } from 'semantic-ui-react';
 const GenreLabel = ({ genreName, genreSlug, genreId }) => {
   const url = `/most-popular/genre/${genreSlug}/${genreId}/`;
   return (
-    <Label as={Link} to={url} className='genre-label'>
+    <Label as={Link} to={url} className='genre-label' color='grey'>
       {genreName}
     </Label>
   );
