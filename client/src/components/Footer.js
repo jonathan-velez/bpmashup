@@ -36,7 +36,7 @@ class Footer extends React.PureComponent {
     }
 
     const handleSeekMouseUp = e => {
-      playerRef.seekTo(+e.target.value)
+      playerRef.current.seekTo(+e.target.value)
       seekMouseUp();
     }
 
