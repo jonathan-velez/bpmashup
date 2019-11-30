@@ -1,37 +1,34 @@
 import React from 'react';
-import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Button, Icon } from 'semantic-ui-react';
 
 import { toggleTracklistView } from '../actions/ActionCreators';
+import { getTracklistViewSetting, setTracklistViewSetting } from '../utils/helpers';
 
-const TrackListingViewToggleButtons = ({ trackListing, toggleTracklistView }) => {
-  const { tracklistView } = trackListing;
-
+const TrackListingViewToggleButtons = ({ toggleTracklistView }) => {
+  const handleToggleTracklistView = (view) => {
+    toggleTracklistView(view);
+    setTracklistViewSetting(view);
+  }
+  
   return (
     <Button.Group className='tracklistViewToggle'>
       <Button
-        active={tracklistView === 'table'}
-        onClick={() => toggleTracklistView('table')}
+        active={getTracklistViewSetting() === 'table'}
+        onClick={() => handleToggleTracklistView('table')}
       > <Icon name='list layout' />
       </Button>
       <Button
-        active={tracklistView === 'cards'}
-        onClick={() => toggleTracklistView('cards')}
+        active={getTracklistViewSetting() === 'cards'}
+        onClick={() => handleToggleTracklistView('cards')}
       ><Icon name='grid layout' />
       </Button>
     </Button.Group>
   );
 };
 
-const mapStateToProps = state => {
-  return {
-    trackListing: state.trackListing,
-  }
+const mapDispatchToProps = {
+  toggleTracklistView,
 }
 
-const mapDispatchToProps = dispatch => {
-  return bindActionCreators({ toggleTracklistView }, dispatch);
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(TrackListingViewToggleButtons);
+export default connect(null, mapDispatchToProps)(TrackListingViewToggleButtons);

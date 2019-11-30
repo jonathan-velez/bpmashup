@@ -1,4 +1,4 @@
-import { DEFAULT_PER_PAGE } from '../constants/defaults';
+import { DEFAULT_PER_PAGE, DEFAULT_TRACKLISTING_VIEW } from '../constants/defaults';
 import { getStorage, setStorage } from '../localStorage';
 
 export const dashlessFilter = (input) => {
@@ -184,4 +184,12 @@ export const getPerPageSetting = () => {
 
 export const setPerPageSetting = (perPage) => {
   setStorage('perPage', perPage);
+}
+
+export const getTracklistViewSetting = () => {
+  return getStorage('tracklistView') || DEFAULT_TRACKLISTING_VIEW;
+}
+
+export const setTracklistViewSetting = (viewType = 'cards') => {
+  setStorage('tracklistView', viewType);
 }
