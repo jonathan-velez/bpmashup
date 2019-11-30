@@ -25,6 +25,7 @@ const TrackCard = ({ track, showPosition = true, canZip }) => {
         <Card.Header className='track-title'>{constructTrackLink(track)}</Card.Header>
         <Card.Content>{constructLinks(track.artists, 'artist')}</Card.Content>
         <Card.Content><Link to={`/label/${track.label.slug}/${track.label.id}`}>[{track.label.name}]</Link></Card.Content>
+        <Card.Content>{constructLinks(track.genres, 'genre')}</Card.Content>
       </Card.Content>
       <Card.Content extra>
         <TrackCardActionRow canZip={canZip} numOfButtons={'three'} track={track} />
