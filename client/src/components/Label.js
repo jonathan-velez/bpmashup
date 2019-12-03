@@ -1,5 +1,4 @@
 import React, { Fragment, useState, useEffect } from 'react';
-import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Grid, Image, Header, Menu, Button } from 'semantic-ui-react';
 import Scroll from 'react-scroll';
@@ -22,13 +21,9 @@ const Label = ({ match, labelDetail, trackListing, location, getLabelDetail }) =
   const [activeItem, setActiveItem] = useState('tracks');
 
   useEffect(() => {
-    fetchLabelDetails();
-  }, [labelId])
-
-  const fetchLabelDetails = () => {
     Scroll.animateScroll.scrollToTop({ duration: 1500 });
     getLabelDetail(labelId);
-  }
+  }, [getLabelDetail, labelId]);
 
   const handleItemClick = (e, { name }) => {
     setActiveItem(name);
@@ -91,15 +86,16 @@ const Label = ({ match, labelDetail, trackListing, location, getLabelDetail }) =
   );
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
+  const { labelDetail, trackListing } = state;
   return {
-    labelDetail: state.labelDetail,
-    trackListing: state.trackListing,
+    labelDetail,
+    trackListing,
   }
 }
 
-const mapDispatchToProps = dispatch => {
-  return bindActionCreators({ getLabelDetail }, dispatch);
+const mapDispatchToProps = {
+  getLabelDetail,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Label);

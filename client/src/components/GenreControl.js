@@ -8,7 +8,7 @@ import GenreList from '../components/GenreList';
 const GenreControl = ({ genreListing, fetchGenres }) => {
   useEffect(() => {
     fetchGenres();
-  }, []);
+  }, [fetchGenres]);
 
   return (
     <GenreList genres={genreListing} />

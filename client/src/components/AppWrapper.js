@@ -24,13 +24,6 @@ const AppWrapper = ({ mediaPlayer, loadTrack, play, pause, updateTrackProgress, 
   const { loadedTrack, loadedUrl, playing, volume, muted, loop, playbackRate, played, duration } = mediaPlayer;
   const playerRef = useRef(null);
 
-  useEffect(() => {
-    window.addEventListener('keydown', throttledKeyPressFunctions, null);
-    return () => {
-      window.removeEventListener('keydown', throttledKeyPressFunctions, null);
-    };
-  }, [volume, loadedTrack, played]);
-
   const throttledKeyPressFunctions = _.throttle((e) => {
     if (['text', 'email', 'password'].includes(e.target.type)) return;
     if (e.metaKey || e.ctrlKey || e.altKey) return;
@@ -90,6 +83,13 @@ const AppWrapper = ({ mediaPlayer, loadTrack, play, pause, updateTrackProgress, 
         break;
     }
   }, 200);
+
+  useEffect(() => {
+    window.addEventListener('keydown', throttledKeyPressFunctions, null);
+    return (() => {
+      window.removeEventListener('keydown', throttledKeyPressFunctions, null);
+    });
+  }, [volume, loadedTrack, played, throttledKeyPressFunctions]);
 
   const fastForward = (seconds) => {
     if (typeof seconds !== 'number') return;

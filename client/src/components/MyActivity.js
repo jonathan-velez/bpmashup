@@ -169,84 +169,76 @@ const MyActivity = ({ auth }) => {
 
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  const db = firebase.database();
+  const { uid } = auth;
+  const { fbRegistered } = state;
 
   useEffect(() => {
-    const { uid } = auth;
-    const { fbRegistered } = state;
-
-    if (!fbRegistered && uid) {
-      registerFbListeners(uid);
-    }
-
-    return (() => unregisterFbListeners());
-  }, [auth.isLoaded]);
-
-  const registerFbListeners = (uid) => {
-    if (!uid) return;
-
+    // register firebase listeners on mount or any time the uid changes. check if already registered and the uid exists
     const db = firebase.database();
     const userDataRef = db.ref(`users/${uid}`);
     const downloadsByGenreNameRef = db.ref(`downloads/users/${uid}/genresNames`);
     const trackPlaysByGenreNameRef = db.ref(`trackPlaysAll/users/${uid}/genresNames`);
 
-    userDataRef.once('value', snapshot => {
-      const { displayName: userDisplayName, email: userEmail } = snapshot.val();
+    if (!fbRegistered && uid) {
+      try {
+        userDataRef.once('value', snapshot => {
+          const { displayName: userDisplayName, email: userEmail } = snapshot.val();
 
-      dispatch({
-        type: 'set_user_data',
-        payload: {
-          userDisplayName,
-          userEmail,
-          uid,
-        }
-      });
-    })
+          dispatch({
+            type: 'set_user_data',
+            payload: {
+              userDisplayName,
+              userEmail,
+              uid,
+            }
+          });
+        });
 
-    downloadsByGenreNameRef.on('value', snapshot => {
-      const genresNames = snapshot.val();
-      if (!genresNames) return;
+        downloadsByGenreNameRef.on('value', snapshot => {
+          const genresNames = snapshot.val();
+          if (!genresNames) return;
 
-      dispatch({
-        type: 'load_genre_activity_data',
-        payload: {
-          activityType: 'trackDownloads',
-          genresNames,
-        }
-      });
-    });
+          dispatch({
+            type: 'load_genre_activity_data',
+            payload: {
+              activityType: 'trackDownloads',
+              genresNames,
+            }
+          });
+        });
 
-    trackPlaysByGenreNameRef.on('value', snapshot => {
-      const genresNames = snapshot.val();
-      if (!genresNames) return;
+        trackPlaysByGenreNameRef.on('value', snapshot => {
+          const genresNames = snapshot.val();
+          if (!genresNames) return;
 
-      dispatch({
-        type: 'load_genre_activity_data',
-        payload: {
-          activityType: 'trackPlays',
-          genresNames,
-        }
-      });
-    });
+          dispatch({
+            type: 'load_genre_activity_data',
+            payload: {
+              activityType: 'trackPlays',
+              genresNames,
+            }
+          });
+        });
 
-    dispatch({
-      type: 'set_fb_registered',
-    });
-  }
+        dispatch({
+          type: 'set_fb_registered',
+        });
+      } catch (error) {
+        throw new Error(`Error registering firebase listeners: ${error}`);
+      }
+    }
 
-  const unregisterFbListeners = () => {
-    const { uid } = state.userData;
+    return () => {
+      // unregister firebase listeners on unmount
+      if (fbRegistered) {
+        userDataRef.off('value');
+        downloadsByGenreNameRef.off('value');
+        trackPlaysByGenreNameRef.off('value');
+      }
+    }
+  }, [uid, fbRegistered]);
 
-    const userDataRef = db.ref(`users/${uid}`);
-    const downloadsByGenreNameRef = db.ref(`downloads/users/${uid}/genresNames`);
-    const trackPlaysByGenreNameRef = db.ref(`trackPlaysAll/users/${uid}/genresNames`);
-
-    userDataRef.off('value');
-    downloadsByGenreNameRef.off('value');
-    trackPlaysByGenreNameRef.off('value');
-  }
-
-  const { userActivityData = {}, pieData = {}, userData = {}, fbRegistered } = state;
+  const { userActivityData = {}, pieData = {}, userData = {} } = state;
   const { trackPlays = {}, trackDownloads = {} } = userActivityData;
   const { totalCount: totalTrackPlayCount = 0, genresSortedDesc: genresSortedDescTrackPlays = [] } = trackPlays;
   const { totalCount: totalTrackDownloadCount = 0, genresSortedDesc: genresSortedDescTrackDownloads = [] } = trackDownloads;

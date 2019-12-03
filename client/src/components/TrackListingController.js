@@ -1,7 +1,7 @@
 import React, { Fragment, useEffect } from 'react';
-import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import Scroll from 'react-scroll';
+import { animateScroll } from 'react-scroll';
+import queryString from 'query-string';
 
 import { fetchMostPopularTracks, searchTracks, fetchTracksSimilar, clearTracklist } from '../thunks';
 import { deslugify, getPerPageSetting } from '../utils/helpers';
@@ -12,19 +12,10 @@ import TracklistingHeader from './TracklistingHeader';
 const TrackListingController = ({ location, match, searchTracks, fetchTracksSimilar, fetchMostPopularTracks, trackListing, clearTracklist }) => {
   const { url, params } = match;
   const { type, searchId, searchString, searchTerm, trackId } = params;
-  const { search } = location;
-
-  // parse params
-  const parsedParams = {};
-  search.replace('?', '').split('&').forEach(param => {
-    const splitParam = param.split('=');
-    parsedParams[splitParam[0]] = splitParam[1];
-  });
-
-  const { page = DEFAULT_PAGE, perPage = getPerPageSetting() } = parsedParams;
+  const { page = DEFAULT_PAGE, perPage = getPerPageSetting() } = queryString.parse(location.search);
 
   useEffect(() => {
-    Scroll.animateScroll.scrollToTop({ duration: 1500 });
+    animateScroll.scrollToTop({ duration: 1500 });
 
     // determine if it's a search page, similar tracks or not
     if (searchTerm) {
@@ -35,8 +26,8 @@ const TrackListingController = ({ location, match, searchTracks, fetchTracksSimi
       fetchMostPopularTracks(type, searchId, searchString, page, perPage);
     }
 
-    return clearTracklist();
-  }, [searchTerm, type, searchId, searchString, page, perPage]);
+    return () => clearTracklist();
+  }, [fetchMostPopularTracks, fetchTracksSimilar, searchTracks, clearTracklist, trackId, searchTerm, type, searchId, searchString, page, perPage]);
 
   const pageName = url.split('/')[1];
   let headerTitle = '';
@@ -73,15 +64,20 @@ const TrackListingController = ({ location, match, searchTracks, fetchTracksSimi
     </Fragment>
   )
 }
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
+  const { trackListing, isLoading } = state;
+
   return {
-    trackListing: state.trackListing,
-    isLoading: state.isLoading,
+    trackListing,
+    isLoading,
   }
 }
 
-const mapDispatchToProps = dispatch => {
-  return bindActionCreators(Object.assign({ fetchMostPopularTracks, searchTracks, fetchTracksSimilar, clearTracklist }), dispatch);
-}
+const mapDispatchToProps = {
+  fetchMostPopularTracks,
+  searchTracks,
+  fetchTracksSimilar,
+  clearTracklist
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(TrackListingController);

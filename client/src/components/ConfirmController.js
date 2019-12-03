@@ -7,11 +7,11 @@ import { setConfirm } from '../actions/ActionCreators';
 const ConfirmController = ({ confirmModal, setConfirm }) => {
   const handleCancel = useCallback(() => {
     setConfirm(false);
-  });
+  }, [setConfirm]);
 
   const handleConfirm = useCallback(() => {
     setConfirm(true);
-  });
+  }, [setConfirm]);
 
   return (
     <Confirm

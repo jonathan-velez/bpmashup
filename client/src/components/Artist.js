@@ -30,19 +30,20 @@ const Artist = ({ match, getArtistDetails, artistDetail, trackListing, location 
 
 
   useEffect(() => {
-    fetchArtistData(artistId);
-  }, [artistId]);
+    const fetchArtistData = (artistId) => {
+      Scroll.animateScroll.scrollToTop({ duration: 1500 });
 
-  const fetchArtistData = (artistId) => {
-    Scroll.animateScroll.scrollToTop({ duration: 1500 });
+      const artist = {
+        artistId,
+        artistName,
+      }
 
-    const artist = {
-      artistId,
-      artistName,
+      getArtistDetails(artist);
     }
 
-    getArtistDetails(artist);
-  }
+    fetchArtistData(artistId);
+  }, [artistId, artistName, getArtistDetails]);
+
 
   const handleItemClick = (e, { name }) => {
     setActiveItem(name);

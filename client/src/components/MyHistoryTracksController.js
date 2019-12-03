@@ -14,22 +14,17 @@ import { getUserHistoryPageSetup } from '../selectors';
 const MyHistoryTracksController = ({ location, trackListing, trackIds, headerTitle, getTracksByIds, clearTracklist }) => {
   const { page = DEFAULT_PAGE, perPage = getPerPageSetting() } = queryString.parse(location.search);
 
-  if (trackIds.length === 0) {
-    return <NothingHereMessage />;
-  }
-
   useEffect(() => {
-    if (trackIds.length > 0) {
-      fetchTracks(trackIds, page, perPage);
-    }
-    return clearTracklist();
-  }, [page, perPage, trackIds]);
-
-  const fetchTracks = (trackIds = [], page, perPage) => {
-    if (trackIds.length > 0) {
+    if (Array.isArray(trackIds) && trackIds.length > 0) {
       animateScroll.scrollToTop({ duration: 300 });
       getTracksByIds(trackIds, page, perPage);
     }
+
+    return () => clearTracklist();
+  }, [trackIds, page, perPage, clearTracklist, getTracksByIds]);
+
+  if (trackIds.length === 0) {
+    return <NothingHereMessage />;
   }
 
   return (

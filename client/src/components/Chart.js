@@ -10,15 +10,15 @@ import { fetchChartDataById } from '../thunks';
 
 const Chart = ({ match, fetchChartDataById, chartListing = {}, isLoading }) => {
   const [visible, setVisible] = useState(false);
+  const { chartId } = match.params;
 
   useEffect(() => {
-    const { chartId } = match.params;
-    if (!chartId) return;
-    
-    fetchChartDataById(chartId);
-    Scroll.animateScroll.scrollToTop({ duration: 1500 });
-    setVisible(true);
-  }, []);
+    if (chartId) {
+      fetchChartDataById(chartId);
+      Scroll.animateScroll.scrollToTop({ duration: 1500 });
+      setVisible(true);
+    }
+  }, [fetchChartDataById, chartId]);
 
   const { tracks = [], images = {}, name, description, genres, publishDate, chartOwner = {} } = chartListing;
   const { xlarge = {} } = images;

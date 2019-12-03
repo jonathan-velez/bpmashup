@@ -31,7 +31,7 @@ const FilterBar = ({ location, history, genreListing }) => {
     setSelectedPublishDateStart(publishDateStart);
     setSelectedPublishDateEnd(publishDateEnd);
     setSelectedBpm(bpm);
-  }, [search]);
+  }, [genre, key, perPage, publishDateStart, publishDateEnd, bpm]);
 
   const handleAccordionClick = (e, titleProps) => {
     const { index } = titleProps
