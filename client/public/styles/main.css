@@ -342,6 +342,7 @@
 
   .item-header {
     text-transform: uppercase!important;
+    cursor: pointer;
   }
 
   .ui.dropdown .menu>.divider {
