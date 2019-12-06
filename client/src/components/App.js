@@ -7,7 +7,6 @@ import Navigation from './Navigation';
 import Main from './Main';
 import Footer from './Footer';
 import ModalView from './ModalView';
-import ConfirmController from './ConfirmController';
 import { openModalWindow } from '../actions/ActionCreators';
 
 class App extends React.PureComponent {
@@ -27,7 +26,6 @@ class App extends React.PureComponent {
             headerIcon={openModal.headerIcon}
             handleClose={() => openModalWindow(false)}
           />
-          <ConfirmController />
           <Navigation />
           <Main />
           <Footer playerRef={player} />

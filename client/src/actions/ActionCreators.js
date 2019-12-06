@@ -27,9 +27,6 @@ import {
   LOAD_YOUTUBE_URL,
   SET_VOLUME,
   LOAD_TRACKS,
-  OPEN_CONFIRM,
-  RESET_CONFIRM,
-  SET_CONFIRM,
   OPEN_MODAL,
   STOP_ASYNC,
   TOGGLE_TRACKLIST_VIEW,
@@ -170,26 +167,6 @@ export const loadTracks = tracks => {
   return {
     type: LOAD_TRACKS,
     payload: tracks
-  }
-}
-
-export const openConfirm = payload => {
-  return {
-    type: OPEN_CONFIRM,
-    payload
-  }
-}
-
-export const resetConfirm = () => {
-  return {
-    type: RESET_CONFIRM
-  }
-}
-
-export const setConfirm = payload => {
-  return {
-    type: SET_CONFIRM,
-    payload,
   }
 }
 
