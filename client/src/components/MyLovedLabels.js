@@ -15,30 +15,28 @@ const MyLovedLabels = ({ location, lovedLabels = [], lovedLabelsDetails, getLabe
   const { labels = {}, metadata = {} } = lovedLabelsDetails;
   const { totalPages, query, page: activePage, perPage: activePerPage } = metadata;
 
-  if (lovedLabels.length === 0) {
-    return <NothingHereMessage />;
-  }
-
   useEffect(() => {
+    const fetchMyFavoriteLabels = (labelIds = [], page, perPage) => {
+      if (labelIds.length > 0) {
+        animateScroll.scrollToTop({ duration: 300 });
+        getLabelsById(labelIds.join(','), page, perPage);
+      }
+    }
+
     if (lovedLabels && lovedLabels.length > 0) {
       fetchMyFavoriteLabels(lovedLabels, page, perPage);
     }
-  }, [lovedLabels, page, perPage]);
+  }, [getLabelsById, lovedLabels, page, perPage]);
 
-  const fetchMyFavoriteLabels = (labelIds = [], page, perPage) => {
-    if (labelIds.length > 0) {
-      animateScroll.scrollToTop({ duration: 300 });
-      getLabelsById(labelIds.join(','), page, perPage);
-    }
+  if (lovedLabels.length === 0) {
+    return <NothingHereMessage />;
   }
 
   return (
     <React.Fragment>
       <LovedLabelsTable labels={labels} />
-      {totalPages && totalPages > 1 ?
+      {totalPages && totalPages > 1 &&
         <Pager activePage={activePage} totalPages={totalPages} firstItem={null} lastItem={null} perPage={activePerPage} query={query} />
-        :
-        null
       }
     </React.Fragment>
   )
