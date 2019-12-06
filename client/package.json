@@ -27,7 +27,8 @@
     "redux-thunk": "^2.2.0",
     "reselect": "^4.0.0",
     "semantic-ui-react": "^0.83.0",
-    "store": "^2.0.12"
+    "store": "^2.0.12",
+    "prop-types": "^15.7.2"
   },
   "devDependencies": {
     "eslint-config-airbnb": "^17.1.0",
