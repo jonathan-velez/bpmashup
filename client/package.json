@@ -5,10 +5,6 @@
   "dependencies": {
     "apexcharts": "^3.8.4",
     "axios": "^0.17.1",
-    "eslint-config-airbnb": "^17.1.0",
-    "eslint-plugin-import": "^2.16.0",
-    "eslint-plugin-jsx-a11y": "^6.2.1",
-    "eslint-plugin-react": "^7.12.4",
     "firebase": "^4.10.1",
     "history": "^4.7.2",
     "lodash": "^4.17.4",
@@ -32,6 +28,12 @@
     "reselect": "^4.0.0",
     "semantic-ui-react": "^0.83.0",
     "store": "^2.0.12"
+  },
+  "devDependencies": {
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-plugin-import": "^2.16.0",
+    "eslint-plugin-jsx-a11y": "^6.2.1",
+    "eslint-plugin-react": "^7.12.4"
   },
   "scripts": {
     "start": "react-scripts start",
