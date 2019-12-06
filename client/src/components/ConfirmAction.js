@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { Confirm } from 'semantic-ui-react';
 
 const ConfirmAction = ({
@@ -46,3 +47,12 @@ const ConfirmAction = ({
 };
 
 export default ConfirmAction;
+
+ConfirmAction.propTypes = {
+  action: PropTypes.func.isRequired,
+  render: PropTypes.func.isRequired,
+  confirmSize: PropTypes.string,
+  confirmText: PropTypes.string,
+  confirmButtonText: PropTypes.string,
+  cancelButtonText: PropTypes.string,
+}

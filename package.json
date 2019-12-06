@@ -16,7 +16,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "concurrently": "^3.5.1"
+    "concurrently": "^3.5.1",
+    "prop-types": "^15.7.2"
   },
   "devDependencies": {
     "eslint-plugin-react-hooks": "^2.3.0"
