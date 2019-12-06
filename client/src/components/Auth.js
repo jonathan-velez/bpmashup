@@ -17,6 +17,7 @@ import {
   clearLovedLabels,
   clearLovedLabelsDetails,
 } from '../actions/ActionCreators';
+import ConfirmAction from './ConfirmAction';
 
 // TODO: Dispatch through actions/thunks rather than importing store
 const Auth = ({ auth, firebase, history }) => {
@@ -88,9 +89,17 @@ const Auth = ({ auth, firebase, history }) => {
                 text='My Activity'
               />
               <Dropdown.Divider />
-              <Dropdown.Item
-                text='Log out'
-                onClick={() => logOut()}
+              <ConfirmAction
+                action={logOut}
+                confirmText='Log out?'
+                render={openConfirm => {
+                  return (
+                    <Dropdown.Item
+                      text='Log out'
+                      onClick={openConfirm}
+                    />
+                  )
+                }}
               />
             </Fragment>
             :
