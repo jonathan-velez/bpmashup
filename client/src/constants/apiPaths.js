@@ -17,3 +17,4 @@ export const API_MOST_POPULAR_RELEASES_BY_LABEL = `${API_ROOT}/most-popular-rele
 export const API_MY_BEATPORT = `${API_ROOT}/my-beatport`;
 export const API_GET_LOVED_ARTISTS = `${API_ROOT}/artists`;
 export const API_GET_CHART = `${API_ROOT}/charts`;
+export const API_PHOTO_UPLOAD = `${API_ROOT}/profile-photo-upload`;

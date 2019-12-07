@@ -88,6 +88,10 @@ const Auth = ({ auth, firebase, history }) => {
                 as={Link} to='/history/my-activity'
                 text='My Activity'
               />
+              <Dropdown.Item
+                as={Link} to='/my-profile'
+                text='My Profile'
+              />
               <Dropdown.Divider />
               <ConfirmAction
                 action={logOut}

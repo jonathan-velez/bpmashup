@@ -10,9 +10,11 @@
     "lodash": "^4.17.4",
     "moment": "^2.20.1",
     "node-uuid": "^1.4.8",
+    "prop-types": "^15.7.2",
     "query-string": "^6.2.0",
     "react": "^16.11.0",
     "react-apexcharts": "^1.3.3",
+    "react-cropper": "^1.3.0",
     "react-dom": "^16.11.0",
     "react-player": "^1.6.4",
     "react-redux": "^5.0.6",
@@ -27,8 +29,7 @@
     "redux-thunk": "^2.2.0",
     "reselect": "^4.0.0",
     "semantic-ui-react": "^0.83.0",
-    "store": "^2.0.12",
-    "prop-types": "^15.7.2"
+    "store": "^2.0.12"
   },
   "devDependencies": {
     "eslint-config-airbnb": "^17.1.0",

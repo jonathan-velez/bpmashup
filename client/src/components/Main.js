@@ -14,6 +14,7 @@ import MyHistoryTracksController from './MyHistoryTracksController';
 import MyActivity from './MyActivity';
 import Track from './Track';
 import Chart from './Chart';
+import MyProfile from './MyProfile';
 
 const Main = () => {
   const containerStyle = {
@@ -37,6 +38,7 @@ const Main = () => {
         <Route exact path="/release/:releaseName/:releaseId" component={ReleaseListingController} />
         <Route exact path="/tracks" component={TracksController} />
         <Route exact path='/:itemType/:itemName/:itemId/tracks' component={TracksController} />
+        <Route exact path="/my-profile" component={MyProfile} />
         <Route exact path="/" component={TrackListingController} />
       </Switch>
     </Container>

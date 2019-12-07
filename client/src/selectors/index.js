@@ -3,6 +3,7 @@ import _ from 'lodash';
 
 import { getUserHistoryPageSetup } from './userHistory';
 
+const getUserAuth = state => state.firebaseState && state.firebaseState.auth;
 const getPlaylists = state => state.playlistList;
 const getUserPermissions = state => state.userDetail && state.userDetail.permissions;
 const getPlaylistTracks = (state = {}, props = {}) => {
@@ -17,6 +18,7 @@ const _hasBeenDownloaded = (state, trackId) => {
   return downloadedTracks.includes(trackId);
 }
 
+export const getUserId = createSelector([getUserAuth], auth => auth.uid);
 export const listOfTracksAddedToPlaylist = createSelector([getPlaylists], playlists => _.map(playlists, playlist => playlist.listOfTracks).flat());
 export const listOfPlaylists = createSelector([getPlaylists], playlists => _.map(playlists, playlist => playlist.name));
 export const numOfPlaylists = createSelector([listOfPlaylists], playlists => playlists.length || 0);
