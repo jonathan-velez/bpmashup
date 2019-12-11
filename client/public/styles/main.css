@@ -324,6 +324,7 @@
   }
 
   /* for navbar dropdowns such as Playlists */
+
   @media only screen and (min-width: 992px) {
     .ui.dropdown .scrolling.menu, .ui.scrolling.dropdown .menu {
       max-height: 100vh!important;
@@ -342,4 +343,13 @@
   .action-message-list-item {
     padding-left: 50px!important;
     padding-right: 50px!important;
+  }
+
+  .cropper-crop-box, .cropper-view-box {
+    border-radius: 50%;
+  }
+
+  .cropper-view-box {
+    box-shadow: 0 0 0 1px #39f;
+    outline: 0;
   }

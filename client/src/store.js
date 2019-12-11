@@ -20,7 +20,7 @@ const firebaseConfig = {
   authDomain: "bp-mashup.firebaseapp.com",
   databaseURL: "https://bp-mashup.firebaseio.com",
   projectId: "bp-mashup",
-  storageBucket: "",
+  storageBucket: "gs://bp-mashup.appspot.com",
   messagingSenderId: "683438091005"
 };
 
