@@ -18,9 +18,11 @@ import {
   clearLovedLabelsDetails,
 } from '../actions/ActionCreators';
 import ConfirmAction from './ConfirmAction';
+import UserAvatar from './UserAvatar';
 
 // TODO: Dispatch through actions/thunks rather than importing store
-const Auth = ({ auth, firebase, history }) => {
+// TODO: Extract avatar into own component, register listener so image updates are detected, use selector to get image
+const Auth = ({ auth, profile, firebase, history }) => {
   const logIn = () => {
     store.dispatch(openLoginModalWindow());
   }
@@ -39,17 +41,14 @@ const Auth = ({ auth, firebase, history }) => {
     });
   }
 
-  const { photoURL, displayName, email } = auth;
+  const { displayName, email } = auth;
+  const { photoURL } = profile;
 
   const trigger = auth.isEmpty ?
     <Icon name='user outline' />
     :
     photoURL ?
-      <Image
-        src={photoURL}
-        size='mini'
-        circular
-      />
+      <UserAvatar />
       :
       <Icon name='user' />
 
@@ -122,5 +121,5 @@ const Auth = ({ auth, firebase, history }) => {
 
 export default compose(
   firebaseConnect(),
-  connect(({ firebaseState: { auth } }) => ({ auth }))
+  connect(({ firebaseState: { auth, profile } }) => ({ auth, profile }))
 )(withRouter(Auth));
