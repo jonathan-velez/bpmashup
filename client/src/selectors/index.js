@@ -19,6 +19,7 @@ const _hasBeenDownloaded = (state, trackId) => {
 }
 
 export const getUserId = createSelector([getUserAuth], auth => auth.uid);
+export const getUserProfilePhotoUrl = createSelector([getUserAuth], (auth) => auth.photoURL);
 export const listOfTracksAddedToPlaylist = createSelector([getPlaylists], playlists => _.map(playlists, playlist => playlist.listOfTracks).flat());
 export const listOfPlaylists = createSelector([getPlaylists], playlists => _.map(playlists, playlist => playlist.name));
 export const numOfPlaylists = createSelector([listOfPlaylists], playlists => playlists.length || 0);
