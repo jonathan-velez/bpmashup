@@ -353,3 +353,21 @@
     box-shadow: 0 0 0 1px #39f;
     outline: 0;
   }
+
+  .hiddenFileInput {
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+  }
+
+  .splashPageContainer {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  

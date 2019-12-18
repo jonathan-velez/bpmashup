@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { compose } from 'redux';
 import { firebaseConnect } from 'react-redux-firebase';
 import { connect } from 'react-redux';
@@ -16,6 +16,16 @@ const PhotoUpload = ({ uid, auth, profile, firebase }) => {
 
   const cropperRef = useRef(null);
   const inputFileRef = useRef(null);
+
+  useEffect(() => {
+    const cropperRefCurrrent = cropperRef.current;
+    if (cropperRefCurrrent){
+    cropperRefCurrrent.addEventListener('ready', () => console.log('ready'), null);
+    return (() => {
+      cropperRefCurrrent.removeEventListener('ready', () => console.log('ready'), null);
+    });
+  }
+  }, [cropperRef]);
 
   if (!auth.uid) {
     return <div>You must be logged in.</div> //TODO: pretty this up. Can we check if fb auth hasn't been initiated yet to prevent false positives?
@@ -116,27 +126,23 @@ const PhotoUpload = ({ uid, auth, profile, firebase }) => {
     <React.Fragment>
       <Header>Upload Profile Photo</Header>
       <Container style={{ width: '400px' }} textAlign='center'>
-        <Cropper
-          src={fileInputImage.imageData || existingProfilePhoto}
-          ref={cropperRef}
-          aspectRatio={1 / 1}
-          style={{
-            height: 400,
-            paddingBottom: 10,
-            display: (editMode ? 'block' : 'none'),
-            // className: (!editMode && 'screen-reader screen-reader-focusable')
-          }}
-          viewMode={1}
-          dragMode='move'
-          background={false}
-          zoomOnWheel={false}
-          minCropBoxWidth={100}
-          minCropBoxHeight={100}
-          minContainerHeight={400}
-          minContainerWidth={400}
-        />
-        {editMode &&
-          <>
+        {editMode ?
+          <React.Fragment>
+            <Cropper
+              src={fileInputImage.imageData || existingProfilePhoto}
+              ref={cropperRef}
+              aspectRatio={1 / 1}
+              style={{
+                height: 400,
+                paddingBottom: 10,
+              }}
+              viewMode={1}
+              dragMode='move'
+              background={false}
+              zoomOnWheel={false}
+              minCropBoxWidth={100}
+              minCropBoxHeight={100}
+            />
             <Grid columns={3}>
               <Grid.Column width={2}>
                 <Icon name='zoom-out' />
@@ -177,9 +183,10 @@ const PhotoUpload = ({ uid, auth, profile, firebase }) => {
             }
             <Button onClick={cropImage} positive>Save</Button>
             {fileInputImage.imageData && <Button onClick={handleClearCropperImage} negative basic>Revert</Button>}
-          </>
+          </React.Fragment>
+          :
+          (existingProfilePhoto && <Image src={existingProfilePhoto} circular centered />)
         }
-        {existingProfilePhoto && !editMode && <Image src={existingProfilePhoto} circular centered />}
         <br />
         {!editMode ?
           <Button onClick={handleToggleEditMode}>Update photo</Button>
@@ -187,7 +194,7 @@ const PhotoUpload = ({ uid, auth, profile, firebase }) => {
           <><br /><a href='#' onClick={handleToggleEditMode}>Cancel</a></>
         }
       </Container>
-    </React.Fragment>
+    </React.Fragment >
   );
 };
 

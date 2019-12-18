@@ -31,4 +31,13 @@ const rrfProps = {
 
 firebase.initializeApp(firebaseConfig);
 
-ReactDOM.render(<Provider store={store}><ReactReduxFirebaseProvider {...rrfProps}><AuthIsLoaded><AppWrapper /></AuthIsLoaded></ReactReduxFirebaseProvider></Provider>, document.getElementById('root'));
+ReactDOM.render(
+  <Provider store={store}>
+    <ReactReduxFirebaseProvider {...rrfProps}>
+      <AuthIsLoaded>
+        <AppWrapper />
+      </AuthIsLoaded>
+    </ReactReduxFirebaseProvider>
+  </Provider>,
+  document.getElementById('root')
+);

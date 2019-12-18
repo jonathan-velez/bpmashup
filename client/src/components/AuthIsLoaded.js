@@ -3,9 +3,10 @@ import { connect } from 'react-redux';
 import { isLoaded } from 'react-redux-firebase';
 
 import { registerFirebaseListeners } from '../utils/storeUtils';
+import SplashPage from './SplashPage';
 
 const AuthIsLoaded = ({ children, auth }) => {
-  if (!isLoaded(auth)) return <div>splash screen...</div>;
+  if (!isLoaded(auth)) return <SplashPage />
   registerFirebaseListeners();
   return children;
 }
