@@ -1,23 +1,24 @@
 import React, { useState, useRef } from 'react';
-import { compose } from 'redux';
-import { firebaseConnect } from 'react-redux-firebase';
+import firebase from 'firebase';
 import { connect } from 'react-redux';
-import { Form, Button, Progress, Header, Container, Image, Icon, Grid } from 'semantic-ui-react';
+import { Button, Progress, Container, Image, Icon, Grid, Dimmer } from 'semantic-ui-react';
 import Cropper from 'react-cropper';
 import '../../node_modules/cropperjs/dist/cropper.css';
 
-import { getUserId } from '../selectors';
+import { getUserId, getUserPhotoURL } from '../selectors';
+import NameBadge from './NameBadge';
 
-const PhotoUpload = ({ uid, auth, profile, firebase }) => {
+const PhotoUpload = ({ photoURL, uid }) => {
   const [percentCompleted, setPercentCompleted] = useState(0);
   const [fileInputImage, setFileInputImage] = useState({ fileExtension: '', fileType: '', imageData: '' });
   const [editMode, setEditMode] = useState(false);
   const [zoomRatio, setZoomRatio] = useState(0);
+  const [dimmerActive, setDimmerActive] = useState(false);
 
   const cropperRef = useRef(null);
   const inputFileRef = useRef(null);
 
-  if (!auth.uid) {
+  if (!uid) {
     return <div>You must be logged in.</div> //TODO: pretty this up. Can we check if fb auth hasn't been initiated yet to prevent false positives?
   }
 
@@ -84,7 +85,7 @@ const PhotoUpload = ({ uid, auth, profile, firebase }) => {
     }
   }
 
-  const zoomPhoto = (evt) => {
+  const handleZoomPhoto = (evt) => {
     setZoomRatio(evt.target.value);
     cropperRef.current.zoomTo(evt.target.value);
   }
@@ -100,8 +101,13 @@ const PhotoUpload = ({ uid, auth, profile, firebase }) => {
 
 
   const handleToggleEditMode = () => {
+    // TODO: Combine resets into single fn - call when canceling or reverting
+
+    setZoomRatio(0);
+    cropperRef.current.zoomTo(0);
+
     setEditMode(!editMode);
-    setZoomRatio(0); // TODO: Combine resets into single fn - call when canceling or reverting
+    setDimmerActive(false);
   }
 
   const handleInputFileClick = (evt) => {
@@ -109,31 +115,30 @@ const PhotoUpload = ({ uid, auth, profile, firebase }) => {
     inputFileRef.current.click();
   }
 
-  const existingProfilePhoto = profile.photoURL;
+  const existingProfilePhoto = photoURL;
 
   // TODO: disable form while upload in progress
   return (
     <React.Fragment>
-      <Header>Upload Profile Photo</Header>
-      <Container style={{ width: '400px' }} textAlign='center'>
+      <Container style={{ width: '200px' }} textAlign='center'>
         <Cropper
           src={fileInputImage.imageData || existingProfilePhoto}
           ref={cropperRef}
           aspectRatio={1 / 1}
           style={{
-            height: 400,
+            height: 200,
             paddingBottom: 10,
             display: (editMode ? 'block' : 'none'),
             // className: (!editMode && 'screen-reader screen-reader-focusable')
           }}
-          viewMode={1}
+          viewMode={2}
           dragMode='move'
-          background={false}
+          background
           zoomOnWheel={false}
           minCropBoxWidth={100}
           minCropBoxHeight={100}
-          minContainerHeight={400}
-          minContainerWidth={400}
+          minContainerHeight={200}
+          minContainerWidth={200}
         />
         {editMode &&
           <>
@@ -147,7 +152,7 @@ const PhotoUpload = ({ uid, auth, profile, firebase }) => {
                   min={0}
                   max={1}
                   step='any'
-                  onChange={zoomPhoto}
+                  onChange={handleZoomPhoto}
                   value={zoomRatio}
                 />
               </Grid.Column>
@@ -155,18 +160,16 @@ const PhotoUpload = ({ uid, auth, profile, firebase }) => {
                 <Icon name='zoom-in' />
               </Grid.Column>
             </Grid>
-            <Form encType="multipart/form-data">
-              <Button onClick={handleInputFileClick}>Choose File</Button>
-              <input
-                type='file'
-                name='photoFile'
-                className='hiddenFileInput'
-                accept="image/*"
-                onChange={handleImageChange} // TODO: check if a new image was selected, otherwise don't resetState
-                ref={inputFileRef}
-              />
-              <input type='hidden' name='uid' value={uid} />
-            </Form>
+            <Button size='mini' onClick={handleInputFileClick}>Choose File</Button>
+            <input
+              type='file'
+              name='photoFile'
+              className='hiddenFileInput'
+              accept="image/*"
+              onChange={handleImageChange} // TODO: check if a new image was selected, otherwise don't resetState
+              ref={inputFileRef}
+            />
+            <input type='hidden' name='uid' value={uid} />
             {percentCompleted > 0 &&
               <Progress
                 label='Upload progress'
@@ -175,16 +178,27 @@ const PhotoUpload = ({ uid, auth, profile, firebase }) => {
                 autoSuccess
               />
             }
-            <Button onClick={cropImage} positive>Save</Button>
-            {fileInputImage.imageData && <Button onClick={handleClearCropperImage} negative basic>Revert</Button>}
+            <Button size='mini' onClick={cropImage} positive>Save</Button>
+            {/* {fileInputImage.imageData && <Button size='mini' onClick={handleClearCropperImage} negative basic>Revert</Button>} */}
           </>
         }
-        {existingProfilePhoto && !editMode && <Image src={existingProfilePhoto} circular centered />}
-        <br />
-        {!editMode ?
-          <Button onClick={handleToggleEditMode}>Update photo</Button>
-          :
-          <><br /><a href='#' onClick={handleToggleEditMode}>Cancel</a></>
+        {existingProfilePhoto && !editMode &&
+          <Dimmer.Dimmable
+            dimmed={dimmerActive}
+            blurring
+            onMouseEnter={() => setDimmerActive(true)}
+            onMouseLeave={() => setDimmerActive(false)}
+            onClick={handleToggleEditMode}
+          >
+            <Dimmer active={dimmerActive} inverted>
+              <Button size='mini' basic onClick={handleToggleEditMode}>Edit</Button>
+            </Dimmer>
+            <Image src={existingProfilePhoto} circular centered />
+          </Dimmer.Dimmable>
+        }
+        <NameBadge />
+        {editMode &&
+          <a href='#' onClick={handleToggleEditMode}>Cancel</a>
         }
       </Container>
     </React.Fragment>
@@ -192,14 +206,11 @@ const PhotoUpload = ({ uid, auth, profile, firebase }) => {
 };
 
 const mapStateToProps = (state) => {
+  // console.log('state', state)
   return {
-    uid: getUserId(state), // TODO: Determine if we really need to connect to redux here, or should we use firebase.auth() ??
+    uid: getUserId(state),
+    photoURL: getUserPhotoURL(state),
   }
 }
 
-export default compose(
-  firebaseConnect(),
-  connect(
-    ({ firebaseState: { auth, profile } }) => ({ auth, profile, ...mapStateToProps })
-  )
-)(PhotoUpload);
+export default connect(mapStateToProps, null)(PhotoUpload);
