@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import firebase from 'firebase';
 import { connect } from 'react-redux';
-import { Button, Progress, Container, Image, Icon, Grid, Dimmer } from 'semantic-ui-react';
+import { Button, Progress, Container, Image, Icon, Grid, Dimmer, Placeholder } from 'semantic-ui-react';
 import Cropper from 'react-cropper';
 import '../../node_modules/cropperjs/dist/cropper.css';
 
@@ -182,7 +182,7 @@ const PhotoUpload = ({ photoURL, uid }) => {
             {/* {fileInputImage.imageData && <Button size='mini' onClick={handleClearCropperImage} negative basic>Revert</Button>} */}
           </>
         }
-        {existingProfilePhoto && !editMode &&
+        {!editMode &&
           <Dimmer.Dimmable
             dimmed={dimmerActive}
             blurring
@@ -193,13 +193,19 @@ const PhotoUpload = ({ photoURL, uid }) => {
             <Dimmer active={dimmerActive} inverted>
               <Button size='mini' basic onClick={handleToggleEditMode}>Edit</Button>
             </Dimmer>
-            <Image src={existingProfilePhoto} circular centered />
+            {!existingProfilePhoto ?
+              <Placeholder className='profilePhotoPlaceholder'>
+                <Placeholder.Image />
+              </Placeholder>
+              :
+              <Image src={existingProfilePhoto} circular centered width={200} height={200} />
+            }
           </Dimmer.Dimmable>
         }
-        <NameBadge />
         {editMode &&
           <a href='#' onClick={handleToggleEditMode}>Cancel</a>
         }
+        <NameBadge />
       </Container>
     </React.Fragment>
   );

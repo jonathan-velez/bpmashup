@@ -41,8 +41,8 @@ const Auth = ({ auth, profile, firebase, history }) => {
     });
   }
 
-  const { displayName, email } = auth;
-  const { photoURL } = profile;
+  const { email } = auth;
+  const { displayName, photoURL } = profile;
 
   const trigger = auth.isEmpty ?
     <Icon name='user outline' />

@@ -21,10 +21,13 @@ const _hasBeenDownloaded = (state, trackId) => {
 
 export const getUserId = createSelector([getUserAuth], auth => auth.uid);
 export const getUserPhotoURL = createSelector([getUserProfile, getUserAuth], (profile, auth) => {
-  return profile.photoURL || auth.photoURL;
+  return profile.photoURL //|| auth.photoURL;
 });
 export const getUserDisplayName = createSelector([getUserProfile, getUserAuth], (profile, auth) => {
   return profile.displayName || auth.displayName;
+});
+export const getFirstAndLastName = createSelector([getUserProfile], (profile) => {
+  return profile.displayName && profile.displayName.split(' ');
 });
 export const getUserProfilePhotoUrl = createSelector([getUserAuth], (auth) => auth.photoURL);
 export const listOfTracksAddedToPlaylist = createSelector([getPlaylists], playlists => _.map(playlists, playlist => playlist.listOfTracks).flat());
