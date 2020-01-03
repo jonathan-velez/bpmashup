@@ -25,7 +25,7 @@ const AppWrapper = ({ mediaPlayer, loadTrack, play, pause, updateTrackProgress, 
   const playerRef = useRef(null);
 
   const throttledKeyPressFunctions = _.throttle((e) => {
-    if (['text', 'email', 'password'].includes(e.target.type)) return;
+    if (['text', 'email', 'password', 'url', 'textarea'].includes(e.target.type)) return;
     if (e.metaKey || e.ctrlKey || e.altKey) return;
 
     switch (e.key) {

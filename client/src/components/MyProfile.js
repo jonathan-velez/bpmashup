@@ -4,25 +4,25 @@ import firebase from 'firebase';
 import { Grid, Form, Input, Button, Message, Dropdown, TextArea } from 'semantic-ui-react';
 
 import PhotoUpload from './PhotoUpload';
-import { getUserId, getFirstAndLastName } from '../selectors';
+import { getUserId } from '../selectors';
 
-const INPUT_CHANGE = 'INPUT_CHANGE';
-const SET_FORM_MESSAGE = 'SET_FORM_MESSAGE';
-const CLEAR_FORM_ERROR_MESSAGE = 'CLEAR_FORM_ERROR_MESSAGE';
+const SET_INPUT_CHANGE = 'SET_INPUT_CHANGE';
 const SET_FAVORITE_GENRES = 'SET_FAVORITE_GENRES';
 const SET_INITIAL_FORM_VALUES = 'SET_INITIAL_FORM_VALUES';
-const SET_FORM_PRISTINE = 'SET_FORM_PRISTINE';
+const SET_FORM_MESSAGE = 'SET_FORM_MESSAGE';
 
-const MyProfile = ({ uid, genreList, firstName, lastName }) => {
+const MyProfile = ({ uid, genreList }) => {
   const initialState = {
     isPristine: true,
     formMessage: {
       isError: false,
-      content: null,
+      content: undefined,
     },
     userDetails: {
-      firstName,
-      lastName,
+      firstName: '',
+      lastName: '',
+      biography: '',
+      websiteURL: '',
       favoriteGenres: [],
     }
   }
@@ -31,7 +31,7 @@ const MyProfile = ({ uid, genreList, firstName, lastName }) => {
     const { type, payload } = action;
 
     switch (type) {
-      case INPUT_CHANGE: {
+      case SET_INPUT_CHANGE: {
         const { inputName, inputValue } = payload;
 
         return {
@@ -46,18 +46,10 @@ const MyProfile = ({ uid, genreList, firstName, lastName }) => {
       case SET_FORM_MESSAGE: {
         return {
           ...state,
+          isPristine: true,
           formMessage: {
             isError: payload.isError,
             content: payload.content,
-          }
-        }
-      }
-      case CLEAR_FORM_ERROR_MESSAGE: {
-        return {
-          ...state,
-          formMessage: {
-            isError: false,
-            content: null,
           }
         }
       }
@@ -73,26 +65,16 @@ const MyProfile = ({ uid, genreList, firstName, lastName }) => {
         }
       }
       case SET_INITIAL_FORM_VALUES: {
-        const { firstName, lastName } = payload;
-
         return {
           ...state,
           isPristine: true,
           userDetails: {
-            ...state.userDetails,
-            firstName,
-            lastName,
+            ...payload
           }
         }
       }
-      case SET_FORM_PRISTINE: {
-        return {
-          ...state,
-          isPristine: payload,
-        }
-      }
       default: {
-        return state
+        return state;
       }
     }
   }
@@ -100,42 +82,50 @@ const MyProfile = ({ uid, genreList, firstName, lastName }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const { userDetails, formMessage, isPristine } = state;
 
-
-
   useEffect(() => {
-    const db = firebase.database();
-    const favoriteGenresRef = db.ref(`usersExtended/${uid}/favoriteGenres`);
+    const loadFb = async () => {
+      const db = firebase.database();
+      const userRef = db.ref(`users/${uid}`);
+      const userExtendedRef = db.ref(`usersExtended/${uid}`);
 
-    favoriteGenresRef.once('value', (snapshot) => {
-      const favoriteGenres = snapshot.val();
-      if (!favoriteGenres) return;
+      let userExtendedDetails = {};
+      let userDisplayName = '';
 
-      dispatch({
-        type: SET_FAVORITE_GENRES,
-        payload: {
-          isInitial: true,
-          genres: Object.keys(favoriteGenres),
+      await userExtendedRef.once('value', (snapshot) => {
+        const { favoriteGenres, ...restOfUserDetails } = snapshot.val();
+        const favoriteGenresArray = Object.keys(favoriteGenres);
+
+        userExtendedDetails = {
+          favoriteGenres: favoriteGenresArray,
+          ...restOfUserDetails,
         }
       });
-    });
 
-  }, [uid]);
+      await userRef.child('displayName').once('value', (snapshot) => {
+        userDisplayName = snapshot.val();
+      });
 
-  useEffect(() => {
-    dispatch({
-      type: SET_INITIAL_FORM_VALUES,
-      payload: {
+      const [firstName, lastName] = userDisplayName.split(' ');
+
+      const fullUserDetails = {
+        ...userExtendedDetails,
         firstName,
         lastName,
       }
-    });
-  }, [firstName, lastName]);
+
+      dispatch({
+        type: SET_INITIAL_FORM_VALUES,
+        payload: fullUserDetails,
+      })
+    }
+    loadFb();
+  }, [uid]);
 
   const handleInputChange = (evt) => {
     const { name: inputName, value: inputValue } = evt && evt.target;
 
     dispatch({
-      type: INPUT_CHANGE,
+      type: SET_INPUT_CHANGE,
       payload: {
         inputName,
         inputValue,
@@ -143,41 +133,50 @@ const MyProfile = ({ uid, genreList, firstName, lastName }) => {
     });
   }
 
+  const isFormValid = () => {
+    const { firstName, lastName } = userDetails;
+    return (!firstName || !lastName) ? false : true;
+  }
+
   const handleFormSubmit = async (evt) => {
     evt.preventDefault();
 
-    const { firstName, lastName } = state.userDetails;
-    const displayName = `${firstName} ${lastName}`;
-
-    if (!firstName || !lastName) {
+    if (!isFormValid) {
       return dispatch({
         type: SET_FORM_MESSAGE,
         payload: {
           isError: true,
           content: 'Missing fields',
         }
-      })
+      });
     }
 
-    await updateProfile(displayName);
-    await updateFavoriteGenres();
+    const { firstName, lastName } = userDetails;
+    const displayName = `${firstName} ${lastName}`;
 
-    dispatch({
-      type: SET_FORM_MESSAGE,
-      payload: {
-        isError: false,
-        content: 'Profile updated.',
-      }
-    });
+    try {
+      await Promise.all([updateFirebaseProfile(displayName), updateFirebaseExtendedUserDetails()]);
 
-    dispatch({
-      type: SET_FORM_PRISTINE,
-      payload: true,
-    })
+      dispatch({
+        type: SET_FORM_MESSAGE,
+        payload: {
+          isError: false,
+          content: 'Profile updated.',
+        }
+      });
+    } catch (error) {
+      dispatch({
+        type: SET_FORM_MESSAGE,
+        payload: {
+          isError: true,
+          content: 'Error updating user profile. Please try again.',
+        }
+      });
+    }
   }
 
   // Should this be an external helper that is reusable for photo upload?
-  const updateProfile = (displayName) => {
+  const updateFirebaseProfile = (displayName) => {
     return new Promise(async (resolve, reject) => {
       try {
         const fbResult = await firebase.updateProfile({ displayName });
@@ -190,39 +189,55 @@ const MyProfile = ({ uid, genreList, firstName, lastName }) => {
     })
   }
 
-  const updateFavoriteGenres = () => {
+  const generateFavoriteGenresObject = () => {
+    const { favoriteGenres } = userDetails;
+    const favoriteGenresObject = {};
+
+    for (let i = 0; i < favoriteGenres.length; i++) {
+      favoriteGenresObject[favoriteGenres[i]] = true;
+    }
+
+    return favoriteGenresObject;
+  }
+
+  const generateExtendedUserDetailsObject = () => {
+    const favoriteGenresObject = generateFavoriteGenresObject();
+    const { biography, websiteURL } = userDetails;
+
+    return {
+      favoriteGenres: {
+        ...favoriteGenresObject
+      },
+      biography,
+      websiteURL,
+    }
+  }
+
+  const updateFirebaseExtendedUserDetails = () => {
     return new Promise((resolve, reject) => {
       if (!uid) return reject('No user id found');
-
-      const { favoriteGenres } = userDetails;
-      if (favoriteGenres.length === 0) return reject('No favorite genres found');
+      const extendedUserDetailsObject = generateExtendedUserDetailsObject();
 
       try {
-        const favoriteGenresObject = {};
-
-        for (let i = 0; i < favoriteGenres.length; i++) {
-          favoriteGenresObject[favoriteGenres[i]] = true;
-        }
-
         const db = firebase.database();
-        const favoriteGenresRef = db.ref(`usersExtended/${uid}/favoriteGenres`);
+        const userExtendedRef = db.ref(`usersExtended/${uid}`);
 
-        favoriteGenresRef.set(favoriteGenresObject, (err) => {
-          if (err) {
-            console.error('Error saving favorite genres');
-            throw new Error(err);
+        userExtendedRef.set(extendedUserDetailsObject, (error) => {
+          if (error) {
+            console.error('Error saving user extended profiles to FB.');
+            throw new Error(error);
           } else {
-            console.log('saved fav genres to fb');
+            console.log('Successfully saved user extended profile to FB.')
           }
         })
 
       } catch (error) {
-        console.error('Error updating favorite genres', error);
+        console.error('Error updating user details in firebase', error);
         return reject(error);
       }
 
       resolve();
-    })
+    });
   }
 
   const handleFavoriteGenreChange = (e, val) => {
@@ -246,11 +261,27 @@ const MyProfile = ({ uid, genreList, firstName, lastName }) => {
           <Form.Group widths='equal'>
             <Form.Field>
               <label>First Name</label>
-              <Input fluid name='firstName' placeholder='First Name' required onChange={(evt) => handleInputChange(evt)} value={state.userDetails.firstName} />
+              <Input
+                fluid
+                name='firstName'
+                placeholder='First Name'
+                maxLength='100'
+                required
+                onChange={(evt) => handleInputChange(evt)}
+                value={state.userDetails.firstName || ''}
+              />
             </Form.Field>
             <Form.Field>
               <label>Last Name</label>
-              <Input fluid name='lastName' placeholder='Last Name' required onChange={(evt) => handleInputChange(evt)} value={state.userDetails.lastName} />
+              <Input
+                fluid
+                name='lastName'
+                placeholder='Last Name'
+                maxLength='100'
+                required
+                onChange={(evt) => handleInputChange(evt)}
+                value={state.userDetails.lastName || ''}
+              />
             </Form.Field>
           </Form.Group>
           {/* <Form.Field>
@@ -272,14 +303,31 @@ const MyProfile = ({ uid, genreList, firstName, lastName }) => {
           </Form.Field>
           <Form.Field>
             <label>Biography</label>
-            <TextArea />
+            <TextArea
+              name='biography'
+              onChange={(evt) => handleInputChange(evt)}
+              value={userDetails.biography}
+            />
+          </Form.Field>
+          <Form.Field>
+            <label>Website</label>
+            <Input
+              fluid
+              type='url'
+              pattern='https://.*'
+              name='websiteURL'
+              placeholder='https://google.com'
+              maxLength='2000'
+              onChange={(evt) => handleInputChange(evt)}
+              value={state.userDetails.websiteURL || ''}
+            />
           </Form.Field>
           <Message
             attached='bottom'
             positive={!formMessage.isError}
             error={formMessage.isError}
             content={formMessage.content}
-            hidden={!formMessage.content || (formMessage.content && formMessage.content.length === 0)}
+            hidden={!formMessage.content || (formMessage.content && formMessage.content.length === 0) || !isPristine}
           />
           <Button type='submit' positive disabled={isPristine}>Update</Button>
         </Form>
@@ -301,13 +349,10 @@ const mapStateToProps = (state) => {
     )
   });
 
-  const [firstName, lastName] = getFirstAndLastName(state) || ['', ''];
 
   return {
     genreList,
     uid: getUserId(state),
-    firstName,
-    lastName,
   }
 }
 

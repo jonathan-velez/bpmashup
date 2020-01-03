@@ -46,8 +46,12 @@ const PhotoUpload = ({ photoURL, uid }) => {
     reader.readAsDataURL(files[0]);
   }
 
+  const isCropperInitiated = () => {
+    return typeof cropperRef && cropperRef.current && cropperRef.current.getCroppedCanvas() !== 'undefined';
+  }
+
   const cropImage = () => {
-    if (typeof cropperRef.current.getCroppedCanvas() === 'undefined') {
+    if (!isCropperInitiated) {
       return;
     }
 
@@ -102,7 +106,7 @@ const PhotoUpload = ({ photoURL, uid }) => {
 
   const handleToggleEditMode = () => {
     // TODO: Combine resets into single fn - call when canceling or reverting
-
+    console.log('cropperRef.current', cropperRef.current)
     setZoomRatio(0);
     cropperRef.current.zoomTo(0);
 
@@ -178,8 +182,7 @@ const PhotoUpload = ({ photoURL, uid }) => {
                 autoSuccess
               />
             }
-            <Button size='mini' onClick={cropImage} positive>Save</Button>
-            {/* {fileInputImage.imageData && <Button size='mini' onClick={handleClearCropperImage} negative basic>Revert</Button>} */}
+            <Button size='tiny' onClick={cropImage} positive>Save</Button>
           </>
         }
         {!editMode &&
@@ -188,10 +191,11 @@ const PhotoUpload = ({ photoURL, uid }) => {
             blurring
             onMouseEnter={() => setDimmerActive(true)}
             onMouseLeave={() => setDimmerActive(false)}
-            onClick={handleToggleEditMode}
           >
-            <Dimmer active={dimmerActive} inverted>
-              <Button size='mini' basic onClick={handleToggleEditMode}>Edit</Button>
+            <Dimmer active={dimmerActive}>
+              {isCropperInitiated() &&
+                <Button size='tiny' onClick={handleToggleEditMode}>Edit</Button>
+              }
             </Dimmer>
             {!existingProfilePhoto ?
               <Placeholder className='profilePhotoPlaceholder'>
@@ -203,7 +207,9 @@ const PhotoUpload = ({ photoURL, uid }) => {
           </Dimmer.Dimmable>
         }
         {editMode &&
-          <a href='#' onClick={handleToggleEditMode}>Cancel</a>
+          <div>
+            <a href='#' onClick={handleToggleEditMode}>Cancel</a>
+          </div>
         }
         <NameBadge />
       </Container>
@@ -212,7 +218,6 @@ const PhotoUpload = ({ photoURL, uid }) => {
 };
 
 const mapStateToProps = (state) => {
-  // console.log('state', state)
   return {
     uid: getUserId(state),
     photoURL: getUserPhotoURL(state),
