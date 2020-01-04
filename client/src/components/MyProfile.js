@@ -4,6 +4,7 @@ import firebase from 'firebase';
 import { Grid, Form, Input, Button, Message, Dropdown, TextArea } from 'semantic-ui-react';
 
 import PhotoUpload from './PhotoUpload';
+import LoggedOutMessage from './LoggedOutMessage';
 import { getUserId } from '../selectors';
 
 const SET_INPUT_CHANGE = 'SET_INPUT_CHANGE';
@@ -12,6 +13,8 @@ const SET_INITIAL_FORM_VALUES = 'SET_INITIAL_FORM_VALUES';
 const SET_FORM_MESSAGE = 'SET_FORM_MESSAGE';
 
 const MyProfile = ({ uid, genreList }) => {
+  const db = firebase.database();
+
   const initialState = {
     isPristine: true,
     formMessage: {
@@ -53,7 +56,6 @@ const MyProfile = ({ uid, genreList }) => {
           }
         }
       }
-      // should we change this to an object to reflect firebase data structure or keep converting to/from array/object?
       case SET_FAVORITE_GENRES: {
         return {
           ...state,
@@ -84,7 +86,8 @@ const MyProfile = ({ uid, genreList }) => {
 
   useEffect(() => {
     const loadFb = async () => {
-      const db = firebase.database();
+      if (!uid) return;
+
       const userRef = db.ref(`users/${uid}`);
       const userExtendedRef = db.ref(`usersExtended/${uid}`);
 
@@ -119,7 +122,7 @@ const MyProfile = ({ uid, genreList }) => {
       })
     }
     loadFb();
-  }, [uid]);
+  }, [db, uid]);
 
   const handleInputChange = (evt) => {
     const { name: inputName, value: inputValue } = evt && evt.target;
@@ -179,10 +182,8 @@ const MyProfile = ({ uid, genreList }) => {
   const updateFirebaseProfile = (displayName) => {
     return new Promise(async (resolve, reject) => {
       try {
-        const fbResult = await firebase.updateProfile({ displayName });
-        console.log(fbResult);
+        await firebase.updateProfile({ displayName });
       } catch (error) {
-        console.error('error updating profile', error);
         return reject(error);
       }
       resolve();
@@ -219,20 +220,14 @@ const MyProfile = ({ uid, genreList }) => {
       const extendedUserDetailsObject = generateExtendedUserDetailsObject();
 
       try {
-        const db = firebase.database();
         const userExtendedRef = db.ref(`usersExtended/${uid}`);
-
         userExtendedRef.set(extendedUserDetailsObject, (error) => {
           if (error) {
-            console.error('Error saving user extended profiles to FB.');
-            throw new Error(error);
-          } else {
-            console.log('Successfully saved user extended profile to FB.')
+            throw new Error(`Error updating firebase: ${error}`);
           }
         })
 
       } catch (error) {
-        console.error('Error updating user details in firebase', error);
         return reject(error);
       }
 
@@ -249,6 +244,10 @@ const MyProfile = ({ uid, genreList }) => {
         genres,
       },
     })
+  }
+
+  if (!uid) {
+    return <LoggedOutMessage />
   }
 
   return (
@@ -284,10 +283,6 @@ const MyProfile = ({ uid, genreList }) => {
               />
             </Form.Field>
           </Form.Group>
-          {/* <Form.Field>
-            <label>Phone Number</label>
-            <Input type='tel' placeholder='310-555-1234' pattern='[0-9]{3}-[0-9]{3}-[0-9]{4}' onChange={(evt) => handleInputChange(evt)} />
-          </Form.Field> */}
           <Form.Field>
             <label>Favorite Genres</label>
             <Dropdown

@@ -18,10 +18,6 @@ const PhotoUpload = ({ photoURL, uid }) => {
   const cropperRef = useRef(null);
   const inputFileRef = useRef(null);
 
-  if (!uid) {
-    return <div>You must be logged in.</div> //TODO: pretty this up. Can we check if fb auth hasn't been initiated yet to prevent false positives?
-  }
-
   const handleImageChange = (evt) => {
     evt.preventDefault();
     let files;
@@ -79,7 +75,7 @@ const PhotoUpload = ({ photoURL, uid }) => {
         const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
         setPercentCompleted(progress);
       }, (error) => {
-        console.log('error with upload', error);
+          throw new Error(`Error uploading new image: ${error}`);
       }, () => {
         uploadTask.snapshot.ref.getDownloadURL().then(function (downloadURL) {
           setUserImageUrlToProfile(downloadURL);
@@ -106,7 +102,6 @@ const PhotoUpload = ({ photoURL, uid }) => {
 
   const handleToggleEditMode = () => {
     // TODO: Combine resets into single fn - call when canceling or reverting
-    console.log('cropperRef.current', cropperRef.current)
     setZoomRatio(0);
     cropperRef.current.zoomTo(0);
 
@@ -121,7 +116,6 @@ const PhotoUpload = ({ photoURL, uid }) => {
 
   const existingProfilePhoto = photoURL;
 
-  // TODO: disable form while upload in progress
   return (
     <React.Fragment>
       <Container style={{ width: '200px' }} textAlign='center'>
@@ -133,7 +127,6 @@ const PhotoUpload = ({ photoURL, uid }) => {
             height: 200,
             paddingBottom: 10,
             display: (editMode ? 'block' : 'none'),
-            // className: (!editMode && 'screen-reader screen-reader-focusable')
           }}
           viewMode={2}
           dragMode='move'
@@ -193,9 +186,7 @@ const PhotoUpload = ({ photoURL, uid }) => {
             onMouseLeave={() => setDimmerActive(false)}
           >
             <Dimmer active={dimmerActive}>
-              {isCropperInitiated() &&
-                <Button size='tiny' onClick={handleToggleEditMode}>Edit</Button>
-              }
+              <Button size='tiny' onClick={handleToggleEditMode}>Edit</Button>
             </Dimmer>
             {!existingProfilePhoto ?
               <Placeholder className='profilePhotoPlaceholder'>
