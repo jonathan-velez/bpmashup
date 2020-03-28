@@ -24,6 +24,7 @@ import userDetail from './userDetail';
 import noDownloadList from './noDownloadList';
 import chartListing from './chartListing';
 import actionMessage from './actionMessage';
+import downloadQueue from './downloadQueue';
 
 const rootReducer = combineReducers({
   trackListing,
@@ -49,6 +50,7 @@ const rootReducer = combineReducers({
   noDownloadList,
   chartListing,
   actionMessage,
+  downloadQueue,
 });
 
 export default rootReducer;

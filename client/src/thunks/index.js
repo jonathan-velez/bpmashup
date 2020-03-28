@@ -10,6 +10,7 @@ import { getLabelDetail } from './labelThunk';
 import { getTracks, fetchTracksSimilar, fetchMostPopularTracks, getYoutubeLink, getTracksByIds, clearTracklist } from './tracksThunk';
 import { fetchChartDataById, fetchChartMetadataByIds } from './chartThunk';
 import { loadPlaylists, loadDownloads, loadNoDownloads, loadLovedTracks, loadLovedArtists, loadLovedLabels, loadPermissions } from './userSessionThunk';
+import { addTrackToDownloadQueue } from './downloadQueueThunk';
 
 export {
   loadTrackThunk,
@@ -44,4 +45,5 @@ export {
   loadLovedLabels,
   loadPermissions,
   fetchChartMetadataByIds,
+  addTrackToDownloadQueue,
 };

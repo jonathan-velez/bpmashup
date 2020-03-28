@@ -15,11 +15,12 @@ import MyActivity from './MyActivity';
 import Track from './Track';
 import Chart from './Chart';
 import MyProfile from './MyProfile';
+import DownloadQueue from './DownloadQueue';
 
 const Main = () => {
   const containerStyle = {
     marginTop: '7em',
-    marginBottom: '8em'
+    marginBottom: '8em',
   };
   return (
     <Container style={containerStyle} textAlign='center'>
@@ -28,21 +29,50 @@ const Main = () => {
         <Route exact path='/track/:trackName/:trackId' component={Track} />
         <Route exact path='/history/my-activity' component={MyActivity} />
         <Route exact path='/history/loved-labels' component={MyLovedLabels} />
-        <Route exact path='/history/:pageType' component={MyHistoryTracksController} />
+        <Route
+          exact
+          path='/history/:pageType'
+          component={MyHistoryTracksController}
+        />
         <Route exact path='/artist/:artistName/:artistId' component={Artist} />
         <Route exact path='/label/:labelName/:labelId' component={Label} />
-        <Route exact path="/most-popular/:type/:searchString/:searchId" component={TrackListingController} />
-        <Route exact path="/similar-tracks/:trackName/:trackId" component={TrackListingController} />
-        <Route exact path="/playlist/:playlistName/:playlistId" component={PlaylistController} />
-        <Route exact path="/search/:searchTerm" component={SearchResultsController} />
-        <Route exact path="/release/:releaseName/:releaseId" component={ReleaseListingController} />
-        <Route exact path="/tracks" component={TracksController} />
-        <Route exact path='/:itemType/:itemName/:itemId/tracks' component={TracksController} />
-        <Route exact path="/my-profile" component={MyProfile} />
-        <Route exact path="/" component={TrackListingController} />
+        <Route
+          exact
+          path='/most-popular/:type/:searchString/:searchId'
+          component={TrackListingController}
+        />
+        <Route
+          exact
+          path='/similar-tracks/:trackName/:trackId'
+          component={TrackListingController}
+        />
+        <Route
+          exact
+          path='/playlist/:playlistName/:playlistId'
+          component={PlaylistController}
+        />
+        <Route
+          exact
+          path='/search/:searchTerm'
+          component={SearchResultsController}
+        />
+        <Route
+          exact
+          path='/release/:releaseName/:releaseId'
+          component={ReleaseListingController}
+        />
+        <Route exact path='/tracks' component={TracksController} />
+        <Route
+          exact
+          path='/:itemType/:itemName/:itemId/tracks'
+          component={TracksController}
+        />
+        <Route exact path='/my-profile' component={MyProfile} />
+        <Route exact path='/download-queue' component={DownloadQueue} />
+        <Route exact path='/' component={TrackListingController} />
       </Switch>
     </Container>
-  )
-}
+  );
+};
 
 export default withRouter(Main);

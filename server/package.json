@@ -12,11 +12,13 @@
   "license": "ISC",
   "dependencies": {
     "axios": "^0.18.0",
+    "bull": "^3.13.0",
     "cheerio": "^1.0.0-rc.2",
     "dotenv": "^5.0.1",
     "eval": "^0.1.2",
     "express": "^4.16.3",
     "firebase": "^6.1.1",
+    "ioredis": "^4.16.0",
     "lodash": "^4.17.5",
     "multer": "^1.4.2",
     "oauth": "^0.9.15",

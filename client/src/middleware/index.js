@@ -14,14 +14,15 @@ import {
   TOGGLE_LOVE_ARTIST,
   DOWNLOAD_TRACK,
   ADD_TRACK_TO_NO_DOWNLOAD_LIST,
+  DOWNLOAD_TRACK_FROM_QUEUE,
 } from '../constants/actionTypes';
 import {
   openLoginModalWindow,
   setActionMessage,
-  removeActionMessage
+  removeActionMessage,
 } from '../actions/ActionCreators';
 
-export const activityLogger = store => next => action => {
+export const activityLogger = (store) => (next) => (action) => {
   const logTrack = (track, userData, type) => {
     const { userId = 0, userDisplayName = '', userEmail = '' } = userData;
 
@@ -37,55 +38,83 @@ export const activityLogger = store => next => action => {
     userDataRef.child('userData').set({ userDisplayName, userEmail });
 
     // total count for all downloads by user
-    userDataRef.child('totalCount').transaction(currentValue => {
+    userDataRef.child('totalCount').transaction((currentValue) => {
       return (currentValue || 0) + 1;
     });
 
     // total count for all downloads by all ussers
-    userDataRef.parent.parent.child('totalCount').transaction(currentValue => {
-      return (currentValue || 0) + 1;
-    });
+    userDataRef.parent.parent
+      .child('totalCount')
+      .transaction((currentValue) => {
+        return (currentValue || 0) + 1;
+      });
 
     const { id: trackId, genres, artists, label } = track;
 
     // track object
-    userDataRef.child('tracks').child(trackId).set(track);
+    userDataRef
+      .child('tracks')
+      .child(trackId)
+      .set(track);
     // trackId with timestamp
-    userDataRef.child('trackIds').child(moment().format()).set(trackId);
+    userDataRef
+      .child('trackIds')
+      .child(moment().format())
+      .set(trackId);
 
     // genres
-    genres.forEach(genre => {
+    genres.forEach((genre) => {
       // genre name
-      userDataRef.child('genresNames').child(genre.slug).transaction(currentValue => (currentValue || 0) + 1);
+      userDataRef
+        .child('genresNames')
+        .child(genre.slug)
+        .transaction((currentValue) => (currentValue || 0) + 1);
       // genre ids
-      userDataRef.child('genresIds').child(genre.id).transaction(currentValue => (currentValue || 0) + 1);
-    })
+      userDataRef
+        .child('genresIds')
+        .child(genre.id)
+        .transaction((currentValue) => (currentValue || 0) + 1);
+    });
 
     // artists
-    artists.forEach(artist => {
+    artists.forEach((artist) => {
       // artist name
-      userDataRef.child('artistsNames').child(artist.slug).transaction(currentValue => (currentValue || 0) + 1);
+      userDataRef
+        .child('artistsNames')
+        .child(artist.slug)
+        .transaction((currentValue) => (currentValue || 0) + 1);
       // artist id
-      userDataRef.child('artistsIds').child(artist.id).transaction(currentValue => (currentValue || 0) + 1);
-    })
+      userDataRef
+        .child('artistsIds')
+        .child(artist.id)
+        .transaction((currentValue) => (currentValue || 0) + 1);
+    });
 
     // label name
-    userDataRef.child('labelsNames').child(label.slug).transaction(currentValue => (currentValue || 0) + 1); // TODO, abstract transaction out
+    userDataRef
+      .child('labelsNames')
+      .child(label.slug)
+      .transaction((currentValue) => (currentValue || 0) + 1); // TODO, abstract transaction out
     // label name
-    userDataRef.child('labelsIds').child(label.id).transaction(currentValue => (currentValue || 0) + 1);
-  }
+    userDataRef
+      .child('labelsIds')
+      .child(label.id)
+      .transaction((currentValue) => (currentValue || 0) + 1);
+  };
 
   // TODO: take in optional positive/negative and icon parameters. Icon would be cool to send a music one for track playing
-  const generateActivityMessage = message => {
+  const generateActivityMessage = (message) => {
     const id = v4();
-    store.dispatch(setActionMessage({
-      id,
-      message,
-    }));
+    store.dispatch(
+      setActionMessage({
+        id,
+        message,
+      }),
+    );
     setTimeout(() => {
       store.dispatch(removeActionMessage(id));
-    }, 4000)
-  }
+    }, 4000);
+  };
 
   const id = v4();
   const state = store.getState();
@@ -128,15 +157,16 @@ export const activityLogger = store => next => action => {
     case ADD_TRACK_TO_NO_DOWNLOAD_LIST:
       logTrack(track, userData, 'noDownloads');
       break;
-    case TOGGLE_LOVE_TRACK: {
-      let message;
-      if (action.payload.add) {
-        message = 'Track added to your Love list';
-      } else {
-        message = 'Track removed from your Love list'
+    case TOGGLE_LOVE_TRACK:
+      {
+        let message;
+        if (action.payload.add) {
+          message = 'Track added to your Love list';
+        } else {
+          message = 'Track removed from your Love list';
+        }
+        generateActivityMessage(message);
       }
-      generateActivityMessage(message);
-    }
       break;
     case ADD_TO_PLAYLIST:
       generateActivityMessage('Track added to playlist');
@@ -149,17 +179,29 @@ export const activityLogger = store => next => action => {
   }
 
   next(action);
-}
+};
 
-const protectedActions = [TOGGLE_LOVE_TRACK, ADD_PLAYLIST, ADD_TO_PLAYLIST, REMOVE_FROM_PLAYLIST, EDIT_PLAYLIST_NAME, DELETE_PLAYLIST, TOGGLE_LOVE_ARTIST];
+const protectedActions = [
+  TOGGLE_LOVE_TRACK,
+  ADD_PLAYLIST,
+  ADD_TO_PLAYLIST,
+  REMOVE_FROM_PLAYLIST,
+  EDIT_PLAYLIST_NAME,
+  DELETE_PLAYLIST,
+  TOGGLE_LOVE_ARTIST,
+  DOWNLOAD_TRACK_FROM_QUEUE,
+];
 
-export const checkProtectedAction = store => next => action => {
+export const checkProtectedAction = (store) => (next) => (action) => {
   const state = store.getState();
   const { auth } = state.firebaseState;
 
-  if ((!auth.isLoaded || auth.isEmpty) && protectedActions.includes(action.type)) {
+  if (
+    (!auth.isLoaded || auth.isEmpty) &&
+    protectedActions.includes(action.type)
+  ) {
     next(openLoginModalWindow(action));
   } else {
     next(action);
   }
-}
+};

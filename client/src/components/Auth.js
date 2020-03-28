@@ -3,7 +3,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
 import { firebaseConnect } from 'react-redux-firebase';
-import { Image, Icon, Dropdown } from 'semantic-ui-react';
+import { Icon, Dropdown } from 'semantic-ui-react';
 
 import store from '../store';
 import {
@@ -25,7 +25,7 @@ import UserAvatar from './UserAvatar';
 const Auth = ({ auth, profile, firebase, history }) => {
   const logIn = () => {
     store.dispatch(openLoginModalWindow());
-  }
+  };
 
   const logOut = () => {
     firebase.logout().then(() => {
@@ -39,87 +39,81 @@ const Auth = ({ auth, profile, firebase, history }) => {
       store.dispatch(clearLovedLabelsDetails());
       history.push(`/`);
     });
-  }
+  };
 
   const { email } = auth;
   const { displayName, photoURL } = profile;
 
-  const trigger = auth.isEmpty ?
+  const trigger = auth.isEmpty ? (
     <Icon name='user outline' />
-    :
-    photoURL ?
-      <UserAvatar />
-      :
-      <Icon name='user' />
+  ) : photoURL ? (
+    <UserAvatar />
+  ) : (
+    <Icon name='user' />
+  );
 
   return (
     <Fragment>
-      <Dropdown
-        item
-        scrolling
-        trigger={trigger}
-        direction='left'
-      >
+      <Dropdown item scrolling trigger={trigger} direction='left'>
         <Dropdown.Menu>
-          {!auth.isEmpty ?
+          {!auth.isEmpty ? (
             <Fragment>
               <Dropdown.Item
                 disabled
                 text={displayName ? displayName.toUpperCase() : email}
               />
               <Dropdown.Item
-                as={Link} to='/history/loved-tracks'
+                as={Link}
+                to='/download-queue'
+                text='Download Queue'
+              />
+              <Dropdown.Item
+                as={Link}
+                to='/history/loved-tracks'
                 text='Loved Tracks'
               />
               <Dropdown.Item
-                as={Link} to='/history/loved-labels'
+                as={Link}
+                to='/history/loved-labels'
                 text='Loved Labels'
               />
               <Dropdown.Item
-                as={Link} to='/history/downloads'
-                text='Downloads'
+                as={Link}
+                to='/history/downloads'
+                text='Download History'
               />
               <Dropdown.Item
-                as={Link} to='/history/no-downloads'
-                text='No Downloads'
+                as={Link}
+                to='/history/no-downloads'
+                text='No Downloads History'
               />
               <Dropdown.Item
-                as={Link} to='/history/my-activity'
+                as={Link}
+                to='/history/my-activity'
                 text='My Activity'
               />
-              <Dropdown.Item
-                as={Link} to='/my-profile'
-                text='My Profile'
-              />
+              <Dropdown.Item as={Link} to='/my-profile' text='My Profile' />
               <Dropdown.Divider />
               <ConfirmAction
                 action={logOut}
                 confirmText='Log out?'
-                render={openConfirm => {
-                  return (
-                    <Dropdown.Item
-                      text='Log out'
-                      onClick={openConfirm}
-                    />
-                  )
+                render={(openConfirm) => {
+                  return <Dropdown.Item text='Log out' onClick={openConfirm} />;
                 }}
               />
             </Fragment>
-            :
+          ) : (
             <Fragment>
-              <Dropdown.Item
-                text='Log in / Sign up'
-                onClick={() => logIn()}
-              />
+              <Dropdown.Item text='Log in / Sign up' onClick={() => logIn()} />
             </Fragment>
-          }
+          )}
         </Dropdown.Menu>
       </Dropdown>
     </Fragment>
   );
-}
+};
 
 export default compose(
   firebaseConnect(),
-  connect(({ firebaseState: { auth, profile } }) => ({ auth, profile }))
+  connect(({ firebaseState: { auth, profile } }) => ({ auth, profile })),
 )(withRouter(Auth));

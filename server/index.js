@@ -4,11 +4,16 @@ const app = express();
 const path = require('path');
 const multer = require('multer');
 const bodyParser = require('body-parser');
+const Bull = require('bull');
 
 dotenv.load({ path: '.env' });
 
 const constants = require('./config/constants');
 const { API_BASE_URL, USER_PROFILE_PHOTO_UPLOAD_PATH } = constants;
+
+const firebase = require('./controllers/firebaseController');
+const firebaseInstance = firebase.firebaseInstance();
+const db = firebaseInstance.database();
 
 const staticFiles = express.static(path.join(__dirname, '../client/build'));
 app.use(staticFiles);
@@ -29,7 +34,7 @@ const storage = multer.diskStorage({
   filename: (req, file, cb) => {
     const { uid } = req.body;
     cb(null, `${uid}-${file.originalname}`); // TODO: Change this to a subdirectory. in destination fn above 'mkdir' with uid.
-  }
+  },
 });
 const upload = multer({ storage });
 
@@ -49,17 +54,93 @@ app.get(`${API_BASE_URL}/my-beatport`, bpController.callApi);
 app.get(`${API_BASE_URL}/charts`, bpController.callApi);
 app.get(`${API_BASE_URL}/download-track`, zippyController.zippyScrape);
 app.get(`${API_BASE_URL}/youtube/search`, ytController.Youtube);
-app.get(`${API_BASE_URL}/songkick/get-artist-id`, songkickController.getArtistId);
-app.get(`${API_BASE_URL}/songkick/get-artist-events`, songkickController.getUpcomingEvents);
-app.get(`${API_BASE_URL}/last-fm/get-artist-info`, lastFmController.getArtistInfo);
+app.get(
+  `${API_BASE_URL}/songkick/get-artist-id`,
+  songkickController.getArtistId,
+);
+app.get(
+  `${API_BASE_URL}/songkick/get-artist-events`,
+  songkickController.getUpcomingEvents,
+);
+app.get(
+  `${API_BASE_URL}/last-fm/get-artist-info`,
+  lastFmController.getArtistInfo,
+);
 app.get(`${API_BASE_URL}/download-it`, zippyController.downloadIt);
-app.post(`${API_BASE_URL}/profile-photo-upload`, upload.single('photoFile'), profilePhotoUploadController.processFileUpload);
+app.post(
+  `${API_BASE_URL}/profile-photo-upload`,
+  upload.single('photoFile'),
+  profilePhotoUploadController.processFileUpload,
+);
 
 app.use('/downloads', express.static(path.join(__dirname, '/downloads')));
-app.use(`/profile-photos`, express.static(path.join(__dirname, `/${USER_PROFILE_PHOTO_UPLOAD_PATH}`)));
+app.use(
+  `/profile-photos`,
+  express.static(path.join(__dirname, `/${USER_PROFILE_PHOTO_UPLOAD_PATH}`)),
+);
 app.use('/*', staticFiles);
 
-app.set('port', (process.env.PORT || 3001));
+app.set('port', process.env.PORT || 3001);
 app.listen(app.get('port'), () => {
   console.log(`Listening on ${app.get('port')}`);
 });
+
+// listen for new additions to the download queue and send to redis
+const downloadQueue = new Bull('download-queue');
+
+db.ref('downloadQueue').on('child_added', async (data) => {
+  const key = data.key;
+  const value = data.val();
+  const uid = value.addedBy;
+
+  if (value.status === 'initiated') {
+    const options = {
+      delay: 10000,
+      attempts: 2,
+    };
+
+    await downloadQueue.add(
+      {
+        key,
+        ...value,
+      },
+      options,
+    );
+
+    // set initiated item as 'queued' in fb
+    const updates = {};
+    const updateData = {
+      ...value,
+      status: 'queued',
+      dateQueued: Date.now(),
+    };
+    updates[`downloadQueue/${key}`] = updateData;
+    updates[`users/${uid}/downloadQueue/${key}`] = updateData;
+    db.ref().update(updates);
+  }
+});
+
+downloadQueue.process(async (job) => {
+  return await processDownloadJob(job.data);
+});
+
+function processDownloadJob(data) {
+  return new Promise((resolve) => {
+    // update queued item as 'available' in firebase
+    const updates = {};
+    const updateData = {
+      ...data,
+      status: 'available',
+      url: 'https://google.com',
+      dateAvailable: Date.now(),
+    };
+
+    // TODO: Move out of the main queue area so it doesn't build up
+    updates[`downloadQueue/${data.key}`] = updateData;
+    updates[`users/${data.addedBy}/downloadQueue/${data.key}`] = updateData;
+    db.ref()
+      .update(updates)
+      .then(() => resolve({ ...data, success: true }))
+      .catch(() => resolve({ ...data, success: false }));
+  });
+}
