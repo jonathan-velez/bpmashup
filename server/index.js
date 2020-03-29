@@ -140,7 +140,11 @@ function processDownloadJob(data) {
     updates[`users/${data.addedBy}/downloadQueue/${data.key}`] = updateData;
     db.ref()
       .update(updates)
-      .then(() => resolve({ ...data, success: true }))
-      .catch(() => resolve({ ...data, success: false }));
+      .then(() => resolve({ ...updateData, success: true }))
+      .catch(() => resolve({ ...updateData, success: false }));
   });
 }
+
+downloadQueue.on('completed', (job, result) => {
+  console.log(`Job ${JSON.stringify(job)} completed with result ${JSON.stringify(result)}`);
+});
