@@ -2,7 +2,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { Button, Icon, Dropdown } from 'semantic-ui-react';
-// import { downloadTrack } from '../utils/trackUtils';
 import { addTrackToDownloadQueue } from '../thunks';
 import { hasBeenDownloaded } from '../selectors';
 

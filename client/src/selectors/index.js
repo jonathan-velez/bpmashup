@@ -24,16 +24,11 @@ const _hasBeenDownloaded = (state, trackId) => {
   return downloadedTracks.includes(trackId);
 };
 const getDownloadQueue = (state) => state.downloadQueue.queue;
-// const getCurrentDownloadQueueItems = (state) => _.filter(state.downloadQueue.queue, (item) => !queueItemIsExpired(item.addedDate));
-// const getArchivedDownloadQueueItems = (state) => _.filter(state.downloadQueue.queue, (item) => queueItemIsExpired(item.addedDate));
 
 export const getUserId = createSelector([getUserAuth], (auth) => auth.uid);
-export const getUserPhotoURL = createSelector(
-  [getUserProfile, getUserAuth],
-  (profile, auth) => {
-    return profile.photoURL; //|| auth.photoURL;
-  },
-);
+export const getUserPhotoURL = createSelector([getUserProfile], (profile) => {
+  return profile.photoURL;
+});
 export const getUserDisplayName = createSelector(
   [getUserProfile, getUserAuth],
   (profile, auth) => {
@@ -126,3 +121,5 @@ export const getNumOfTracksAvailableToDownload = createSelector(
   [getCurrentDownloadQueueItems],
   (items) => items.filter((item) => item.status === 'available').length,
 );
+
+// TODO: Get full list of download history, replace existing logic

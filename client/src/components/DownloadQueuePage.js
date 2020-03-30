@@ -1,20 +1,16 @@
 import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 import { Tab } from 'semantic-ui-react';
-import moment from 'moment';
-import _ from 'lodash';
 
 import DownloadQueueTable from './DownloadQueueTable';
 import { updateTrackStatus } from '../thunks';
 import {
   getCurrentDownloadQueueItems,
   getArchivedDownloadQueueItems,
-  getNumOfTracksAvailableToDownload,
 } from '../selectors';
 
 const DownloadQueuePage = ({
   updateTrackStatus,
-  numOfTracksAvailableToDownload,
   currentDownloadQueueItems,
   archivedDownloadQueueItems,
 }) => {
@@ -54,7 +50,6 @@ const DownloadQueuePage = ({
 const mapStateToProps = (state) => {
   return {
     downloadQueue: state.downloadQueue,
-    numOfTracksAvailableToDownload: getNumOfTracksAvailableToDownload(state),
     currentDownloadQueueItems: getCurrentDownloadQueueItems(state),
     archivedDownloadQueueItems: getArchivedDownloadQueueItems(state),
   };
