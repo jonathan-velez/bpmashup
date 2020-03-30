@@ -15,7 +15,7 @@ import MyActivity from './MyActivity';
 import Track from './Track';
 import Chart from './Chart';
 import MyProfile from './MyProfile';
-import DownloadQueue from './DownloadQueue';
+import DownloadQueuePage from './DownloadQueuePage';
 
 const Main = () => {
   const containerStyle = {
@@ -68,7 +68,7 @@ const Main = () => {
           component={TracksController}
         />
         <Route exact path='/my-profile' component={MyProfile} />
-        <Route exact path='/download-queue' component={DownloadQueue} />
+        <Route exact path='/download-queue' component={DownloadQueuePage} />
         <Route exact path='/' component={TrackListingController} />
       </Switch>
     </Container>

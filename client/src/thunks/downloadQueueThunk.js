@@ -1,17 +1,27 @@
 import firebase from 'firebase';
+
 import {
   DOWNLOAD_TRACK_FROM_QUEUE,
-  // ADD_TRACK_TO_DOWNLOAD_QUEUE,
-  // UPDATE_TRACK_STATUS_IN_DOWNLOAD_QUEUE,
 } from '../constants/actionTypes';
 
 export const addTrackToDownloadQueue = (track) => {
-  return (dispatch, getState) => {
+  return async (dispatch, getState) => {
     const state = getState();
     const { uid } = state.firebaseState.auth;
     if (!uid || uid === 0) return;
 
-    const { id: beatportTrackId } = track;
+    let { id: beatportTrackId, name, mixName } = track;
+    const artists = track.artists.reduce(
+      (acc, artist, idx) => (acc += (idx > 0 ? ' ' : '') + artist.name),
+      '',
+    );
+
+    mixName = mixName
+      .replace('Original', '')
+      .replace('Mix', '')
+      .replace('Version', '')
+      .replace('Remix', '');
+
     const addedDate = Date.now();
 
     const db = firebase.database();
@@ -21,6 +31,11 @@ export const addTrackToDownloadQueue = (track) => {
     const queueId = userDownloadQueueRef.push(
       {
         beatportTrackId,
+        searchTerms: {
+          artists,
+          name,
+          mixName,
+        },
         status: 'initiated',
         addedDate,
       },
@@ -34,6 +49,11 @@ export const addTrackToDownloadQueue = (track) => {
     db.ref(`downloadQueue/${queueId}`).set(
       {
         beatportTrackId,
+        searchTerms: {
+          artists,
+          name,
+          mixName,
+        },
         status: 'initiated',
         addedDate,
         addedBy: uid,
@@ -56,33 +76,20 @@ export const addTrackToDownloadQueue = (track) => {
   };
 };
 
-// TODO: add download thunk - update queues to downloaded status
-
 export const updateTrackStatus = (queueId, status) => {
   return (dispatch, getState) => {
     const state = getState();
     const { uid } = state.firebaseState.auth;
     const db = firebase.database();
     const itemRef = db.ref(`users/${uid}/downloadQueue/${queueId}`);
+    const globalItemRef = db.ref(`downloadQueue/${queueId}`);
 
-    if (itemRef) {
-      itemRef.update({
-        status,
-      });
-    }
+    itemRef.update({
+      status,
+    });
+
+    globalItemRef.update({
+      status,
+    });
   };
 };
-
-/*
-{
-  queueId: xxxx,
-  beatportTrackId: yyyy,
-  status: abc,
-  addedDate: zzzz,
-  downloadDate: aaa,
-  errors: true,
-  errorCodes: {},
-  url: kjxnczkjc,
-}
-
-*/

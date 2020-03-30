@@ -174,6 +174,9 @@ export const activityLogger = (store) => (next) => (action) => {
     case REMOVE_FROM_PLAYLIST:
       generateActivityMessage('Track removed from playlist');
       break;
+    case DOWNLOAD_TRACK_FROM_QUEUE:
+      generateActivityMessage('Track added to download queue');
+      break;
     default:
       break;
   }
@@ -189,7 +192,6 @@ const protectedActions = [
   EDIT_PLAYLIST_NAME,
   DELETE_PLAYLIST,
   TOGGLE_LOVE_ARTIST,
-  DOWNLOAD_TRACK_FROM_QUEUE,
 ];
 
 export const checkProtectedAction = (store) => (next) => (action) => {

@@ -9,7 +9,11 @@ const Bull = require('bull');
 dotenv.load({ path: '.env' });
 
 const constants = require('./config/constants');
-const { API_BASE_URL, USER_PROFILE_PHOTO_UPLOAD_PATH } = constants;
+const {
+  API_BASE_URL,
+  USER_PROFILE_PHOTO_UPLOAD_PATH,
+  BULL_PROCESS_CONCURRENCY,
+} = constants;
 
 const firebase = require('./controllers/firebaseController');
 const firebaseInstance = firebase.firebaseInstance();
@@ -95,7 +99,7 @@ db.ref('downloadQueue').on('child_added', async (data) => {
 
   if (value.status === 'initiated') {
     const options = {
-      delay: 10000,
+      delay: 1000,
       attempts: 2,
     };
 
@@ -120,18 +124,29 @@ db.ref('downloadQueue').on('child_added', async (data) => {
   }
 });
 
-downloadQueue.process(async (job) => {
+downloadQueue.process(BULL_PROCESS_CONCURRENCY, async (job) => {
   return await processDownloadJob(job.data);
 });
 
 function processDownloadJob(data) {
-  return new Promise((resolve) => {
+  return new Promise(async (resolve) => {
     // update queued item as 'available' in firebase
+    console.log('data', data);
+    const { artists, name, mixName } = data.searchTerms;
+
+    const response = await zippyController.getDownladLink({
+      artists,
+      name,
+      mixName,
+    });
+
+    console.log('zippy response', response);
+
     const updates = {};
     const updateData = {
       ...data,
-      status: 'available',
-      url: 'https://google.com',
+      status: response.success ? 'available' : 'notAvailable',
+      url: response.success ? response.href : null,
       dateAvailable: Date.now(),
     };
 
@@ -142,9 +157,11 @@ function processDownloadJob(data) {
       .update(updates)
       .then(() => resolve({ ...updateData, success: true }))
       .catch(() => resolve({ ...updateData, success: false }));
+
+    resolve({ success: true });
   });
 }
 
 downloadQueue.on('completed', (job, result) => {
-  console.log(`Job ${JSON.stringify(job)} completed with result ${JSON.stringify(result)}`);
+  console.log(`Job completed with result ${JSON.stringify(result)}`);
 });

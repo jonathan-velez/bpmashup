@@ -7,13 +7,26 @@ const puppeteer = require('puppeteer');
 
 async function scrape(req, res) {
   try {
-    let { artists, name: trackName, mixName } = req.query;
+    res.json(await getDownladLink(req.query));
+  } catch (error) {
+    res.json({
+      success: false,
+      error,
+    });
+  }
+}
+
+function getDownladLink(query) {
+  return new Promise(async (resolve) => {
+    // try {
+    console.log('query', query);
+    let { artists, name: trackName, mixName } = query;
     let searchString = [artists, trackName, mixName].join(' ');
 
     searchString = searchString.replace(/[()]/g, ''); // TODO: replace common terms: mix, remix, original
 
     if (!searchString || searchString.length < 3) {
-      return res.json({
+      return resolve({
         success: false,
         href: null,
         error: 'Search string less than 3 characters',
@@ -21,19 +34,18 @@ async function scrape(req, res) {
     }
 
     console.log(`Searching google for zippyshare link for: ${searchString}`);
-    const urlScrape = `https://www.google.com/search?q=${encodeURIComponent(searchString)}%20+site:zippyshare.com`;
+    const urlScrape = `https://www.google.com/search?q=${encodeURIComponent(
+      searchString,
+    )}%20+site:zippyshare.com`;
     const browser = await puppeteer.launch({
-      args: [
-        '--no-sandbox',
-        '--disable-setuid-sandbox',
-      ],
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
     });
-    
+
     const page = await browser.newPage();
     await page.goto(urlScrape);
 
-    let linksList = await page.$$eval('a', as => as.map(a => a.href));
-    console.log('hrefs', linksList)
+    let linksList = await page.$$eval('a', (as) => as.map((a) => a.href));
+    console.log('hrefs', linksList);
 
     await browser.close();
 
@@ -42,21 +54,21 @@ async function scrape(req, res) {
     let indexOfBestLink = -1;
 
     // filter links to just the ones on zippyshare.com
-    linksList = linksList.filter(link => link.includes('zippyshare.com/'));
-    console.log('filteredLinks', linksList)
+    linksList = linksList.filter((link) => link.includes('zippyshare.com/'));
+    console.log('filteredLinks', linksList);
 
     console.log('# of links', linksList.length);
 
     if (linksList.length === 0) {
       console.log(`No google hits for search: ${urlScrape}`);
-      return res.json({
+      return resolve({
         success: false,
         href: null,
         error: 'No google hits',
-      })
+      });
     }
 
-    // loop through link list and analyze the file name. break out if a perfect match to our search string is found, otherwise determine best match afterwards 
+    // loop through link list and analyze the file name. break out if a perfect match to our search string is found, otherwise determine best match afterwards
     for (const [i, link] of linksList.entries()) {
       console.log(`Parsing page #${i} - ${link}`);
       const zippyCall = await axios.get(link);
@@ -64,7 +76,7 @@ async function scrape(req, res) {
       let fileExists = true;
       pagesHtml[i] = $.html();
 
-      let pageTitle = ($('title').text());
+      let pageTitle = $('title').text();
       console.log('Page title: ' + pageTitle);
 
       const lastIndexOfDot = pageTitle.lastIndexOf('.');
@@ -73,7 +85,11 @@ async function scrape(req, res) {
       // ensure the file is still available, otherwise skip to next
       for (let elem of $('div').get()) {
         for (let child of elem.children) {
-          if (child.type === 'text' && (child.data.indexOf('File does not exist') >= 0 || child.data.indexOf('File has expired') >= 0)) {
+          if (
+            child.type === 'text' &&
+            (child.data.indexOf('File does not exist') >= 0 ||
+              child.data.indexOf('File has expired') >= 0)
+          ) {
             fileExists = false;
             break;
           }
@@ -87,37 +103,53 @@ async function scrape(req, res) {
       }
 
       // parse the page title - remove file extension and non alphanumeric characters
-      pageTitle = pageTitle.substring(pageTitle.indexOf('Zippyshare.com - ') + 17, lastIndexOfDot);
+      pageTitle = pageTitle.substring(
+        pageTitle.indexOf('Zippyshare.com - ') + 17,
+        lastIndexOfDot,
+      );
       pageTitle = pageTitle.replace(/[(),]/g, '');
 
       // check file extension, ensure it's allowed, otherwise skip to next
-      const allowedExtensions = ['mp3', 'wav', 'aiff', 'flac', 'aac', 'm4a', 'ogg'];
+      const allowedExtensions = [
+        'mp3',
+        'wav',
+        'aiff',
+        'flac',
+        'aac',
+        'm4a',
+        'ogg',
+      ];
       if (!allowedExtensions.includes(fileExtension.toLowerCase())) {
-        console.log(`Invalid file extension found in Link #${i}: ${fileExtension}`);
+        console.log(
+          `Invalid file extension found in Link #${i}: ${fileExtension}`,
+        );
         continue;
       }
 
       // count how many search words are in the title
       const searchWords = searchString.split(/[\s-]+/).filter(Boolean);
-      const titleWords = [...new Set(pageTitle.split(/[\s-]+/).filter(Boolean))];
+      const titleWords = [
+        ...new Set(pageTitle.split(/[\s-]+/).filter(Boolean)),
+      ];
       const artistWords = [...new Set(artists.split(/[\s-]+/).filter(Boolean))];
-      const trackNameWords = [...new Set(trackName.split(/[\s-]+/).filter(Boolean))];
-      const mixNameWords = [...new Set(mixName.split(/[\s-]+/).filter(Boolean))];
-      
+      const trackNameWords = [
+        ...new Set(trackName.split(/[\s-]+/).filter(Boolean)),
+      ];
+      const mixNameWords = [
+        ...new Set(mixName.split(/[\s-]+/).filter(Boolean)),
+      ];
+
       const matchedArtistsWords = [];
       const matchedTrackNameWords = [];
       const matchedMixNameWords = [];
 
-      console.log('titleWords', titleWords);
-      console.log('searchWords', searchWords);
-      console.log('artistWords', artistWords);
-      console.log('trackNameWords', trackNameWords);
-      console.log('mixNameWords', mixNameWords);
-
       for (let x = 0; x < artistWords.length; x++) {
         for (let y = 0; y < titleWords.length; y++) {
           let wordFound = false;
-          if (titleWords[y].toLowerCase() === artistWords[x].toLowerCase() && !wordFound) {
+          if (
+            titleWords[y].toLowerCase() === artistWords[x].toLowerCase() &&
+            !wordFound
+          ) {
             matchedArtistsWords.push(artistWords[x]);
             wordFound = true;
           }
@@ -127,7 +159,10 @@ async function scrape(req, res) {
       for (let x = 0; x < trackNameWords.length; x++) {
         for (let y = 0; y < titleWords.length; y++) {
           let wordFound = false;
-          if (titleWords[y].toLowerCase() === trackNameWords[x].toLowerCase() && !wordFound) {
+          if (
+            titleWords[y].toLowerCase() === trackNameWords[x].toLowerCase() &&
+            !wordFound
+          ) {
             matchedTrackNameWords.push(trackNameWords[x]);
             wordFound = true;
           }
@@ -137,34 +172,60 @@ async function scrape(req, res) {
       for (let x = 0; x < mixNameWords.length; x++) {
         for (let y = 0; y < titleWords.length; y++) {
           let wordFound = false;
-          if (titleWords[y].toLowerCase() === mixNameWords[x].toLowerCase() && !wordFound) {
+          if (
+            titleWords[y].toLowerCase() === mixNameWords[x].toLowerCase() &&
+            !wordFound
+          ) {
             matchedMixNameWords.push(mixNameWords[x]);
             wordFound = true;
           }
         }
       }
 
-      console.log('matchedArtistsWords', matchedArtistsWords)
-      console.log('matchedTrackNameWords', matchedTrackNameWords)
-      console.log('matchedMixNameWords', matchedMixNameWords)
+      console.log('matchedArtistsWords', matchedArtistsWords);
+      console.log('matchedTrackNameWords', matchedTrackNameWords);
+      console.log('matchedMixNameWords', matchedMixNameWords);
 
       // log match count if more than half of the words found. if a perfect match is found, break out
-      const combinedMatches = (matchedArtistsWords.length + matchedTrackNameWords.length + matchedMixNameWords.length);
-      const combinedMatchesPercentage = (combinedMatches / searchWords.length) * 100;
-      const matchedArtistsPercentage = (matchedArtistsWords.length / artistWords.length) * 100;
-      const matchedTrackNamePercentage = (matchedTrackNameWords.length / trackNameWords.length) * 100;
-      const matchedMixNameWordsPercentage = (matchedMixNameWords.length / mixNameWords.length) * 100;
+      const combinedMatches =
+        matchedArtistsWords.length +
+        matchedTrackNameWords.length +
+        matchedMixNameWords.length;
+      const combinedMatchesPercentage =
+        (combinedMatches / searchWords.length) * 100;
+      const matchedArtistsPercentage =
+        (matchedArtistsWords.length / artistWords.length) * 100;
+      const matchedTrackNamePercentage =
+        (matchedTrackNameWords.length / trackNameWords.length) * 100;
+      const matchedMixNameWordsPercentage =
+        (matchedMixNameWords.length / mixNameWords.length) * 100;
 
-      console.log(`Artist Matches in Link ${i}: ${matchedArtistsWords.length}/${artistWords.length}. matchedArtistsPercentage: ${matchedArtistsPercentage}`);
-      console.log(`TrackName Matches in Link ${i}: ${matchedTrackNameWords.length}/${trackNameWords.length}. matchedTrackNamePercentage: ${matchedTrackNamePercentage}`);
-      console.log(`MixName Matches in Link ${i}: ${matchedMixNameWords.length}/${mixNameWords.length}. matchedMixNameWordsPercentage: ${matchedMixNameWordsPercentage}`)
-      console.log(`Total Matches in Link ${i}: ${combinedMatches}/${searchWords.length}. combinedMatchesPercentage: ${combinedMatchesPercentage}`);
+      console.log(
+        `Artist Matches in Link ${i}: ${matchedArtistsWords.length}/${artistWords.length}. matchedArtistsPercentage: ${matchedArtistsPercentage}`,
+      );
+      console.log(
+        `TrackName Matches in Link ${i}: ${matchedTrackNameWords.length}/${trackNameWords.length}. matchedTrackNamePercentage: ${matchedTrackNamePercentage}`,
+      );
+      console.log(
+        `MixName Matches in Link ${i}: ${matchedMixNameWords.length}/${mixNameWords.length}. matchedMixNameWordsPercentage: ${matchedMixNameWordsPercentage}`,
+      );
+      console.log(
+        `Total Matches in Link ${i}: ${combinedMatches}/${searchWords.length}. combinedMatchesPercentage: ${combinedMatchesPercentage}`,
+      );
 
       // ensure at least half of the artists and track names match
-      if ((matchedArtistsWords.length > 0 && matchedArtistsPercentage >= 50) && (matchedTrackNameWords.length > 0 && matchedTrackNamePercentage >= 50)) {
+      if (
+        matchedArtistsWords.length > 0 &&
+        matchedArtistsPercentage >= 50 &&
+        matchedTrackNameWords.length > 0 &&
+        matchedTrackNamePercentage >= 50
+      ) {
         pagesRank[i] = combinedMatches.length;
       } else {
-        console.log(`Missed the mark on either artists or track names`, `matchedArtistsPercentage: ${matchedArtistsPercentage} | matchedTrackNamePercentage ${matchedTrackNamePercentage}`);
+        console.log(
+          `Missed the mark on either artists or track names`,
+          `matchedArtistsPercentage: ${matchedArtistsPercentage} | matchedTrackNamePercentage ${matchedTrackNamePercentage}`,
+        );
       }
 
       if (combinedMatches === searchWords.length) {
@@ -183,19 +244,23 @@ async function scrape(req, res) {
     }
 
     // best link found, parse the page and get download link
-    const downloadLink = indexOfBestLink >= 0 && _parseZippyPage(linksList[indexOfBestLink], pagesHtml[indexOfBestLink]);
+    const downloadLink =
+      indexOfBestLink >= 0 &&
+      _parseZippyPage(linksList[indexOfBestLink], pagesHtml[indexOfBestLink]);
 
     if (!downloadLink) {
-      console.log('No suitable file found')
-      return res.json({
+      console.log('No suitable file found');
+      return resolve({
         href: null,
         success: false,
         error: 'No file found',
-      })
+      });
     }
 
     // check if file already exists on server, download if not
-    let fileName = decodeURIComponent(downloadLink.substr(downloadLink.lastIndexOf('/') + 1));
+    let fileName = decodeURIComponent(
+      downloadLink.substr(downloadLink.lastIndexOf('/') + 1),
+    );
     const thePath = path.resolve(__dirname, '../downloads', fileName);
     const fileExists = fs.existsSync(thePath);
 
@@ -207,39 +272,50 @@ async function scrape(req, res) {
     // respond back with json payload
     if (!fileName || fileName.length === 0) {
       console.log('fileName not valid, possibly failed in _downloadMp3 fn');
-      return res.json({
+      return resolve({
         href: null,
         success: true,
         error: 'No file found',
-      })
+      });
     } else {
-      return res.json({
+      return resolve({
         href: `/api/download-it/?fileName=${encodeURIComponent(fileName)}`, // TODO: make dynamic for dev
         success: true,
-      })
+      });
     }
-  } catch (error) {
-    console.log(`Error with scrape(): ${error}`);
-  }
+    // } catch (error) {
+    //   resolve({
+    //     succes: false,
+    //     href: null,
+    //     error,
+    //   });
+    // }
+  });
 }
 
 const downloadIt = async (req, res) => {
   const { fileName } = req.query;
   console.log('Client download started', fileName);
   res.download(`downloads/${decodeURIComponent(fileName)}`);
-}
+};
 
 const _parseZippyPage = (pageLink, pageHtml) => {
   const $ = cheerio.load(pageHtml);
   let downloadLink = null;
 
-  $('script').get().forEach((val) => {
-    const scriptData = val.children.length > 0 && val.children[0].data;
+  $('script')
+    .get()
+    .forEach((val) => {
+      const scriptData = val.children.length > 0 && val.children[0].data;
 
-    if (val.children.length > 0 && scriptData.includes('dlbutton') && !downloadLink) {
-      const scriptData = val.children[0].data;
+      if (
+        val.children.length > 0 &&
+        scriptData.includes('dlbutton') &&
+        !downloadLink
+      ) {
+        const scriptData = val.children[0].data;
 
-      /******** Sample of the script we need to emulate ********
+        /******** Sample of the script we need to emulate ********
       var a = 497531;
       var b = 742589;
       document.getElementById('dlbutton').omg = "f";
@@ -256,31 +332,47 @@ const _parseZippyPage = (pageLink, pageHtml) => {
 
       }
       */
-      try {
-        let aVar = scriptData.substring(scriptData.indexOf('var a =') + 8);
-        aVar = aVar.substring(0, aVar.indexOf(';'));
+        try {
+          let aVar = scriptData.substring(scriptData.indexOf('var a =') + 8);
+          aVar = aVar.substring(0, aVar.indexOf(';'));
 
-        let bVar = scriptData.substring(scriptData.indexOf('var b =') + 8);
-        bVar = bVar.substring(0, bVar.indexOf(';'));
+          let bVar = scriptData.substring(scriptData.indexOf('var b =') + 8);
+          bVar = bVar.substring(0, bVar.indexOf(';'));
 
-        let omg = scriptData.indexOf('document.getElementById(\'dlbutton\').omg = "f";') >= 0;
-        aVar = omg ? Math.floor(aVar / 3) : aVar = Math.ceil(aVar / 3);
+          let omg =
+            scriptData.indexOf(
+              'document.getElementById(\'dlbutton\').omg = "f";',
+            ) >= 0;
+          aVar = omg ? Math.floor(aVar / 3) : (aVar = Math.ceil(aVar / 3));
 
-        let mp3Link = scriptData.substring(scriptData.indexOf('document.getElementById(\'dlbutton\').href = ') + 43);
-        mp3Link = mp3Link.substring(0, mp3Link.indexOf(';'));
-        mp3Link = mp3Link.replace('(a', '(' + aVar).replace('%b)', '%' + bVar + ')');
+          let mp3Link = scriptData.substring(
+            scriptData.indexOf("document.getElementById('dlbutton').href = ") +
+              43,
+          );
+          mp3Link = mp3Link.substring(0, mp3Link.indexOf(';'));
+          mp3Link = mp3Link
+            .replace('(a', '(' + aVar)
+            .replace('%b)', '%' + bVar + ')');
 
-        mp3Link = _eval('module.exports = ' + mp3Link);
+          mp3Link = _eval('module.exports = ' + mp3Link);
 
-        downloadLink = pageLink.substr(0, pageLink.indexOf('.com/') + 4) + mp3Link;
-      } catch (error) {
-        console.log('Error extracting mp3 link from zippyshare', error, 'scriptData', scriptData, 'pageLink', pageLink);
+          downloadLink =
+            pageLink.substr(0, pageLink.indexOf('.com/') + 4) + mp3Link;
+        } catch (error) {
+          console.log(
+            'Error extracting mp3 link from zippyshare',
+            error,
+            'scriptData',
+            scriptData,
+            'pageLink',
+            pageLink,
+          );
+        }
       }
-    }
-  });
+    });
 
   return downloadLink;
-}
+};
 
 async function _downloadMp3(url, fileName, thePath) {
   return new Promise(async (resolve, reject) => {
@@ -299,8 +391,9 @@ async function _downloadMp3(url, fileName, thePath) {
       console.log('Error with downloading mp3', thePath, error);
       reject();
     }
-  })
+  });
 }
 
 exports.zippyScrape = scrape;
 exports.downloadIt = downloadIt;
+exports.getDownladLink = getDownladLink;

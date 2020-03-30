@@ -66,6 +66,7 @@ const Auth = ({ auth, profile, firebase, history }) => {
                 as={Link}
                 to='/download-queue'
                 text='Download Queue'
+                label='1'
               />
               <Dropdown.Item
                 as={Link}
