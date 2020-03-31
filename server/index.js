@@ -90,7 +90,8 @@ app.listen(app.get('port'), () => {
 });
 
 // listen for new additions to the download queue and send to redis
-const downloadQueue = new Bull('download-queue');
+const { REDIS_URL } = process.env;
+const downloadQueue = new Bull('download-queue', REDIS_URL);
 
 db.ref('downloadQueue').on('child_added', async (data) => {
   const key = data.key;
@@ -99,7 +100,6 @@ db.ref('downloadQueue').on('child_added', async (data) => {
 
   if (value.status === 'initiated') {
     const options = {
-      delay: 1000,
       attempts: 2,
     };
 
