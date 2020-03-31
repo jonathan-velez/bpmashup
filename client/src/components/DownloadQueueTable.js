@@ -19,7 +19,7 @@ const DownloadQueueTable = ({ queue, downloadTrack }) => {
     let downloadButtonPopupContent = '';
     const downloadExpirationDate = moment(dateAvailable).add(1, 'day');
     const downloadExpirationDateFormatted = downloadExpirationDate.format(
-      'MM/DD/YYYY HH:MM:ss A',
+      'MM/DD/YYYY hh:MM:ss A',
     );
 
     const status = moment(downloadExpirationDate).isBefore(moment())
@@ -83,7 +83,7 @@ const DownloadQueueTable = ({ queue, downloadTrack }) => {
     return (
       <Table.Row key={idx}>
         <Table.Cell>
-          {moment(addedDate).format('MM/DD/YYYY HH:MM:ss A')}
+          {moment(addedDate).format('MM/DD/YYYY hh:MM:ss A')}
         </Table.Cell>
         <Table.Cell>
           {name} {mixName && mixName.trim.length > 0 && `( ${mixName})`}
