@@ -107,14 +107,26 @@ export { getUserHistoryPageSetup };
 const _queueItemIsExpired = (addedDate) =>
   moment(addedDate).isBefore(moment().subtract(1, 'day'));
 
+// select expired or already downloaded files
 export const getArchivedDownloadQueueItems = createSelector(
   [getDownloadQueue],
-  (queue) => _.filter(queue, (item) => _queueItemIsExpired(item.addedDate)),
+  (queue) =>
+    _.filter(
+      queue,
+      (item) =>
+        _queueItemIsExpired(item.addedDate) || item.status === 'downloaded',
+    ),
 );
 
+// select files which haven't been downloaded and have not expired
 export const getCurrentDownloadQueueItems = createSelector(
   [getDownloadQueue],
-  (queue) => _.filter(queue, (item) => !_queueItemIsExpired(item.addedDate)),
+  (queue) =>
+    _.filter(
+      queue,
+      (item) =>
+        !_queueItemIsExpired(item.addedDate) && item.status !== 'downloaded',
+    ),
 );
 
 export const getNumOfTracksAvailableToDownload = createSelector(
