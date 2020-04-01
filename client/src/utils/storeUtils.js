@@ -117,14 +117,11 @@ export const registerFirebaseListeners = () => {
   const downloadQueueRef = db.ref(`users/${uid}/downloadQueue`);
   downloadQueueRef.on('value', (snapshot) => {
     const downloadQueueItems = snapshot.val();
-    // Object.keys length instead?
-    if (downloadQueueItems) {
-      console.log('sup', downloadQueueItems);
-      store.dispatch({
-        type: UPDATE_DOWNLOAD_QUEUE,
-        payload: downloadQueueItems,
-      });
-    }
+
+    store.dispatch({
+      type: UPDATE_DOWNLOAD_QUEUE,
+      payload: downloadQueueItems,
+    });
   });
 };
 
