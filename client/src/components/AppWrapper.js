@@ -17,15 +17,42 @@ import {
   toggleMute,
   setVolume
 } from '../actions/ActionCreators';
-import { downloadTrack, getNextTrack } from '../utils/trackUtils';
-import { getYoutubeLink } from '../thunks';
+import { getNextTrack } from '../utils/trackUtils';
+import { getYoutubeLink, addTrackToDownloadQueue } from '../thunks';
 
-const AppWrapper = ({ mediaPlayer, loadTrack, play, pause, updateTrackProgress, setDuration, playPause, getYoutubeLink, toggleMute, seekChange, seekMouseUp, setVolume }) => {
-  const { loadedTrack, loadedUrl, playing, volume, muted, loop, playbackRate, played, duration } = mediaPlayer;
+const AppWrapper = ({
+  mediaPlayer,
+  loadTrack,
+  play,
+  pause,
+  updateTrackProgress,
+  setDuration,
+  playPause,
+  getYoutubeLink,
+  toggleMute,
+  seekChange,
+  seekMouseUp,
+  setVolume,
+  addTrackToDownloadQueue,
+}) => {
+  const {
+    loadedTrack,
+    loadedUrl,
+    playing,
+    volume,
+    muted,
+    loop,
+    playbackRate,
+    played,
+    duration,
+  } = mediaPlayer;
   const playerRef = useRef(null);
 
   const throttledKeyPressFunctions = _.throttle((e) => {
-    if (['text', 'email', 'password', 'url', 'textarea'].includes(e.target.type)) return;
+    if (
+      ['text', 'email', 'password', 'url', 'textarea'].includes(e.target.type)
+    )
+      return;
     if (e.metaKey || e.ctrlKey || e.altKey) return;
 
     switch (e.key) {
@@ -43,7 +70,7 @@ const AppWrapper = ({ mediaPlayer, loadTrack, play, pause, updateTrackProgress, 
         break;
       case 'd':
       case 'D':
-        if (loadedTrack.id) downloadTrack(loadedTrack);
+        if (loadedTrack.id) addTrackToDownloadQueue(loadedTrack);
         break;
       case 'f':
       case 'F':
@@ -67,12 +94,12 @@ const AppWrapper = ({ mediaPlayer, loadTrack, play, pause, updateTrackProgress, 
         break;
       case '=':
         if (loadedTrack.id) {
-          changeVolume(.15);
+          changeVolume(0.15);
         }
         break;
       case '-':
         if (loadedTrack.id) {
-          changeVolume(-.15);
+          changeVolume(-0.15);
         }
         break;
       case 'Shift':
@@ -86,18 +113,18 @@ const AppWrapper = ({ mediaPlayer, loadTrack, play, pause, updateTrackProgress, 
 
   useEffect(() => {
     window.addEventListener('keydown', throttledKeyPressFunctions, null);
-    return (() => {
+    return () => {
       window.removeEventListener('keydown', throttledKeyPressFunctions, null);
-    });
+    };
   }, [volume, loadedTrack, played, throttledKeyPressFunctions]);
 
   const fastForward = (seconds) => {
     if (typeof seconds !== 'number') return;
 
-    let seekToPosition = (seconds / duration) + played;
+    let seekToPosition = seconds / duration + played;
 
     if (seekToPosition > 1) {
-      seekToPosition = .99;
+      seekToPosition = 0.99;
     }
 
     if (seekToPosition < 0) {
@@ -107,7 +134,7 @@ const AppWrapper = ({ mediaPlayer, loadTrack, play, pause, updateTrackProgress, 
     playerRef.current.seekTo(seekToPosition);
     seekChange(seekToPosition);
     seekMouseUp();
-  }
+  };
 
   const changeVolume = (amount) => {
     if (typeof amount !== 'number') return;
@@ -122,11 +149,11 @@ const AppWrapper = ({ mediaPlayer, loadTrack, play, pause, updateTrackProgress, 
     }
 
     setVolume(setVolumeTo);
-  }
+  };
 
   const loadNextTrack = (incrementBy = 1) => {
     loadTrack(getNextTrack(incrementBy));
-  }
+  };
 
   return (
     <React.Fragment>
@@ -151,7 +178,7 @@ const AppWrapper = ({ mediaPlayer, loadTrack, play, pause, updateTrackProgress, 
       <ActionMessage />
     </React.Fragment>
   );
-}
+};
 
 const mapStateToProps = state => {
   return {
@@ -170,7 +197,8 @@ const mapDispatchToProps = {
   seekChange,
   seekMouseUp,
   toggleMute,
-  setVolume
-}
+  setVolume,
+  addTrackToDownloadQueue,
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(AppWrapper);
