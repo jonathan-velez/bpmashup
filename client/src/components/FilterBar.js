@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Form, Icon, Accordion } from 'semantic-ui-react';
 import queryString from 'query-string';
 import _ from 'lodash';
+import moment from 'moment';
 
 import { KeyCamelot } from '../constants/musicalKeys';
 
@@ -16,13 +17,20 @@ const FilterBar = ({ location, history, genreListing }) => {
   const bpm = +queryString.parse(search).bpm || '';
 
   const [activeIndex, setActiveIndex] = useState(0);
-  const [selectedGenre, setSelectedGenre] = useState(+queryString.parse(search).genre || '');
-  const [selectedMusicalKey, setSelectedMusicalKey] = useState(+queryString.parse(search).key || '');
+  const [selectedGenre, setSelectedGenre] = useState(
+    +queryString.parse(search).genre || '',
+  );
+  const [selectedMusicalKey, setSelectedMusicalKey] = useState(
+    +queryString.parse(search).key || '',
+  );
   const [selectedPerPage, setSelectedPerPage] = useState(perPage);
-  const [selectedPublishDateStart, setSelectedPublishDateStart] = useState(publishDateStart);
-  const [selectedPublishDateEnd, setSelectedPublishDateEnd] = useState(publishDateEnd);
+  const [selectedPublishDateStart, setSelectedPublishDateStart] = useState(
+    publishDateStart,
+  );
+  const [selectedPublishDateEnd, setSelectedPublishDateEnd] = useState(
+    publishDateEnd,
+  );
   const [selectedBpm, setSelectedBpm] = useState(bpm);
-
 
   useEffect(() => {
     setSelectedGenre(genre);
@@ -34,23 +42,23 @@ const FilterBar = ({ location, history, genreListing }) => {
   }, [genre, key, perPage, publishDateStart, publishDateEnd, bpm]);
 
   const handleAccordionClick = (e, titleProps) => {
-    const { index } = titleProps
-    const newIndex = activeIndex === index ? -1 : index
+    const { index } = titleProps;
+    const newIndex = activeIndex === index ? -1 : index;
 
     setActiveIndex(newIndex);
-  }
+  };
 
   const handleGenreChange = (e, { value }) => {
     setSelectedGenre(value);
-  }
+  };
 
   const handleKeyChange = (e, { value }) => {
     setSelectedMusicalKey(value);
-  }
+  };
 
   const handleBPMChange = (e, { value }) => {
     setSelectedBpm(value);
-  }
+  };
 
   const handleTimeframeChange = (e, { value }) => {
     const values = queryString.parse(value);
@@ -58,19 +66,23 @@ const FilterBar = ({ location, history, genreListing }) => {
 
     setSelectedPublishDateStart(publishDateStart);
     setSelectedPublishDateEnd(publishDateEnd);
-  }
+  };
 
   const filterTracks = () => {
     // use _.pickBy to remove non-filtered options
-    history.push(`?${queryString.stringify(_.pickBy({
-      genre: selectedGenre,
-      key: selectedMusicalKey,
-      perPage: selectedPerPage,
-      publishDateStart: selectedPublishDateStart,
-      publishDateEnd: selectedPublishDateEnd,
-      bpm: selectedBpm,
-    }))}`);
-  }
+    history.push(
+      `?${queryString.stringify(
+        _.pickBy({
+          genre: selectedGenre,
+          key: selectedMusicalKey,
+          perPage: selectedPerPage,
+          publishDateStart: selectedPublishDateStart,
+          publishDateEnd: selectedPublishDateEnd,
+          bpm: selectedBpm,
+        }),
+      )}`,
+    );
+  };
 
   const clearFilters = () => {
     setSelectedGenre('');
@@ -79,59 +91,73 @@ const FilterBar = ({ location, history, genreListing }) => {
     setSelectedPublishDateStart('');
     setSelectedPublishDateEnd('');
     setSelectedBpm('');
-  }
+  };
 
-
-  const genreOptions = genreListing.map(genre => {
-    return (
-      {
-        ...genre,
-        key: genre.id,
-        value: +genre.id,
-        text: genre.name,
-      }
-    )
+  const genreOptions = genreListing.map((genre) => {
+    return {
+      ...genre,
+      key: genre.id,
+      value: +genre.id,
+      text: genre.name,
+    };
   });
 
-  const keyOptions = Object.values(KeyCamelot).sort((a, b) => a.replace(/\D/g, '') - b.replace(/\D/g, '')).map(musicalKey => {
-    return (
-      {
+  const keyOptions = Object.values(KeyCamelot)
+    .sort((a, b) => a.replace(/\D/g, '') - b.replace(/\D/g, ''))
+    .map((musicalKey) => {
+      return {
         key: _.invert(KeyCamelot)[musicalKey],
         value: +_.invert(KeyCamelot)[musicalKey],
         text: musicalKey,
-      }
-    )
-  });
+      };
+    });
+
+  const today = moment().format('YYYY-MM-DD');
+  const yesterday = moment()
+    .subtract(1, 'day')
+    .format('YYYY-MM-DD');
+  const weekAgo = moment()
+    .subtract(1, 'week')
+    .format('YYYY-MM-DD');
+  const monthAgo = moment()
+    .subtract(1, 'month')
+    .format('YYYY-MM-DD');
+  const yearAgo = moment()
+    .subtract(1, 'year')
+    .format('YYYY-MM-DD');
 
   const timeframeOptions = [
     {
-      key: "today",
-      value: "publishDateStart=2019-08-23&publishDateEnd=2019-08-23",
-      text: "Today",
+      key: 'today',
+      value: `publishDateStart=${today}&publishDateEnd=${today}`,
+      text: 'Today',
     },
     {
-      key: "yesterday",
-      value: "publishDateStart=2019-08-22&publishDateEnd=2019-08-23",
-      text: "Yesterday",
+      key: 'yesterday',
+      value: `publishDateStart=${yesterday}&publishDateEnd=${today}`,
+      text: 'Yesterday',
     },
     {
-      key: "weekToDate",
-      value: "publishDateStart=2019-08-16&publishDateEnd=2019-08-23",
-      text: "Past Week",
+      key: 'weekToDate',
+      value: `publishDateStart=${weekAgo}&publishDateEnd=${today}`,
+      text: 'Past Week',
     },
     {
-      key: "monthToDate",
-      value: "publishDateStart=2019-07-23&publishDateEnd=2019-08-23",
-      text: "Past Month",
+      key: 'monthToDate',
+      value: `publishDateStart=${monthAgo}&publishDateEnd=${today}`,
+      text: 'Past Month',
     },
     {
-      key: "yearToDate",
-      value: "publishDateStart=2018-08-23&publishDateEnd=2019-08-23",
-      text: "Past Year",
-    }
+      key: 'yearToDate',
+      value: `publishDateStart=${yearAgo}&publishDateEnd=${today}`,
+      text: 'Past Year',
+    },
   ];
 
-  const selectedTimeframe = selectedPublishDateStart && selectedPublishDateEnd && `publishDateStart=${selectedPublishDateStart}&publishDateEnd=${selectedPublishDateEnd}`;
+  const selectedTimeframe =
+    selectedPublishDateStart &&
+    selectedPublishDateEnd &&
+    `publishDateStart=${selectedPublishDateStart}&publishDateEnd=${selectedPublishDateEnd}`;
 
   return (
     <Accordion fluid>
@@ -144,7 +170,7 @@ const FilterBar = ({ location, history, genreListing }) => {
         <Icon name='dropdown' />
         <Icon name='filter' />
         FILTERS
-        </Accordion.Title>
+      </Accordion.Title>
       <Accordion.Content active={activeIndex === 0}>
         <Form>
           <Form.Group style={{ textAlign: 'left' }}>
@@ -190,14 +216,19 @@ const FilterBar = ({ location, history, genreListing }) => {
               value={selectedTimeframe}
               width={3}
             />
-            <Form.Button label='GO' color='red' onClick={filterTracks}><Icon name='filter' />Filter</Form.Button>
-            <Form.Button basic label='CLEAR' onClick={clearFilters}><Icon name='delete' />Clear</Form.Button>
+            <Form.Button label='GO' color='red' onClick={filterTracks}>
+              <Icon name='filter' />
+              Filter
+            </Form.Button>
+            <Form.Button basic label='CLEAR' onClick={clearFilters}>
+              <Icon name='delete' />
+              Clear
+            </Form.Button>
           </Form.Group>
         </Form>
       </Accordion.Content>
     </Accordion>
   );
-
-}
+};
 
 export default FilterBar;
