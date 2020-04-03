@@ -5,7 +5,7 @@
   "dependencies": {
     "apexcharts": "^3.8.4",
     "axios": "^0.17.1",
-    "firebase": "^4.10.1",
+    "firebase": "^7.6.2",
     "history": "^4.7.2",
     "lodash": "^4.17.4",
     "moment": "^2.20.1",
@@ -37,7 +37,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "sh -ac '. .env; react-scripts build'",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   },
