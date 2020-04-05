@@ -165,7 +165,7 @@ function processDownloadJob(data) {
       status: response.success ? 'available' : 'notAvailable',
       url: response.success ? response.href : null,
       dateAvailable: Date.now(),
-      fileName: response.fileName,
+      fileName: response.fileName || null,
     };
 
     // update firesstore
