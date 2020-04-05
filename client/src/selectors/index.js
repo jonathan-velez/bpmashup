@@ -3,6 +3,7 @@ import _ from 'lodash';
 import moment from 'moment';
 
 import { getUserHistoryPageSetup } from './userHistory';
+import { getUserDownloadQueueTrackIds } from './userActivity';
 
 const getUserAuth = (state) => state.firebaseState && state.firebaseState.auth;
 const getUserProfile = (state) =>
@@ -19,10 +20,7 @@ const getPlaylistTracks = (state = {}, props = {}) => {
     ? state.playlistList[playlistId] && state.playlistList[playlistId].tracks
     : {};
 };
-const _hasBeenDownloaded = (state, trackId) => {
-  const { downloadedTracks } = state;
-  return downloadedTracks.includes(trackId);
-};
+
 const getDownloadQueue = (state) => state.downloadQueue.queue;
 
 export const getUserId = createSelector([getUserAuth], (auth) => auth.uid);
@@ -97,11 +95,6 @@ export const hasZippyPermission = createSelector(
   (permissions) => Array.isArray(permissions) && permissions.includes('zipZip'),
 );
 
-export const hasBeenDownloaded = createSelector(
-  [_hasBeenDownloaded],
-  (downloaded) => downloaded,
-);
-
 export { getUserHistoryPageSetup };
 
 const _queueItemIsExpired = (addedDate) =>
@@ -135,3 +128,9 @@ export const getNumOfTracksAvailableToDownload = createSelector(
 );
 
 // TODO: Get full list of download history, replace existing logic
+
+export { getUserDownloadQueueTrackIds };
+
+const _trackHasBeenDownloaded = (state, trackId) =>
+  getUserDownloadQueueTrackIds(state).includes(trackId);
+export const trackHasBeenDownloaded = createSelector([_trackHasBeenDownloaded], (downloaded) => downloaded);

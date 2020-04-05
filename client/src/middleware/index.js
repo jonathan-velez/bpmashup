@@ -14,13 +14,12 @@ import {
   TOGGLE_LOVE_ARTIST,
   DOWNLOAD_TRACK,
   ADD_TRACK_TO_NO_DOWNLOAD_LIST,
-  DOWNLOAD_TRACK_FROM_QUEUE,
+  START_ADD_TRACK_TO_DOWNLOAD_QUEUE,
 } from '../constants/actionTypes';
 import {
   openLoginModalWindow,
-  setActionMessage,
-  removeActionMessage,
 } from '../actions/ActionCreators';
+import { generateActivityMessage } from '../utils/storeUtils';
 
 export const activityLogger = (store) => (next) => (action) => {
   const logTrack = (track, userData, type) => {
@@ -52,15 +51,9 @@ export const activityLogger = (store) => (next) => (action) => {
     const { id: trackId, genres, artists, label } = track;
 
     // track object
-    userDataRef
-      .child('tracks')
-      .child(trackId)
-      .set(track);
+    userDataRef.child('tracks').child(trackId).set(track);
     // trackId with timestamp
-    userDataRef
-      .child('trackIds')
-      .child(moment().format())
-      .set(trackId);
+    userDataRef.child('trackIds').child(moment().format()).set(trackId);
 
     // genres
     genres.forEach((genre) => {
@@ -103,18 +96,6 @@ export const activityLogger = (store) => (next) => (action) => {
   };
 
   // TODO: take in optional positive/negative and icon parameters. Icon would be cool to send a music one for track playing
-  const generateActivityMessage = (message) => {
-    const id = v4();
-    store.dispatch(
-      setActionMessage({
-        id,
-        message,
-      }),
-    );
-    setTimeout(() => {
-      store.dispatch(removeActionMessage(id));
-    }, 4000);
-  };
 
   const id = v4();
   const state = store.getState();
@@ -174,7 +155,7 @@ export const activityLogger = (store) => (next) => (action) => {
     case REMOVE_FROM_PLAYLIST:
       generateActivityMessage('Track removed from playlist');
       break;
-    case DOWNLOAD_TRACK_FROM_QUEUE:
+    case START_ADD_TRACK_TO_DOWNLOAD_QUEUE:
       generateActivityMessage('Track added to download queue');
       break;
     default:

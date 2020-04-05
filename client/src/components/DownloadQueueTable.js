@@ -11,7 +11,7 @@ const DownloadQueueTable = ({ queue, downloadTrack }) => {
   }
 
   const tableBody = queue.map((item, idx) => {
-    const { addedDate, searchTerms, url, key, dateAvailable } = item;
+    const { addedDate, searchTerms, url, fileName, key, dateAvailable } = item;
     const { artists, mixName, name } = searchTerms;
     let downloadButtonText = 'Download';
     let downloadButtonColor = 'positive';
@@ -21,6 +21,8 @@ const DownloadQueueTable = ({ queue, downloadTrack }) => {
     const downloadExpirationDateFormatted = downloadExpirationDate.format(
       'MM/DD/YYYY hh:MM:ss A',
     );
+    const addedDateObject = new Date(0);
+    addedDateObject.setUTCSeconds(addedDate.seconds || 0);
 
     const status = moment(downloadExpirationDate).isBefore(moment())
       ? 'expired'
@@ -73,7 +75,7 @@ const DownloadQueueTable = ({ queue, downloadTrack }) => {
           negative={downloadButtonColor === 'negative'}
           positive={downloadButtonColor === 'positive'}
           disabled={downloadButtonIsDisabled}
-          onClick={() => downloadTrack(url, key)}
+          onClick={() => downloadTrack(url, fileName, key)}
         >
           {downloadButtonText}
         </Button>
@@ -83,7 +85,7 @@ const DownloadQueueTable = ({ queue, downloadTrack }) => {
     return (
       <Table.Row key={idx}>
         <Table.Cell>
-          {moment(addedDate).format('MM/DD/YYYY hh:MM:ss A')}
+          {moment(addedDateObject).format('MM/DD/YYYY hh:MM:ss A')}
         </Table.Cell>
         <Table.Cell>
           {name} {mixName && mixName.trim.length > 0 && `( ${mixName})`}

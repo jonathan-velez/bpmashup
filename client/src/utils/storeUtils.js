@@ -1,10 +1,10 @@
 import firebase from 'firebase';
 import _ from 'lodash';
+import { v4 } from 'node-uuid';
 
 import store from '../store';
 import {
   LOAD_PLAYLISTS,
-  LOAD_DOWNLOADED_TRACKS,
   LOAD_LOVED_TRACKS,
   LOAD_LOVED_ARTISTS,
   LOAD_LOVED_LABELS,
@@ -12,6 +12,11 @@ import {
   LOAD_NO_DOWNLOADS_TRACKS,
   UPDATE_DOWNLOAD_QUEUE,
 } from '../constants/actionTypes';
+
+import {
+  setActionMessage,
+  removeActionMessage,
+} from '../actions/ActionCreators';
 
 export const registerFirebaseListeners = () => {
   const { uid } = store.getState().firebaseState.auth;
@@ -24,19 +29,6 @@ export const registerFirebaseListeners = () => {
       store.dispatch({
         type: LOAD_PLAYLISTS,
         payload: playlistList,
-      });
-    }
-  });
-
-  // load downloaded tracks into Redux
-  const downloadsRef = db.ref(`downloads/users/${uid}/trackIds`);
-  downloadsRef.on('value', (snapshot) => {
-    const downloads = snapshot.val();
-
-    if (downloads) {
-      store.dispatch({
-        type: LOAD_DOWNLOADED_TRACKS,
-        payload: Object.values(downloads).map(Number),
       });
     }
   });
@@ -114,15 +106,38 @@ export const registerFirebaseListeners = () => {
   });
 
   // listen to download queue
-  const downloadQueueRef = db.ref(`users/${uid}/downloadQueue`);
-  downloadQueueRef.on('value', (snapshot) => {
-    const downloadQueueItems = snapshot.val();
+  const fs = firebase.firestore();
+  const downloadQueueRefFirestore = fs.collection(`users/${uid}/downloadQueue`);
+  downloadQueueRefFirestore.onSnapshot((downloads) => {
+    const downloadQueueUser = {};
+    downloads.forEach((snapshot) => {
+      const queueItem = {
+        id: snapshot.id,
+        ...snapshot.data(),
+      };
+
+      downloadQueueUser[snapshot.id] = queueItem;
+    });
 
     store.dispatch({
       type: UPDATE_DOWNLOAD_QUEUE,
-      payload: downloadQueueItems,
+      payload: downloadQueueUser,
     });
   });
+};
+
+// TODO: take in optional positive/negative and icon parameters. Icon would be cool to send a music one for track playing
+export const generateActivityMessage = (message) => {
+  const id = v4();
+  store.dispatch(
+    setActionMessage({
+      id,
+      message,
+    }),
+  );
+  setTimeout(() => {
+    store.dispatch(removeActionMessage(id));
+  }, 3000);
 };
 
 // TODO: DRY up ref to user object

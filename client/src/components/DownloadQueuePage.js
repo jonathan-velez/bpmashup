@@ -7,17 +7,31 @@ import { updateTrackStatus } from '../thunks';
 import {
   getCurrentDownloadQueueItems,
   getArchivedDownloadQueueItems,
+  getUserDownloadQueueTrackIds,
 } from '../selectors';
+import { fileExistsOnDownloadServer } from '../utils/trackUtils';
+import { generateActivityMessage } from '../utils/storeUtils';
 
 const DownloadQueuePage = ({
   updateTrackStatus,
   currentDownloadQueueItems,
   archivedDownloadQueueItems,
 }) => {
-  const handleDownloadClick = (url, queueId) => {
-    const downloadWindow = window.open('/downloadLink.html', '_blank');
-    downloadWindow.location = url;
-    updateTrackStatus(queueId, 'downloaded');
+  const handleDownloadClick = async (url, fileName, queueId) => {
+    // check if file still exists on server. Due to Heroku Dyno's ephemeral file system, file existence is not guaranteed
+    // if it doesn't, re-initiate for processing in download queue
+    
+    const fileExists = await fileExistsOnDownloadServer(fileName);
+    if (fileExists) {
+      const downloadWindow = window.open('/downloadLink.html', '_blank');
+      downloadWindow.location = url;
+      updateTrackStatus(queueId, 'downloaded');
+    } else {
+      updateTrackStatus(queueId, 'initiated'); // TODO: set update date, since this is a re-do
+      generateActivityMessage(
+        'File not found on server, re-initiating download',
+      );
+    }
   };
 
   const panes = [
@@ -52,6 +66,7 @@ const mapStateToProps = (state) => {
     downloadQueue: state.downloadQueue,
     currentDownloadQueueItems: getCurrentDownloadQueueItems(state),
     archivedDownloadQueueItems: getArchivedDownloadQueueItems(state),
+    downloadedTrackIds: getUserDownloadQueueTrackIds(state),
   };
 };
 

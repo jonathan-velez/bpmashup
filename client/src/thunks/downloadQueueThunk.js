@@ -1,8 +1,11 @@
 import firebase from 'firebase';
 
 import {
-  DOWNLOAD_TRACK_FROM_QUEUE,
+  ADD_TRACK_TO_DOWNLOAD_QUEUE,
+  START_ADD_TRACK_TO_DOWNLOAD_QUEUE,
 } from '../constants/actionTypes';
+import { generateActivityMessage } from '../utils/storeUtils';
+import { trackHasBeenDownloaded } from '../selectors';
 
 export const addTrackToDownloadQueue = (track) => {
   return async (dispatch, getState) => {
@@ -22,57 +25,57 @@ export const addTrackToDownloadQueue = (track) => {
       .replace('Version', '')
       .replace('Remix', '');
 
-    const addedDate = Date.now();
+    // check if track already's been added
+    if (trackHasBeenDownloaded(state, beatportTrackId)) {
+      return generateActivityMessage(
+        "You've already added this file. Please check your download queue.",
+      );
+    }
 
-    const db = firebase.database();
-    const userDownloadQueueRef = db.ref(`users/${uid}/downloadQueue`);
-
-    let success = true;
-    const queueId = userDownloadQueueRef.push(
-      {
-        beatportTrackId,
-        searchTerms: {
-          artists,
-          name,
-          mixName,
-        },
-        status: 'initiated',
-        addedDate,
-      },
-      (error) => {
-        if (error) {
-          success = false;
-        }
-      },
-    ).key;
-
-    db.ref(`downloadQueue/${queueId}`).set(
-      {
-        beatportTrackId,
-        searchTerms: {
-          artists,
-          name,
-          mixName,
-        },
-        status: 'initiated',
-        addedDate,
-        addedBy: uid,
-      },
-      (error) => {
-        if (error) {
-          console.error('Error setting downloadQueue', error);
-          success = false;
-        }
-      },
-    );
-
+    // fresh download request, add to Firestore queues
     dispatch({
-      type: DOWNLOAD_TRACK_FROM_QUEUE,
-      payload: {
-        queueId,
-        success,
-      },
+      type: START_ADD_TRACK_TO_DOWNLOAD_QUEUE,
     });
+    const fs = firebase.firestore();
+    const downloadItem = {
+      status: 'initiated',
+      addedDate: firebase.firestore.Timestamp.fromDate(new Date()),
+      beatportTrackId,
+      searchTerms: {
+        artists,
+        name,
+        mixName,
+      },
+      track: {
+        ...track,
+      },
+    };
+
+    // add to user's queue
+    const queueAdd = await fs
+      .collection(`users/${uid}/downloadQueue`)
+      .add(downloadItem);
+
+    // add to global download queue with id
+    const { id } = queueAdd;
+    if (id) {
+      await fs
+        .collection(`downloadQueue/`)
+        .doc(id)
+        .set({
+          ...downloadItem,
+          addedBy: uid,
+        });
+
+      dispatch({
+        type: ADD_TRACK_TO_DOWNLOAD_QUEUE,
+        payload: {
+          success: true,
+          queueId: id,
+        },
+      });
+    }
+    // TODO: handle mishaps here
   };
 };
 
@@ -80,16 +83,18 @@ export const updateTrackStatus = (queueId, status) => {
   return (dispatch, getState) => {
     const state = getState();
     const { uid } = state.firebaseState.auth;
-    const db = firebase.database();
-    const itemRef = db.ref(`users/${uid}/downloadQueue/${queueId}`);
-    const globalItemRef = db.ref(`downloadQueue/${queueId}`);
 
-    itemRef.update({
-      status,
-    });
+    const firestore = firebase.firestore();
+    const userItemRef = firestore
+      .collection('users')
+      .doc(uid)
+      .collection('downloadQueue')
+      .doc(queueId);
+    const globalItemRef = firestore.collection('downloadQueue').doc(queueId);
 
-    globalItemRef.update({
-      status,
-    });
+    const batch = firestore.batch();
+    batch.update(userItemRef, { status });
+    batch.update(globalItemRef, { status });
+    batch.commit();
   };
 };

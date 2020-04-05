@@ -25,7 +25,6 @@ import {
 import { fetchChartDataById, fetchChartMetadataByIds } from './chartThunk';
 import {
   loadPlaylists,
-  loadDownloads,
   loadNoDownloads,
   loadLovedTracks,
   loadLovedArtists,
@@ -63,7 +62,6 @@ export {
   clearPlaylist,
   fetchChartDataById,
   loadPlaylists,
-  loadDownloads,
   loadNoDownloads,
   loadLovedTracks,
   loadLovedArtists,

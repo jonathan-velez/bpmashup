@@ -18,3 +18,4 @@ export const API_MY_BEATPORT = `${API_ROOT}/my-beatport`;
 export const API_GET_LOVED_ARTISTS = `${API_ROOT}/artists`;
 export const API_GET_CHART = `${API_ROOT}/charts`;
 export const API_PHOTO_UPLOAD = `${API_ROOT}/profile-photo-upload`;
+export const API_FILE_EXISTS = `${API_ROOT}/file-exists`;

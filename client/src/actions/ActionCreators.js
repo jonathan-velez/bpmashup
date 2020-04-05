@@ -40,7 +40,7 @@ import {
   CLEAR_LOVED_LABELS_DETAILS,
   ADD_ACTION_MESSAGE,
   REMOVE_ACTION_MESSAGE,
-  DOWNLOAD_TRACK_FROM_QUEUE,
+  ADD_TRACK_TO_DOWNLOAD_QUEUE,
 } from '../constants/actionTypes';
 
 export const startAsync = () => {
@@ -258,11 +258,4 @@ export const removeActionMessage = id => {
     type: REMOVE_ACTION_MESSAGE,
     payload: id,
   }
-}
-
-export const downloadTrackFromQueue = (id) => {
-  return {
-    type: DOWNLOAD_TRACK_FROM_QUEUE,
-    payload: id,
-  };
 }

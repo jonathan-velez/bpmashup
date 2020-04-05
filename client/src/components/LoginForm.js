@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { firebaseConnect } from 'react-redux-firebase';
 
 import store from '../store';
-import { loadPlaylists, loadDownloads, loadNoDownloads, loadLovedTracks, loadLovedArtists, loadLovedLabels, loadPermissions, } from '../thunks/';
+import { loadPlaylists, loadNoDownloads, loadLovedTracks, loadLovedArtists, loadLovedLabels, loadPermissions, } from '../thunks/';
 import { openModalWindow } from '../actions/ActionCreators';
 import SignupForm from './SignupForm';
 import ForgotPasswordForm from './ForgotPasswordForm';
@@ -121,7 +121,6 @@ const LoginForm = ({ firebase }) => {
 
     // load user activitaty data into reducer
     store.dispatch(loadPlaylists(uid));
-    store.dispatch(loadDownloads(uid));
     store.dispatch(loadNoDownloads(uid));
     store.dispatch(loadLovedTracks(uid));
     store.dispatch(loadLovedArtists(uid));

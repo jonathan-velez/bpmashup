@@ -1,5 +1,5 @@
 import {
-  DOWNLOAD_TRACK_FROM_QUEUE,
+  ADD_TRACK_TO_DOWNLOAD_QUEUE,
   UPDATE_DOWNLOAD_QUEUE,
 } from '../constants/actionTypes';
 
@@ -10,7 +10,7 @@ const defaultState = {
 
 const downloadQueue = (state = defaultState, action) => {
   switch (action.type) {
-    case DOWNLOAD_TRACK_FROM_QUEUE: {
+    case ADD_TRACK_TO_DOWNLOAD_QUEUE: {
       const { queueId, success } = action.payload;
       return {
         ...state,

@@ -5,6 +5,21 @@ const path = require('path');
 const fs = require('fs');
 const puppeteer = require('puppeteer');
 
+function _fileExists(path) {
+  return fs.existsSync(path);
+}
+
+async function fileExistsInDownloadFolder(req, res) {
+  const fileName = req.query.fileName;
+  const exists = _fileExists(`downloads/${decodeURIComponent(fileName)}`);
+
+  res.json({
+    success: true,
+    exists,
+    fileName,
+  });
+}
+
 async function scrape(req, res) {
   try {
     res.json(await getDownladLink(req.query));
@@ -282,6 +297,7 @@ function getDownladLink(query) {
       } else {
         return resolve({
           href: `/api/download-it/?fileName=${encodeURIComponent(fileName)}`, // TODO: make dynamic for dev
+          fileName,
           success: true,
         });
       }
@@ -399,3 +415,4 @@ async function _downloadMp3(url, fileName, thePath) {
 exports.zippyScrape = scrape;
 exports.downloadIt = downloadIt;
 exports.getDownladLink = getDownladLink;
+exports.fileExists = fileExistsInDownloadFolder;

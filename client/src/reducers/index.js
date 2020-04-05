@@ -10,7 +10,6 @@ import openModal from './openModal';
 import playlistList from './playlistList';
 import mediaPlayer from './mediaPlayer';
 import autoSuggest from './autoSuggest';
-import downloadedTracks from './downloadedTracks';
 import lovedTracks from './lovedTracks';
 import lovedArtists from './lovedArtists';
 import lovedArtistsDetails from './lovedArtistsDetails';
@@ -34,7 +33,6 @@ const rootReducer = combineReducers({
   playlistList,
   mediaPlayer,
   autoSuggest,
-  downloadedTracks,
   lovedTracks,
   lovedArtists,
   lovedLabels,

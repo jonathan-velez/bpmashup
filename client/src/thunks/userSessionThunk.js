@@ -3,7 +3,6 @@ import _ from 'lodash';
 
 import {
   LOAD_PLAYLISTS,
-  LOAD_DOWNLOADED_TRACKS,
   LOAD_NO_DOWNLOADS_TRACKS,
   LOAD_LOVED_TRACKS,
   LOAD_LOVED_ARTISTS,
@@ -28,29 +27,6 @@ export const loadPlaylists = userId => {
         dispatch({
           type: LOAD_PLAYLISTS,
           payload: playlistList,
-        });
-      }
-    });
-  }
-}
-
-export const loadDownloads = userId => {
-  return (dispatch, getState) => {
-    let uid = null;
-    if (userId) {
-      uid = userId;
-    } else {
-      uid = getState().firebaseState.auth.uid
-    }
-    const db = firebase.database();
-    const downloadsRef = db.ref(`downloads/users/${uid}/trackIds`);
-
-    downloadsRef.once('value', snapshot => {
-      const downloads = snapshot.val();
-      if (downloads) {
-        dispatch({
-          type: LOAD_DOWNLOADED_TRACKS,
-          payload: Object.values(downloads).map(Number),
         });
       }
     });

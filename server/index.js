@@ -17,7 +17,7 @@ const {
 
 const firebase = require('./controllers/firebaseController');
 const firebaseInstance = firebase.firebaseInstance();
-const db = firebaseInstance.database();
+const firestore = firebaseInstance.firestore();
 
 const staticFiles = express.static(path.join(__dirname, '../client/build'));
 app.use(staticFiles);
@@ -76,6 +76,7 @@ app.post(
   upload.single('photoFile'),
   profilePhotoUploadController.processFileUpload,
 );
+app.get(`${API_BASE_URL}/file-exists`, zippyController.fileExists);
 
 app.use('/downloads', express.static(path.join(__dirname, '/downloads')));
 app.use(
@@ -93,35 +94,52 @@ app.listen(app.get('port'), () => {
 const { REDIS_URL } = process.env;
 const downloadQueue = new Bull('download-queue', REDIS_URL);
 
-db.ref('downloadQueue').on('child_added', async (data) => {
-  const key = data.key;
-  const value = data.val();
-  const uid = value.addedBy;
+const downloadQueueGlobalRef = firestore
+  .collection('downloadQueue')
+  .where('status', '==', 'initiated');
 
-  if (value.status === 'initiated') {
-    const options = {
-      attempts: 2,
-    };
-
-    await downloadQueue.add(
-      {
-        key,
-        ...value,
-      },
-      options,
+downloadQueueGlobalRef.onSnapshot((snapshot) => {
+  console.log('Registering firestore listener on global download queue.');
+  snapshot.forEach((item) => {
+    console.log(
+      `Processing new item added to global download queue. Item ID: ${item.id}`,
     );
 
-    // set initiated item as 'queued' in fb
-    const updates = {};
-    const updateData = {
-      ...value,
-      status: 'queued',
-      dateQueued: Date.now(),
+    // add item to Bull queue
+    const itemData = item.data();
+    const queueItem = {
+      ...itemData,
+      key: item.id,
+      options: {
+        attempts: 2,
+      },
     };
-    updates[`downloadQueue/${key}`] = updateData;
-    updates[`users/${uid}/downloadQueue/${key}`] = updateData;
-    db.ref().update(updates);
-  }
+
+    downloadQueue.add(queueItem);
+
+    // update items to "queued" in Firestore
+    const { addedBy } = itemData;
+    const batch = firestore.batch();
+
+    const globalRef = firestore.collection('downloadQueue').doc(item.id);
+    batch.set(globalRef, { status: 'queued' }, { merge: true });
+
+    const userRef = firestore
+      .collection('users')
+      .doc(addedBy)
+      .collection('downloadQueue')
+      .doc(item.id);
+    batch.set(userRef, { status: 'queued' }, { merge: true });
+
+    batch
+      .commit()
+      .then(() =>
+        console.log(`Successfully updated Firestore for item ${item.id}`),
+      )
+      .catch(
+        (error) => `Error updating Firestore for item ${item.id}: ${error}`,
+      );
+  });
 });
 
 downloadQueue.process(BULL_PROCESS_CONCURRENCY, async (job) => {
@@ -130,7 +148,7 @@ downloadQueue.process(BULL_PROCESS_CONCURRENCY, async (job) => {
 
 function processDownloadJob(data) {
   return new Promise(async (resolve) => {
-    // update queued item as 'available' in firebase
+    // update queued item as 'available' in Firestore
     console.log('data', data);
     const { artists, name, mixName } = data.searchTerms;
 
@@ -142,19 +160,27 @@ function processDownloadJob(data) {
 
     console.log('zippy response', response);
 
-    const updates = {};
     const updateData = {
       ...data,
       status: response.success ? 'available' : 'notAvailable',
       url: response.success ? response.href : null,
       dateAvailable: Date.now(),
+      fileName: response.fileName,
     };
 
-    // TODO: Move out of the main queue area so it doesn't build up
-    updates[`downloadQueue/${data.key}`] = updateData;
-    updates[`users/${data.addedBy}/downloadQueue/${data.key}`] = updateData;
-    db.ref()
-      .update(updates)
+    // update firesstore
+    const batch = firestore.batch();
+    const globalRef = firestore.collection('downloadQueue').doc(data.key);
+    batch.update(globalRef, updateData);
+
+    const userRef = firestore
+      .collection('users')
+      .doc(data.addedBy)
+      .collection('downloadQueue')
+      .doc(data.key);
+    batch.update(userRef, updateData);
+    batch
+      .commit()
       .then(() => resolve({ ...updateData, success: true }))
       .catch(() => resolve({ ...updateData, success: false }));
 

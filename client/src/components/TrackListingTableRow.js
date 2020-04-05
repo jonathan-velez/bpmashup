@@ -8,14 +8,14 @@ import TrackAlbum from './TrackAlbum';
 import TrackActionDropdown from './TrackActionDropdown';
 import { constructLinks, constructTrackLink } from '../utils/trackUtils';
 import { musicalKeyFilter } from '../utils/helpers';
-import { hasBeenDownloaded } from '../selectors';
+import { trackHasBeenDownloaded } from '../selectors';
 
-const TrackListingTableRow = ({ idx, track, isPlaylist, hasBeenDownloaded }) => {
+const TrackListingTableRow = ({ idx, track, isPlaylist, trackHasBeenDownloaded }) => {
   const { id, images, artists, genres, label, bpm, key, releaseDate, position, dateAdded } = track;
   const dateAddedFormatted = dateAdded ? moment.unix(dateAdded).format('YYYY-MM-DD') : '????-??-??';
 
   return (
-    <Table.Row key={id} id={`track-${id}`} negative={hasBeenDownloaded}>
+    <Table.Row key={id} id={`track-${id}`} negative={trackHasBeenDownloaded}>
       <Table.Cell>
         {isPlaylist ? idx + 1 : position}
       </Table.Cell>
@@ -46,7 +46,7 @@ const TrackListingTableRow = ({ idx, track, isPlaylist, hasBeenDownloaded }) => 
 
 const mapStateToProps = (state, props) => {
   return {
-    hasBeenDownloaded: hasBeenDownloaded(state, props.track.id),
+    trackHasBeenDownloaded: trackHasBeenDownloaded(state, props.track.id),
   }
 }
 

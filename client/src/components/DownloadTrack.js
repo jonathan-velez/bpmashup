@@ -3,19 +3,19 @@ import { connect } from 'react-redux';
 
 import { Button, Icon, Dropdown } from 'semantic-ui-react';
 import { addTrackToDownloadQueue } from '../thunks';
-import { hasBeenDownloaded } from '../selectors';
+import { trackHasBeenDownloaded } from '../selectors';
 
 const DownloadTrack = ({
   track,
   type,
-  hasBeenDownloaded,
   addTrackToDownloadQueue,
+  trackHasBeenDownloaded,
 }) => {
   const downloadIcon = (
     <Icon
       name='download'
-      color={hasBeenDownloaded ? 'red' : 'grey'}
-      title={hasBeenDownloaded ? 'Download it again' : 'Download it'}
+      color={trackHasBeenDownloaded ? 'red' : 'grey'}
+      title={trackHasBeenDownloaded ? 'Download it again' : 'Download it'}
     />
   );
   const downloadButton = (
@@ -34,9 +34,9 @@ const DownloadTrack = ({
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    hasBeenDownloaded: hasBeenDownloaded(state, ownProps.track.id),
-  }
-}
+    trackHasBeenDownloaded: trackHasBeenDownloaded(state, ownProps.track.id),
+  };
+};
 
 const mapDispatchToProps = {
   addTrackToDownloadQueue,
