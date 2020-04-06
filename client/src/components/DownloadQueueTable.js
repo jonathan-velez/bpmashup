@@ -1,8 +1,11 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Table, Button, Popup } from 'semantic-ui-react';
 import moment from 'moment';
 
 import NothingHereMessage from './NothingHereMessage';
+import { constructLinks, constructTrackLink } from '../utils/trackUtils';
+import { musicalKeyFilter } from '../utils/helpers';
 
 const DownloadQueueTable = ({ queue, downloadTrack }) => {
   const queueItems = Object.keys(queue);
@@ -11,8 +14,9 @@ const DownloadQueueTable = ({ queue, downloadTrack }) => {
   }
 
   const tableBody = queue.map((item, idx) => {
-    const { addedDate, searchTerms, url, fileName, key, dateAvailable } = item;
-    const { artists, mixName, name } = searchTerms;
+    const { addedDate, url, fileName, key, dateAvailable, track } = item;
+    const { artists, label, genres, bpm, key: musicalKey } = track;
+
     let downloadButtonText = 'Download';
     let downloadButtonColor = 'positive';
     let downloadButtonIsDisabled = false;
@@ -84,13 +88,19 @@ const DownloadQueueTable = ({ queue, downloadTrack }) => {
 
     return (
       <Table.Row key={idx}>
+        <Table.Cell>{constructTrackLink(track)}</Table.Cell>
+        <Table.Cell>{constructLinks(artists, 'artist')}</Table.Cell>
+        <Table.Cell>
+          <Link to={`/label/${label.slug}/${label.id}`}>{label.name}</Link>
+        </Table.Cell>
+        <Table.Cell>{constructLinks(genres, 'genre')}</Table.Cell>
+        <Table.Cell>{bpm}</Table.Cell>
+        <Table.Cell>
+          {musicalKeyFilter(musicalKey && musicalKey.shortName)}
+        </Table.Cell>
         <Table.Cell>
           {moment(addedDateObject).format('MM/DD/YYYY hh:MM:ss A')}
         </Table.Cell>
-        <Table.Cell>
-          {name} {mixName && mixName.trim.length > 0 && `( ${mixName})`}
-        </Table.Cell>
-        <Table.Cell>{artists}</Table.Cell>
         <Table.Cell>
           <Popup
             content={downloadButtonPopupContent}
@@ -105,10 +115,14 @@ const DownloadQueueTable = ({ queue, downloadTrack }) => {
     <Table celled>
       <Table.Header>
         <Table.Row>
-          <Table.HeaderCell>Date Added</Table.HeaderCell>
-          <Table.HeaderCell>Track Name</Table.HeaderCell>
-          <Table.HeaderCell>Artists</Table.HeaderCell>
-          <Table.HeaderCell>Status</Table.HeaderCell>
+          <Table.HeaderCell>TITLE</Table.HeaderCell>
+          <Table.HeaderCell>ARTISTS</Table.HeaderCell>
+          <Table.HeaderCell>LABEL</Table.HeaderCell>
+          <Table.HeaderCell>GENRE</Table.HeaderCell>
+          <Table.HeaderCell>BPM</Table.HeaderCell>
+          <Table.HeaderCell>KEY</Table.HeaderCell>
+          <Table.HeaderCell>DATE ADDED</Table.HeaderCell>
+          <Table.HeaderCell>STATUS</Table.HeaderCell>
         </Table.Row>
       </Table.Header>
       <Table.Body>{tableBody}</Table.Body>
