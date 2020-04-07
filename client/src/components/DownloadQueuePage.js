@@ -20,7 +20,7 @@ const DownloadQueuePage = ({
   const handleDownloadClick = async (url, fileName, queueId) => {
     // check if file still exists on server. Due to Heroku Dyno's ephemeral file system, file existence is not guaranteed
     // if it doesn't, re-initiate for processing in download queue
-    
+
     const fileExists = await fileExistsOnDownloadServer(fileName);
     if (fileExists) {
       const downloadWindow = window.open('/downloadLink.html', '_blank');
@@ -34,6 +34,11 @@ const DownloadQueuePage = ({
     }
   };
 
+  const retryDownload = (queueId) => {
+    updateTrackStatus(queueId, 'initiated'); // TODO: set update date and retry tally. consider throttling/limiting requests
+    generateActivityMessage('Track re-initiated for processing.');
+  };
+
   const panes = [
     {
       menuItem: 'DOWNLOAD QUEUE',
@@ -41,6 +46,7 @@ const DownloadQueuePage = ({
         <DownloadQueueTable
           queue={currentDownloadQueueItems}
           downloadTrack={handleDownloadClick}
+          retryDownload={retryDownload}
         />
       ),
     },
@@ -50,6 +56,7 @@ const DownloadQueuePage = ({
         <DownloadQueueTable
           queue={archivedDownloadQueueItems}
           downloadTrack={handleDownloadClick}
+          retryDownload={retryDownload}
         />
       ),
     },

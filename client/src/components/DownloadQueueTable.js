@@ -4,10 +4,11 @@ import { Table, Button, Popup } from 'semantic-ui-react';
 import moment from 'moment';
 
 import NothingHereMessage from './NothingHereMessage';
+import ConfirmAction from './ConfirmAction';
 import { constructLinks, constructTrackLink } from '../utils/trackUtils';
-import { musicalKeyFilter } from '../utils/helpers';
+import { musicalKeyFilter, convertEpochToDate } from '../utils/helpers';
 
-const DownloadQueueTable = ({ queue, downloadTrack }) => {
+const DownloadQueueTable = ({ queue, downloadTrack, retryDownload }) => {
   const queueItems = Object.keys(queue);
   if (queueItems.length === 0) {
     return <NothingHereMessage />;
@@ -25,8 +26,7 @@ const DownloadQueueTable = ({ queue, downloadTrack }) => {
     const downloadExpirationDateFormatted = downloadExpirationDate.format(
       'MM/DD/YYYY hh:MM:ss A',
     );
-    const addedDateObject = new Date(0);
-    addedDateObject.setUTCSeconds(addedDate.seconds || 0);
+    const addedDateObject = convertEpochToDate(addedDate.seconds);
 
     const status = moment(downloadExpirationDate).isBefore(moment())
       ? 'expired'
@@ -47,11 +47,10 @@ const DownloadQueueTable = ({ queue, downloadTrack }) => {
         downloadButtonIsDisabled = true;
         break;
       case 'notAvailable':
-        downloadButtonText = 'Not Available';
+        downloadButtonText = 'Failed';
         downloadButtonColor = 'negative';
         downloadButtonPopupContent =
-          'This track is not availble to be downloaded at this time.';
-        downloadButtonIsDisabled = true;
+          'The download request failed, click to try again.';
         break;
       case 'downloaded':
         downloadButtonText = 'Downloaded';
@@ -72,19 +71,32 @@ const DownloadQueueTable = ({ queue, downloadTrack }) => {
     }
 
     // In order for the Popup to work on disabled buttons, we need to wrap it in a div
-    const downloadButton = (
-      <div>
-        <Button
-          primary={downloadButtonColor === 'primary'}
-          negative={downloadButtonColor === 'negative'}
-          positive={downloadButtonColor === 'positive'}
-          disabled={downloadButtonIsDisabled}
-          onClick={() => downloadTrack(url, fileName, key)}
-        >
-          {downloadButtonText}
-        </Button>
-      </div>
-    );
+    const downloadButton =
+      status === 'notAvailable' ? (
+        <div>
+          <ConfirmAction
+            action={() => retryDownload(key)}
+            confirmText='Retry download?'
+            render={(confirm) => (
+              <Button negative onClick={confirm}>
+                Failed
+              </Button>
+            )}
+          />
+        </div>
+      ) : (
+        <div>
+          <Button
+            primary={downloadButtonColor === 'primary'}
+            negative={downloadButtonColor === 'negative'}
+            positive={downloadButtonColor === 'positive'}
+            disabled={downloadButtonIsDisabled}
+            onClick={() => downloadTrack(url, fileName, key, status)}
+          >
+            {downloadButtonText}
+          </Button>
+        </div>
+      );
 
     return (
       <Table.Row key={idx}>

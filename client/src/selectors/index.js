@@ -4,6 +4,7 @@ import moment from 'moment';
 
 import { getUserHistoryPageSetup } from './userHistory';
 import { getUserDownloadQueueTrackIds } from './userActivity';
+import { convertEpochToDate } from '../utils/helpers';
 
 const getUserAuth = (state) => state.firebaseState && state.firebaseState.auth;
 const getUserProfile = (state) =>
@@ -97,8 +98,11 @@ export const hasZippyPermission = createSelector(
 
 export { getUserHistoryPageSetup };
 
-const _queueItemIsExpired = (addedDate) =>
-  moment(addedDate).isBefore(moment().subtract(1, 'day'));
+const _queueItemIsExpired = (addedDate) => {
+  return moment(convertEpochToDate(addedDate.seconds)).isBefore(
+    moment().subtract(1, 'day'),
+  );
+};
 
 // select expired or already downloaded files
 export const getArchivedDownloadQueueItems = createSelector(
@@ -133,4 +137,7 @@ export { getUserDownloadQueueTrackIds };
 
 const _trackHasBeenDownloaded = (state, trackId) =>
   getUserDownloadQueueTrackIds(state).includes(trackId);
-export const trackHasBeenDownloaded = createSelector([_trackHasBeenDownloaded], (downloaded) => downloaded);
+export const trackHasBeenDownloaded = createSelector(
+  [_trackHasBeenDownloaded],
+  (downloaded) => downloaded,
+);
