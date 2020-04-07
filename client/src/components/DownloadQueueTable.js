@@ -110,7 +110,7 @@ const DownloadQueueTable = ({ queue, downloadTrack, retryDownload }) => {
   });
 
   return (
-    <Table celled>
+    <Table celled striped unstackable padded>
       <Table.Header>
         <Table.Row>
           <Table.HeaderCell>TITLE</Table.HeaderCell>
