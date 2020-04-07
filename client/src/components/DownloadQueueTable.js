@@ -64,7 +64,7 @@ const DownloadQueueTable = ({ queue, downloadTrack, retryDownload }) => {
             action={() => retryDownload(key)}
             confirmText='Retry download?'
             render={(confirm) => (
-              <Button negative onClick={confirm}>
+              <Button fluid negative onClick={confirm}>
                 Failed
               </Button>
             )}
@@ -73,6 +73,7 @@ const DownloadQueueTable = ({ queue, downloadTrack, retryDownload }) => {
       ) : (
         <div>
           <Button
+            fluid
             primary={downloadButtonColor === 'primary'}
             negative={downloadButtonColor === 'negative'}
             positive={downloadButtonColor === 'positive'}
@@ -110,7 +111,7 @@ const DownloadQueueTable = ({ queue, downloadTrack, retryDownload }) => {
   });
 
   return (
-    <Table celled striped unstackable padded>
+    <Table striped unstackable padded>
       <Table.Header>
         <Table.Row>
           <Table.HeaderCell>TITLE</Table.HeaderCell>
