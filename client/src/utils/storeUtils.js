@@ -107,7 +107,7 @@ export const registerFirebaseListeners = () => {
 
   // listen to download queue
   const fs = firebase.firestore();
-  const downloadQueueRefFirestore = fs.collection(`users/${uid}/downloadQueue`).orderBy('addedDate', 'asc');
+  const downloadQueueRefFirestore = fs.collection(`users/${uid}/downloadQueue`).orderBy('addedDate', 'desc');
   downloadQueueRefFirestore.onSnapshot((downloads) => {
     const downloadQueueUser = {};
     downloads.forEach((snapshot) => {
