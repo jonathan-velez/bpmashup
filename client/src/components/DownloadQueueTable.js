@@ -15,22 +15,14 @@ const DownloadQueueTable = ({ queue, downloadTrack, retryDownload }) => {
   }
 
   const tableBody = queue.map((item, idx) => {
-    const { addedDate, url, fileName, key, dateAvailable, track } = item;
+    const { addedDate, url, fileName, key, track, status } = item;
     const { artists, label, genres, bpm, key: musicalKey } = track;
 
     let downloadButtonText = 'Download';
     let downloadButtonColor = 'positive';
     let downloadButtonIsDisabled = false;
     let downloadButtonPopupContent = '';
-    const downloadExpirationDate = moment(dateAvailable).add(1, 'day');
-    const downloadExpirationDateFormatted = downloadExpirationDate.format(
-      'MM/DD/YYYY hh:MM:ss A',
-    );
     const addedDateObject = convertEpochToDate(addedDate.seconds);
-
-    const status = moment(downloadExpirationDate).isBefore(moment())
-      ? 'expired'
-      : item.status;
 
     switch (status) {
       case 'queued':
@@ -55,16 +47,10 @@ const DownloadQueueTable = ({ queue, downloadTrack, retryDownload }) => {
       case 'downloaded':
         downloadButtonText = 'Downloaded';
         downloadButtonColor = 'primary';
-        downloadButtonPopupContent = `This track has already been downloaded and will be available to re-download until ${downloadExpirationDateFormatted}`;
+        downloadButtonPopupContent = `This track has already been downloaded, but you can download it again.`;
         break;
       case 'available':
-        downloadButtonPopupContent = `Your track is available to download and will be valid until ${downloadExpirationDateFormatted}`;
-        break;
-      case 'expired':
-        downloadButtonText = 'Expired';
-        downloadButtonColor = 'negative';
-        downloadButtonPopupContent = 'This download link has expired.'; // TODO: add ability to re dl
-        downloadButtonIsDisabled = true;
+        downloadButtonPopupContent = `Your track is available to download!`;
         break;
       default:
         break;
