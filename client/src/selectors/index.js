@@ -112,7 +112,7 @@ export const getArchivedDownloadQueueItems = createSelector(
       queue,
       (item) =>
         _queueItemIsExpired(item.addedDate) || item.status === 'downloaded',
-    ).sort((a, b) => a.addedDate > b.addedDate),
+    ),
 );
 
 // select files which haven't been downloaded and have not expired
@@ -123,7 +123,7 @@ export const getCurrentDownloadQueueItems = createSelector(
       queue,
       (item) =>
         !_queueItemIsExpired(item.addedDate) && item.status !== 'downloaded',
-    ).sort((a, b) => a.addedDate > b.addedDate),
+    ),
 );
 
 export const getNumOfTracksAvailableToDownload = createSelector(

@@ -71,8 +71,12 @@ const DownloadQueuePage = ({
 const mapStateToProps = (state) => {
   return {
     downloadQueue: state.downloadQueue,
-    currentDownloadQueueItems: getCurrentDownloadQueueItems(state),
-    archivedDownloadQueueItems: getArchivedDownloadQueueItems(state),
+    currentDownloadQueueItems: getCurrentDownloadQueueItems(state).sort(
+      (a, b) => b.addedDate.seconds - a.addedDate.seconds,
+    ),
+    archivedDownloadQueueItems: getArchivedDownloadQueueItems(state).sort(
+      (a, b) => b.addedDate.seconds - a.addedDate.seconds,
+    ),
     downloadedTrackIds: getUserDownloadQueueTrackIds(state),
   };
 };
