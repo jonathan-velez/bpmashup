@@ -605,6 +605,11 @@ const apiConfig = {
         required: true,
       },
       {
+        name: 'publishedOnly',
+        dataType: 'string',
+        required: false,
+      },
+      {
         name: 'page',
         dataType: 'string',
         required: false,

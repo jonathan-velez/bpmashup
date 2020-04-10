@@ -87,7 +87,7 @@ export async function fetchBeatportCharts(
     });
 
     const beatportChardData = await callAPIorCache(
-      `${API_GET_CHARTS_BY_PROFILE_ID}?djprofileId=36047&page=${page}&perPage=${perPage}`,
+      `${API_GET_CHARTS_BY_PROFILE_ID}?djprofileId=36047&publishedOnly=true&page=${page}&perPage=${perPage}`,
     );
 
     const { data, status } = beatportChardData;
