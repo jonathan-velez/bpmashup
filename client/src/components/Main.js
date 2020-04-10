@@ -16,6 +16,7 @@ import Track from './Track';
 import Chart from './Chart';
 import MyProfile from './MyProfile';
 import DownloadQueuePage from './DownloadQueuePage';
+import Home from './Home';
 
 const Main = () => {
   const containerStyle = {
@@ -34,7 +35,11 @@ const Main = () => {
           path='/history/:pageType'
           component={MyHistoryTracksController}
         />
-        <Route exact path='/artist/:artistName/:artistId' component={Artist} />
+        <Route
+          exact
+          path='/artist/:artistName/:artistId'
+          component={Artist}
+        />
         <Route exact path='/label/:labelName/:labelId' component={Label} />
         <Route
           exact
@@ -69,7 +74,7 @@ const Main = () => {
         />
         <Route exact path='/my-profile' component={MyProfile} />
         <Route exact path='/download-queue' component={DownloadQueuePage} />
-        <Route exact path='/' component={TrackListingController} />
+        <Route exact path='/' component={Home} />
       </Switch>
     </Container>
   );

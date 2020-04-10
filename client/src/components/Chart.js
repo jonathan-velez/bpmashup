@@ -5,6 +5,7 @@ import Scroll from 'react-scroll';
 import { Transition, Grid, Image, Header, Segment } from 'semantic-ui-react';
 
 import ResponsiveTrackListing from './ResponsiveTrackListing';
+import NothingHereMessage from './NothingHereMessage';
 import GenreLabel from './GenreLabel';
 import { fetchChartDataById } from '../thunks';
 
@@ -20,7 +21,15 @@ const Chart = ({ match, fetchChartDataById, chartListing = {}, isLoading }) => {
     }
   }, [fetchChartDataById, chartId]);
 
-  const { tracks = [], images = {}, name, description, genres, publishDate, chartOwner = {} } = chartListing;
+  const {
+    tracks = [],
+    images = {},
+    name,
+    description,
+    genres,
+    publishDate,
+    chartOwner = {},
+  } = chartListing;
   const { xlarge = {} } = images;
   const { secureUrl } = xlarge;
   const { name: chartOwnerName } = chartOwner;
@@ -28,6 +37,10 @@ const Chart = ({ match, fetchChartDataById, chartListing = {}, isLoading }) => {
   const trackTitleHeader = {
     textAlign: 'left',
     textTransform: 'uppercase',
+  };
+
+  if (tracks.length === 0) {
+    return <NothingHereMessage />;
   }
 
   return (
@@ -41,40 +54,59 @@ const Chart = ({ match, fetchChartDataById, chartListing = {}, isLoading }) => {
             <Grid.Column width={8} textAlign='left'>
               <Header as='h1' style={trackTitleHeader}>
                 {name}
-                {chartOwnerName && <Header.Subheader>{chartOwnerName}</Header.Subheader>}
-                {publishDate && <Header.Subheader>{publishDate}</Header.Subheader>}
+                {chartOwnerName && (
+                  <Header.Subheader>{chartOwnerName}</Header.Subheader>
+                )}
+                {publishDate && (
+                  <Header.Subheader>{publishDate}</Header.Subheader>
+                )}
               </Header>
-              {genres && genres.map((genre, idx) => {
-                return (
-                  <GenreLabel key={idx} genreName={genre.name} genreSlug={genre.slug} genreId={genre.id} />
-                )
-              })}
+              {genres &&
+                genres.map((genre, idx) => {
+                  return (
+                    <GenreLabel
+                      key={idx}
+                      genreName={genre.name}
+                      genreSlug={genre.slug}
+                      genreId={genre.id}
+                    />
+                  );
+                })}
               <p>{description}</p>
             </Grid.Column>
           </Grid.Row>
         </Grid>
       </Segment>
-      {
-        tracks.length > 0 ?
-          <Transition visible={visible} animation='fade' duration={1500}>
-            <ResponsiveTrackListing trackListing={tracks} isPlaylist={false} isLoading={isLoading} page={1} perPage={50} />
-          </Transition>
-          :
-          null
-      }
+      {tracks.length > 0 ? (
+        <Transition visible={visible} animation='fade' duration={1500}>
+          <ResponsiveTrackListing
+            trackListing={tracks}
+            isPlaylist={false}
+            isLoading={isLoading}
+            page={1}
+            perPage={50}
+          />
+        </Transition>
+      ) : null}
     </React.Fragment>
   );
-}
+};
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     isLoading: state.isLoading,
     chartListing: state.chartListing,
-  }
-}
+  };
+};
 
-const mapDispatchToProps = dispatch => {
-  return bindActionCreators(Object.assign({}, { fetchChartDataById }), dispatch);
-}
+const mapDispatchToProps = (dispatch) => {
+  return bindActionCreators(
+    Object.assign({}, { fetchChartDataById }),
+    dispatch,
+  );
+};
 
-export default connect(mapStateToProps, mapDispatchToProps)(Chart);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(Chart);

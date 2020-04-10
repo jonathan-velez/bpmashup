@@ -5,6 +5,11 @@
   "dependencies": {
     "apexcharts": "^3.8.4",
     "axios": "^0.17.1",
+    "date-fns": "^2.11.1",
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-plugin-import": "^2.16.0",
+    "eslint-plugin-jsx-a11y": "^6.2.1",
+    "eslint-plugin-react": "^7.12.4",
     "firebase": "^7.6.2",
     "history": "^4.7.2",
     "lodash": "^4.17.4",
@@ -23,17 +28,15 @@
     "react-router-redux": "^4.0.8",
     "react-scripts": "2.0.3",
     "react-scroll": "^1.7.6",
+    "react-slick": "^0.25.2",
     "redux": "^4.0.4",
     "redux-logger": "^3.0.6",
     "redux-promise": "^0.5.3",
     "redux-thunk": "^2.2.0",
     "reselect": "^4.0.0",
-    "semantic-ui-react": "^0.83.0",
-    "store": "^2.0.12",
-    "eslint-config-airbnb": "^17.1.0",
-    "eslint-plugin-import": "^2.16.0",
-    "eslint-plugin-jsx-a11y": "^6.2.1",
-    "eslint-plugin-react": "^7.12.4"
+    "semantic-ui-react": "^0.88.2",
+    "slick-carousel": "^1.8.1",
+    "store": "^2.0.12"
   },
   "scripts": {
     "start": "react-scripts start",

@@ -50,6 +50,7 @@ const TrackListingController = ({ location, match, searchTracks, fetchTracksSimi
       break;
     default:
       headerPrefix = 'TOP TRACKS';
+      headerTitle = 'ALL GENRES';
   }
 
   return (

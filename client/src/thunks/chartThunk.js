@@ -1,6 +1,16 @@
 import { callAPIorCache } from '../seessionStorageCache';
-import { GET_CHART_DATA, LOAD_TRACKS, START_ASYNC, FETCH_CHART_METADATA } from '../constants/actionTypes';
-import { API_GET_CHART, API_GET_TRACKS } from '../constants/apiPaths';
+import {
+  GET_CHART_DATA,
+  LOAD_TRACKS,
+  START_ASYNC,
+  FETCH_CHART_METADATA,
+  FETCH_BEATPORT_CHARTS,
+} from '../constants/actionTypes';
+import {
+  API_GET_CHART,
+  API_GET_TRACKS,
+  API_GET_CHARTS_BY_PROFILE_ID,
+} from '../constants/apiPaths';
 import {
   DEFAULT_CHARTS_PER_PAGE,
   DEFAULT_PER_PAGE,
@@ -16,10 +26,18 @@ export async function fetchChartDataById(chartId) {
       type: START_ASYNC,
     });
 
-    const chartMetadata = await callAPIorCache(`${API_GET_CHART}?id=${chartId}&perPage=${DEFAULT_PER_PAGE}`);
-    const chartObject = chartMetadata.data.results && Array.isArray(chartMetadata.data.results) && chartMetadata.data.results[0];
+    const chartMetadata = await callAPIorCache(
+      `${API_GET_CHART}?id=${chartId}&perPage=${DEFAULT_PER_PAGE}`,
+    );
+    const chartObject =
+      (chartMetadata.data.results &&
+        Array.isArray(chartMetadata.data.results) &&
+        chartMetadata.data.results[0]) ||
+      {};
 
-    const chartTracks = await callAPIorCache(`${API_GET_TRACKS}?chartId=${chartId}&perPage=${DEFAULT_PER_PAGE}`);
+    const chartTracks = await callAPIorCache(
+      `${API_GET_TRACKS}?chartId=${chartId}&perPage=${DEFAULT_PER_PAGE}`,
+    );
     chartObject.tracks = chartTracks.data && chartTracks.data.results;
 
     dispatch({
@@ -31,16 +49,24 @@ export async function fetchChartDataById(chartId) {
       type: LOAD_TRACKS,
       payload: chartObject.tracks,
     });
-  }
+  };
 }
 
-export async function fetchChartMetadataByIds(chartIds = [], page = 1, perPage = DEFAULT_CHARTS_PER_PAGE) {
+export async function fetchChartMetadataByIds(
+  chartIds = [],
+  page = 1,
+  perPage = DEFAULT_CHARTS_PER_PAGE,
+) {
   return async (dispatch) => {
     dispatch({
       type: START_ASYNC,
     });
 
-    const chartData = await callAPIorCache(`${API_GET_CHART}?ids=${chartIds.join(',')}&page=${page}&perPage=${perPage}`);
+    const chartData = await callAPIorCache(
+      `${API_GET_CHART}?ids=${chartIds.join(
+        ',',
+      )}&page=${page}&perPage=${perPage}`,
+    );
     const { data, status } = chartData;
     if (status !== 200) return;
 
@@ -48,5 +74,28 @@ export async function fetchChartMetadataByIds(chartIds = [], page = 1, perPage =
       type: FETCH_CHART_METADATA,
       payload: data,
     });
-  }
+  };
+}
+
+export async function fetchBeatportCharts(
+  page = 1,
+  perPage = DEFAULT_CHARTS_PER_PAGE,
+) {
+  return async (dispatch) => {
+    dispatch({
+      type: START_ASYNC,
+    });
+
+    const beatportChardData = await callAPIorCache(
+      `${API_GET_CHARTS_BY_PROFILE_ID}?djprofileId=36047&page=${page}&perPage=${perPage}`,
+    );
+
+    const { data, status } = beatportChardData;
+    if (status !== 200) return;
+
+    dispatch({
+      type: FETCH_BEATPORT_CHARTS,
+      payload: data,
+    });
+  };
 }

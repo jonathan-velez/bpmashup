@@ -22,7 +22,11 @@ import {
   getTracksByIds,
   clearTracklist,
 } from './tracksThunk';
-import { fetchChartDataById, fetchChartMetadataByIds } from './chartThunk';
+import {
+  fetchChartDataById,
+  fetchChartMetadataByIds,
+  fetchBeatportCharts,
+} from './chartThunk';
 import {
   loadPlaylists,
   loadNoDownloads,
@@ -70,4 +74,5 @@ export {
   fetchChartMetadataByIds,
   addTrackToDownloadQueue,
   updateTrackStatus,
+  fetchBeatportCharts,
 };

@@ -56,6 +56,7 @@ app.get(`${API_BASE_URL}/artist`, bpController.getArtistData);
 app.get(`${API_BASE_URL}/most-popular-releases/:type`, bpController.callApi);
 app.get(`${API_BASE_URL}/my-beatport`, bpController.callApi);
 app.get(`${API_BASE_URL}/charts`, bpController.callApi);
+app.get(`${API_BASE_URL}/profile/charts`, bpController.callApi);
 app.get(`${API_BASE_URL}/download-track`, zippyController.zippyScrape);
 app.get(`${API_BASE_URL}/youtube/search`, ytController.Youtube);
 app.get(
@@ -169,6 +170,8 @@ function processDownloadJob(data) {
     };
 
     // update firesstore
+    // TODO: If failed, add reason. e.g. No google hits, No suitable zippy hits, etc.
+    // zippy response { href: null, success: false, error: 'No file found' }
     const batch = firestore.batch();
     const globalRef = firestore.collection('downloadQueue').doc(data.key);
     batch.update(globalRef, updateData);

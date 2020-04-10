@@ -13,6 +13,7 @@ import {
   GET_TRACKS,
   LOAD_LOVED_LABELS_DETAILS,
   GET_CHART_DATA,
+  FETCH_BEATPORT_CHARTS,
 } from '../constants/actionTypes';
 
 const isLoading = (state = false, action) => {
@@ -32,6 +33,7 @@ const isLoading = (state = false, action) => {
     case GENERAL_ERROR:
     case LOAD_LOVED_LABELS_DETAILS:
     case GET_CHART_DATA:
+    case FETCH_BEATPORT_CHARTS:
       if (action.error) console.log(GENERAL_ERROR, action.error);
       return false;
     default:
