@@ -49,7 +49,7 @@ const DownloadQueueTable = ({ queue, downloadTrack, retryDownload }) => {
       case 'downloaded':
         downloadButtonText = 'Downloaded';
         downloadButtonColor = 'primary';
-        downloadButtonPopupContent = `This track has already been downloaded, but you can download it again.`;
+        downloadButtonPopupContent = `This track has already been downloaded.\nDownload it again or better yet - purchase it!`;
         break;
       case 'available':
         downloadButtonPopupContent = `Your track is available to download!`;
@@ -65,11 +65,16 @@ const DownloadQueueTable = ({ queue, downloadTrack, retryDownload }) => {
 
     // In order for the Popup to work on disabled buttons, we need to wrap it in a div
     const downloadButton =
-      status === 'notAvailable' ? (
-        <Dropdown button floating text='Failed' className='negative'>
+      status === 'notAvailable' || status === 'downloaded' ? (
+        <Dropdown
+          button
+          floating
+          text={downloadButtonText}
+          className={downloadButtonColor}
+        >
           <Dropdown.Menu>
             <Dropdown.Item
-              text='Retry'
+              text={status === 'notAvailable' ? 'Retry' : 'Re-download'}
               icon='redo'
               onClick={() => retryDownload(key)}
             />
