@@ -4,6 +4,7 @@ import Slider from 'react-slick';
 import { connect } from 'react-redux';
 import { fetchBeatportCharts } from '../thunks';
 import { Image, Label, Segment } from 'semantic-ui-react';
+import moment from 'moment';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 
@@ -17,7 +18,7 @@ const BeatportCharts = ({ isLoading, fetchBeatportCharts, beatportCharts }) => {
   if (isLoading) return <div>Loading...</div>;
 
   const { results = {} } = beatportCharts;
-  const { charts = [] } = results;
+  let { charts = [] } = results;
 
   return (
     <React.Fragment>
@@ -33,18 +34,21 @@ const BeatportCharts = ({ isLoading, fetchBeatportCharts, beatportCharts }) => {
         slidesToScroll={4}
       >
         {charts.map((chart) => {
-          return (
-            <div key={chart.id}>
-              <Segment padded>
-                <Label attached='bottom'>{chart.name || 'name'}</Label>
-                <Image
-                  as={Link}
-                  to={`/chart/${chart.slug}/${chart.id}`}
-                  src={chart.images.xlarge && chart.images.xlarge.secureUrl}
-                />
-              </Segment>
-            </div>
-          );
+          // filter out charts made after yesterday
+          if (moment(chart.publishDate).isBefore(moment().subtract(1, 'day'))) {
+            return (
+              <div key={chart.id}>
+                <Segment padded>
+                  <Label attached='bottom'>{chart.name || 'name'}</Label>
+                  <Image
+                    as={Link}
+                    to={`/chart/${chart.slug}/${chart.id}`}
+                    src={chart.images.xlarge && chart.images.xlarge.secureUrl}
+                  />
+                </Segment>
+              </div>
+            );
+          }
         })}
       </Slider>
     </React.Fragment>
