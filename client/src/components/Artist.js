@@ -211,7 +211,7 @@ const Artist = ({
           Charts
         </Menu.Item>
         <Menu.Item position='right'>
-          <Button as={Link} to={`${pathname}/tracks`}>
+          <Button basic as={Link} to={`${pathname}/tracks`}>
             View All Tracks
           </Button>
         </Menu.Item>
