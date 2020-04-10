@@ -1,11 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Table, Button, Popup } from 'semantic-ui-react';
+import { Table, Button, Popup, Dropdown } from 'semantic-ui-react';
 import moment from 'moment';
 
 import NothingHereMessage from './NothingHereMessage';
-import ConfirmAction from './ConfirmAction';
-import { constructLinks, constructTrackLink } from '../utils/trackUtils';
+import {
+  constructLinks,
+  constructTrackLink,
+  generateBPTrackLink,
+} from '../utils/trackUtils';
 import { musicalKeyFilter, convertEpochToDate } from '../utils/helpers';
 
 const DownloadQueueTable = ({ queue, downloadTrack, retryDownload }) => {
@@ -41,8 +44,7 @@ const DownloadQueueTable = ({ queue, downloadTrack, retryDownload }) => {
       case 'notAvailable':
         downloadButtonText = 'Failed';
         downloadButtonColor = 'negative';
-        downloadButtonPopupContent =
-          'The download request failed, click to try again.';
+        downloadButtonPopupContent = 'The download request failed.';
         break;
       case 'downloaded':
         downloadButtonText = 'Downloaded';
@@ -56,20 +58,28 @@ const DownloadQueueTable = ({ queue, downloadTrack, retryDownload }) => {
         break;
     }
 
+    const openPurchaseLink = (href) => {
+      const purchaseWindow = window.open('/downloadLink.html', '_blank');
+      purchaseWindow.location = href;
+    };
+
     // In order for the Popup to work on disabled buttons, we need to wrap it in a div
     const downloadButton =
       status === 'notAvailable' ? (
-        <div>
-          <ConfirmAction
-            action={() => retryDownload(key)}
-            confirmText='Retry download?'
-            render={(confirm) => (
-              <Button fluid negative onClick={confirm}>
-                Failed
-              </Button>
-            )}
-          />
-        </div>
+        <Dropdown button floating text='Failed' className='negative'>
+          <Dropdown.Menu>
+            <Dropdown.Item
+              text='Retry'
+              icon='redo'
+              onClick={() => retryDownload(key)}
+            />
+            <Dropdown.Item
+              text='Purchase'
+              icon='cart arrow down'
+              onClick={() => openPurchaseLink(generateBPTrackLink(track))}
+            />
+          </Dropdown.Menu>
+        </Dropdown>
       ) : (
         <div>
           <Button
@@ -100,7 +110,7 @@ const DownloadQueueTable = ({ queue, downloadTrack, retryDownload }) => {
         <Table.Cell>
           {moment(addedDateObject).format('MM/DD/YYYY hh:MM:ss A')}
         </Table.Cell>
-        <Table.Cell>
+        <Table.Cell collapsing>
           <Popup
             content={downloadButtonPopupContent}
             trigger={downloadButton}
