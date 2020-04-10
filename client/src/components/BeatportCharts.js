@@ -8,7 +8,7 @@ import { fetchChartsByProfileId } from '../thunks';
 const BeatportCharts = ({
   isLoading,
   fetchChartsByProfileId,
-  beatportCharts,
+  chartsList,
 }) => {
   useEffect(() => {
     fetchChartsByProfileId('36047');
@@ -16,7 +16,7 @@ const BeatportCharts = ({
 
   if (isLoading) return <div>Loading...</div>;
 
-  const { results = {} } = beatportCharts;
+  const { results = {} } = chartsList;
   let { charts = [] } = results;
 
   return (
@@ -28,10 +28,10 @@ const BeatportCharts = ({
 };
 
 const mapStateToProps = (state) => {
-  const { isLoading, beatportCharts } = state;
+  const { isLoading, chartsList } = state;
   return {
     isLoading,
-    beatportCharts,
+    chartsList,
   };
 };
 

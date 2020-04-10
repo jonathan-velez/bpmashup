@@ -1,4 +1,4 @@
-import { FETCH_BEATPORT_CHARTS } from '../constants/actionTypes';
+import { FETCH_CHARTS_BY_PROFILE_ID } from '../constants/actionTypes';
 
 const defaultState = {
   metadata: {
@@ -9,15 +9,15 @@ const defaultState = {
   },
 };
 
-const beatportCharts = (state = defaultState, action) => {
+const chartsList = (state = defaultState, action) => {
   const { payload, type } = action;
 
   switch (type) {
-    case FETCH_BEATPORT_CHARTS:
+    case FETCH_CHARTS_BY_PROFILE_ID:
       return payload;
     default:
       return state;
   }
 };
 
-export default beatportCharts;
+export default chartsList;

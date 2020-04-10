@@ -4,7 +4,7 @@ import {
   LOAD_TRACKS,
   START_ASYNC,
   FETCH_CHART_METADATA,
-  FETCH_BEATPORT_CHARTS,
+  FETCH_CHARTS_BY_PROFILE_ID,
 } from '../constants/actionTypes';
 import {
   API_GET_CHART,
@@ -95,7 +95,7 @@ export async function fetchChartsByProfileId(
     if (status !== 200) return;
 
     dispatch({
-      type: FETCH_BEATPORT_CHARTS,
+      type: FETCH_CHARTS_BY_PROFILE_ID,
       payload: data,
     });
   };
