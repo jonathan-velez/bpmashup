@@ -29,7 +29,7 @@ const SearchTracks = ({ history }) => {
     <Form onSubmit={handleFormSubmit}>
       <Input
         ref={inputRef}
-        size='medium'
+        size='large'
         onChange={(e) => handleChange(e)}
         onFocus={selectInputText}
         style={inputStyle}
