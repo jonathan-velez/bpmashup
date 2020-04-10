@@ -25,7 +25,7 @@ import {
 import {
   fetchChartDataById,
   fetchChartMetadataByIds,
-  fetchBeatportCharts,
+  fetchChartsByProfileId,
 } from './chartThunk';
 import {
   loadPlaylists,
@@ -74,5 +74,5 @@ export {
   fetchChartMetadataByIds,
   addTrackToDownloadQueue,
   updateTrackStatus,
-  fetchBeatportCharts,
+  fetchChartsByProfileId,
 };

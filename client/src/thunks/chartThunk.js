@@ -77,7 +77,8 @@ export async function fetchChartMetadataByIds(
   };
 }
 
-export async function fetchBeatportCharts(
+export async function fetchChartsByProfileId(
+  profileId,
   page = 1,
   perPage = DEFAULT_CHARTS_PER_PAGE,
 ) {
@@ -87,7 +88,7 @@ export async function fetchBeatportCharts(
     });
 
     const beatportChardData = await callAPIorCache(
-      `${API_GET_CHARTS_BY_PROFILE_ID}?djprofileId=36047&publishedOnly=true&page=${page}&perPage=${perPage}`,
+      `${API_GET_CHARTS_BY_PROFILE_ID}?djprofileId=${profileId}&publishedOnly=true&page=${page}&perPage=${perPage}`,
     );
 
     const { data, status } = beatportChardData;

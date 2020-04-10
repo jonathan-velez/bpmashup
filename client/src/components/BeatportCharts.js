@@ -3,12 +3,16 @@ import { connect } from 'react-redux';
 
 import TracklistingHeader from './TracklistingHeader';
 import ChartSlider from './ChartSlider';
-import { fetchBeatportCharts } from '../thunks';
+import { fetchChartsByProfileId } from '../thunks';
 
-const BeatportCharts = ({ isLoading, fetchBeatportCharts, beatportCharts }) => {
+const BeatportCharts = ({
+  isLoading,
+  fetchChartsByProfileId,
+  beatportCharts,
+}) => {
   useEffect(() => {
-    fetchBeatportCharts();
-  }, [fetchBeatportCharts]);
+    fetchChartsByProfileId('36047');
+  }, [fetchChartsByProfileId]);
 
   if (isLoading) return <div>Loading...</div>;
 
@@ -31,7 +35,7 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = { fetchBeatportCharts };
+const mapDispatchToProps = { fetchChartsByProfileId };
 
 export default connect(
   mapStateToProps,
