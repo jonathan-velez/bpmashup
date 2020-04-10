@@ -16,7 +16,7 @@ import lovedArtistsDetails from './lovedArtistsDetails';
 import lovedLabels from './lovedLabels';
 import lovedLabelsDetails from './lovedLabelsDetails';
 import searchResults from './searchResults';
-import releaseListing from './releaseListing';
+import release from './release';
 import artistDetail from './artistDetail';
 import labelDetail from './labelDetail';
 import userDetail from './userDetail';
@@ -41,7 +41,7 @@ const rootReducer = combineReducers({
   firebaseState: firebaseReducer,
   routing: routerReducer,
   searchResults,
-  releaseListing,
+  release,
   artistDetail,
   labelDetail,
   userDetail,

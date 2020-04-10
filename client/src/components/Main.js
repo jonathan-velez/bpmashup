@@ -6,7 +6,7 @@ import TrackListingController from './TrackListingController';
 import PlaylistController from './PlaylistController';
 import MyLovedLabels from './MyLovedLabels';
 import SearchResultsController from './SearchResultsController';
-import ReleaseListingController from './ReleaseListingController';
+import Release from './Release';
 import Artist from './Artist';
 import Label from './Label';
 import TracksController from './TracksController';
@@ -64,7 +64,7 @@ const Main = () => {
         <Route
           exact
           path='/release/:releaseName/:releaseId'
-          component={ReleaseListingController}
+          component={Release}
         />
         <Route exact path='/tracks' component={TracksController} />
         <Route

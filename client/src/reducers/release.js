@@ -6,7 +6,7 @@ const defaultState = {
   tracks: {},
 }
 
-const releaseListing = (state = defaultState, action) => {
+const release = (state = defaultState, action) => {
   switch (action.type) {
     case GET_RELEASE_DATA:
       return action.payload;
@@ -15,4 +15,4 @@ const releaseListing = (state = defaultState, action) => {
   }
 }
 
-export default releaseListing;
+export default release;
