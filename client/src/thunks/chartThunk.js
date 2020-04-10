@@ -83,6 +83,8 @@ export async function fetchChartsByProfileId(
   perPage = DEFAULT_CHARTS_PER_PAGE,
 ) {
   return async (dispatch) => {
+    if (!profileId) return;
+    
     dispatch({
       type: START_ASYNC,
     });
