@@ -12,7 +12,7 @@ export const dashlessFilter = (input) => {
 };
 
 export const convertUnicode = (input) => {
-  return input.replace(/\\u(\w{4,4})/g, function (a, b) {
+  return input.replace(/\\u(\w{4,4})/g, function(a, b) {
     var charcode = parseInt(b, 16);
     return String.fromCharCode(charcode);
   });
@@ -170,7 +170,7 @@ export const sortObject = (obj, direction = 'asc') => {
     }
   }
 
-  arr.sort(function (a, b) {
+  arr.sort(function(a, b) {
     if (direction === 'desc') {
       return b.value - a.value;
     } else {
@@ -190,11 +190,12 @@ export const setPerPageSetting = (perPage) => {
 };
 
 export const getTracklistViewSetting = () => {
-  return getStorage('tracklistView') || DEFAULT_TRACKLISTING_VIEW;
+  const preferences = JSON.parse(getStorage('preferences')) || {};
+  return preferences.tracklistView || DEFAULT_TRACKLISTING_VIEW;
 };
 
 export const setTracklistViewSetting = (viewType = 'cards') => {
-  setStorage('tracklistView', viewType);
+  setStorage('preferences', JSON.stringify({ tracklistView: viewType }));
 };
 
 export const convertEpochToDate = (seconds) => {

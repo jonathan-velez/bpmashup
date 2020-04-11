@@ -10,22 +10,32 @@ const setStorage = (path, payload) => {
   } catch (error) {
     makeRoomForStorageAndRetry(path, payload);
   }
-}
+};
 
 const removeItemFromStorageByKey = (key) => {
   sessionStorage.removeItem(key);
-}
+};
 
 const makeRoomForStorageAndRetry = (path, payload) => {
   // call this function when caching fails due to sessionStorage exceeding its limit
   // remove the oldest cached item and try to store payload, repeat until successful
 
-  const sortedItemKeys = Object.keys(sessionStorage).sort((a, b) => (JSON.parse(sessionStorage[a]).stamp) - (JSON.parse(sessionStorage[b]).stamp));
+  const sortedItemKeys = Object.keys(sessionStorage).sort((a, b) => {
+    try {
+      return (
+        JSON.parse(sessionStorage[a]).stamp -
+        JSON.parse(sessionStorage[b]).stamp
+      );
+    } catch (error) {
+      return false;
+    }
+  });
+
   removeItemFromStorageByKey(sortedItemKeys[0]);
   setStorage(path, payload);
-}
+};
 
-const getStorage = path => {
+const getStorage = (path) => {
   try {
     const serializedPayload = sessionStorage.getItem(path);
     if (serializedPayload === null) {
@@ -38,19 +48,32 @@ const getStorage = path => {
   }
 };
 
-const getCachedResult = path => {
+const getCachedResult = (path) => {
   const cachedResult = getStorage(path);
-  const isStillAlive = cachedResult && moment(cachedResult.stamp).add(1, 'hour').isAfter(moment());
-  return (cachedResult && isStillAlive) ? cachedResult : undefined;
-}
+  const isStillAlive =
+    cachedResult &&
+    moment(cachedResult.stamp)
+      .add(1, 'hour')
+      .isAfter(moment());
+  return cachedResult && isStillAlive ? cachedResult : undefined;
+};
 
-export const callAPIorCache = path => {
+export const callAPIorCache = (path) => {
   return new Promise(async (resolve, reject) => {
     try {
       let requestResult = getCachedResult(path);
-      if (!requestResult || (requestResult && Object.keys(requestResult.data).length === 0 && requestResult.constructor === Object)) {
+      if (
+        !requestResult ||
+        (requestResult &&
+          Object.keys(requestResult.data).length === 0 &&
+          requestResult.constructor === Object)
+      ) {
         requestResult = await axios.get(path);
-        if (requestResult.status === 200 && Object.keys(requestResult.data).length > 0 && requestResult.constructor === Object) {
+        if (
+          requestResult.status === 200 &&
+          Object.keys(requestResult.data).length > 0 &&
+          requestResult.constructor === Object
+        ) {
           setStorage(path, requestResult);
         }
       }
@@ -58,5 +81,5 @@ export const callAPIorCache = path => {
     } catch (error) {
       return reject(error);
     }
-  })
-}
+  });
+};
