@@ -9,7 +9,7 @@ import { getTracks, clearTracklist } from '../thunks';
 import TrackListingGroup from './TrackListingGroup';
 import FilterBar from './FilterBar';
 
-const Tracks = ({ match, history, location, trackListing, genreListing, clearTracklist, getTracks }) => {
+const TracksController = ({ match, history, location, trackListing, genreListing, clearTracklist, getTracks }) => {
   useEffect(() => {
     fetchTracks(Object.assign({}, parseParams(), queryString.parse(location.search)));
 
@@ -58,4 +58,7 @@ const mapDispatchToProps = dispatch => {
   return bindActionCreators({ getTracks, clearTracklist }, dispatch);
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Tracks));
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(withRouter(TracksController));
