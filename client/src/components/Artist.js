@@ -6,6 +6,7 @@ import Scroll from 'react-scroll';
 
 import { getArtistDetails, fetchChartsByProfileId } from '../thunks';
 import TrackListingGroup from './TrackListingGroup';
+import TracksController from './TracksController';
 import ItemCards from './ItemCards';
 import GenreLabel from './GenreLabel';
 import EventsList from './EventsList';
@@ -24,7 +25,7 @@ const Artist = ({
   location,
 }) => {
   const [activeItem, setActiveItem] = useState('biography');
-  const [activeItem2, setActiveItem2] = useState('tracks');
+  const [activeItem2, setActiveItem2] = useState('featured-releases');
 
   const { params } = match;
   const { artistId, artistName } = params;
@@ -119,15 +120,18 @@ const Artist = ({
         />
       );
       break;
-    case 'tracks':
+    case 'top-tracks':
       activeItemContent2 = trackListing && (
         <TrackListingGroup trackListing={trackListing} />
       );
       break;
+    case 'all-tracks':
+      activeItemContent2 = <TracksController trackQuery={{ artistId }} />;
+      break;
     case 'charts':
       activeItemContent2 = charts && <ChartSlider charts={charts} />;
       break;
-    case 'releases':
+    case 'all-releases':
       activeItemContent2 = <ReleaseList artistId={artistId} />;
       break;
     default:
@@ -189,15 +193,6 @@ const Artist = ({
       <Menu secondary pointing>
         <Menu.Item
           link
-          name='tracks'
-          className='item-header'
-          active={activeItem2 === 'tracks'}
-          onClick={handleItemClick2}
-        >
-          Top 10 Tracks
-        </Menu.Item>
-        <Menu.Item
-          link
           name='featured-releases'
           className='item-header'
           active={activeItem2 === 'featured-releases'}
@@ -207,26 +202,39 @@ const Artist = ({
         </Menu.Item>
         <Menu.Item
           link
+          name='all-releases'
+          className='item-header'
+          active={activeItem2 === 'all-releases'}
+          onClick={handleItemClick2}
+        >
+          All Releases
+        </Menu.Item>
+        <Menu.Item
+          link
+          name='top-tracks'
+          className='item-header'
+          active={activeItem2 === 'top-tracks'}
+          onClick={handleItemClick2}
+        >
+          Top 10 Tracks
+        </Menu.Item>
+        <Menu.Item
+          link
+          name='all-tracks'
+          className='item-header'
+          active={activeItem2 === 'all-tracks'}
+          onClick={handleItemClick2}
+        >
+          Tracks
+        </Menu.Item>
+        <Menu.Item
+          link
           name='charts'
           className='item-header'
           active={activeItem2 === 'charts'}
           onClick={handleItemClick2}
         >
           Charts
-        </Menu.Item>
-        <Menu.Item
-          link
-          name='releases'
-          className='item-header'
-          active={activeItem2 === 'releases'}
-          onClick={handleItemClick2}
-        >
-          Releases
-        </Menu.Item>
-        <Menu.Item position='right'>
-          <Button basic as={Link} to={`${pathname}/tracks`}>
-            View All Tracks
-          </Button>
         </Menu.Item>
       </Menu>
       {activeItemContent2}
