@@ -1,6 +1,5 @@
 import React, { Fragment, useEffect } from 'react';
 import { connect } from 'react-redux';
-import Scroll from 'react-scroll';
 import _ from 'lodash';
 
 import TrackListingGroup from './TrackListingGroup';
@@ -13,7 +12,6 @@ const TracksController = ({ trackQuery, search, trackListing, getTracks }) => {
 
   useEffect(() => {
     const fetchTracks = (trackQuery) => {
-      Scroll.animateScroll.scrollToTop({ duration: 1500 });
       getTracks(trackQuery);
     };
 
