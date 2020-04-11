@@ -1,64 +1,47 @@
 import React, { Fragment, useEffect } from 'react';
-import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import queryString from 'query-string';
-import { withRouter } from 'react-router';
 import Scroll from 'react-scroll';
+import _ from 'lodash';
 
-import { getTracks, clearTracklist } from '../thunks';
 import TrackListingGroup from './TrackListingGroup';
 import FilterBar from './FilterBar';
+import { getTracks } from '../thunks';
+import { usePrevious } from '../hooks';
 
-const TracksController = ({ match, history, location, trackListing, genreListing, clearTracklist, getTracks }) => {
+const TracksController = ({ trackQuery, search, trackListing, getTracks }) => {
+  const previousTrackQuery = usePrevious(trackQuery);
+
   useEffect(() => {
-    fetchTracks(Object.assign({}, parseParams(), queryString.parse(location.search)));
+    const fetchTracks = (trackQuery) => {
+      Scroll.animateScroll.scrollToTop({ duration: 1500 });
+      getTracks(trackQuery);
+    };
 
-    return clearTracklist();
-  }, [location.search]);
-
-  const parseParams = () => {
-    const { itemType, itemId } = match.params;
-    const extraParams = {};
-
-    switch (itemType) {
-      case 'artist':
-        extraParams.artistId = itemId;
-        break;
-      case 'label':
-        extraParams.labelId = itemId;
-        break;
-      default:
-        break;
+    if (
+      !previousTrackQuery ||
+      (previousTrackQuery && !_.isEqual(previousTrackQuery, trackQuery))
+    ) {
+      fetchTracks(trackQuery);
     }
-    return extraParams;
-  }
-
-  const fetchTracks = (payload) => {
-    Scroll.animateScroll.scrollToTop({ duration: 1500 });
-    getTracks(payload);
-  }
+  }, [trackQuery, getTracks, previousTrackQuery]);
 
   return (
     <Fragment>
-      <FilterBar genreListing={genreListing} history={history} location={location} />
+      <FilterBar search={search} />
       <TrackListingGroup trackListing={trackListing} />
     </Fragment>
   );
+};
 
-}
-
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     trackListing: state.trackListing,
-    genreListing: state.genreListing,
-  }
-}
+  };
+};
 
-const mapDispatchToProps = dispatch => {
-  return bindActionCreators({ getTracks, clearTracklist }, dispatch);
-}
+const mapDispatchToProps = { getTracks };
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(withRouter(TracksController));
+)(TracksController);

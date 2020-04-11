@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import { Form, Icon, Accordion } from 'semantic-ui-react';
 import queryString from 'query-string';
 import _ from 'lodash';
@@ -6,9 +8,7 @@ import moment from 'moment';
 
 import { KeyCamelot } from '../constants/musicalKeys';
 
-const FilterBar = ({ location, history, genreListing }) => {
-  const { search } = location;
-
+const FilterBar = ({ search, history, genreListing }) => {
   const key = +queryString.parse(search).key || '';
   const genre = +queryString.parse(search).genre || '';
   const perPage = +queryString.parse(search).perPage || '';
@@ -231,4 +231,13 @@ const FilterBar = ({ location, history, genreListing }) => {
   );
 };
 
-export default FilterBar;
+const mapStateToProps = (state) => {
+  return {
+    genreListing: state.genreListing,
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  {},
+)(withRouter(FilterBar));

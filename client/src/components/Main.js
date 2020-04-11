@@ -9,7 +9,7 @@ import SearchResultsController from './SearchResultsController';
 import Release from './Release';
 import Artist from './Artist';
 import Label from './Label';
-import TracksController from './TracksController';
+import TracksRoute from './TracksRoute';
 import MyHistoryTracksController from './MyHistoryTracksController';
 import MyActivity from './MyActivity';
 import Track from './Track';
@@ -66,11 +66,11 @@ const Main = () => {
           path='/release/:releaseName/:releaseId'
           component={Release}
         />
-        <Route exact path='/tracks' component={TracksController} />
+        <Route exact path='/tracks' component={TracksRoute} />
         <Route
           exact
           path='/:itemType/:itemName/:itemId/tracks'
-          component={TracksController}
+          component={TracksRoute}
         />
         <Route exact path='/my-profile' component={MyProfile} />
         <Route exact path='/download-queue' component={DownloadQueuePage} />
