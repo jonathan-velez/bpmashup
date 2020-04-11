@@ -12,6 +12,7 @@ import EventsList from './EventsList';
 import LoveItem from './LoveItem';
 import ShowMore from './ShowMore';
 import ChartSlider from './ChartSlider';
+import ReleaseList from './ReleaseList';
 
 const Artist = ({
   match,
@@ -109,7 +110,7 @@ const Artist = ({
 
   let activeItemContent2 = null;
   switch (activeItem2) {
-    case 'releases':
+    case 'featured-releases':
       activeItemContent2 = featuredReleases && (
         <ItemCards
           items={featuredReleases}
@@ -125,6 +126,9 @@ const Artist = ({
       break;
     case 'charts':
       activeItemContent2 = charts && <ChartSlider charts={charts} />;
+      break;
+    case 'releases':
+      activeItemContent2 = <ReleaseList artistId={artistId} />;
       break;
     default:
   }
@@ -190,13 +194,13 @@ const Artist = ({
           active={activeItem2 === 'tracks'}
           onClick={handleItemClick2}
         >
-          Top Tracks
+          Top 10 Tracks
         </Menu.Item>
         <Menu.Item
           link
-          name='releases'
+          name='featured-releases'
           className='item-header'
-          active={activeItem2 === 'releases'}
+          active={activeItem2 === 'featured-releases'}
           onClick={handleItemClick2}
         >
           Featured Releases
@@ -209,6 +213,15 @@ const Artist = ({
           onClick={handleItemClick2}
         >
           Charts
+        </Menu.Item>
+        <Menu.Item
+          link
+          name='releases'
+          className='item-header'
+          active={activeItem2 === 'releases'}
+          onClick={handleItemClick2}
+        >
+          Releases
         </Menu.Item>
         <Menu.Item position='right'>
           <Button basic as={Link} to={`${pathname}/tracks`}>
