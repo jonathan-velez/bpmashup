@@ -6,8 +6,10 @@ export const getStorage = (key) => {
       return undefined;
     }
 
-    // parse payload as JSON if pulling state for store load
-    return key === 'state' ? JSON.parse(payload) : payload;
+    // parse payload if pulling state or preferences (serialized JSON)
+    return key === 'state' || key === 'preferences'
+      ? JSON.parse(payload)
+      : payload;
   } catch (err) {
     return undefined;
   }

@@ -190,7 +190,7 @@ export const setPerPageSetting = (perPage) => {
 };
 
 export const getTracklistViewSetting = () => {
-  const preferences = JSON.parse(getStorage('preferences')) || {};
+  const preferences = getStorage('preferences') || {};
   return preferences.tracklistView || DEFAULT_TRACKLISTING_VIEW;
 };
 
