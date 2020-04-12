@@ -3,7 +3,7 @@ import _ from 'lodash';
 import { Link } from 'react-router-dom';
 import { Table, Header, Image } from 'semantic-ui-react';
 
-import TracklistingHeader from './TracklistingHeader';
+import TitleHeader from './TitleHeader';
 
 const LovedLabelsTable = (labelDetails) => {
   const { labels } = labelDetails;
@@ -30,7 +30,7 @@ const LovedLabelsTable = (labelDetails) => {
 
   return (
     <React.Fragment>
-      <TracklistingHeader headerTitle='My Loved Labels' />
+      <TitleHeader headerTitle='My Loved Labels' />
       <Table basic='very' celled collapsing>
         <Table.Header>
           <Table.Row>

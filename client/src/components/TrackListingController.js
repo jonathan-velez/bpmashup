@@ -7,7 +7,7 @@ import { fetchMostPopularTracks, searchTracks, fetchTracksSimilar, clearTracklis
 import { deslugify, getPerPageSetting } from '../utils/helpers';
 import { DEFAULT_PAGE } from '../constants/defaults';
 import TrackListingGroup from './TrackListingGroup';
-import TracklistingHeader from './TracklistingHeader';
+import TitleHeader from './TitleHeader';
 
 const TrackListingController = ({ location, match, searchTracks, fetchTracksSimilar, fetchMostPopularTracks, trackListing, clearTracklist }) => {
   const { url, params } = match;
@@ -55,7 +55,7 @@ const TrackListingController = ({ location, match, searchTracks, fetchTracksSimi
 
   return (
     <Fragment>
-      <TracklistingHeader
+      <TitleHeader
         headerPrefix={headerPrefix}
         headerTitle={headerTitle}
         headerId={headerId}

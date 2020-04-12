@@ -4,7 +4,7 @@ import { Header } from 'semantic-ui-react';
 import { deslugify } from '../utils/helpers';
 import LoveItem from './LoveItem';
 
-class TracklistingHeader extends React.PureComponent {
+class TitleHeader extends React.PureComponent {
   render() {
     const { headerPrefix, headerTitle, headerId, headerType } = this.props;
     const item = {
@@ -26,4 +26,4 @@ class TracklistingHeader extends React.PureComponent {
   }
 }
 
-export default TracklistingHeader;
+export default TitleHeader;

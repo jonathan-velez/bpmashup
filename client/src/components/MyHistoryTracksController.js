@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { animateScroll } from 'react-scroll';
 import queryString from 'query-string';
 
-import TracklistingHeader from './TracklistingHeader';
+import TitleHeader from './TitleHeader';
 import TrackListingGroup from './TrackListingGroup';
 import NothingHereMessage from './NothingHereMessage';
 import { DEFAULT_PAGE } from '../constants/defaults';
@@ -29,7 +29,7 @@ const MyHistoryTracksController = ({ location, trackListing, trackIds, headerTit
 
   return (
     <React.Fragment>
-      <TracklistingHeader headerTitle={headerTitle} />
+      <TitleHeader headerTitle={headerTitle} />
       <TrackListingGroup trackListing={trackListing} />
     </React.Fragment>
   );

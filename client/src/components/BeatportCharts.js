@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 
-import TracklistingHeader from './TracklistingHeader';
+import TitleHeader from './TitleHeader';
 import ChartSlider from './ChartSlider';
 import { fetchChartsByProfileId } from '../thunks';
 
@@ -17,7 +17,7 @@ const BeatportCharts = ({ isLoading, fetchChartsByProfileId, chartsList }) => {
 
   return (
     <React.Fragment>
-      <TracklistingHeader headerPrefix='TOP CHARTS' headerTitle='ALL GENRES' />
+      <TitleHeader headerPrefix='TOP CHARTS' headerTitle='ALL GENRES' />
       <ChartSlider charts={charts} />
     </React.Fragment>
   );

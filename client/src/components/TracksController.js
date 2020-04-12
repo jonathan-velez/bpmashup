@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import _ from 'lodash';
 
 import TrackListingGroup from './TrackListingGroup';
-import TracklistingHeader from './TracklistingHeader';
+import TitleHeader from './TitleHeader';
 import FilterBar from './FilterBar';
 import { getTracks } from '../thunks';
 import { usePrevious } from '../hooks';
@@ -35,7 +35,7 @@ const TracksController = ({
 
   return (
     <Fragment>
-      <TracklistingHeader headerPrefix='TRACKS' headerTitle={itemName} />
+      <TitleHeader headerPrefix='TRACKS' headerTitle={itemName} />
       {filterBar && <FilterBar />}
       <TrackListingGroup trackListing={trackListing} />
     </Fragment>
