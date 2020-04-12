@@ -1,14 +1,24 @@
 import React, { Fragment, useEffect } from 'react';
+import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 
 import TrackListingGroup from './TrackListingGroup';
+import TracklistingHeader from './TracklistingHeader';
 import FilterBar from './FilterBar';
 import { getTracks } from '../thunks';
 import { usePrevious } from '../hooks';
 
-const TracksController = ({ trackQuery, search, trackListing, getTracks }) => {
+const TracksController = ({
+  filterBar,
+  trackQuery,
+  trackListing,
+  getTracks,
+  match,
+}) => {
   const previousTrackQuery = usePrevious(trackQuery);
+  const { params = {} } = match;
+  const { itemName } = params;
 
   useEffect(() => {
     const fetchTracks = (trackQuery) => {
@@ -25,7 +35,8 @@ const TracksController = ({ trackQuery, search, trackListing, getTracks }) => {
 
   return (
     <Fragment>
-      <FilterBar search={search} />
+      <TracklistingHeader headerPrefix='TRACKS' headerTitle={itemName} />
+      {filterBar && <FilterBar />}
       <TrackListingGroup trackListing={trackListing} />
     </Fragment>
   );
@@ -42,4 +53,4 @@ const mapDispatchToProps = { getTracks };
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(TracksController);
+)(withRouter(TracksController));

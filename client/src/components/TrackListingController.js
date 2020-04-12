@@ -37,15 +37,15 @@ const TrackListingController = ({ location, match, searchTracks, fetchTracksSimi
 
   switch (pageName) {
     case 'search':
-      headerPrefix = 'SEARCH RESULTS:';
+      headerPrefix = 'SEARCH RESULTS';
       headerTitle = params.searchTerm;
       break;
     case 'most-popular':
-      headerPrefix = 'TOP TRACKS:';
+      headerPrefix = 'TOP TRACKS';
       headerTitle = params.searchString;
       break;
     case 'similar-tracks':
-      headerPrefix = 'SIMILAR TO:';
+      headerPrefix = 'SIMILAR TO';
       headerTitle = params.trackName;
       break;
     default:

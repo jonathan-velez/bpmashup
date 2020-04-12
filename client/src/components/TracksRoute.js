@@ -7,7 +7,7 @@ import TracksController from './TracksController';
 const TracksRoute = ({ match, location }) => {
   useEffect(() => {
     Scroll.animateScroll.scrollToTop({ duration: 500 });
-  })
+  });
   const { search } = location;
   const query = queryString.parse(search);
   const { params } = match;
@@ -34,7 +34,7 @@ const TracksRoute = ({ match, location }) => {
     ...query,
   };
 
-  return <TracksController trackQuery={trackQuery} search={search} />;
+  return <TracksController filterBar trackQuery={trackQuery} />;
 };
 
 export default TracksRoute;

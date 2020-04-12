@@ -8,7 +8,8 @@ import moment from 'moment';
 
 import { KeyCamelot } from '../constants/musicalKeys';
 
-const FilterBar = ({ search, history, genreListing }) => {
+const FilterBar = ({ location, history, genreListing }) => {
+  const { search } = location;
   const key = +queryString.parse(search).key || '';
   const genre = +queryString.parse(search).genre || '';
   const perPage = +queryString.parse(search).perPage || '';

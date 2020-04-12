@@ -5,11 +5,7 @@ import TracklistingHeader from './TracklistingHeader';
 import ChartSlider from './ChartSlider';
 import { fetchChartsByProfileId } from '../thunks';
 
-const BeatportCharts = ({
-  isLoading,
-  fetchChartsByProfileId,
-  chartsList,
-}) => {
+const BeatportCharts = ({ isLoading, fetchChartsByProfileId, chartsList }) => {
   useEffect(() => {
     fetchChartsByProfileId('36047');
   }, [fetchChartsByProfileId]);
@@ -21,7 +17,7 @@ const BeatportCharts = ({
 
   return (
     <React.Fragment>
-      <TracklistingHeader headerPrefix='TOP' headerTitle='CHARTS' />
+      <TracklistingHeader headerPrefix='TOP CHARTS' headerTitle='ALL GENRES' />
       <ChartSlider charts={charts} />
     </React.Fragment>
   );

@@ -1,12 +1,11 @@
 import React, { Fragment, useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import { Grid, Image, Header, Menu, Button } from 'semantic-ui-react';
 import Scroll from 'react-scroll';
 
 import { getArtistDetails, fetchChartsByProfileId } from '../thunks';
 import TrackListingGroup from './TrackListingGroup';
-import TracksController from './TracksController';
 import ItemCards from './ItemCards';
 import GenreLabel from './GenreLabel';
 import EventsList from './EventsList';
@@ -80,6 +79,7 @@ const Artist = ({
 
   if (Object.keys(artistData).length === 0) return null; // TODO: do something nicer here
 
+  // TODO: Keep activeItem state in sessionStorage
   let activeItemContent = null;
   switch (activeItem) {
     case 'biography':
@@ -124,9 +124,6 @@ const Artist = ({
       activeItemContent2 = trackListing && (
         <TrackListingGroup trackListing={trackListing} />
       );
-      break;
-    case 'all-tracks':
-      activeItemContent2 = <TracksController trackQuery={{ artistId }} />;
       break;
     case 'charts':
       activeItemContent2 = charts && <ChartSlider charts={charts} />;
@@ -220,21 +217,17 @@ const Artist = ({
         </Menu.Item>
         <Menu.Item
           link
-          name='all-tracks'
-          className='item-header'
-          active={activeItem2 === 'all-tracks'}
-          onClick={handleItemClick2}
-        >
-          Tracks
-        </Menu.Item>
-        <Menu.Item
-          link
           name='charts'
           className='item-header'
           active={activeItem2 === 'charts'}
           onClick={handleItemClick2}
         >
           Charts
+        </Menu.Item>
+        <Menu.Item position='right'>
+          <Button basic as={Link} to={`${pathname}/tracks`}>
+            View All Tracks
+          </Button>
         </Menu.Item>
       </Menu>
       {activeItemContent2}
@@ -260,4 +253,4 @@ const mapDispatchToProps = {
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(Artist);
+)(withRouter(Artist));
