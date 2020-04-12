@@ -4,6 +4,7 @@ import { Table, Button, Popup, Dropdown } from 'semantic-ui-react';
 import moment from 'moment';
 
 import NothingHereMessage from './NothingHereMessage';
+import TrackAlbum from './TrackAlbum';
 import {
   constructLinks,
   constructTrackLink,
@@ -19,7 +20,7 @@ const DownloadQueueTable = ({ queue, downloadTrack, retryDownload }) => {
 
   const tableBody = queue.map((item, idx) => {
     const { addedDate, url, fileName, key, track, status } = item;
-    const { artists, label, genres, bpm, key: musicalKey } = track;
+    const { artists, label, genres, bpm, key: musicalKey, images } = track;
 
     let downloadButtonText = 'Download';
     let downloadButtonColor = 'positive';
@@ -102,6 +103,14 @@ const DownloadQueueTable = ({ queue, downloadTrack, retryDownload }) => {
 
     return (
       <Table.Row key={idx}>
+        <Table.Cell>
+          <TrackAlbum
+            imageUrl={images.medium.secureUrl}
+            imageSize='tiny'
+            iconSize='big'
+            track={track}
+          />
+        </Table.Cell>
         <Table.Cell>{constructTrackLink(track)}</Table.Cell>
         <Table.Cell>{constructLinks(artists, 'artist')}</Table.Cell>
         <Table.Cell>
