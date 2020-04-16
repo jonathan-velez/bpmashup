@@ -138,6 +138,7 @@ const DownloadQueueTable = ({ queue, downloadTrack, retryDownload }) => {
     <Table striped unstackable padded>
       <Table.Header>
         <Table.Row>
+          <Table.HeaderCell>&nbsp;</Table.HeaderCell>
           <Table.HeaderCell>TITLE</Table.HeaderCell>
           <Table.HeaderCell>ARTISTS</Table.HeaderCell>
           <Table.HeaderCell>LABEL</Table.HeaderCell>
