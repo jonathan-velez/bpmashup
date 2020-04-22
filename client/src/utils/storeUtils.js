@@ -38,16 +38,14 @@ export const registerFirebaseListeners = () => {
     }
 
     // listen to playlists
-    const playlistsRef = userRef.collection('playlists').where('active', '==', true);
+    const playlistsRef = userRef
+      .collection('playlists')
+      .where('active', '==', true);
     playlistsRef.onSnapshot((playlists) => {
       let payload = {};
-      
+
       playlists.forEach(async (item) => {
         const playlist = item.data();
-               
-        // const tracksRef = playlistsRef.doc(item.id).collection('tracks');
-        // const tracks = await tracksRef.get();
-        // console.log('tracks', tracks.docs);
 
         payload[item.id] = {
           ...playlist,
