@@ -4,11 +4,10 @@ import { compose, bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { firebaseConnect } from 'react-redux-firebase';
 
-import { loadPlaylists } from '../thunks/';
 import { openModalWindow } from '../actions/ActionCreators';
 import LoginForm from './LoginForm';
 
-const SignupForm = ({ firebase, loadPlaylists, openModalWindow }) => {
+const SignupForm = ({ firebase, openModalWindow }) => {
   const initialState = {
     isLoading: false,
     isPristine: true,
@@ -26,7 +25,7 @@ const SignupForm = ({ firebase, loadPlaylists, openModalWindow }) => {
           ...state,
           [inputName]: inputValue,
           isPristine: false,
-        }
+        };
       }
       case 'form_error': {
         const { errorCode, isPristine } = action.payload;
@@ -34,21 +33,21 @@ const SignupForm = ({ firebase, loadPlaylists, openModalWindow }) => {
           ...state,
           errorCode,
           isPristine,
-        }
+        };
       }
       case 'initialize_call': {
         return {
           ...state,
           isLoading: true,
           errorCode: '',
-        }
+        };
       }
       case 'signup_successful': {
         return {
           ...state,
           isLoading: false,
           errorCode: '',
-        }
+        };
       }
       case 'signup_unsuccessful': {
         const { errorCode } = action.payload;
@@ -57,22 +56,27 @@ const SignupForm = ({ firebase, loadPlaylists, openModalWindow }) => {
           errorCode,
           isLoading: false,
           isPristine: true,
-        }
+        };
       }
       default:
         throw new Error();
     }
-  }
+  };
 
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const errorCodes = {
-    'passwords-mismatched': 'The passwords you enetered don\'t match. Please try again.',
-    'auth/weak-password': 'The password you entered is too weak. Strengthen that shit!',
-    'auth/email-already-in-use': 'The email address you entered is already registered. Sign in with your password, or reset it if you have forgotten it.',
-    'auth/invalid-email': 'The email address you entered is invalid. Please try again.',
-    'auth/operation-not-allowed': 'Sign ups have been disabled. Please contact support for more information',
-  }
+    'passwords-mismatched':
+      "The passwords you enetered don't match. Please try again.",
+    'auth/weak-password':
+      'The password you entered is too weak. Strengthen that shit!',
+    'auth/email-already-in-use':
+      'The email address you entered is already registered. Sign in with your password, or reset it if you have forgotten it.',
+    'auth/invalid-email':
+      'The email address you entered is invalid. Please try again.',
+    'auth/operation-not-allowed':
+      'Sign ups have been disabled. Please contact support for more information',
+  };
 
   const emailRef = useRef(null);
 
@@ -82,7 +86,7 @@ const SignupForm = ({ firebase, loadPlaylists, openModalWindow }) => {
 
   const focusEmailInput = () => {
     emailRef.current.focus();
-  }
+  };
 
   const handleInputChange = (inputName, evt) => {
     dispatch({
@@ -90,13 +94,13 @@ const SignupForm = ({ firebase, loadPlaylists, openModalWindow }) => {
       payload: {
         inputName: [inputName],
         inputValue: evt.target.value,
-      }
+      },
     });
-  }
+  };
 
   const validatePasswordsMatch = (userPassword, userPasswordConfirm) => {
     return userPassword === userPasswordConfirm;
-  }
+  };
 
   const handleFormError = (errorCode) => {
     dispatch({
@@ -104,24 +108,24 @@ const SignupForm = ({ firebase, loadPlaylists, openModalWindow }) => {
       payload: {
         errorCode,
         isPristine: true,
-      }
+      },
     });
-  }
+  };
 
   const intializeCall = () => {
     dispatch({
       type: 'initialize_call',
     });
-  }
+  };
 
   const handleUnsuccesfulSignup = (errorCode) => {
     dispatch({
       type: 'signup_unsuccessful',
       payload: {
         errorCode,
-      }
+      },
     });
-  }
+  };
 
   const handleFormSubmit = async (evt) => {
     evt.preventDefault();
@@ -133,13 +137,15 @@ const SignupForm = ({ firebase, loadPlaylists, openModalWindow }) => {
 
     intializeCall();
     try {
-      await firebase.auth().createUserWithEmailAndPassword(userEmail, userPassword);
+      await firebase
+        .auth()
+        .createUserWithEmailAndPassword(userEmail, userPassword);
       handleSuccessfulSignup();
     } catch (error) {
       focusEmailInput();
       handleUnsuccesfulSignup(error.code);
     }
-  }
+  };
 
   const handleLoginClick = () => {
     openModalWindow({
@@ -148,7 +154,7 @@ const SignupForm = ({ firebase, loadPlaylists, openModalWindow }) => {
       body: <LoginForm />,
       headerIcon: 'sign in',
     });
-  }
+  };
 
   const handleSuccessfulSignup = () => {
     dispatch({
@@ -158,9 +164,7 @@ const SignupForm = ({ firebase, loadPlaylists, openModalWindow }) => {
     openModalWindow({
       open: false,
     });
-
-    loadPlaylists();
-  }
+  };
 
   const { errorCode, isLoading, isPristine } = state;
 
@@ -169,43 +173,66 @@ const SignupForm = ({ firebase, loadPlaylists, openModalWindow }) => {
       <Form onSubmit={handleFormSubmit} loading={isLoading}>
         <Header as='h2'>
           Welcome to BPMashup
-            <Header.Subheader>Please sign up with your email and choose a password.</Header.Subheader>
+          <Header.Subheader>
+            Please sign up with your email and choose a password.
+          </Header.Subheader>
         </Header>
         <Form.Field>
           <label>Email</label>
-          <Input type="email" placeholder='Enter your email address' ref={emailRef} onChange={(evt) => handleInputChange('userEmail', evt)} />
+          <Input
+            type='email'
+            placeholder='Enter your email address'
+            ref={emailRef}
+            onChange={(evt) => handleInputChange('userEmail', evt)}
+          />
         </Form.Field>
         <Form.Field>
           <label>Password</label>
-          <Input type="password" autoComplete="new-password" placeholder="Enter your password" onChange={(evt) => handleInputChange('userPassword', evt)} />
+          <Input
+            type='password'
+            autoComplete='new-password'
+            placeholder='Enter your password'
+            onChange={(evt) => handleInputChange('userPassword', evt)}
+          />
         </Form.Field>
         <Form.Field>
           <label>Confirm Password</label>
-          <Input type="password" autoComplete="new-password" placeholder="Confirm your password" onChange={(evt) => handleInputChange('userPasswordConfirm', evt)} />
+          <Input
+            type='password'
+            autoComplete='new-password'
+            placeholder='Confirm your password'
+            onChange={(evt) => handleInputChange('userPasswordConfirm', evt)}
+          />
         </Form.Field>
         <Form.Field className='form-field-centered'>
-          <Button type='submit' className='red-cta'>Sign Up</Button>
-          <Button type='button' basic onClick={handleLoginClick}>Already have an account?</Button>
+          <Button type='submit' className='red-cta'>
+            Sign Up
+          </Button>
+          <Button type='button' basic onClick={handleLoginClick}>
+            Already have an account?
+          </Button>
         </Form.Field>
-        {errorCode.length > 0 && isPristine &&
+        {errorCode.length > 0 && isPristine && (
           <Form.Field className='form-field-centered'>
-            <Message negative>{(errorCode && errorCodes[errorCode]) || errorCode}</Message>
+            <Message negative>
+              {(errorCode && errorCodes[errorCode]) || errorCode}
+            </Message>
           </Form.Field>
-        }
+        )}
       </Form>
     </React.Fragment>
   );
-}
+};
 
 // TODO: Figure out why the shorthand of this fn doesn't work with connect below
-const mapDispatchToProps = dispatch => {
-  return bindActionCreators({ openModalWindow, loadPlaylists }, dispatch);
-}
+const mapDispatchToProps = (dispatch) => {
+  return bindActionCreators({ openModalWindow }, dispatch);
+};
 
 export default compose(
   firebaseConnect(),
   connect(
     ({ firebaseState: { auth } }) => ({ auth }),
     mapDispatchToProps,
-  )
+  ),
 )(SignupForm);

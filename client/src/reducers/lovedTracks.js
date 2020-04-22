@@ -1,30 +1,23 @@
-import { TOGGLE_LOVE_TRACK, LOAD_LOVED_TRACKS, CLEAR_LOVED_TRACKS } from '../constants/actionTypes';
+import {
+  TOGGLE_LOVE_TRACK,
+  LOAD_LOVED_TRACKS,
+  CLEAR_LOVED_TRACKS,
+} from '../constants/actionTypes';
 
-const lovedTracks = (state = [], action) => {
+const defaultState = {};
+const lovedTracks = (state = defaultState, action) => {
   switch (action.type) {
-    case TOGGLE_LOVE_TRACK: {
-      if (!action.payload) {
-        return state;
-      }
-
-      const { id, add } = action.payload;
-
-      if (add) {
-        return [...state, id];
-      }
-
-      return state.filter(tId => tId !== id);
-    }
+    case TOGGLE_LOVE_TRACK:
+      return state;
     case LOAD_LOVED_TRACKS: {
-      const { payload: newTracks = [] } = action;
-      return [...new Set(state.concat(newTracks))];
+      return action.payload;
     }
     case CLEAR_LOVED_TRACKS: {
-      return [];
+      return defaultState;
     }
     default:
       return state;
   }
-}
+};
 
 export default lovedTracks;

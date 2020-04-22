@@ -7,32 +7,27 @@ import TitleHeader from './TitleHeader';
 import TrackListingGroup from './TrackListingGroup';
 import NothingHereMessage from './NothingHereMessage';
 import { DEFAULT_PAGE } from '../constants/defaults';
-import { getTracksByIds, clearTracklist } from '../thunks';
+import { getTracksByIds } from '../thunks';
 import { getPerPageSetting } from '../utils/helpers';
-import { getUserHistoryPageSetup } from '../selectors';
+import { getLovedTrackIds } from '../selectors';
 
-const MyHistoryTracksController = ({
+const MyLovedTracks = ({
   location,
   trackListing,
-  trackIds = [],
-  headerTitle,
+  trackIds,
   getTracksByIds,
-  clearTracklist,
 }) => {
   const {
     page = DEFAULT_PAGE,
     perPage = getPerPageSetting(),
   } = queryString.parse(location.search);
 
-  const ids = trackIds.join(',');
-
   useEffect(() => {
-    if (ids) {
-      console.log('trackIds', ids);
+    if (trackIds) {
       animateScroll.scrollToTop({ duration: 300 });
-      getTracksByIds(ids, page, perPage);
+      getTracksByIds(trackIds, page, perPage);
     }
-  }, [ids, page, perPage, clearTracklist, getTracksByIds]);
+  }, [trackIds, page, perPage, getTracksByIds]);
 
   if (trackIds.length === 0) {
     return <NothingHereMessage />;
@@ -40,35 +35,27 @@ const MyHistoryTracksController = ({
 
   return (
     <React.Fragment>
-      <TitleHeader headerTitle={headerTitle} />
+      <TitleHeader headerTitle='My Loved Tracks' />
       <TrackListingGroup trackListing={trackListing} />
     </React.Fragment>
   );
 };
 
-const mapStateToProps = (state, ownProps) => {
-  const { trackListing = {} } = state;
-  const { match = {} } = ownProps;
-  const { pageType } = match.params;
-
-  const { trackIds = [], headerTitle = '' } = getUserHistoryPageSetup(
-    state,
-    pageType,
-  );
+const mapStateToProps = (state) => {
+  const lovedTracks = getLovedTrackIds(state);
+  const trackIds = lovedTracks.join(',');
 
   return {
-    trackListing,
-    headerTitle,
+    trackListing: state.trackListing,
     trackIds,
   };
 };
 
 const mapDispatchToProps = {
   getTracksByIds,
-  clearTracklist,
 };
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(MyHistoryTracksController);
+)(MyLovedTracks);

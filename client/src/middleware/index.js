@@ -15,10 +15,9 @@ import {
   DOWNLOAD_TRACK,
   ADD_TRACK_TO_NO_DOWNLOAD_LIST,
   START_ADD_TRACK_TO_DOWNLOAD_QUEUE,
+  TOGGLE_LOVE_ITEM,
 } from '../constants/actionTypes';
-import {
-  openLoginModalWindow,
-} from '../actions/ActionCreators';
+import { openLoginModalWindow } from '../actions/ActionCreators';
 import { generateActivityMessage } from '../utils/storeUtils';
 
 export const activityLogger = (store) => (next) => (action) => {
@@ -51,9 +50,15 @@ export const activityLogger = (store) => (next) => (action) => {
     const { id: trackId, genres, artists, label } = track;
 
     // track object
-    userDataRef.child('tracks').child(trackId).set(track);
+    userDataRef
+      .child('tracks')
+      .child(trackId)
+      .set(track);
     // trackId with timestamp
-    userDataRef.child('trackIds').child(moment().format()).set(trackId);
+    userDataRef
+      .child('trackIds')
+      .child(moment().format())
+      .set(trackId);
 
     // genres
     genres.forEach((genre) => {
@@ -158,6 +163,16 @@ export const activityLogger = (store) => (next) => (action) => {
     case START_ADD_TRACK_TO_DOWNLOAD_QUEUE:
       generateActivityMessage('Track added to download queue');
       break;
+    case TOGGLE_LOVE_ITEM: {
+      const { itemType } = action.payload;
+      generateActivityMessage(
+        `${itemType.charAt(0).toUpperCase()}${itemType.slice(1)} ${
+          action.payload.add ? 'added to' : 'removed from'
+        } your love list.`,
+      );
+      break;
+    }
+
     default:
       break;
   }
@@ -173,6 +188,7 @@ const protectedActions = [
   EDIT_PLAYLIST_NAME,
   DELETE_PLAYLIST,
   TOGGLE_LOVE_ARTIST,
+  TOGGLE_LOVE_ITEM,
 ];
 
 export const checkProtectedAction = (store) => (next) => (action) => {

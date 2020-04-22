@@ -1,23 +1,27 @@
 import {
   ADD_ACTION_MESSAGE,
-  REMOVE_ACTION_MESSAGE
+  REMOVE_ACTION_MESSAGE,
 } from '../constants/actionTypes';
 
 const actionMessage = (state = {}, action) => {
-  switch (action.type) {
+  const { type, payload } = action;
+  switch (type) {
     case ADD_ACTION_MESSAGE: {
       return {
         ...state,
-        [action.payload.id]: action.payload.message,
-      }
+        [payload.id]: {
+          message: payload.message,
+          messageType: payload.messageType,
+        },
+      };
     }
     case REMOVE_ACTION_MESSAGE: {
-      const { [action.payload]: deletedMessage, ...restOfMessages } = state;
+      const { [payload]: deletedMessage, ...restOfMessages } = state;
       return restOfMessages;
     }
     default:
       return state;
   }
-}
+};
 
 export default actionMessage;

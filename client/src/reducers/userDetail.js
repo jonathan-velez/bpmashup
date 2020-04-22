@@ -1,7 +1,7 @@
 import { LOAD_PERMS } from '../constants/actionTypes';
 
 const defaultState = {
-  permissions: {},
+  permissions: [],
 }
 
 const userDetail = (state = defaultState, action) => {

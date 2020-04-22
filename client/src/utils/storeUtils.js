@@ -9,7 +9,6 @@ import {
   LOAD_LOVED_ARTISTS,
   LOAD_LOVED_LABELS,
   LOAD_PERMS,
-  LOAD_NO_DOWNLOADS_TRACKS,
   UPDATE_DOWNLOAD_QUEUE,
 } from '../constants/actionTypes';
 
@@ -19,120 +18,140 @@ import {
 } from '../actions/ActionCreators';
 
 export const registerFirebaseListeners = () => {
-  const { uid } = store.getState().firebaseState.auth;
-  const db = firebase.database();
-  const playlistListRef = db.ref(`users/${uid}/playlists`);
+  return new Promise(async (resolve) => {
+    const { uid } = store.getState().firebaseState.auth;
+    if (!uid) return;
 
-  playlistListRef.on('value', (snapshot) => {
-    const playlistList = snapshot.val();
-    if (playlistList) {
-      store.dispatch({
-        type: LOAD_PLAYLISTS,
-        payload: playlistList,
-      });
-    }
-  });
+    const listeners = [];
+    const firestore = firebase.firestore();
+    const userRef = firestore.collection(`users`).doc(uid);
 
-  // load missing downloads into Redux
-  const noDownloadssRef = db.ref(`noDownloads/users/${uid}/trackIds`);
-  noDownloadssRef.on('value', (snapshot) => {
-    const noDownloads = snapshot.val();
-
-    if (noDownloads) {
-      store.dispatch({
-        type: LOAD_NO_DOWNLOADS_TRACKS,
-        payload: Object.values(noDownloads).map(Number),
-      });
-    }
-  });
-
-  // load loved tracks into Redux, filter out previously loved tracks
-  const lovedTracksRef = db.ref(`users/${uid}/lovedTracks`);
-  lovedTracksRef.on('value', (snapshot) => {
-    const lovedTracksObject = snapshot.val();
-
-    if (lovedTracksObject) {
-      const lovedTracks = _.pickBy(lovedTracksObject, (obj) => obj === 1);
-
-      store.dispatch({
-        type: LOAD_LOVED_TRACKS,
-        payload: Object.keys(lovedTracks).map(Number),
-      });
-    }
-  });
-
-  // load loved artists into Redux, filter out previously loved artists
-  const lovedArtistsRef = db.ref(`users/${uid}/lovedArtists`);
-  lovedArtistsRef.on('value', (snapshot) => {
-    const lovedArtistsObject = snapshot.val();
-
-    if (lovedArtistsObject) {
-      const lovedArtists = _.pickBy(lovedArtistsObject, (obj) => obj === 1);
-
-      store.dispatch({
-        type: LOAD_LOVED_ARTISTS,
-        payload: Object.keys(lovedArtists).map(Number),
-      });
-    }
-  });
-
-  // load loved labels into Redux, filter out previously loved labels
-  const lovedLabelsRef = db.ref(`users/${uid}/lovedLabels`);
-  lovedLabelsRef.on('value', (snapshot) => {
-    const lovedLabelsObject = snapshot.val();
-
-    if (lovedLabelsObject) {
-      const lovedLabels = _.pickBy(lovedLabelsObject, (obj) => obj === 1);
-
-      store.dispatch({
-        type: LOAD_LOVED_LABELS,
-        payload: Object.keys(lovedLabels).map(Number),
-      });
-    }
-  });
-
-  // load permissions
-  const permsRef = db.ref(`users/${uid}/permissions`);
-  permsRef.once('value').then((snapshot) => {
-    const perms = snapshot.val();
-    if (perms) {
-      const payload = Object.keys(perms).filter((perm) => perms[perm] === 1);
+    // load permissions
+    const userDocs = await userRef.get();
+    if (userDocs.exists) {
+      const { permissions } = userDocs.data();
 
       store.dispatch({
         type: LOAD_PERMS,
-        payload,
+        payload: permissions,
       });
     }
-  });
 
-  // listen to download queue
-  const fs = firebase.firestore();
-  const downloadQueueRefFirestore = fs.collection(`users/${uid}/downloadQueue`).orderBy('addedDate', 'desc');
-  downloadQueueRefFirestore.onSnapshot((downloads) => {
-    const downloadQueueUser = {};
-    downloads.forEach((snapshot) => {
-      const queueItem = {
-        id: snapshot.id,
-        ...snapshot.data(),
-      };
+    // listen to playlists
+    const playlistsRef = userRef.collection('playlists').where('active', '==', true);
+    playlistsRef.onSnapshot((playlists) => {
+      let payload = {};
+      
+      playlists.forEach(async (item) => {
+        const playlist = item.data();
+               
+        // const tracksRef = playlistsRef.doc(item.id).collection('tracks');
+        // const tracks = await tracksRef.get();
+        // console.log('tracks', tracks.docs);
 
-      downloadQueueUser[snapshot.id] = queueItem;
+        payload[item.id] = {
+          ...playlist,
+          id: item.id,
+        };
+      });
+
+      store.dispatch({
+        type: LOAD_PLAYLISTS,
+        payload,
+      });
     });
 
-    store.dispatch({
-      type: UPDATE_DOWNLOAD_QUEUE,
-      payload: downloadQueueUser,
+    // listen to loved labels
+    const lovedLabels = userRef
+      .collection('loves')
+      .doc('labels')
+      .onSnapshot((lovedLabels) => {
+        let payload = {};
+        if (lovedLabels.exists) {
+          payload = lovedLabels.data();
+        }
+
+        store.dispatch({
+          type: LOAD_LOVED_LABELS,
+          payload,
+        });
+      });
+
+    listeners.push(lovedLabels);
+
+    // listen to loved artists
+    const lovedArtists = userRef
+      .collection('loves')
+      .doc('artists')
+      .onSnapshot((lovedArtists) => {
+        let payload = {};
+        if (lovedArtists.exists) {
+          payload = lovedArtists.data();
+        }
+
+        // dispatch redux
+        store.dispatch({
+          type: LOAD_LOVED_ARTISTS,
+          payload,
+        });
+      });
+
+    listeners.push(lovedArtists);
+
+    // listen to loved tracks
+    const lovedTracks = userRef
+      .collection('loves')
+      .doc('tracks')
+      .onSnapshot((lovedTracks) => {
+        let payload = {};
+        if (lovedTracks.exists) {
+          payload = lovedTracks.data();
+        }
+
+        // dispatch redux
+        store.dispatch({
+          type: LOAD_LOVED_TRACKS,
+          payload,
+        });
+      });
+
+    listeners.push(lovedTracks);
+
+    // listen to download queue
+    const downloadQueueRefFirestore = firestore
+      .collection(`users/${uid}/downloadQueue`)
+      .orderBy('addedDate', 'desc');
+    const downloadQueue = downloadQueueRefFirestore.onSnapshot((downloads) => {
+      const downloadQueueUser = {};
+      downloads.forEach((snapshot) => {
+        const queueItem = {
+          id: snapshot.id,
+          ...snapshot.data(),
+        };
+
+        downloadQueueUser[snapshot.id] = queueItem;
+      });
+
+      store.dispatch({
+        type: UPDATE_DOWNLOAD_QUEUE,
+        payload: downloadQueueUser,
+      });
     });
+
+    listeners.push(downloadQueue);
+
+    return resolve(listeners);
   });
 };
 
 // TODO: take in optional positive/negative and icon parameters. Icon would be cool to send a music one for track playing
-export const generateActivityMessage = (message) => {
+export const generateActivityMessage = (message, messageType = 'positive') => {
   const id = v4();
   store.dispatch(
     setActionMessage({
       id,
       message,
+      messageType,
     }),
   );
   setTimeout(() => {

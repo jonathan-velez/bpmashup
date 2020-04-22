@@ -14,7 +14,7 @@ import TrackListingGroup from './TrackListingGroup';
 const Label = ({ match, labelDetail, trackListing, location, getLabelDetail }) => {
   const { labelId } = match.params;
   const { labelData, releasesData } = labelDetail;
-  const { images, name, id, biography, genres } = labelData;
+  const { images, name, id, biography, genres, slug } = labelData;
   const imageSrc = images && images.large && images.large.secureUrl;
   const { pathname } = location;
 
@@ -38,7 +38,7 @@ const Label = ({ match, labelDetail, trackListing, location, getLabelDetail }) =
               <Image src={imageSrc} size='medium' />
             </Grid.Column>
             <Grid.Column textAlign='right'>
-              <Header size='huge' className='item-header'>{name} <LoveItem itemType='label' item={{ id }} type='button' /></Header>
+              <Header size='huge' className='item-header'>{name} <LoveItem itemType='label' item={{ id, name, slug }} type='button' /></Header>
               {biography && <ShowMore content={biography} />}
             </Grid.Column>
           </Grid.Row>

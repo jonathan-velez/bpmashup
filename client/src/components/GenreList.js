@@ -60,7 +60,7 @@ const GenreList = ({ genres }) => {
         onClose={closePopup}
         onOpen={openPopup}
         basic
-        verticalOffset={-10}
+        offset={0,-10}
         size='small'
         flowing
         className='genre-popup'

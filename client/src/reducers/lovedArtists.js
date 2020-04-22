@@ -1,30 +1,20 @@
 import { TOGGLE_LOVE_ARTIST, LOAD_LOVED_ARTISTS, CLEAR_LOVED_ARTISTS } from '../constants/actionTypes';
 
-const lovedArtists = (state = [], action) => {
+const defaultState = {};
+const lovedArtists = (state = defaultState, action) => {
   switch (action.type) {
     case TOGGLE_LOVE_ARTIST: {
-      if (!action.payload) {
-        return state;
-      }
-
-      const { id, add } = action.payload;
-
-      if (add) {
-        return [...state, id];
-      }
-
-      return state.filter(tId => tId !== id);
+     return state;
     }
     case LOAD_LOVED_ARTISTS: {
-      const { payload: newTracks = [] } = action;
-      return [...new Set(state.concat(newTracks))];
+      return action.payload;
     }
     case CLEAR_LOVED_ARTISTS: {
-      return [];
+      return defaultState;
     }
     default:
       return state;
   }
-}
+};
 
 export default lovedArtists;

@@ -7,7 +7,11 @@ import moment from 'moment';
 import ModalView from './ModalView';
 import AddToPlaylistForm from './AddNewPlaylistForm';
 import PlaylistListItems from './PlaylistListItems';
-import { addToPlaylist, removeFromPlaylist, addNewPlaylist } from '../thunks';
+import {
+  addTrackToPlaylist,
+  removeTrackFromPlaylist,
+  addNewPlaylist,
+} from '../thunks';
 import {
   listOfTracksAddedToPlaylist,
   listOfPlaylists,
@@ -30,13 +34,13 @@ class AddToPlaylist extends React.PureComponent {
     })
 
     if (playlist.added) {
-      this.props.removeFromPlaylist({
+      this.props.removeTrackFromPlaylist({
         playlistId: playlist.id,
         trackId: track.id.toString(),
       });
     } else {
-      this.props.addToPlaylist({
-        playlist,
+      this.props.addTrackToPlaylist({
+        playlistId: playlist.id,
         track
       });
     }
@@ -110,7 +114,7 @@ class AddToPlaylist extends React.PureComponent {
         <PlaylistListItems
           playlistList={playlistList}
           track={track}
-          addToPlaylist={this.handleAddToPlaylist}
+          addTrackToPlaylist={this.handleAddToPlaylist}
         />
         <List.Item>
           <Button
@@ -151,7 +155,10 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => {
-  return bindActionCreators({ addToPlaylist, removeFromPlaylist, addNewPlaylist }, dispatch);
+  return bindActionCreators(
+    { addTrackToPlaylist, removeTrackFromPlaylist, addNewPlaylist },
+    dispatch,
+  );
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddToPlaylist);

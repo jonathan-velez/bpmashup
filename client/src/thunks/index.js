@@ -1,14 +1,14 @@
 import loadTrackThunk from './loadTrackThunk';
 import {
-  removeFromPlaylist,
-  addToPlaylist,
+  addTrackToPlaylist,
   editPlaylistName,
   deletePlaylist,
   addNewPlaylist,
-  clearPlaylist,
+  getPlaylistDetails,
+  removeTrackFromPlaylist,
 } from './playlistThunk';
 import { downloadTrack, addTrackToNoDownloadList } from './downloadTrackThunk';
-import { toggleLoveItem } from './loveItemThunk';
+import { toggleLoveItem, loveLabelNew, toggleItemNew } from './loveItemThunk';
 import { getMyFavoriteLabels, getLabelsById } from './myFavoritesThunk';
 import { searchEverything, searchTracks } from './searchEverythingThunk';
 import { fetchReleaseData } from './releaseThunk';
@@ -28,22 +28,13 @@ import {
   fetchChartsByProfileId,
 } from './chartThunk';
 import {
-  loadPlaylists,
-  loadNoDownloads,
-  loadLovedTracks,
-  loadLovedArtists,
-  loadLovedLabels,
-  loadPermissions,
-} from './userSessionThunk';
-import {
   addTrackToDownloadQueue,
   updateTrackStatus,
 } from './downloadQueueThunk';
 
 export {
   loadTrackThunk,
-  removeFromPlaylist,
-  addToPlaylist,
+  addTrackToPlaylist,
   editPlaylistName,
   deletePlaylist,
   addNewPlaylist,
@@ -63,16 +54,13 @@ export {
   getYoutubeLink,
   getTracksByIds,
   clearTracklist,
-  clearPlaylist,
   fetchChartDataById,
-  loadPlaylists,
-  loadNoDownloads,
-  loadLovedTracks,
-  loadLovedArtists,
-  loadLovedLabels,
-  loadPermissions,
   fetchChartMetadataByIds,
   addTrackToDownloadQueue,
   updateTrackStatus,
   fetchChartsByProfileId,
+  loveLabelNew,
+  toggleItemNew,
+  getPlaylistDetails,
+  removeTrackFromPlaylist,
 };

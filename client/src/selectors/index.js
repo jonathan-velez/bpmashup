@@ -2,7 +2,6 @@ import { createSelector } from 'reselect';
 import _ from 'lodash';
 import moment from 'moment';
 
-import { getUserHistoryPageSetup } from './userHistory';
 import { getUserDownloadQueueTrackIds } from './userActivity';
 import { convertEpochToDate } from '../utils/helpers';
 
@@ -12,22 +11,27 @@ const getUserProfile = (state) =>
 const getPlaylists = (state) => state.playlistList;
 const getUserPermissions = (state) =>
   state.userDetail && state.userDetail.permissions;
-const getPlaylistTracks = (state = {}, props = {}) => {
-  const { match = {} } = props;
-  const { params = {} } = match;
-  const { playlistId } = params;
-
-  return playlistId
-    ? state.playlistList[playlistId] && state.playlistList[playlistId].tracks
-    : {};
-};
 
 const getDownloadQueue = (state) => state.downloadQueue.queue;
+const _getLovedTracks = (state) => state.lovedTracks;
+const _getTracklistTracks = (state) =>
+  state.trackListing && state.trackListing.tracks;
 
-export const getUserId = createSelector([getUserAuth], (auth) => auth.uid);
-export const getUserPhotoURL = createSelector([getUserProfile], (profile) => {
-  return profile.photoURL;
-});
+export const getLovedTrackIds = createSelector(
+  [_getLovedTracks],
+  (tracks) => Object.keys(_.pickBy(tracks, (track) => track.loved)),
+);
+
+export const getUserId = createSelector(
+  [getUserAuth],
+  (auth) => auth.uid,
+);
+export const getUserPhotoURL = createSelector(
+  [getUserProfile],
+  (profile) => {
+    return profile.photoURL;
+  },
+);
 export const getUserDisplayName = createSelector(
   [getUserProfile, getUserAuth],
   (profile, auth) => {
@@ -46,10 +50,11 @@ export const getUserProfilePhotoUrl = createSelector(
 );
 export const listOfTracksAddedToPlaylist = createSelector(
   [getPlaylists],
-  (playlists) => _.map(playlists, (playlist) => playlist.listOfTracks).flat(),
+  (playlists) => _.map(playlists, (playlist) => playlist.trackIds).flat(),
 );
-export const listOfPlaylists = createSelector([getPlaylists], (playlists) =>
-  _.map(playlists, (playlist) => playlist.name),
+export const listOfPlaylists = createSelector(
+  [getPlaylists],
+  (playlists) => _.map(playlists, (playlist) => playlist.name),
 );
 export const numOfPlaylists = createSelector(
   [listOfPlaylists],
@@ -63,40 +68,11 @@ export const getPlaylistsSortedByAddedDate = createSelector(
   [getPlaylists],
   (playlists) => _.sortBy(playlists, 'dateAdded'),
 );
-export const getPlaylistGenreCount = createSelector(
-  [getPlaylistTracks],
-  (tracks) => {
-    const genreCount = {};
-    if (tracks && Object.keys(tracks).length > 0) {
-      Object.values(tracks).forEach((track) => {
-        const { id, slug, name } = track.genres[0];
-        const count = genreCount[id] ? genreCount[id].count + 1 : 1;
-
-        genreCount[id] = {
-          count,
-          id,
-          slug,
-          name,
-        };
-      });
-    }
-
-    return genreCount;
-  },
-);
-export const getPlaylistTrackCount = createSelector(
-  [getPlaylistTracks],
-  (tracks) => {
-    return (tracks && Object.keys(tracks).length) || 0;
-  },
-);
 
 export const hasZippyPermission = createSelector(
   [getUserPermissions],
   (permissions) => Array.isArray(permissions) && permissions.includes('zipZip'),
 );
-
-export { getUserHistoryPageSetup };
 
 const _queueItemIsExpired = (addedDate) => {
   return moment(convertEpochToDate(addedDate.seconds)).isBefore(
@@ -140,4 +116,43 @@ const _trackHasBeenDownloaded = (state, trackId) =>
 export const trackHasBeenDownloaded = createSelector(
   [_trackHasBeenDownloaded],
   (downloaded) => downloaded,
+);
+
+const _playlistTrackIds = (state, playlistId) => {
+  const playlists = getPlaylists(state);
+  return playlists[playlistId] && playlists[playlistId].trackIds;
+};
+
+export const getPlaylistTrackIds = createSelector(
+  [_playlistTrackIds],
+  (trackIds) => trackIds,
+);
+
+export const getTracklistGenreCount = createSelector(
+  [_getTracklistTracks],
+  (tracks) => {
+    const genreCount = {};
+    if (tracks && Object.keys(tracks).length > 0) {
+      Object.values(tracks).forEach((track) => {
+        const { id, slug, name } = track.genres[0];
+        const count = genreCount[id] ? genreCount[id].count + 1 : 1;
+
+        genreCount[id] = {
+          count,
+          id,
+          slug,
+          name,
+        };
+      });
+    }
+
+    return genreCount;
+  },
+);
+
+export const getTracklistTrackCount = createSelector(
+  [_getTracklistTracks],
+  (tracks) => {
+    return (tracks && Object.keys(tracks).length) || 0;
+  },
 );

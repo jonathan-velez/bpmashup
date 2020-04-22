@@ -10,7 +10,7 @@ import Release from './Release';
 import Artist from './Artist';
 import Label from './Label';
 import TracksRoute from './TracksRoute';
-import MyHistoryTracksController from './MyHistoryTracksController';
+import MyLovedTracks from './MyLovedTracks';
 import MyActivity from './MyActivity';
 import Track from './Track';
 import Chart from './Chart';
@@ -32,8 +32,8 @@ const Main = () => {
         <Route exact path='/history/loved-labels' component={MyLovedLabels} />
         <Route
           exact
-          path='/history/:pageType'
-          component={MyHistoryTracksController}
+          path='/history/loved-tracks'
+          component={MyLovedTracks}
         />
         <Route
           exact

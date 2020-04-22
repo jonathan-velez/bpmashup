@@ -87,16 +87,6 @@ const Auth = ({
               />
               <Dropdown.Item
                 as={Link}
-                to='/history/downloads'
-                text='Download History'
-              />
-              <Dropdown.Item
-                as={Link}
-                to='/history/no-downloads'
-                text='No Downloads History'
-              />
-              <Dropdown.Item
-                as={Link}
                 to='/history/my-activity'
                 text='My Activity'
               />

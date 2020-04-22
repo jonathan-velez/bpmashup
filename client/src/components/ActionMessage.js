@@ -18,11 +18,13 @@ class ActionMessage extends React.PureComponent {
         animation='fly down'
         duration={1000}
       >
-        {_.map(actionMessage, ((message, idx) => {
+        {_.map(actionMessage, ((item, idx) => {
+          const { message, messageType} = item;
           return (
             <List.Item key={idx}>
               <Message
-                positive
+                positive={!messageType || messageType === 'positive'}
+                error={messageType === 'error'}
                 compact
                 floating
                 className='action-message-list-item'

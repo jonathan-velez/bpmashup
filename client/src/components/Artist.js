@@ -37,6 +37,7 @@ const Artist = ({
     genres,
     featuredReleases,
     profile,
+    slug,
   } = artistData;
 
   const imageSrc = images && images.large.secureUrl;
@@ -143,7 +144,7 @@ const Artist = ({
               <Grid.Column>
                 <Header floated='right' size='huge' className='item-header'>
                   {name}{' '}
-                  <LoveItem itemType='artist' item={{ id }} type='button' />
+                  <LoveItem itemType='artist' item={{ id, name, slug }} type='button' />
                 </Header>
               </Grid.Column>
             </Grid.Row>

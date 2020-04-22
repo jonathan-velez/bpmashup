@@ -1,7 +1,15 @@
 import React, { useReducer, useEffect } from 'react';
 import { connect } from 'react-redux';
 import firebase from 'firebase';
-import { Grid, Form, Input, Button, Message, Dropdown, TextArea } from 'semantic-ui-react';
+import {
+  Grid,
+  Form,
+  Input,
+  Button,
+  Message,
+  Dropdown,
+  TextArea,
+} from 'semantic-ui-react';
 
 import PhotoUpload from './PhotoUpload';
 import LoggedOutMessage from './LoggedOutMessage';
@@ -27,8 +35,8 @@ const MyProfile = ({ uid, genreList }) => {
       biography: '',
       websiteURL: '',
       favoriteGenres: [],
-    }
-  }
+    },
+  };
 
   const reducer = (state, action) => {
     const { type, payload } = action;
@@ -44,7 +52,7 @@ const MyProfile = ({ uid, genreList }) => {
             ...state.userDetails,
             [inputName]: inputValue,
           },
-        }
+        };
       }
       case SET_FORM_MESSAGE: {
         return {
@@ -53,8 +61,8 @@ const MyProfile = ({ uid, genreList }) => {
           formMessage: {
             isError: payload.isError,
             content: payload.content,
-          }
-        }
+          },
+        };
       }
       case SET_FAVORITE_GENRES: {
         return {
@@ -63,23 +71,23 @@ const MyProfile = ({ uid, genreList }) => {
           userDetails: {
             ...state.userDetails,
             favoriteGenres: payload.genres,
-          }
-        }
+          },
+        };
       }
       case SET_INITIAL_FORM_VALUES: {
         return {
           ...state,
           isPristine: true,
           userDetails: {
-            ...payload
-          }
-        }
+            ...payload,
+          },
+        };
       }
       default: {
         return state;
       }
     }
-  }
+  };
 
   const [state, dispatch] = useReducer(reducer, initialState);
   const { userDetails, formMessage, isPristine } = state;
@@ -95,13 +103,13 @@ const MyProfile = ({ uid, genreList }) => {
       let userDisplayName = '';
 
       await userExtendedRef.once('value', (snapshot) => {
-        const { favoriteGenres, ...restOfUserDetails } = snapshot.val();
-        const favoriteGenresArray = Object.keys(favoriteGenres);
+        const { favoriteGenres = {}, ...restOfUserDetails } = snapshot.val() || {};
+        const favoriteGenresArray = Object.keys(favoriteGenres) || [];
 
         userExtendedDetails = {
           favoriteGenres: favoriteGenresArray,
           ...restOfUserDetails,
-        }
+        };
       });
 
       await userRef.child('displayName').once('value', (snapshot) => {
@@ -114,13 +122,13 @@ const MyProfile = ({ uid, genreList }) => {
         ...userExtendedDetails,
         firstName,
         lastName,
-      }
+      };
 
       dispatch({
         type: SET_INITIAL_FORM_VALUES,
         payload: fullUserDetails,
-      })
-    }
+      });
+    };
     loadFb();
   }, [db, uid]);
 
@@ -132,14 +140,14 @@ const MyProfile = ({ uid, genreList }) => {
       payload: {
         inputName,
         inputValue,
-      }
+      },
     });
-  }
+  };
 
   const isFormValid = () => {
     const { firstName, lastName } = userDetails;
-    return (!firstName || !lastName) ? false : true;
-  }
+    return !firstName || !lastName ? false : true;
+  };
 
   const handleFormSubmit = async (evt) => {
     evt.preventDefault();
@@ -150,7 +158,7 @@ const MyProfile = ({ uid, genreList }) => {
         payload: {
           isError: true,
           content: 'Missing fields',
-        }
+        },
       });
     }
 
@@ -158,14 +166,17 @@ const MyProfile = ({ uid, genreList }) => {
     const displayName = `${firstName} ${lastName}`;
 
     try {
-      await Promise.all([updateFirebaseProfile(displayName), updateFirebaseExtendedUserDetails()]);
+      await Promise.all([
+        updateFirebaseProfile(displayName),
+        updateFirebaseExtendedUserDetails(),
+      ]);
 
       dispatch({
         type: SET_FORM_MESSAGE,
         payload: {
           isError: false,
           content: 'Profile updated.',
-        }
+        },
       });
     } catch (error) {
       dispatch({
@@ -173,10 +184,10 @@ const MyProfile = ({ uid, genreList }) => {
         payload: {
           isError: true,
           content: 'Error updating user profile. Please try again.',
-        }
+        },
       });
     }
-  }
+  };
 
   // Should this be an external helper that is reusable for photo upload?
   const updateFirebaseProfile = (displayName) => {
@@ -187,8 +198,8 @@ const MyProfile = ({ uid, genreList }) => {
         return reject(error);
       }
       resolve();
-    })
-  }
+    });
+  };
 
   const generateFavoriteGenresObject = () => {
     const { favoriteGenres } = userDetails;
@@ -199,7 +210,7 @@ const MyProfile = ({ uid, genreList }) => {
     }
 
     return favoriteGenresObject;
-  }
+  };
 
   const generateExtendedUserDetailsObject = () => {
     const favoriteGenresObject = generateFavoriteGenresObject();
@@ -207,12 +218,12 @@ const MyProfile = ({ uid, genreList }) => {
 
     return {
       favoriteGenres: {
-        ...favoriteGenresObject
+        ...favoriteGenresObject,
       },
       biography,
       websiteURL,
-    }
-  }
+    };
+  };
 
   const updateFirebaseExtendedUserDetails = () => {
     return new Promise((resolve, reject) => {
@@ -225,15 +236,14 @@ const MyProfile = ({ uid, genreList }) => {
           if (error) {
             throw new Error(`Error updating firebase: ${error}`);
           }
-        })
-
+        });
       } catch (error) {
         return reject(error);
       }
 
       resolve();
     });
-  }
+  };
 
   const handleFavoriteGenreChange = (e, val) => {
     const { value: genres } = val;
@@ -243,11 +253,11 @@ const MyProfile = ({ uid, genreList }) => {
       payload: {
         genres,
       },
-    })
-  }
+    });
+  };
 
   if (!uid) {
-    return <LoggedOutMessage />
+    return <LoggedOutMessage />;
   }
 
   return (
@@ -322,9 +332,15 @@ const MyProfile = ({ uid, genreList }) => {
             positive={!formMessage.isError}
             error={formMessage.isError}
             content={formMessage.content}
-            hidden={!formMessage.content || (formMessage.content && formMessage.content.length === 0) || !isPristine}
+            hidden={
+              !formMessage.content ||
+              (formMessage.content && formMessage.content.length === 0) ||
+              !isPristine
+            }
           />
-          <Button type='submit' positive disabled={isPristine}>Update</Button>
+          <Button type='submit' positive disabled={isPristine}>
+            Update
+          </Button>
         </Form>
       </Grid.Column>
     </Grid>
@@ -333,22 +349,22 @@ const MyProfile = ({ uid, genreList }) => {
 
 const mapStateToProps = (state) => {
   const { genreListing } = state;
-  const genreList = genreListing.map(genre => {
+  const genreList = genreListing.map((genre) => {
     const { id: key, name: text, slug: value } = genre;
-    return (
-      {
-        key,
-        text,
-        value,
-      }
-    )
+    return {
+      key,
+      text,
+      value,
+    };
   });
-
 
   return {
     genreList,
     uid: getUserId(state),
-  }
-}
+  };
+};
 
-export default connect(mapStateToProps, null)(MyProfile);
+export default connect(
+  mapStateToProps,
+  null,
+)(MyProfile);
