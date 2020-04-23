@@ -8,18 +8,23 @@ export const getLabelDetail = (labelId, labelName) => {
       type: START_ASYNC
     });
 
-    const labelData = await callAPIorCache(`${API_GET_LABEL_BY_ID}?id=${labelId}&name=${labelName}`);
-    const labelTracks = await callAPIorCache(`${API_MOST_POPULAR_BY_LABEL}?id=${labelId}&perPage=25`);
-    const labelReleases = await callAPIorCache(`${API_MOST_POPULAR_RELEASES_BY_LABEL}?id=${labelId}`);
+    const labelDataCall = callAPIorCache(`${API_GET_LABEL_BY_ID}?id=${labelId}&name=${labelName}`);
+    const labelTracksCall = callAPIorCache(`${API_MOST_POPULAR_BY_LABEL}?id=${labelId}&perPage=25`);
+    const labelReleasesCall = callAPIorCache(`${API_MOST_POPULAR_RELEASES_BY_LABEL}?id=${labelId}`);
+
+    const labelData = await labelDataCall;
 
     const { data } = labelData;
     let labelDataPayload = {};
-
+    
     if (data.results.length > 0) {
       labelDataPayload = data.results[0];
     }
-
+    
+    const labelTracks = await labelTracksCall;
     const tracksData = labelTracks.data.results;
+    
+    const labelReleases = await labelReleasesCall;
     const releasesData = labelReleases.data.results;
 
     dispatch({
