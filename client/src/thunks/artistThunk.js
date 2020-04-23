@@ -1,9 +1,17 @@
 import { callAPIorCache } from '../seessionStorageCache';
-import { API_GET_ARTIST_DETAIL, API_GET_ARTIST_EVENTS_BY_NAME } from '../constants/apiPaths';
-import { START_ASYNC, LOAD_TRACKS, GET_ARTIST_DETAIL, GENERAL_ERROR } from '../constants/actionTypes';
+import {
+  API_GET_ARTIST_DETAIL,
+  API_GET_ARTIST_EVENTS_BY_NAME,
+} from '../constants/apiPaths';
+import {
+  START_ASYNC,
+  LOAD_TRACKS,
+  GET_ARTIST_DETAIL,
+  GENERAL_ERROR,
+} from '../constants/actionTypes';
 
 export const getArtistDetails = ({ artistId, artistName }) => {
-  return async dispatch => {
+  return async (dispatch) => {
     function successfulCall({ artistDetails, artistEvents }) {
       const { data: artistData } = artistDetails;
       const { data: eventsData } = artistEvents;
@@ -22,28 +30,35 @@ export const getArtistDetails = ({ artistId, artistName }) => {
         payload: {
           artistData: artistData.results,
           eventsData: eventsData.events,
-        }
-      })
+        },
+      });
     }
 
     function failedCall(error) {
       dispatch({
         type: GENERAL_ERROR,
-        error
-      })
+        error,
+      });
     }
 
     dispatch({
-      type: START_ASYNC
+      type: START_ASYNC,
     });
 
     try {
-      const artistDetails = await callAPIorCache(`${API_GET_ARTIST_DETAIL}?id=${artistId}`);
-      const artistEvents = await callAPIorCache(`${API_GET_ARTIST_EVENTS_BY_NAME}?artistName=${artistName}`);
+      const artistDetailsCall = callAPIorCache(
+        `${API_GET_ARTIST_DETAIL}?id=${artistId}`,
+      );
+      const artistEventsCall = callAPIorCache(
+        `${API_GET_ARTIST_EVENTS_BY_NAME}?artistName=${artistName}`,
+      );
 
-      successfulCall({ artistDetails, artistEvents });
+      successfulCall({
+        artistDetails: await artistDetailsCall,
+        artistEvents: await artistEventsCall,
+      });
     } catch (error) {
       failedCall(error);
     }
-  }
-}
+  };
+};
