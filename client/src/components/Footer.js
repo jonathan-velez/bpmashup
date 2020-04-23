@@ -78,7 +78,6 @@ class Footer extends React.PureComponent {
         <Menu.Item>
           <TrackActionDropdown
             ellipsisOrientation='horizontal'
-            upward
             track={loadedTrack}
           />
         </Menu.Item>

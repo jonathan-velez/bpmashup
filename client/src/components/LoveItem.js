@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Icon, Dropdown } from 'semantic-ui-react';
+import { Button, Icon, Menu } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 
 import { toggleItemNew } from '../thunks';
@@ -12,6 +12,7 @@ const LoveItem = ({
   lovedArtists,
   lovedLabels,
   type = 'button',
+  clickCallback = () => {},
 }) => {
   let isLoved = false;
 
@@ -29,6 +30,14 @@ const LoveItem = ({
       break;
   }
 
+  const handleClick = () => {
+    toggleItemNew(itemType, item, !isLoved);
+
+    setTimeout(() => {
+      clickCallback();
+    }, 100);
+  };
+
   const loveIcon = (
     <Icon
       color={isLoved ? 'red' : 'grey'}
@@ -38,16 +47,16 @@ const LoveItem = ({
   );
 
   const loveButton = (
-    <Button basic onClick={() => toggleItemNew(itemType, item, !isLoved)}>
+    <Button basic onClick={handleClick}>
       <Button.Content visible>{loveIcon}</Button.Content>
     </Button>
   );
 
   const loveDropDown = (
-    <Dropdown.Item onClick={() => toggleItemNew(itemType, item, !isLoved)}>
+    <Menu.Item onClick={handleClick}>
       {loveIcon}
       {isLoved ? 'Unlove' : 'Love'}
-    </Dropdown.Item>
+    </Menu.Item>
   );
 
   return type === 'button' ? loveButton : loveDropDown;

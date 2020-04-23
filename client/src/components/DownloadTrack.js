@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { Button, Icon, Dropdown } from 'semantic-ui-react';
+import { Button, Icon, Menu } from 'semantic-ui-react';
 import { addTrackToDownloadQueue } from '../thunks';
 import { trackHasBeenDownloaded } from '../selectors';
 
@@ -10,7 +10,16 @@ const DownloadTrack = ({
   type,
   addTrackToDownloadQueue,
   trackHasBeenDownloaded,
+  clickCallback = () => {},
 }) => {
+  const handleAddTrackToDownloadQueue = () => {
+    addTrackToDownloadQueue(track);
+
+    setTimeout(() => {
+      clickCallback();
+    }, 100);
+  };
+
   const downloadIcon = (
     <Icon
       name='download'
@@ -19,14 +28,14 @@ const DownloadTrack = ({
     />
   );
   const downloadButton = (
-    <Button basic onClick={() => addTrackToDownloadQueue(track)}>
+    <Button basic onClick={handleAddTrackToDownloadQueue}>
       <Button.Content visible>{downloadIcon}</Button.Content>
     </Button>
   );
   const downloadDropdownItem = (
-    <Dropdown.Item onClick={() => addTrackToDownloadQueue(track)}>
+    <Menu.Item onClick={handleAddTrackToDownloadQueue}>
       {downloadIcon}Download
-    </Dropdown.Item>
+    </Menu.Item>
   );
 
   return type === 'dropdownItem' ? downloadDropdownItem : downloadButton;
@@ -42,4 +51,7 @@ const mapDispatchToProps = {
   addTrackToDownloadQueue,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(DownloadTrack);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(DownloadTrack);

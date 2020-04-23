@@ -12,7 +12,10 @@ const PlaylistListItems = ({ playlistList, track, addTrackToPlaylist }) => {
 
     return (
       <List.Item
-        onClick={() => addTrackToPlaylist({ id: playlistId, added })}
+        onClick={(e) => {
+          e.stopPropagation();
+          addTrackToPlaylist({ id: playlistId, added });
+        }}
         style={listItemStyle}
         key={playlistId}
       >
