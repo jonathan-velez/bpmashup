@@ -12,7 +12,7 @@ import ItemCards from './ItemCards';
 import TrackListingGroup from './TrackListingGroup';
 
 const Label = ({ match, labelDetail, trackListing, location, getLabelDetail }) => {
-  const { labelId } = match.params;
+  const { labelId, labelName } = match.params;
   const { labelData, releasesData } = labelDetail;
   const { images, name, id, biography, genres, slug } = labelData;
   const imageSrc = images && images.large && images.large.secureUrl;
@@ -22,8 +22,8 @@ const Label = ({ match, labelDetail, trackListing, location, getLabelDetail }) =
 
   useEffect(() => {
     Scroll.animateScroll.scrollToTop({ duration: 1500 });
-    getLabelDetail(labelId);
-  }, [getLabelDetail, labelId]);
+    getLabelDetail(labelId, labelName);
+  }, [getLabelDetail, labelId, labelName]);
 
   const handleItemClick = (e, { name }) => {
     setActiveItem(name);

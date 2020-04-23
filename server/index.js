@@ -50,7 +50,7 @@ app.get(`${API_BASE_URL}/autocomplete`, bpController.callApi);
 app.get(`${API_BASE_URL}/artists/detail`, bpController.callApi);
 app.get(`${API_BASE_URL}/tracks`, bpController.callApi);
 app.get(`${API_BASE_URL}/tracks/similar`, bpController.callApi);
-app.get(`${API_BASE_URL}/labels`, bpController.callApi);
+app.get(`${API_BASE_URL}/labels`, bpController.getLabelData);
 app.get(`${API_BASE_URL}/releases`, bpController.callApi);
 app.get(`${API_BASE_URL}/artist`, bpController.getArtistData);
 app.get(`${API_BASE_URL}/most-popular-releases/:type`, bpController.callApi);
