@@ -52,3 +52,22 @@ exports.deslugify = (input) => {
     return input.replace(/-/g, ' ');
   }
 }
+
+exports.constructRequestQueryString = (reqQuery) => {
+  // encode facets string
+  if (reqQuery.facets) {
+    reqQuery = {
+      ...reqQuery,
+      facets: encodeURIComponent(reqQuery.facets),
+    };
+  }
+  //encode query string
+  if (reqQuery.query) {
+    reqQuery = {
+      ...reqQuery,
+      query: encodeURIComponent(reqQuery.query),
+    };
+  }
+
+  return reqQuery;
+};

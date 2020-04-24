@@ -64,27 +64,11 @@ const executeOA = (reqPath, reqQuery) => {
 
 async function callApi(req, res) {
   const reqPath = utils.filterPath(req.url);
-  let reqQuery = req.query;
+  let reqQuery = utils.constructRequestQueryString(req.query);
 
   try {
-    const model = bpAPIConfig[reqPath] && bpAPIConfig[reqPath].model;
-
-    // encode facets string
-    if (reqQuery.facets) {
-      reqQuery = {
-        ...reqQuery,
-        facets: encodeURIComponent(reqQuery.facets),
-      };
-    }
-    //encode query string
-    if (reqQuery.query) {
-      reqQuery = {
-        ...reqQuery,
-        query: encodeURIComponent(reqQuery.query),
-      };
-    }
-
     const bpData = await executeOA(reqPath, reqQuery);
+    const model = bpAPIConfig[reqPath] && bpAPIConfig[reqPath].model;
 
     // remove properties that aren't in our model
     if (model) {
@@ -128,28 +112,40 @@ async function _scrapeBeatportPage(url, type) {
 }
 
 async function getLabelData(req, res) {
-  const labelResults = await executeOA('labels', { id: req.query.id });
-  const { results } = labelResults;
+  const reqQuery = utils.constructRequestQueryString(req.query);
+  const labelResults = await executeOA('labels', reqQuery);
 
-  if (results && Array.isArray && results.length > 0) {
-    let labelData = results[0];
+  try {
+    const { results } = labelResults;
+    console.log('labelResults count', labelResults.results.length);
 
-    if (labelData.biography === '') {
-      // no bio from beatport API, scrape their site instead
-      const bioFromScrape = await _scrapeBeatportPage(
-        `https://www.beatport.com/label/${req.query.name}/${req.query.id}`,
-        'label',
-      );
-      labelData.biography = bioFromScrape;
+    // when fetching a single Label, we want to make sure there's a biography
+    if (results && Array.isArray && results.length === 1) {
+      let labelData = results[0];
+
+      if (labelData.biography === '') {
+        // no bio from beatport API, scrape their site instead
+        try {
+          labelData.biography = await _scrapeBeatportPage(
+            `https://www.beatport.com/label/${req.query.name}/${req.query.id}`,
+            'label',
+          );
+        } catch (error) {
+          console.log('Error scraping beatport for label bio', error);
+        }
+      }
+
+      res.json({
+        ...labelResults,
+        results: [labelData],
+      });
     }
-
-    res.json({
-      ...labelResults,
-      results: [labelData],
-    });
+  } catch (error) {
+    console.log('Error fetching label data', error);
+    res.json({});
   }
 
-  res.json({});
+  res.json(labelResults);
 }
 
 // Get artist details from Beatport. If no biography is found, hit up Last.fm's API and patch the bio into the BP response object
