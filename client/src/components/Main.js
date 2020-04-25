@@ -17,6 +17,7 @@ import Chart from './Chart';
 import MyProfile from './MyProfile';
 import DownloadQueuePage from './DownloadQueuePage';
 import Home from './Home';
+import Genre from './Genre';
 
 const Main = () => {
   const containerStyle = {
@@ -71,6 +72,11 @@ const Main = () => {
           exact
           path='/:itemType/:itemName/:itemId/tracks'
           component={TracksRoute}
+        />
+        <Route
+          exact
+          path='/genre/:genreName/:genreId'
+          component={Genre}
         />
         <Route exact path='/my-profile' component={MyProfile} />
         <Route exact path='/download-queue' component={DownloadQueuePage} />

@@ -26,6 +26,7 @@ import {
   fetchChartDataById,
   fetchChartMetadataByIds,
   fetchChartsByProfileId,
+  fetchChartsByGenreId,
 } from './chartThunk';
 import {
   addTrackToDownloadQueue,
@@ -63,4 +64,5 @@ export {
   toggleItemNew,
   getPlaylistDetails,
   removeTrackFromPlaylist,
+  fetchChartsByGenreId,
 };

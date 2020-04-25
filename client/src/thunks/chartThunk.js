@@ -5,6 +5,7 @@ import {
   START_ASYNC,
   FETCH_CHART_METADATA,
   FETCH_CHARTS_BY_PROFILE_ID,
+  FETCH_CHARTS_BY_GENRE_ID,
 } from '../constants/actionTypes';
 import {
   API_GET_CHART,
@@ -101,4 +102,30 @@ export async function fetchChartsByProfileId(
       payload: data,
     });
   };
+}
+
+export async function fetchChartsByGenreId(
+  genreId,
+  page = 1,
+  perPage = DEFAULT_CHARTS_PER_PAGE,
+){
+  return async(dispatch) => {
+    if (!genreId) return;
+
+    dispatch({
+      type: START_ASYNC, 
+    });
+
+    const beatportChardData = await callAPIorCache(
+      `${API_GET_CHART}?facets=genreId:${genreId}&publishedOnly=true&page=${page}&perPage=${perPage}`,
+    );
+
+    const { data, status } = beatportChardData;
+    if (status !== 200) return;
+
+    dispatch({
+      type: FETCH_CHARTS_BY_GENRE_ID,
+      payload: data,
+    });
+  }
 }

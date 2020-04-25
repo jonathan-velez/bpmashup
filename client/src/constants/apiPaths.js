@@ -20,4 +20,4 @@ export const API_GET_CHART = `${API_ROOT}/charts`;
 export const API_PHOTO_UPLOAD = `${API_ROOT}/profile-photo-upload`;
 export const API_FILE_EXISTS = `${API_ROOT}/file-exists`;
 export const API_GET_CHARTS_BY_PROFILE_ID = `${API_ROOT}/profile/charts`;
-
+export const API_MOST_POPULAR_RELEASES_BY_GENRE = `${API_ROOT}/most-popular-releases/genre`;

@@ -33,7 +33,7 @@ const GenreList = ({ genres }) => {
         <Table.Row key={idx}>
           {genreRow.map(genre => {
             const { name, id, slug } = genre;
-            const genreUrl = `/most-popular/genre/${slug}/${id}/`;
+            const genreUrl = `/genre/${slug}/${id}/`;
 
             cellsMade++;
             return (
