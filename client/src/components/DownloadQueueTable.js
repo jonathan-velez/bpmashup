@@ -12,7 +12,12 @@ import {
 } from '../utils/trackUtils';
 import { musicalKeyFilter, convertEpochToDate } from '../utils/helpers';
 
-const DownloadQueueTable = ({ queue, downloadTrack, retryDownload }) => {
+const DownloadQueueTable = ({
+  queue,
+  downloadTrack,
+  retryDownload,
+  markTrackAsPurchased,
+}) => {
   const queueItems = Object.keys(queue);
   if (queueItems.length === 0) {
     return <NothingHereMessage />;
@@ -55,6 +60,11 @@ const DownloadQueueTable = ({ queue, downloadTrack, retryDownload }) => {
       case 'available':
         downloadButtonPopupContent = `Your track is available to download!`;
         break;
+      case 'purchased':
+        downloadButtonText = 'Purchased';
+        downloadButtonPopupContent = `You purchased this track. Thanks for supporting the artist!`;
+        downloadButtonIsDisabled = true;
+        break;
       default:
         break;
     }
@@ -83,6 +93,11 @@ const DownloadQueueTable = ({ queue, downloadTrack, retryDownload }) => {
               text='Purchase'
               icon='cart arrow down'
               onClick={() => openPurchaseLink(generateBPTrackLink(track))}
+            />
+            <Dropdown.Item
+              text='Mark as Purchased'
+              icon='checkmark'
+              onClick={() => markTrackAsPurchased(key)}
             />
           </Dropdown.Menu>
         </Dropdown>

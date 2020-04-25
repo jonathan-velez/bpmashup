@@ -39,6 +39,11 @@ const DownloadQueuePage = ({
     generateActivityMessage('Track re-initiated for processing.');
   };
 
+  const markTrackAsPurchased = (queueId) => {
+    updateTrackStatus(queueId, 'purchased');
+    generateActivityMessage('Track marked as purchased.');
+  }
+
   const panes = [
     {
       menuItem: 'DOWNLOAD QUEUE',
@@ -47,6 +52,7 @@ const DownloadQueuePage = ({
           queue={currentDownloadQueueItems}
           downloadTrack={handleDownloadClick}
           retryDownload={retryDownload}
+          markTrackAsPurchased={markTrackAsPurchased}
         />
       ),
     },
@@ -57,6 +63,7 @@ const DownloadQueuePage = ({
           queue={archivedDownloadQueueItems}
           downloadTrack={handleDownloadClick}
           retryDownload={retryDownload}
+          markTrackAsPurchased={markTrackAsPurchased}
         />
       ),
     },
