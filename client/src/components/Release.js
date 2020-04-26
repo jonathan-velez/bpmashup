@@ -4,11 +4,11 @@ import { Link } from 'react-router-dom';
 import { Item, Placeholder } from 'semantic-ui-react';
 import Scroll from 'react-scroll';
 
-import ResponsiveTrackListing from './ResponsiveTrackListing';
+import TrackListingGroup from './TrackListingGroup';
 import { fetchReleaseData } from '../thunks';
 import { constructLinks } from '../utils/trackUtils';
 
-const Release = ({ match, fetchReleaseData, release, isLoading }) => {
+const Release = ({ match, fetchReleaseData, release, trackListing }) => {
   const { params = {} } = match;
   const { releaseId } = params;
 
@@ -60,25 +60,18 @@ const Release = ({ match, fetchReleaseData, release, isLoading }) => {
           )}
         </Item>
       </Item.Group>
-      {release.id ? (
-        <ResponsiveTrackListing
-          trackListing={release.tracks}
-          isPlaylist={false}
-          isLoading={isLoading}
-          page={1}
-          perPage={10}
-        />
-      ) : null}
+      {release.id ? <TrackListingGroup trackListing={trackListing} /> : null}
     </Fragment>
   );
 };
 
 const mapStateToProps = (state) => {
-  const { isLoading, release } = state;
+  const { isLoading, release, trackListing } = state;
 
   return {
-    isLoading: isLoading,
-    release: release,
+    isLoading,
+    release,
+    trackListing,
   };
 };
 
