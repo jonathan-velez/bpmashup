@@ -1,7 +1,7 @@
 import { callAPIorCache } from '../seessionStorageCache';
 import {
   GET_CHART_DATA,
-  LOAD_TRACKS,
+  FETCH_TRACKS,
   START_ASYNC,
   FETCH_CHART_METADATA,
   FETCH_CHARTS_BY_PROFILE_ID,
@@ -39,7 +39,6 @@ export async function fetchChartDataById(chartId) {
     const chartTracks = await callAPIorCache(
       `${API_GET_TRACKS}?chartId=${chartId}&perPage=${DEFAULT_PER_PAGE}`,
     );
-    chartObject.tracks = chartTracks.data && chartTracks.data.results;
 
     dispatch({
       type: GET_CHART_DATA,
@@ -47,8 +46,8 @@ export async function fetchChartDataById(chartId) {
     });
 
     dispatch({
-      type: LOAD_TRACKS,
-      payload: chartObject.tracks,
+      type: FETCH_TRACKS,
+      payload: chartTracks,
     });
   };
 }
@@ -85,7 +84,7 @@ export async function fetchChartsByProfileId(
 ) {
   return async (dispatch) => {
     if (!profileId) return;
-    
+
     dispatch({
       type: START_ASYNC,
     });
@@ -108,12 +107,12 @@ export async function fetchChartsByGenreId(
   genreId,
   page = 1,
   perPage = DEFAULT_CHARTS_PER_PAGE,
-){
-  return async(dispatch) => {
+) {
+  return async (dispatch) => {
     if (!genreId) return;
 
     dispatch({
-      type: START_ASYNC, 
+      type: START_ASYNC,
     });
 
     const beatportChardData = await callAPIorCache(
@@ -127,5 +126,5 @@ export async function fetchChartsByGenreId(
       type: FETCH_CHARTS_BY_GENRE_ID,
       payload: data,
     });
-  }
+  };
 }

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Responsive } from 'semantic-ui-react';
 
 import TrackListingActionRow from './TrackListingActionRow';
 import TrackListingCards from './TrackListingCards';
@@ -16,15 +17,37 @@ const TrackListingGroup = ({ trackListing = {} }) => {
   const { totalPages, page, perPage, query } = metadata;
   return (
     <React.Fragment>
-      <TrackListingActionRow activePage={page} totalPages={totalPages} perPage={perPage} />
-      {getTracklistViewSetting() === 'cards' ?
+      <TrackListingActionRow
+        activePage={page}
+        totalPages={totalPages}
+        perPage={perPage}
+      />
+      <Responsive minWidth={700}>
+        {getTracklistViewSetting() === 'cards' ? (
+          <TrackListingCards trackListing={tracks} />
+        ) : (
+          <TrackListingTable
+            trackListing={tracks}
+            isPlaylist={false}
+            page={page}
+            perPage={perPage}
+          />
+        )}
+      </Responsive>
+      <Responsive maxWidth={699}>
         <TrackListingCards trackListing={tracks} />
-        :
-        <TrackListingTable trackListing={tracks} isPlaylist={false} page={page} perPage={perPage} />
-      }
-      {totalPages > 1 &&
-        <Pager activePage={page} totalPages={totalPages} firstItem={null} lastItem={null} perPage={perPage || getPerPageSetting()} query={query} />
-      }
+      </Responsive>
+
+      {totalPages > 1 && (
+        <Pager
+          activePage={page}
+          totalPages={totalPages}
+          firstItem={null}
+          lastItem={null}
+          perPage={perPage || getPerPageSetting()}
+          query={query}
+        />
+      )}
     </React.Fragment>
   );
 };

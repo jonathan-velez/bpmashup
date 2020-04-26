@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import Scroll from 'react-scroll';
 import { Transition, Grid, Image, Header, Segment } from 'semantic-ui-react';
 
-import ResponsiveTrackListing from './ResponsiveTrackListing';
-import NothingHereMessage from './NothingHereMessage';
+import TrackListingGroup from './TrackListingGroup';
 import GenreLabel from './GenreLabel';
 import { fetchChartDataById } from '../thunks';
 
-const Chart = ({ match, fetchChartDataById, chartListing = {}, isLoading }) => {
+const Chart = ({
+  match,
+  fetchChartDataById,
+  chartListing = {},
+  trackListing,
+}) => {
   const [visible, setVisible] = useState(false);
   const { chartId } = match.params;
 
@@ -22,7 +25,6 @@ const Chart = ({ match, fetchChartDataById, chartListing = {}, isLoading }) => {
   }, [fetchChartDataById, chartId]);
 
   const {
-    tracks = [],
     images = {},
     name,
     description,
@@ -38,10 +40,6 @@ const Chart = ({ match, fetchChartDataById, chartListing = {}, isLoading }) => {
     textAlign: 'left',
     textTransform: 'uppercase',
   };
-
-  if (tracks.length === 0) {
-    return <NothingHereMessage />;
-  }
 
   return (
     <React.Fragment>
@@ -77,34 +75,24 @@ const Chart = ({ match, fetchChartDataById, chartListing = {}, isLoading }) => {
           </Grid.Row>
         </Grid>
       </Segment>
-      {tracks.length > 0 ? (
-        <Transition visible={visible} animation='fade' duration={1500}>
-          <ResponsiveTrackListing
-            trackListing={tracks}
-            isPlaylist={false}
-            isLoading={isLoading}
-            page={1}
-            perPage={50}
-          />
-        </Transition>
-      ) : null}
+      <Transition visible={visible} animation='fade' duration={1500}>
+        <TrackListingGroup trackListing={trackListing} />
+      </Transition>
     </React.Fragment>
   );
 };
 
 const mapStateToProps = (state) => {
+  const { isLoading, chartListing, trackListing } = state;
+
   return {
-    isLoading: state.isLoading,
-    chartListing: state.chartListing,
+    isLoading,
+    chartListing,
+    trackListing,
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators(
-    Object.assign({}, { fetchChartDataById }),
-    dispatch,
-  );
-};
+const mapDispatchToProps = { fetchChartDataById };
 
 export default connect(
   mapStateToProps,
