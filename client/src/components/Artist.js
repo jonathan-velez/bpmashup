@@ -24,7 +24,7 @@ const Artist = ({
   location,
 }) => {
   const [activeItem, setActiveItem] = useState('biography');
-  const [activeItem2, setActiveItem2] = useState('featured-releases');
+  const [activeItem2, setActiveItem2] = useState('top-tracks');
 
   const { params } = match;
   const { artistId, artistName } = params;
@@ -191,6 +191,15 @@ const Artist = ({
       <Menu secondary pointing>
         <Menu.Item
           link
+          name='top-tracks'
+          className='item-header'
+          active={activeItem2 === 'top-tracks'}
+          onClick={handleItemClick2}
+        >
+          Top Tracks
+        </Menu.Item>
+        <Menu.Item
+          link
           name='featured-releases'
           className='item-header'
           active={activeItem2 === 'featured-releases'}
@@ -206,15 +215,6 @@ const Artist = ({
           onClick={handleItemClick2}
         >
           All Releases
-        </Menu.Item>
-        <Menu.Item
-          link
-          name='top-tracks'
-          className='item-header'
-          active={activeItem2 === 'top-tracks'}
-          onClick={handleItemClick2}
-        >
-          Top 10 Tracks
         </Menu.Item>
         <Menu.Item
           link

@@ -2,26 +2,29 @@ import { callAPIorCache } from '../seessionStorageCache';
 import {
   API_GET_ARTIST_DETAIL,
   API_GET_ARTIST_EVENTS_BY_NAME,
+  API_MOST_POPULAR_BY_ARTISTS,
 } from '../constants/apiPaths';
 import {
   START_ASYNC,
-  LOAD_TRACKS,
   GET_ARTIST_DETAIL,
   GENERAL_ERROR,
+  FETCH_TRACKS,
 } from '../constants/actionTypes';
+import { DEFAULT_PER_PAGE } from '../constants/defaults';
 
 export const getArtistDetails = ({ artistId, artistName }) => {
   return async (dispatch) => {
-    function successfulCall({ artistDetails, artistEvents }) {
+    function successfulCall({
+      artistDetails,
+      artistEvents,
+      artistMostPopularTracks,
+    }) {
       const { data: artistData } = artistDetails;
       const { data: eventsData } = artistEvents;
 
-      // get top downloads and load into the media player
-      const { results = {} } = artistData;
-      const { topDownloads = [] } = results;
       dispatch({
-        type: LOAD_TRACKS,
-        payload: topDownloads,
+        type: FETCH_TRACKS,
+        payload: artistMostPopularTracks,
       });
 
       // dispatch combined artist data to state
@@ -53,9 +56,14 @@ export const getArtistDetails = ({ artistId, artistName }) => {
         `${API_GET_ARTIST_EVENTS_BY_NAME}?artistName=${artistName}`,
       );
 
+      const artistsMostPopularTracks = callAPIorCache(
+        `${API_MOST_POPULAR_BY_ARTISTS}?id=${artistId}&perPage=${DEFAULT_PER_PAGE}`,
+      );
+
       successfulCall({
         artistDetails: await artistDetailsCall,
         artistEvents: await artistEventsCall,
+        artistMostPopularTracks: await artistsMostPopularTracks,
       });
     } catch (error) {
       failedCall(error);
