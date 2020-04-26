@@ -60,7 +60,7 @@ const Release = ({ match, fetchReleaseData, release, trackListing }) => {
           )}
         </Item>
       </Item.Group>
-      {release.id ? <TrackListingGroup trackListing={trackListing} /> : null}
+      {release.id && <TrackListingGroup trackListing={trackListing} />}
     </Fragment>
   );
 };
