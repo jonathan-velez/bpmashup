@@ -4,17 +4,15 @@ import { Grid, Header } from 'semantic-ui-react';
 import { animateScroll } from 'react-scroll';
 
 import { searchEverything } from '../thunks';
-import ResponsiveTrackListing from './ResponsiveTrackListing';
+import TrackListingGroup from './TrackListingGroup';
 import ItemCards from './ItemCards';
 import NothingHereMessage from './NothingHereMessage';
-import { DEFAULT_PAGE } from '../constants/defaults';
-import { getPerPageSetting } from '../utils/helpers';
 
 const SearchResultsController = ({
   match = {},
   searchEverything,
   searchResults = {},
-  isLoading = false,
+  trackListing,
 }) => {
   const { searchTerm } = match.params;
   const {
@@ -44,13 +42,7 @@ const SearchResultsController = ({
             <Header textAlign='left' dividing>
               TRACKS
             </Header>
-            <ResponsiveTrackListing
-              trackListing={tracks}
-              isPlaylist={false}
-              isLoading={isLoading}
-              page={DEFAULT_PAGE}
-              perPage={getPerPageSetting()}
-            />
+            <TrackListingGroup trackListing={trackListing} />
           </Grid.Column>
         </Grid.Row>
       )}
@@ -59,10 +51,12 @@ const SearchResultsController = ({
 };
 
 const mapStateToProps = (state) => {
-  const { isLoading, searchResults } = state;
+  const { isLoading, searchResults, trackListing } = state;
+  
   return {
-    isLoading: isLoading,
-    searchResults: searchResults,
+    isLoading,
+    searchResults,
+    trackListing,
   };
 };
 
