@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import Scroll from 'react-scroll';
+import queryString from 'query-string';
 import { Transition, Grid, Image, Header, Segment } from 'semantic-ui-react';
 
 import TrackListingGroup from './TrackListingGroup';
 import GenreLabel from './GenreLabel';
 import { fetchChartDataById } from '../thunks';
+import { getPerPageSetting } from '../utils/helpers';
+import { DEFAULT_PAGE } from '../constants/defaults';
 
 const Chart = ({
+  location,
   match,
   fetchChartDataById,
   chartListing = {},
@@ -15,14 +19,18 @@ const Chart = ({
 }) => {
   const [visible, setVisible] = useState(false);
   const { chartId } = match.params;
+  const {
+    page = DEFAULT_PAGE,
+    perPage = getPerPageSetting(),
+  } = queryString.parse(location.search);
 
   useEffect(() => {
     if (chartId) {
-      fetchChartDataById(chartId);
+      fetchChartDataById(chartId, page, perPage);
       Scroll.animateScroll.scrollToTop({ duration: 1500 });
       setVisible(true);
     }
-  }, [fetchChartDataById, chartId]);
+  }, [fetchChartDataById, chartId, page, perPage]);
 
   const {
     images = {},

@@ -14,21 +14,26 @@ import {
 } from '../constants/apiPaths';
 import {
   DEFAULT_CHARTS_PER_PAGE,
+  DEFAULT_PAGE,
   DEFAULT_PER_PAGE,
 } from '../constants/defaults';
 
 // For a given chartId, fetch its metadata and then fetch the tracks within it
 // Requires two separate BP API calls
-// TODO: check if Chart metadata is already provided, skip first api call if so
-
-export async function fetchChartDataById(chartId) {
+export async function fetchChartDataById(
+  chartId,
+  page = DEFAULT_PAGE,
+  perPage = DEFAULT_PER_PAGE,
+) {
   return async (dispatch) => {
     dispatch({
       type: START_ASYNC,
     });
 
+    // hard code the page and perPage on the metadata call as it will always be the first result
+    // we'll benefit from the cached api call when page + perPage changes come on the tracks call below
     const chartMetadata = await callAPIorCache(
-      `${API_GET_CHART}?id=${chartId}&perPage=${DEFAULT_PER_PAGE}`,
+      `${API_GET_CHART}?id=${chartId}&page=1&perPage=25`,
     );
     const chartObject =
       (chartMetadata.data.results &&
@@ -37,7 +42,7 @@ export async function fetchChartDataById(chartId) {
       {};
 
     const chartTracks = await callAPIorCache(
-      `${API_GET_TRACKS}?chartId=${chartId}&perPage=${DEFAULT_PER_PAGE}`,
+      `${API_GET_TRACKS}?chartId=${chartId}&page=${page}&perPage=${perPage}`,
     );
 
     dispatch({
@@ -54,7 +59,7 @@ export async function fetchChartDataById(chartId) {
 
 export async function fetchChartMetadataByIds(
   chartIds = [],
-  page = 1,
+  page = DEFAULT_PAGE,
   perPage = DEFAULT_CHARTS_PER_PAGE,
 ) {
   return async (dispatch) => {
@@ -79,7 +84,7 @@ export async function fetchChartMetadataByIds(
 
 export async function fetchChartsByProfileId(
   profileId,
-  page = 1,
+  page = DEFAULT_PAGE,
   perPage = DEFAULT_CHARTS_PER_PAGE,
 ) {
   return async (dispatch) => {
@@ -105,7 +110,7 @@ export async function fetchChartsByProfileId(
 
 export async function fetchChartsByGenreId(
   genreId,
-  page = 1,
+  page = DEFAULT_PAGE,
   perPage = DEFAULT_CHARTS_PER_PAGE,
 ) {
   return async (dispatch) => {
