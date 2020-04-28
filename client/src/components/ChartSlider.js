@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Image, Label, Segment } from 'semantic-ui-react';
 import Slider from 'react-slick';
+import moment from 'moment';
 
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
@@ -19,6 +20,8 @@ const ChartSlider = ({ charts }) => {
       slidesToScroll={4}
     >
       {charts.map((chart) => {
+        // filter out charts made after yesterday
+        if (moment(chart.publishDate).isBefore(moment().subtract(1, 'day'))) {
           return (
             <div key={chart.id}>
               <Segment padded>
@@ -31,6 +34,7 @@ const ChartSlider = ({ charts }) => {
               </Segment>
             </div>
           );
+        }
       })}
     </Slider>
   );
