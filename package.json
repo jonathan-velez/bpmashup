@@ -11,7 +11,7 @@
     "start-prod": "cd server && npm start"
   },
   "engines": {
-    "node": "9.11.1"
+    "node": "13.2.0"
   },
   "author": "",
   "license": "ISC",
