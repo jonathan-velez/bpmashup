@@ -15,8 +15,8 @@ const {
   BULL_PROCESS_CONCURRENCY,
 } = constants;
 
-const firebase = require('./controllers/firebaseController');
-const firebaseInstance = firebase.firebaseInstance();
+const firebaseAdmin = require('./controllers/firebaseAdminSDKController');
+const firebaseInstance = firebaseAdmin.firebaseInstance();
 const firestore = firebaseInstance.firestore();
 
 const staticFiles = express.static(path.join(__dirname, '../client/build'));
