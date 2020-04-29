@@ -10,7 +10,7 @@ import {
   constructTrackLink,
   generateBPTrackLink,
 } from '../utils/trackUtils';
-import { musicalKeyFilter, convertEpochToDate } from '../utils/helpers';
+import { musicalKeyFilter } from '../utils/helpers';
 
 const DownloadQueueTable = ({
   queue,
@@ -31,7 +31,6 @@ const DownloadQueueTable = ({
     let downloadButtonColor = 'positive';
     let downloadButtonIsDisabled = false;
     let downloadButtonPopupContent = '';
-    const addedDateObject = convertEpochToDate(addedDate.seconds);
 
     switch (status) {
       case 'queued':
@@ -137,7 +136,7 @@ const DownloadQueueTable = ({
           {musicalKeyFilter(musicalKey && musicalKey.shortName)}
         </Table.Cell>
         <Table.Cell>
-          {moment(addedDateObject).format('MM/DD/YYYY hh:MM:ss A')}
+          {moment(addedDate).format('MM/DD/YYYY hh:MM:ss A')}
         </Table.Cell>
         <Table.Cell collapsing>
           <Popup
