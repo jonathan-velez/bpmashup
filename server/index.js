@@ -5,6 +5,7 @@ const path = require('path');
 const multer = require('multer');
 const bodyParser = require('body-parser');
 const Bull = require('bull');
+const firebase = require('firebase');
 
 dotenv.load({ path: '.env' });
 
@@ -165,7 +166,7 @@ function processDownloadJob(data) {
       ...data,
       status: response.success ? 'available' : 'notAvailable',
       url: response.success ? response.href : null,
-      dateAvailable: Date.now(),
+      dateAvailable: firebase.firestore.Timestamp.fromDate(new Date()),
       fileName: response.fileName || null,
     };
 
