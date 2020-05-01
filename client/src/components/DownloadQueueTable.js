@@ -10,7 +10,7 @@ import {
   constructTrackLink,
   generateBPTrackLink,
 } from '../utils/trackUtils';
-import { musicalKeyFilter, convertEpochToDate } from '../utils/helpers';
+import { musicalKeyFilter } from '../utils/helpers';
 
 const DownloadQueueTable = ({
   queue,
@@ -24,17 +24,13 @@ const DownloadQueueTable = ({
   }
 
   const tableBody = queue.map((item, idx) => {
-    const { addedDate, url, fileName, key, track, status } = item;
+    const { addedDate, url, fileName, queueId, track, status } = item;
     const { artists, label, genres, bpm, key: musicalKey, images } = track;
 
     let downloadButtonText = 'Download';
     let downloadButtonColor = 'positive';
     let downloadButtonIsDisabled = false;
     let downloadButtonPopupContent = '';
-
-    const addedDateObject = addedDate.seconds
-      ? convertEpochToDate(addedDate.seconds)
-      : addedDate;
 
     switch (status) {
       case 'queued':
@@ -90,7 +86,7 @@ const DownloadQueueTable = ({
             <Dropdown.Item
               text={status === 'notAvailable' ? 'Retry' : 'Re-download'}
               icon='redo'
-              onClick={() => retryDownload(key)}
+              onClick={() => retryDownload(queueId)}
             />
             <Dropdown.Item
               text='Purchase'
@@ -100,7 +96,7 @@ const DownloadQueueTable = ({
             <Dropdown.Item
               text='Mark as Purchased'
               icon='checkmark'
-              onClick={() => markTrackAsPurchased(key)}
+              onClick={() => markTrackAsPurchased(queueId)}
             />
           </Dropdown.Menu>
         </Dropdown>
@@ -112,7 +108,7 @@ const DownloadQueueTable = ({
             negative={downloadButtonColor === 'negative'}
             positive={downloadButtonColor === 'positive'}
             disabled={downloadButtonIsDisabled}
-            onClick={() => downloadTrack(url, fileName, key, status)}
+            onClick={() => downloadTrack(url, fileName, queueId, status)}
           >
             {downloadButtonText}
           </Button>
@@ -140,7 +136,7 @@ const DownloadQueueTable = ({
           {musicalKeyFilter(musicalKey && musicalKey.shortName)}
         </Table.Cell>
         <Table.Cell>
-          {moment(addedDateObject).format('MM/DD/YYYY hh:MM:ss A')}
+          {moment.unix(addedDate.seconds).format('MM/DD/YYYY hh:MM:ss A')}
         </Table.Cell>
         <Table.Cell collapsing>
           <Popup

@@ -33,7 +33,7 @@ export const addNewPlaylist = (newPlaylist) => {
     const { name, track } = newPlaylist;
     const { id: trackId } = track;
 
-    const dateAdded = firebase.firestore.Timestamp.fromDate(new Date());
+    const dateAdded = firebase.firestore.Timestamp.now();
 
     const newTrack = {
       ...track,

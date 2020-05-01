@@ -36,10 +36,11 @@ export const addTrackToDownloadQueue = (track) => {
     dispatch({
       type: START_ADD_TRACK_TO_DOWNLOAD_QUEUE,
     });
+
     const fs = firebase.firestore();
     const downloadItem = {
       status: 'initiated',
-      addedDate: firebase.firestore.Timestamp.fromDate(new Date()),
+      addedDate: firebase.firestore.Timestamp.now(),
       beatportTrackId,
       searchTerms: {
         artists,
@@ -83,7 +84,7 @@ export const updateTrackStatus = (queueId, status) => {
   return (dispatch, getState) => {
     const state = getState();
     const { uid } = state.firebaseState.auth;
-
+    
     const firestore = firebase.firestore();
     const userItemRef = firestore
       .collection('users')

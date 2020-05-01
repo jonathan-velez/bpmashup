@@ -151,8 +151,8 @@ downloadQueue.process(BULL_PROCESS_CONCURRENCY, async (job) => {
 function processDownloadJob(data) {
   return new Promise(async (resolve) => {
     // update queued item as 'available' in Firestore
-    console.log('data', data);
-    const { artists, name, mixName } = data.searchTerms;
+    const { key, searchTerms } = data;
+    const { artists, name, mixName } = searchTerms;
 
     const response = await zippyController.getDownladLink({
       artists,
@@ -163,10 +163,10 @@ function processDownloadJob(data) {
     console.log('zippy response', response);
 
     const updateData = {
-      ...data,
+      queueId: key,
       status: response.success ? 'available' : 'notAvailable',
       url: response.success ? response.href : null,
-      dateAvailable: admin.firestore.Timestamp.now(),
+      dateProcessed: admin.firestore.Timestamp.now(),
       fileName: response.fileName || null,
     };
 
