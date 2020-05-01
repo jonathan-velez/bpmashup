@@ -1,6 +1,6 @@
 import React from 'react';
 import GenreCharts from './GenreCharts';
-import TrackListingController from './TrackListingController';
+import MostPopularTracks from './MostPopularTracks';
 
 const Genre = (props) => {
   const { match = {} } = props;
@@ -10,7 +10,12 @@ const Genre = (props) => {
   return (
     <React.Fragment>
       <GenreCharts genreId={genreId} genreName={genreName} />
-      <TrackListingController {...props} />
+      <MostPopularTracks
+        searchType='genre'
+        searchId={genreId}
+        searchName={genreName}
+        {...props}
+      />
     </React.Fragment>
   );
 };
