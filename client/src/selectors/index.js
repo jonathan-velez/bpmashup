@@ -156,3 +156,31 @@ export const getTracklistTrackCount = createSelector(
     return (tracks && Object.keys(tracks).length) || 0;
   },
 );
+
+const _getCurrentTrackStatus = (state) => {
+  const { loadedTrack, playing } = state.mediaPlayer;
+  return {
+    trackId: loadedTrack.id,
+    playing,
+  };
+};
+
+const _isTrackPlaying = (state, id) => {
+  const { trackId, playing } = _getCurrentTrackStatus(state);
+  return playing && trackId === id;
+};
+
+const _isTrackLoaded = (state, id) => {
+  const { trackId } = _getCurrentTrackStatus(state);
+  return trackId === id;
+};
+
+export const isTrackPlaying = createSelector(
+  [_isTrackPlaying],
+  (isPlaying) => isPlaying,
+);
+
+export const isTrackLoaded = createSelector(
+  [_isTrackLoaded],
+  (isLoaded) => isLoaded,
+);

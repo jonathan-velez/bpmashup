@@ -102,7 +102,7 @@ const Auth = ({
             </Fragment>
           ) : (
             <Fragment>
-              <Dropdown.Item text='Log in / Sign up' onClick={() => logIn()} />
+              <Dropdown.Item text='Log in / Sign up' onClick={logIn} />
             </Fragment>
           )}
         </Dropdown.Menu>
