@@ -3,10 +3,15 @@ import ReactDOM from 'react-dom';
 import firebase from 'firebase';
 import { ReactReduxFirebaseProvider } from 'react-redux-firebase';
 import { Provider } from 'react-redux';
+import whyDidYouRender from '@welldone-software/why-did-you-render';
 
 import AppWrapper from './components/AppWrapper';
 import AuthIsLoaded from './components/AuthIsLoaded';
 import store from './store';
+
+whyDidYouRender(React, {
+  trackAllPureComponents: true,
+});
 
 const {
   REACT_APP_FIREBASE_API_KEY,

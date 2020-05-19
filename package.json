@@ -16,6 +16,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@welldone-software/why-did-you-render": "^4.2.1",
     "concurrently": "^3.5.1"
   },
   "devDependencies": {
