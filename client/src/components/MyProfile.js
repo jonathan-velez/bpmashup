@@ -103,7 +103,8 @@ const MyProfile = ({ uid, genreList }) => {
       let userDisplayName = '';
 
       await userExtendedRef.once('value', (snapshot) => {
-        const { favoriteGenres = {}, ...restOfUserDetails } = snapshot.val() || {};
+        const { favoriteGenres = {}, ...restOfUserDetails } =
+          snapshot.val() || {};
         const favoriteGenresArray = Object.keys(favoriteGenres) || [];
 
         userExtendedDetails = {
@@ -113,7 +114,7 @@ const MyProfile = ({ uid, genreList }) => {
       });
 
       await userRef.child('displayName').once('value', (snapshot) => {
-        userDisplayName = snapshot.val();
+        userDisplayName = snapshot.val() || '';
       });
 
       const [firstName, lastName] = userDisplayName.split(' ');
@@ -260,90 +261,107 @@ const MyProfile = ({ uid, genreList }) => {
     return <LoggedOutMessage />;
   }
 
+  const STATE_VAL = 'biggie';
+  const SPOTIFY_AUTH_URL = 'https://accounts.spotify.com/authorize';
+  const SPOTIFY_CLIENT_ID = '5cb7ddeef8404b3bb847578bb9704d27';
+  const SPOTIFY_REDIRECT_URI =
+    'http://localhost:3001/api/spotify-callback';
+
+  const spotifyAuthUrl = `${SPOTIFY_AUTH_URL}/?client_id=${SPOTIFY_CLIENT_ID}&response_type=code&redirect_uri=${SPOTIFY_REDIRECT_URI}&state=${STATE_VAL}&show_dialog=false`;
+
   return (
-    <Grid columns={2} textAlign='left'>
-      <Grid.Column computer={4} mobile={16}>
-        <PhotoUpload />
-      </Grid.Column>
-      <Grid.Column computer={12} mobile={16}>
-        <Form onSubmit={handleFormSubmit}>
-          <Form.Group widths='equal'>
+    <>
+      <Grid columns={2} textAlign='left'>
+        <Grid.Column computer={4} mobile={16}>
+          <PhotoUpload />
+        </Grid.Column>
+        <Grid.Column computer={12} mobile={16}>
+          <Form onSubmit={handleFormSubmit}>
+            <Form.Group widths='equal'>
+              <Form.Field>
+                <label>First Name</label>
+                <Input
+                  fluid
+                  name='firstName'
+                  placeholder='First Name'
+                  maxLength='100'
+                  required
+                  onChange={(evt) => handleInputChange(evt)}
+                  value={state.userDetails.firstName || ''}
+                />
+              </Form.Field>
+              <Form.Field>
+                <label>Last Name</label>
+                <Input
+                  fluid
+                  name='lastName'
+                  placeholder='Last Name'
+                  maxLength='100'
+                  required
+                  onChange={(evt) => handleInputChange(evt)}
+                  value={state.userDetails.lastName || ''}
+                />
+              </Form.Field>
+            </Form.Group>
             <Form.Field>
-              <label>First Name</label>
-              <Input
+              <label>Favorite Genres</label>
+              <Dropdown
+                placeholder='Techno, Progressive House, House'
+                multiple
+                search
+                selection
                 fluid
-                name='firstName'
-                placeholder='First Name'
-                maxLength='100'
-                required
-                onChange={(evt) => handleInputChange(evt)}
-                value={state.userDetails.firstName || ''}
+                options={genreList}
+                onChange={handleFavoriteGenreChange}
+                value={userDetails.favoriteGenres || []}
               />
             </Form.Field>
             <Form.Field>
-              <label>Last Name</label>
-              <Input
-                fluid
-                name='lastName'
-                placeholder='Last Name'
-                maxLength='100'
-                required
+              <label>Biography</label>
+              <TextArea
+                name='biography'
                 onChange={(evt) => handleInputChange(evt)}
-                value={state.userDetails.lastName || ''}
+                value={userDetails.biography}
               />
             </Form.Field>
-          </Form.Group>
-          <Form.Field>
-            <label>Favorite Genres</label>
-            <Dropdown
-              placeholder='Techno, Progressive House, House'
-              multiple
-              search
-              selection
-              fluid
-              options={genreList}
-              onChange={handleFavoriteGenreChange}
-              value={userDetails.favoriteGenres || []}
+            <Form.Field>
+              <label>Website</label>
+              <Input
+                fluid
+                type='url'
+                pattern='https://.*'
+                name='websiteURL'
+                placeholder='https://google.com'
+                maxLength='2000'
+                onChange={(evt) => handleInputChange(evt)}
+                value={state.userDetails.websiteURL || ''}
+              />
+            </Form.Field>
+            <Message
+              attached='bottom'
+              positive={!formMessage.isError}
+              error={formMessage.isError}
+              content={formMessage.content}
+              hidden={
+                !formMessage.content ||
+                (formMessage.content && formMessage.content.length === 0) ||
+                !isPristine
+              }
             />
-          </Form.Field>
-          <Form.Field>
-            <label>Biography</label>
-            <TextArea
-              name='biography'
-              onChange={(evt) => handleInputChange(evt)}
-              value={userDetails.biography}
-            />
-          </Form.Field>
-          <Form.Field>
-            <label>Website</label>
-            <Input
-              fluid
-              type='url'
-              pattern='https://.*'
-              name='websiteURL'
-              placeholder='https://google.com'
-              maxLength='2000'
-              onChange={(evt) => handleInputChange(evt)}
-              value={state.userDetails.websiteURL || ''}
-            />
-          </Form.Field>
-          <Message
-            attached='bottom'
-            positive={!formMessage.isError}
-            error={formMessage.isError}
-            content={formMessage.content}
-            hidden={
-              !formMessage.content ||
-              (formMessage.content && formMessage.content.length === 0) ||
-              !isPristine
-            }
-          />
-          <Button type='submit' positive disabled={isPristine}>
-            Update
-          </Button>
-        </Form>
-      </Grid.Column>
-    </Grid>
+            <Button type='submit' positive disabled={isPristine}>
+              Update
+            </Button>
+          </Form>
+        </Grid.Column>
+      </Grid>
+      <Grid columns={1}>
+        <Grid.Column>
+          <a href={spotifyAuthUrl}>
+            Authorize Spotify
+          </a>
+        </Grid.Column>
+      </Grid>
+    </>
   );
 };
 

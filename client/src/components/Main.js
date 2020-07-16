@@ -18,6 +18,7 @@ import MyProfile from './MyProfile';
 import DownloadQueuePage from './DownloadQueuePage';
 import Home from './Home';
 import Genre from './Genre';
+import SpotifyPlaylists from './SpotifyPlaylists';
 
 const Main = () => {
   const containerStyle = {
@@ -31,11 +32,7 @@ const Main = () => {
         <Route exact path='/track/:trackName/:trackId' component={Track} />
         <Route exact path='/history/my-activity' component={MyActivity} />
         <Route exact path='/history/loved-labels' component={MyLovedLabels} />
-        <Route
-          exact
-          path='/history/loved-tracks'
-          component={MyLovedTracks}
-        />
+        <Route exact path='/history/loved-tracks' component={MyLovedTracks} />
         <Route
           exact
           path='/artist/:artistName/:artistId'
@@ -73,10 +70,11 @@ const Main = () => {
           path='/:itemType/:itemName/:itemId/tracks'
           component={TracksRoute}
         />
+        <Route exact path='/genre/:genreName/:genreId' component={Genre} />
         <Route
           exact
-          path='/genre/:genreName/:genreId'
-          component={Genre}
+          path='/spotify-playlists'
+          component={SpotifyPlaylists}
         />
         <Route exact path='/my-profile' component={MyProfile} />
         <Route exact path='/download-queue' component={DownloadQueuePage} />

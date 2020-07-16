@@ -29,6 +29,7 @@ const ytController = require('./controllers/youtubeController');
 const songkickController = require('./controllers/songkickController');
 const lastFmController = require('./controllers/lastFmController');
 const profilePhotoUploadController = require('./controllers/profilePhotoUploadController');
+const spotifyController = require('./controllers/spotifyController');
 
 app.use(bodyParser.urlencoded({ extended: false }));
 
@@ -43,6 +44,12 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
+app.get(`${API_BASE_URL}/spotify-authorize`, spotifyController.authorize);
+app.get(
+  `${API_BASE_URL}/spotify-refresh-token`,
+  spotifyController.refreshToken,
+);
+app.get(`${API_BASE_URL}/spotify-callback`, spotifyController.authCallback);
 app.get(`${API_BASE_URL}/genres`, bpController.callApi);
 app.get(`${API_BASE_URL}/search`, bpController.callApi);
 app.get(`${API_BASE_URL}/most-popular`, bpController.callApi);
