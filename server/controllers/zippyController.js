@@ -350,29 +350,45 @@ const _parseZippyPage = (pageLink, pageHtml) => {
 
       }
       */
+
+        /*
+        Updated Zippscript as of 22-AUG-2020:
+
+        <script type="text/javascript">
+            var a = function() {return 1};
+            var b = function() {return a() + 1};
+            var c = function() {return b() + 1};
+            var d = document.getElementById('omg').getAttribute('class');
+            if (true) { d = d*2;}
+            document.getElementById('dlbutton').href = "/d/3YiYYZ2S/"+(199143%1000 + a() + b() + c() + d + 5/5)+"/Dominik%20Eulberg%20-%20F%c3%bcnffleck-Widderchen%20%281979%20Remix%29%20%5bTraxCrate.com%5d.mp3";
+            if (document.getElementById('fimage')) {
+                document.getElementById('fimage').href = "/i/3YiYYZ2S/"+(199143%1000 + a() + b() + c() + d + 5/5)+"/Dominik%20Eulberg%20-%20F%c3%bcnffleck-Widderchen%20%281979%20Remix%29%20%5bTraxCrate.com%5d.mp3";
+            }
+        </script>
+        */
+
         try {
-          let aVar = scriptData.substring(scriptData.indexOf('var a =') + 8);
-          aVar = aVar.substring(0, aVar.indexOf(';'));
-
-          let bVar = scriptData.substring(scriptData.indexOf('var b =') + 8);
-          bVar = bVar.substring(0, bVar.indexOf(';'));
-
-          let omg =
-            scriptData.indexOf(
-              'document.getElementById(\'dlbutton\').omg = "f";',
-            ) >= 0;
-          aVar = omg ? Math.floor(aVar / 3) : (aVar = Math.ceil(aVar / 3));
+          let a = 1;
+          let b = 2;
+          let c = 3;
+          let d = $('#omg').attr('class');
+          d = d * 2;
 
           let mp3Link = scriptData.substring(
             scriptData.indexOf("document.getElementById('dlbutton').href = ") +
               43,
           );
-          mp3Link = mp3Link.substring(0, mp3Link.indexOf(';'));
-          mp3Link = mp3Link
-            .replace('(a', '(' + aVar)
-            .replace('%b)', '%' + bVar + ')');
 
+          mp3Link = mp3Link.substring(0, mp3Link.indexOf(';'));
+
+          mp3Link = mp3Link
+            .replace('a()', a)
+            .replace('b()', b)
+            .replace('c()', c)
+            .replace('+ d +', `+ ${d} +`);
           mp3Link = _eval('module.exports = ' + mp3Link);
+
+          console.log('new mp3Link', mp3Link);
 
           downloadLink =
             pageLink.substr(0, pageLink.indexOf('.com/') + 4) + mp3Link;
