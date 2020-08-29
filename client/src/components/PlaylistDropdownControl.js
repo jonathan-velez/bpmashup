@@ -16,9 +16,17 @@ class PlaylistDropdownControl extends React.PureComponent {
     let playlistItems = '';
 
     const firstListItem = (
+      <Dropdown.Header
+        content={`${playlistCount} playlists, ${tracksInPlaylistsCount} tracks`}
+      />
+    );
+
+    const lastListItem = (
       <Dropdown.Item
-        disabled
-        text={`${playlistCount} playlists, ${tracksInPlaylistsCount} tracks`}
+        text='Spotify Playlists'
+        as={Link}
+        to='/spotify-playlists'
+        text='Spotify Playlists'
       />
     );
 
@@ -44,6 +52,8 @@ class PlaylistDropdownControl extends React.PureComponent {
         <Dropdown.Menu>
           {firstListItem}
           {playlistItems}
+          <Dropdown.Divider />
+          {lastListItem}
         </Dropdown.Menu>
       </Dropdown>
     );

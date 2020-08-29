@@ -49,6 +49,7 @@ app.get(
   `${API_BASE_URL}/spotify-refresh-token`,
   spotifyController.refreshToken,
 );
+app.get(`${API_BASE_URL}/spotify-set-cookies`, spotifyController.authCallbackJSON)
 app.get(`${API_BASE_URL}/spotify-callback`, spotifyController.authCallback);
 app.get(`${API_BASE_URL}/genres`, bpController.callApi);
 app.get(`${API_BASE_URL}/search`, bpController.callApi);

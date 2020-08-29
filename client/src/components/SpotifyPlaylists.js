@@ -1,125 +1,117 @@
 import React, { useEffect, useState } from 'react';
-import querystring from 'query-string';
-import Cookies from 'js-cookie';
-import axios from 'axios';
-import { Header, List } from 'semantic-ui-react';
+import { connect } from 'react-redux';
+import { Header, List, Grid, Image, Button } from 'semantic-ui-react';
 
-const SpotifyPlaylists = () => {
+import useSpotify from '../hooks/useSpotify';
+import { addTrackToDownloadQueue } from '../thunks';
+import AuthorizeSpotify from './AuthorizeSpotify';
+
+const SpotifyPlaylists = ({ addTrackToDownloadQueue }) => {
+  const { callSpotify } = useSpotify();
+
   const [playlists, setPlaylists] = useState([]);
-  const [spotifyToken, setSpotifyToken] = useState(
-    Cookies.get('spotify_access_token'),
-  );
-  const [spotifyRefreshToken, setSpotifyRefreshToken] = useState(
-    Cookies.get('spotify_refresh_token'),
-  );
-  const SPOTIFY_CLIENT_ID = '5cb7ddeef8404b3bb847578bb9704d27';
-
-  const axiosGETConfig = {
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${spotifyToken}`,
-    },
-  };
-  const axiosPOSTConfig = {
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      Authorization: `Bearer ${spotifyToken}`,
-      client_id: SPOTIFY_CLIENT_ID,
-    },
-  };
-
-  console.log('axiosGETConfig', axiosGETConfig);
+  const [playlistTracks, setPlaylistTracks] = useState([]);
+  const [spotifyIsAuthorized, setSpotifyIsAuthorized] = useState(false);
 
   useEffect(() => {
-    const refreshToken = async (callback) => {
-      if (spotifyRefreshToken) {
-        const refreshPOSTUrl = 'https://accounts.spotify.com/api/token';
-        const refreshData = {
-          grant_type: 'refresh_token',
-          refresh_token: spotifyRefreshToken,
-        };
+    const getPlaylists = async () => {
+      const resultData = await callSpotify(
+        `https://api.spotify.com/v1/me/playlists?limit=50&offset=0`,
+      );
 
-        let result;
-        try {
-          result = await axios.post(
-            refreshPOSTUrl,
-            querystring.stringify(refreshData),
-            axiosPOSTConfig,
-          );
-        } catch (error) {
-          console.log('error refreshing token', error);
-        }
+      console.log('inside component: resultData', resultData);
 
-        if (result && result.data) {
-          console.log('refresh token data', result.data);
-          const { access_token } = result.data;
-          setSpotifyToken(access_token);
-          callback();
+      if (resultData && resultData.items) {
+        setPlaylists(resultData.items);
+      } else {
+        console.log('some failure here or items null', resultData);
+        
+        if (resultData === 'missing_refresh_token') {
+          alert('refresh token failed, display spotify login button');
+          setSpotifyIsAuthorized(false);
         }
       }
     };
 
-    const getMyPlaylists = async () => {
-      let result;
-      try {
-        result = await axios.get(
-          `https://api.spotify.com/v1/me/playlists?limit=100&offset=0`,
-          axiosGETConfig,
-        );
-      } catch (error) {
-        console.log('error calling spotify', error); //401?
-        // refresh token
-        // refreshToken(getMyPlaylists);
-      }
-
-      console.log('result!!!', result);
-
-      if (
-        result &&
-        result.data &&
-        result.data.items &&
-        result.data.items.length > 0
-      ) {
-        setPlaylists(result.data.items);
-      }
-    };
-
-    getMyPlaylists();
+    if (playlists.length === 0) {
+      getPlaylists();
+    }
   }, []);
-
-  const refreshSpotifyToken = async () => {
-    const result = await axios.get(
-      `/api/spotify-refresh-token?spotifyRefreshToken=${spotifyRefreshToken}`,
-    );
-
-    console.log(result && result.data);
-  };
 
   const getPlaylistTracks = async (playlistId) => {
     const url = `https://api.spotify.com/v1/playlists/${playlistId}/tracks`;
-    const result = await axios.get(url, axiosGETConfig);
-    const { data = {} } = result;
-    console.log('playlist data', data);
+    const resultData = await callSpotify(url);
+    if (resultData && resultData.items) {
+      setPlaylistTracks(resultData.items);
+    }
+  };
+
+  const handleAddTrackToDownloadQueue = (track) => {
+    addTrackToDownloadQueue(track, 'spotify');
   };
 
   return (
     <div>
       <Header>Spotify Playlists</Header>
-      <List>
-        {playlists.map((list) => (
-          <List.Item
-            key={list.id}
-            onClick={() => getPlaylistTracks(list.id)}
-            as='a'
-          >
-            {list.name}
-          </List.Item>
-        ))}
-      </List>
-      <button onClick={refreshSpotifyToken}>Refresh token</button>
+      <Grid columns={2} divided>
+        <Grid.Row textAlign='left'>
+          <Grid.Column width={4}>
+            <List>
+              {playlists.map((list) => (
+                <List.Item
+                  key={list.id}
+                  onClick={() => getPlaylistTracks(list.id)}
+                  as='a'
+                >
+                  {list.name}
+                </List.Item>
+              ))}
+            </List>
+          </Grid.Column>
+          <Grid.Column width={12}>
+            <List divided size='large'>
+              {playlistTracks.map((item, idx) => {
+                const { track = {} } = item;
+                const { id, name, artists = [], album = {}, uri } = track;
+                const { images = [] } = album;
+
+                const artistList = artists.map((artist, idx) => {
+                  return (idx > 0 ? ', ' : '') + artist.name;
+                });
+
+                return (
+                  <List.Item key={`${id}-${idx}`}>
+                    <Image src={images[0].url} avatar />
+                    <List.Content>
+                      <List.Header as='a' href={uri}>
+                        {name}
+                      </List.Header>
+                      {artistList}
+                    </List.Content>
+                    <List.Content floated='right'>
+                      <Button
+                        primary
+                        onClick={() => handleAddTrackToDownloadQueue(track)}
+                      >
+                        Download
+                      </Button>
+                    </List.Content>
+                  </List.Item>
+                );
+              })}
+            </List>
+          </Grid.Column>
+        </Grid.Row>
+      </Grid>
     </div>
   );
 };
 
-export default SpotifyPlaylists;
+const mapDispatchToProps = {
+  addTrackToDownloadQueue,
+};
+
+export default connect(
+  null,
+  mapDispatchToProps,
+)(SpotifyPlaylists);

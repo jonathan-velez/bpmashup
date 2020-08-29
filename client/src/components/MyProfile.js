@@ -10,10 +10,12 @@ import {
   Dropdown,
   TextArea,
 } from 'semantic-ui-react';
+import axios from 'axios';
 
 import PhotoUpload from './PhotoUpload';
 import LoggedOutMessage from './LoggedOutMessage';
 import { getUserId } from '../selectors';
+import AuthorizeSpotify from './AuthorizeSpotify';
 
 const SET_INPUT_CHANGE = 'SET_INPUT_CHANGE';
 const SET_FAVORITE_GENRES = 'SET_FAVORITE_GENRES';
@@ -265,7 +267,9 @@ const MyProfile = ({ uid, genreList }) => {
   const SPOTIFY_AUTH_URL = 'https://accounts.spotify.com/authorize';
   const SPOTIFY_CLIENT_ID = '5cb7ddeef8404b3bb847578bb9704d27';
   const SPOTIFY_REDIRECT_URI =
-    'http://localhost:3001/api/spotify-callback';
+    // 'http://localhost:3001/api/spotify-callback';
+    // 'http://localhost:3000/spotify-cb';
+    'http://localhost:3000/spotify-cb.html';
 
   const spotifyAuthUrl = `${SPOTIFY_AUTH_URL}/?client_id=${SPOTIFY_CLIENT_ID}&response_type=code&redirect_uri=${SPOTIFY_REDIRECT_URI}&state=${STATE_VAL}&show_dialog=false`;
 
@@ -356,9 +360,7 @@ const MyProfile = ({ uid, genreList }) => {
       </Grid>
       <Grid columns={1}>
         <Grid.Column>
-          <a href={spotifyAuthUrl}>
-            Authorize Spotify
-          </a>
+          <AuthorizeSpotify />
         </Grid.Column>
       </Grid>
     </>

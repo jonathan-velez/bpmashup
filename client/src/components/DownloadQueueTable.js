@@ -25,7 +25,7 @@ const DownloadQueueTable = ({
 
   const tableBody = queue.map((item, idx) => {
     const { addedDate, url, fileName, queueId, track, status } = item;
-    const { artists, label, genres, bpm, key: musicalKey, images } = track;
+    const { artists, label = {}, genres = [], bpm, key: musicalKey, images = {} } = track;
 
     let downloadButtonText = 'Download';
     let downloadButtonColor = 'positive';
@@ -119,7 +119,7 @@ const DownloadQueueTable = ({
       <Table.Row key={idx}>
         <Table.Cell>
           <TrackAlbum
-            imageUrl={images.medium.secureUrl}
+            imageUrl={images.medium && images.medium.secureUrl}
             imageSize='tiny'
             iconSize='big'
             track={track}

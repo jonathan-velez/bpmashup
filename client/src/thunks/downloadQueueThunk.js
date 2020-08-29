@@ -7,13 +7,13 @@ import {
 import { generateActivityMessage } from '../utils/storeUtils';
 import { trackHasBeenDownloaded } from '../selectors';
 
-export const addTrackToDownloadQueue = (track) => {
+export const addTrackToDownloadQueue = (track, trackType = 'beatport') => {
   return async (dispatch, getState) => {
     const state = getState();
     const { uid } = state.firebaseState.auth;
     if (!uid || uid === 0) return;
 
-    let { id: beatportTrackId, name, mixName } = track;
+    let { id: beatportTrackId, name, mixName = '' } = track;
     const artists = track.artists.reduce(
       (acc, artist, idx) => (acc += (idx > 0 ? ' ' : '') + artist.name),
       '',
@@ -39,6 +39,7 @@ export const addTrackToDownloadQueue = (track) => {
 
     const fs = firebase.firestore();
     const downloadItem = {
+      trackType,
       status: 'initiated',
       addedDate: firebase.firestore.Timestamp.now(),
       beatportTrackId,
