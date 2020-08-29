@@ -6,14 +6,14 @@ import GenreControl from './GenreControl';
 import PlaylistDropdownControl from './PlaylistDropdownControl';
 import SearchTracks from './SearchTracks';
 import Auth from './Auth';
-import logo from '../static/bpm-logo-01.png';
+import logo from '../static/vinyl-lg.png';
 
 class Navigation extends React.PureComponent {
   render() {
     return (
       <Menu fixed='top' borderless>
         <Menu.Item header>
-          <Link to="/"><img src={logo} height='62' width='100' alt='BPMashup' /></Link>
+          <Link to="/"><img src={logo} height='32' width='32' alt='BPMashup' /></Link>
         </Menu.Item>
         <GenreControl />
         <PlaylistDropdownControl />
