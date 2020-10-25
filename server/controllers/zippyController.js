@@ -367,25 +367,36 @@ const _parseZippyPage = (pageLink, pageHtml) => {
         </script>
         */
 
+        /*
+        Updated script as of 25-OCT-2020:
+        <script type="text/javascript">
+            var a = 13;
+            document.getElementById('dlbutton').omg = "asdasd".substr(0, 3);
+            var b = document.getElementById('dlbutton').omg.length;
+            document.getElementById('dlbutton').href = "/d/EwqjGJc6/"+(Math.pow(a, 3)+b)+"/Solomun%20-%20Home%20%28Club%20Mix%29%20%5bTraxCrate.com%5d.mp3";
+            if (document.getElementById('fimage')) {
+                document.getElementById('fimage').href = "/i/EwqjGJc6/"+(Math.pow(a, 3)+b)+"/Solomun%20-%20Home%20%28Club%20Mix%29%20%5bTraxCrate.com%5d.mp3";
+            }
+        </script>
+
+        */
+
         try {
-          let a = 1;
-          let b = 2;
-          let c = 3;
-          let d = $('#omg').attr('class');
-          d = d * 2;
+          let aVar = scriptData.substring(
+            scriptData.indexOf('var a =') + 8,
+            scriptData.indexOf(';'),
+          );
+          let bVar = 3;
 
           let mp3Link = scriptData.substring(
             scriptData.indexOf("document.getElementById('dlbutton').href = ") +
               43,
           );
-
           mp3Link = mp3Link.substring(0, mp3Link.indexOf(';'));
+          mp3Link = mp3Link.replace('(a, 3)+b)', `(${aVar}, 3)+${bVar})`);
 
-          mp3Link = mp3Link
-            .replace('a()', a)
-            .replace('b()', b)
-            .replace('c()', c)
-            .replace('+ d +', `+ ${d} +`);
+          console.log('pre eval mp3Link', mp3Link);
+
           mp3Link = _eval('module.exports = ' + mp3Link);
 
           console.log('new mp3Link', mp3Link);
