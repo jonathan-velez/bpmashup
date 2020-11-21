@@ -1,5 +1,4 @@
 import firebase from 'firebase';
-import _ from 'lodash';
 import { v4 } from 'node-uuid';
 
 import store from '../store';
@@ -10,6 +9,7 @@ import {
   LOAD_LOVED_LABELS,
   LOAD_PERMS,
   UPDATE_DOWNLOAD_QUEUE,
+  LOAD_PREFERENCES,
 } from '../constants/actionTypes';
 
 import {
@@ -137,6 +137,28 @@ export const registerFirebaseListeners = () => {
     });
 
     listeners.push(downloadQueue);
+
+    // listen to user preferences
+    const userPreferencesRef = firestore.collection(`users/${uid}/preferences`);
+    const userPreferences = userPreferencesRef.onSnapshot((preferences) => {
+      const userPreferences = {};
+      preferences.forEach((snapshot) => {
+        const { id } = snapshot;
+        const preferenceItem = {
+          id,
+          ...snapshot.data(),
+        };
+
+        userPreferences[id] = preferenceItem;
+
+        store.dispatch({
+          type: LOAD_PREFERENCES,
+          payload: userPreferences,
+        });
+      });
+    });
+
+    listeners.push(userPreferences);
 
     return resolve(listeners);
   });

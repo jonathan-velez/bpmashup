@@ -13,14 +13,24 @@ import { updateTrackStatus } from '../thunks';
 import { fileExistsOnDownloadServer } from '../utils/trackUtils';
 import { generateActivityMessage } from '../utils/storeUtils';
 
-const DownloadQueuePage = ({ updateTrackStatus, queueItems }) => {
+const DownloadQueuePage = ({
+  updateTrackStatus,
+  queueItems,
+  userPreferences,
+}) => {
+  // TODO: do something w/ preferencecs once we build them out
+  const { downloadQueueDefaultSortBy = {} } = userPreferences;
+
   const [activePage, setActivePage] = useState(1);
   const [limitPerPage, setLimitPerPage] = useState(10);
   const [currentItems, setCurrentItems] = useState([]);
   const [currentItemsPaginated, setCurrentItemsPaginated] = useState([]);
   const [showArchiveItems, setShowArchiveItems] = useState(false);
   const [hideFailed, setHideFailed] = useState(false);
-  const [sortBy, setSortBy] = useState('newest');
+  const [sortBy, setSortBy] = useState(
+    (downloadQueueDefaultSortBy && downloadQueueDefaultSortBy.value) ||
+      'newest',
+  );
 
   const sortByOptions = [
     {
@@ -221,11 +231,14 @@ const DownloadQueuePage = ({ updateTrackStatus, queueItems }) => {
 };
 
 const mapStateToProps = (state) => {
-  const { downloadQueue } = state;
+  const { downloadQueue, userDetail } = state;
+  const { preferences } = userDetail;
+
   return {
     queueItems: Object.keys(downloadQueue.queue).map(
       (val) => downloadQueue.queue[val],
     ),
+    userPreferences: preferences,
   };
 };
 

@@ -18,6 +18,7 @@ import MyProfile from './MyProfile';
 import DownloadQueuePage from './DownloadQueuePage';
 import Home from './Home';
 import Genre from './Genre';
+import Preferences from './Preferences';
 
 const Main = () => {
   const containerStyle = {
@@ -79,6 +80,7 @@ const Main = () => {
           component={Genre}
         />
         <Route exact path='/my-profile' component={MyProfile} />
+        <Route exact path='/preferences' component={Preferences} />
         <Route exact path='/download-queue' component={DownloadQueuePage} />
         <Route exact path='/' component={Home} />
       </Switch>

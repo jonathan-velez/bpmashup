@@ -91,6 +91,7 @@ const Auth = ({
                 text='My Activity'
               />
               <Dropdown.Item as={Link} to='/my-profile' text='My Profile' />
+              <Dropdown.Item as={Link} to='/preferences' text='Preferences' />
               <Dropdown.Divider />
               <ConfirmAction
                 action={logOut}
