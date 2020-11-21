@@ -1,9 +1,7 @@
 import { createSelector } from 'reselect';
 import _ from 'lodash';
-import moment from 'moment';
 
 import { getUserDownloadQueueTrackIds } from './userActivity';
-import { convertEpochToDate } from '../utils/helpers';
 
 const getUserAuth = (state) => state.firebaseState && state.firebaseState.auth;
 const getUserProfile = (state) =>
@@ -74,12 +72,6 @@ export const hasZippyPermission = createSelector(
   (permissions) => Array.isArray(permissions) && permissions.includes('zipZip'),
 );
 
-const _queueItemIsExpired = (addedDate) => {
-  return moment(convertEpochToDate(addedDate.seconds)).isBefore(
-    moment().subtract(1, 'day'),
-  );
-};
-
 // select expired or already downloaded files
 export const getArchivedDownloadQueueItems = createSelector(
   [getDownloadQueue],
@@ -87,19 +79,14 @@ export const getArchivedDownloadQueueItems = createSelector(
     _.filter(
       queue,
       (item) =>
-        _queueItemIsExpired(item.addedDate) || item.status === 'downloaded',
+        item.status === 'downloaded',
     ),
 );
 
-// select files which haven't been downloaded and have not expired
+// select files which haven't been downloaded
 export const getCurrentDownloadQueueItems = createSelector(
   [getDownloadQueue],
-  (queue) =>
-    _.filter(
-      queue,
-      (item) =>
-        !_queueItemIsExpired(item.addedDate) && item.status !== 'downloaded',
-    ),
+  (queue) => _.filter(queue, (item) => item.status !== 'downloaded'),
 );
 
 export const getNumOfTracksAvailableToDownload = createSelector(

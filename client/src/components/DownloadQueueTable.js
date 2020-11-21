@@ -116,35 +116,41 @@ const DownloadQueueTable = ({
       );
 
     return (
-      <Table.Row key={idx}>
-        <Table.Cell>
-          <TrackAlbum
-            imageUrl={images.medium.secureUrl}
-            imageSize='tiny'
-            iconSize='big'
-            track={track}
-          />
-        </Table.Cell>
-        <Table.Cell>{constructTrackLink(track)}</Table.Cell>
-        <Table.Cell>{constructLinks(artists, 'artist')}</Table.Cell>
-        <Table.Cell>
-          <Link to={`/label/${label.slug}/${label.id}`}>{label.name}</Link>
-        </Table.Cell>
-        <Table.Cell>{constructLinks(genres, 'genre')}</Table.Cell>
-        <Table.Cell>{bpm}</Table.Cell>
-        <Table.Cell>
-          {musicalKeyFilter(musicalKey && musicalKey.shortName)}
-        </Table.Cell>
-        <Table.Cell>
-          {moment.unix(addedDate.seconds).format('MM/DD/YYYY hh:MM:ss A')}
-        </Table.Cell>
-        <Table.Cell collapsing>
-          <Popup
-            content={downloadButtonPopupContent}
-            trigger={downloadButton}
-          />
-        </Table.Cell>
-      </Table.Row>
+      track && (
+        <Table.Row key={idx}>
+          <Table.Cell>
+            {images ? (
+              <TrackAlbum
+                imageUrl={images.medium && images.medium.secureUrl}
+                imageSize='tiny'
+                iconSize='big'
+                track={track}
+              />
+            ) : (
+              ''
+            )}
+          </Table.Cell>
+          <Table.Cell>{constructTrackLink(track)}</Table.Cell>
+          <Table.Cell>{constructLinks(artists, 'artist')}</Table.Cell>
+          <Table.Cell>
+            <Link to={`/label/${label.slug}/${label.id}`}>{label.name}</Link>
+          </Table.Cell>
+          <Table.Cell>{constructLinks(genres, 'genre')}</Table.Cell>
+          <Table.Cell>{bpm}</Table.Cell>
+          <Table.Cell>
+            {musicalKeyFilter(musicalKey && musicalKey.shortName)}
+          </Table.Cell>
+          <Table.Cell>
+            {moment.unix(addedDate.seconds).format('MM/DD/YYYY hh:MM:ss A')}
+          </Table.Cell>
+          <Table.Cell collapsing>
+            <Popup
+              content={downloadButtonPopupContent}
+              trigger={downloadButton}
+            />
+          </Table.Cell>
+        </Table.Row>
+      )
     );
   });
 
