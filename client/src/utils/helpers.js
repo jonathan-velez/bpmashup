@@ -189,13 +189,40 @@ export const setPerPageSetting = (perPage) => {
   setStorage('perPage', perPage);
 };
 
+export const getDownloadQueueSettings = () => {
+  const preferences = getStorage('preferences') || {};
+  return preferences.downloadQueueSettings || {};
+};
+
+export const setDownloadQueueSettings = (settings = {}) => {
+  if (!settings || Object.keys(settings).length === 0) return;
+
+  const preferences = getStorage('preferences') || {};
+  const { downloadQueueSettings = {} } = preferences;
+
+  const newSettings = {
+    ...preferences,
+    downloadQueueSettings: {
+      ...downloadQueueSettings,
+      ...settings,
+    },
+  };
+  setStorage('preferences', JSON.stringify(newSettings));
+};
+
 export const getTracklistViewSetting = () => {
   const preferences = getStorage('preferences') || {};
   return preferences.tracklistView || DEFAULT_TRACKLISTING_VIEW;
 };
 
 export const setTracklistViewSetting = (viewType = 'cards') => {
-  setStorage('preferences', JSON.stringify({ tracklistView: viewType }));
+  const preferences = getStorage('preferences') || {};
+
+  const newSettings = {
+    ...preferences,
+    tracklistView: viewType,
+  };
+  setStorage('preferences', JSON.stringify(newSettings));
 };
 
 export const convertEpochToDate = (seconds) => {

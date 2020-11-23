@@ -12,6 +12,10 @@ import DownloadQueueTable from './DownloadQueueTable';
 import { updateTrackStatus } from '../thunks';
 import { fileExistsOnDownloadServer } from '../utils/trackUtils';
 import { generateActivityMessage } from '../utils/storeUtils';
+import {
+  setDownloadQueueSettings,
+  getDownloadQueueSettings,
+} from '../utils/helpers';
 
 const DownloadQueuePage = ({
   updateTrackStatus,
@@ -21,12 +25,23 @@ const DownloadQueuePage = ({
   // TODO: do something w/ preferencecs once we build them out
   const { downloadQueueDefaultSortBy = {} } = userPreferences;
 
+  // load preferences from sessionStorage
+  // TODO: Decide if this is stupid to do. Why not just use redux or firebase?
+  const downloadQueueSettings = getDownloadQueueSettings();
+  const {
+    hideFailed: hideFailedStoredSetting = false,
+    limitPerPage: limitPerPageStoredSettng = 10,
+    showArchiveItems: showArchiveItemsStoredSetting = false,
+  } = downloadQueueSettings;
+
   const [activePage, setActivePage] = useState(1);
-  const [limitPerPage, setLimitPerPage] = useState(10);
+  const [limitPerPage, setLimitPerPage] = useState(limitPerPageStoredSettng);
   const [currentItems, setCurrentItems] = useState([]);
   const [currentItemsPaginated, setCurrentItemsPaginated] = useState([]);
-  const [showArchiveItems, setShowArchiveItems] = useState(false);
-  const [hideFailed, setHideFailed] = useState(false);
+  const [showArchiveItems, setShowArchiveItems] = useState(
+    showArchiveItemsStoredSetting,
+  );
+  const [hideFailed, setHideFailed] = useState(hideFailedStoredSetting);
   const [sortBy, setSortBy] = useState(
     (downloadQueueDefaultSortBy && downloadQueueDefaultSortBy.value) ||
       'newest',
@@ -148,15 +163,19 @@ const DownloadQueuePage = ({
   const handleArchiveToggle = (e, data) => {
     const { checked } = data;
     setShowArchiveItems(checked);
+    setDownloadQueueSettings({ showArchiveItems: checked });
   };
 
   const handleHideFailed = (e, data) => {
     const { checked } = data;
     setHideFailed(checked);
+    setDownloadQueueSettings({ hideFailed: checked });
   };
 
   const handleSetLimitPerPage = (e, data) => {
-    setLimitPerPage(data.value);
+    const { value } = data;
+    setLimitPerPage(value);
+    setDownloadQueueSettings({ limitPerPage: value });
   };
 
   const handleSetSortBy = (e, data) => {
@@ -173,6 +192,7 @@ const DownloadQueuePage = ({
                 toggle
                 label='Include Downloaded/Purchased'
                 onChange={handleArchiveToggle}
+                checked={showArchiveItems}
               />
             </Grid.Column>
             <Grid.Column floated='right'>
@@ -180,6 +200,7 @@ const DownloadQueuePage = ({
                 toggle
                 label='Hide Failed'
                 onChange={handleHideFailed}
+                checked={hideFailed}
               />
             </Grid.Column>
             <Grid.Column floated='right'>
