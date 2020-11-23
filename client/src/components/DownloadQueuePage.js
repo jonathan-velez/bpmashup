@@ -20,10 +20,10 @@ import {
 const DownloadQueuePage = ({
   updateTrackStatus,
   queueItems,
-  userPreferences,
+  // userPreferences,
 }) => {
-  // TODO: do something w/ preferencecs once we build them out
-  const { downloadQueueDefaultSortBy = {} } = userPreferences;
+  // TODO: switch to firebase preferences once we build them out
+  // const { downloadQueueDefaultSortBy = {} } = userPreferences;
 
   // load preferences from sessionStorage
   // TODO: Decide if this is stupid to do. Why not just use redux or firebase?
@@ -32,6 +32,7 @@ const DownloadQueuePage = ({
     hideFailed: hideFailedStoredSetting = false,
     limitPerPage: limitPerPageStoredSettng = 10,
     showArchiveItems: showArchiveItemsStoredSetting = false,
+    sortBy: sortByStoredSetting = 'newest',
   } = downloadQueueSettings;
 
   const [activePage, setActivePage] = useState(1);
@@ -42,10 +43,7 @@ const DownloadQueuePage = ({
     showArchiveItemsStoredSetting,
   );
   const [hideFailed, setHideFailed] = useState(hideFailedStoredSetting);
-  const [sortBy, setSortBy] = useState(
-    (downloadQueueDefaultSortBy && downloadQueueDefaultSortBy.value) ||
-      'newest',
-  );
+  const [sortBy, setSortBy] = useState(sortByStoredSetting);
 
   const sortByOptions = [
     {
@@ -179,7 +177,9 @@ const DownloadQueuePage = ({
   };
 
   const handleSetSortBy = (e, data) => {
-    setSortBy(data.value);
+    const { value } = data;
+    setSortBy(value);
+    setDownloadQueueSettings({ sortBy: value });
   };
 
   return (
