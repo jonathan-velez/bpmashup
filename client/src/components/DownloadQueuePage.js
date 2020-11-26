@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useState, useRef } from 'react';
 import { connect } from 'react-redux';
 import {
   Checkbox,
@@ -6,6 +6,8 @@ import {
   Grid,
   Pagination,
   Select,
+  Input,
+  Icon,
 } from 'semantic-ui-react';
 
 import DownloadQueueTable from './DownloadQueueTable';
@@ -44,6 +46,9 @@ const DownloadQueuePage = ({
   );
   const [hideFailed, setHideFailed] = useState(hideFailedStoredSetting);
   const [sortBy, setSortBy] = useState(sortByStoredSetting);
+
+  const [searchString, setSearchString] = useState('');
+  const inputRef = useRef(null);
 
   const sortByOptions = [
     {
@@ -118,10 +123,36 @@ const DownloadQueuePage = ({
       items = items.filter((item) => item.status !== 'notAvailable');
     }
 
+    // filter search terms - artists, track or label
+    if (searchString) {
+      items = items.filter((item) => {
+        const { searchTerms, track } = item;
+
+        let { artists, name } = searchTerms;
+        artists = artists.toLowerCase();
+        name = name.toLowerCase();
+
+        const { label = {} } = track;
+
+        return (
+          artists.includes(searchString) ||
+          name.includes(searchString) ||
+          label.slug.includes(searchString)
+        );
+      });
+    }
+
     setCurrentItems(items);
     setCurrentItemsPaginated(items.slice(0, limitPerPage));
     setActivePage(1);
-  }, [queueItems, showArchiveItems, hideFailed, limitPerPage, sortBy]);
+  }, [
+    queueItems,
+    showArchiveItems,
+    hideFailed,
+    limitPerPage,
+    sortBy,
+    searchString,
+  ]);
 
   const handleDownloadClick = async (url, fileName, queueId) => {
     // check if file still exists on server. Due to Heroku Dyno's ephemeral file system, file existence is not guaranteed
@@ -182,15 +213,32 @@ const DownloadQueuePage = ({
     setDownloadQueueSettings({ sortBy: value });
   };
 
+  const handleSearchInput = ({ target }) => {
+    setSearchString(target.value && target.value.toLowerCase());
+  };
+
   return (
     <Fragment>
       <Container>
-        <Grid columns={4} centered verticalAlign='middle'>
+        <Grid columns={5} centered verticalAlign='middle'>
           <Grid.Row>
+            <Grid.Column floated='right'>
+              <Input
+                ref={inputRef}
+                size='large'
+                onChange={(e) => handleSearchInput(e)}
+                style={{ width: '200px' }}
+                iconPosition='left'
+                placeholder='Artists, Title, Label'
+              >
+                <Icon name='search' />
+                <input />
+              </Input>
+            </Grid.Column>
             <Grid.Column floated='right'>
               <Checkbox
                 toggle
-                label='Include Downloaded/Purchased'
+                label='Include DL/Purchased'
                 onChange={handleArchiveToggle}
                 checked={showArchiveItems}
               />
@@ -203,7 +251,7 @@ const DownloadQueuePage = ({
                 checked={hideFailed}
               />
             </Grid.Column>
-            <Grid.Column floated='right'>
+            <Grid.Column textAlign='right' floated='right'>
               <label style={{ paddingRight: '10px' }}>Per page</label>
               <Select
                 label='Tracks per page'
@@ -214,10 +262,10 @@ const DownloadQueuePage = ({
                 onChange={(e, data) => handleSetLimitPerPage(e, data)}
               />
             </Grid.Column>
-            <Grid.Column>
-              <label style={{ paddingRight: '10px' }}>Sort by</label>
+            <Grid.Column textAlign='right' floated='right'>
               <Select
-                label='Sort by'
+                icon='sort'
+                compact
                 selection
                 options={sortByOptions}
                 value={sortBy}
@@ -238,7 +286,11 @@ const DownloadQueuePage = ({
           <Grid.Column floated='left' textAlign='left' verticalAlign='middle'>
             {`${currentItems.length} tracks`}
           </Grid.Column>
-          <Grid.Column floated='right' textAlign='right' verticalAlign='middle'>
+          <Grid.Column
+            floated='right'
+            textAlign='right'
+            verticalAlign='middle'
+          >
             <Pagination
               onPageChange={(e, data) => handlePageChange(e, data)}
               totalPages={Math.ceil(currentItems.length / limitPerPage)}
