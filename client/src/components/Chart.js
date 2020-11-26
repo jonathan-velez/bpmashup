@@ -5,6 +5,7 @@ import queryString from 'query-string';
 import { Transition, Grid, Image, Header, Segment } from 'semantic-ui-react';
 
 import TrackListingGroup from './TrackListingGroup';
+import TrackAlbum from './TrackAlbum';
 import GenreLabel from './GenreLabel';
 import { fetchChartDataById } from '../thunks';
 import { getPerPageSetting } from '../utils/helpers';
@@ -16,6 +17,7 @@ const Chart = ({
   fetchChartDataById,
   chartListing = {},
   trackListing,
+  firstTrack,
 }) => {
   const [visible, setVisible] = useState(false);
   const { chartId } = match.params;
@@ -55,7 +57,11 @@ const Chart = ({
         <Grid>
           <Grid.Row>
             <Grid.Column width={4}>
-              <Image src={secureUrl} />
+              {firstTrack ? (
+                <TrackAlbum imageUrl={secureUrl} track={firstTrack} />
+              ) : (
+                <Image src={secureUrl} />
+              )}
             </Grid.Column>
             <Grid.Column width={8} textAlign='left'>
               <Header as='h1' style={trackTitleHeader}>
@@ -92,11 +98,15 @@ const Chart = ({
 
 const mapStateToProps = (state) => {
   const { isLoading, chartListing, trackListing } = state;
+  const { tracks = {} } = trackListing;
+  const trackKeys = Object.keys(tracks);
+  const firstTrack = tracks[trackKeys[0]];
 
   return {
     isLoading,
     chartListing,
     trackListing,
+    firstTrack,
   };
 };
 
