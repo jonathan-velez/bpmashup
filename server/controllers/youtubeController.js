@@ -2,14 +2,19 @@ const path = require('path');
 const axios = require('axios');
 const ytdl = require('ytdl-core');
 const ffmpeg = require('fluent-ffmpeg');
+const moment = require('moment');
 
 const ytKey = process.env.YOUTUBE_API_KEY;
-const ytURL =
+const YT_API_SEARCH_URL =
   'https://www.googleapis.com/youtube/v3/search?type=video&safeSearch=none&videoEmbeddable=true&videoSyndicated=true&part=snippet&videoDuration=medium&q=';
+const YT_API_VIDEOS_URL =
+  'https://youtube.googleapis.com/youtube/v3/videos?part=contentDetails';
 
 // TODO: give this a better name
 exports.Youtube = async (req, res) => {
-  const searchURL = `${ytURL}${encodeURIComponent(req.query.q)}&key=${ytKey}`;
+  const searchURL = `${YT_API_SEARCH_URL}${encodeURIComponent(
+    req.query.q,
+  )}&key=${ytKey}`;
 
   console.log('Searching Youtube: ', searchURL);
 
@@ -27,30 +32,74 @@ exports.Youtube = async (req, res) => {
   res.json(body);
 };
 
-const getYTId = async (searchString) => {
-  const searchURL = `${ytURL}${encodeURIComponent(searchString)}&key=${ytKey}`;
+// return the best youtube ID for a given search string.
+// optionally take in the duration of the requested track in seconds
+// to be used when trying to determine best match
+const getYTId = async (searchString, targetDuration) => {
+  const searchURL = `${YT_API_SEARCH_URL}${encodeURIComponent(
+    searchString,
+  )}&key=${ytKey}`;
 
   try {
-    const ytResponse = await axios.get(searchURL);
-    if (ytResponse.status === 200 && ytResponse.data) {
-      const { items = [] } = ytResponse.data;
+    const ytSearchResponse = await axios.get(searchURL);
+    if (ytSearchResponse.status === 200 && ytSearchResponse.data) {
+      const { items = [] } = ytSearchResponse.data;
       const firstResult = items[0] || {};
       const { id = {} } = firstResult;
-      const { videoId } = id;
+      let { videoId } = id;
+
+      // if a targetDuration was provided, let's see if we can factor it in our decision
+      if (targetDuration) {
+        console.log('targetDuration provided, getting video data');
+        const idsString = items.reduce(
+          (acc, val, idx) =>
+            acc + (idx > 0 ? '&' : '') + 'id=' + val.id.videoId,
+          '',
+        );
+  
+        const videosURL = `${YT_API_VIDEOS_URL}&${idsString}&key=${ytKey}`;
+        console.log('videosURL', videosURL);
+        const ytVideosResponse = await axios.get(videosURL);
+        const { data = {} } = ytVideosResponse;
+        const { items: videoItems = [] } = data;
+        console.log('videoItems', videoItems);
+
+        // find the ID with the closest duration, either up or down
+        const closestDurationVideo = videoItems.reduce(
+          (acc, val, idx) => {
+            const newDiff = Math.abs(
+              moment
+                .duration(val.contentDetails && val.contentDetails.duration)
+                .asSeconds() - targetDuration,
+            );
+            return newDiff < acc.diff
+              ? { id: val.id, diff: newDiff, idx }
+              : acc;
+          },
+          { id: null, diff: 99999, idx: -1 },
+        );
+
+        console.log('closestDurationVideo', closestDurationVideo);
+
+        if (closestDurationVideo.id) {
+          videoId = closestDurationVideo.id;
+        }
+      }
 
       return videoId;
     }
 
     return null;
   } catch (error) {
-    console.log(`Error in YouTube Controller: ${error}`);
+    console.log(
+      `Error in YouTube Controller: ${error} \nSearch URL: ${searchURL}`,
+    );
     return null;
   }
 };
 
 const downloadYTAsMp3 = async (id, fileName) => {
   return new Promise((resolve, reject) => {
-    
     let thePath = path.resolve(__dirname, '../downloads', fileName);
 
     const stream = ytdl(id, {
@@ -73,9 +122,7 @@ const downloadYTAsMp3 = async (id, fileName) => {
           );
 
           return resolve({
-            href: `/api/download-it/?fileName=${encodeURIComponent(
-              fileName,
-            )}`,
+            href: `/api/download-it/?fileName=${encodeURIComponent(fileName)}`,
             fileName,
             success: true,
           });
@@ -95,7 +142,10 @@ const getYouTubeLink = (query) => {
       console.log('getYT Link query', query);
       const ytId = await getYTId(query);
 
-      const res = await downloadYTAsMp3(ytId, `${query} - [YT-320] - ${ytId}.mp3`);
+      const res = await downloadYTAsMp3(
+        ytId,
+        `${query} - [YT-320] - ${ytId}.mp3`,
+      );
       return resolve(res);
     } catch (error) {
       return resolve({
