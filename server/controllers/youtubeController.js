@@ -50,7 +50,8 @@ const getYTId = async (searchString) => {
 
 const downloadYTAsMp3 = async (id, fileName) => {
   return new Promise((resolve, reject) => {
-    let thePath = path.resolve(__dirname, '../downloads', fileName + '.mp3');
+    
+    let thePath = path.resolve(__dirname, '../downloads', fileName);
 
     const stream = ytdl(id, {
       quality: 'highestaudio',
@@ -73,7 +74,7 @@ const downloadYTAsMp3 = async (id, fileName) => {
 
           return resolve({
             href: `/api/download-it/?fileName=${encodeURIComponent(
-              fileName + '.mp3',
+              fileName,
             )}`,
             fileName,
             success: true,
@@ -94,7 +95,7 @@ const getYouTubeLink = (query) => {
       console.log('getYT Link query', query);
       const ytId = await getYTId(query);
 
-      const res = await downloadYTAsMp3(ytId, `${query} - [YT-320] - ${ytId}`);
+      const res = await downloadYTAsMp3(ytId, `${query} - [YT-320] - ${ytId}.mp3`);
       return resolve(res);
     } catch (error) {
       return resolve({
