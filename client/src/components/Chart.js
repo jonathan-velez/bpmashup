@@ -44,7 +44,7 @@ const Chart = ({
   } = chartListing;
   const { xlarge = {} } = images;
   const { secureUrl } = xlarge;
-  const { name: chartOwnerName } = chartOwner;
+  const { name: chartOwnerName } = chartOwner || {};
 
   const trackTitleHeader = {
     textAlign: 'left',
