@@ -24,7 +24,8 @@ class YouTubeButton extends React.PureComponent {
 
     const popUp = <Popup
       basic
-      on='click'
+      on='hover'
+      hoverable
       flowing
       trigger={youtubeIcon}
       content={<YouTubeButtonPopup />}
