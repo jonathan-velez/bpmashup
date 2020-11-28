@@ -151,7 +151,7 @@ downloadQueue.process(BULL_PROCESS_CONCURRENCY, async (job) => {
 function processDownloadJob(data) {
   return new Promise(async (resolve) => {
     // update queued item as 'available' in Firestore
-    const { key, searchTerms } = data;
+    const { key, searchTerms, track = {} } = data;
     const { artists, name, mixName } = searchTerms;
     let isYouTube = false;
 
@@ -167,7 +167,7 @@ function processDownloadJob(data) {
     if (!response.success) {
       console.log('zippy failed, try YT');
       const searchString = [artists, name, mixName].join(' ');
-      response = await ytController.getYouTubeLink(searchString);
+      response = await ytController.getYouTubeLink(searchString, track.lengthMs);
       isYouTube = true;
     }
 

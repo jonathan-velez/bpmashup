@@ -33,7 +33,7 @@ exports.Youtube = async (req, res) => {
 };
 
 // return the best youtube ID for a given search string.
-// optionally take in the duration of the requested track in seconds
+// optionally take in the duration of the requested track in milliseconds
 // to be used when trying to determine best match
 const getYTId = async (searchString, targetDuration) => {
   const searchURL = `${YT_API_SEARCH_URL}${encodeURIComponent(
@@ -70,7 +70,7 @@ const getYTId = async (searchString, targetDuration) => {
             const newDiff = Math.abs(
               moment
                 .duration(val.contentDetails && val.contentDetails.duration)
-                .asSeconds() - targetDuration,
+                .asMilliseconds() - targetDuration,
             );
             return newDiff < acc.diff
               ? { id: val.id, diff: newDiff, idx }
@@ -136,11 +136,11 @@ const downloadYTAsMp3 = async (id, fileName) => {
   });
 };
 
-const getYouTubeLink = (query) => {
+const getYouTubeLink = (query, lengthMs) => {
   return new Promise(async (resolve) => {
     try {
       console.log('getYT Link query', query);
-      const ytId = await getYTId(query);
+      const ytId = await getYTId(query, lengthMs);
 
       const res = await downloadYTAsMp3(
         ytId,
