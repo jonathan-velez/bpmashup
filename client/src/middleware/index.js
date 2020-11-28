@@ -133,7 +133,7 @@ export const activityLogger = (store) => (next) => (action) => {
         id,
         userId,
         track: state.mediaPlayer.loadedTrack,
-        youTubeId: track.data[0].id.videoId,
+        youTubeId: track.data.id.videoId,
         timeStamp: moment().format(),
       });
       break;

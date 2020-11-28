@@ -59,7 +59,7 @@ app.get(`${API_BASE_URL}/my-beatport`, bpController.callApi);
 app.get(`${API_BASE_URL}/charts`, bpController.callApi);
 app.get(`${API_BASE_URL}/profile/charts`, bpController.callApi);
 app.get(`${API_BASE_URL}/download-track`, zippyController.zippyScrape);
-app.get(`${API_BASE_URL}/youtube/search`, ytController.Youtube);
+app.get(`${API_BASE_URL}/youtube/search-v2`, ytController.searchv2);
 app.get(
   `${API_BASE_URL}/songkick/get-artist-id`,
   songkickController.getArtistId,

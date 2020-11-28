@@ -10,32 +10,15 @@ const YT_API_SEARCH_URL =
 const YT_API_VIDEOS_URL =
   'https://youtube.googleapis.com/youtube/v3/videos?part=contentDetails';
 
-// TODO: give this a better name
-exports.Youtube = async (req, res) => {
-  const searchURL = `${YT_API_SEARCH_URL}${encodeURIComponent(
-    req.query.q,
-  )}&key=${ytKey}`;
-
-  console.log('Searching Youtube: ', searchURL);
-
-  const body = [];
-  try {
-    const ytResponse = await axios.get(searchURL);
-    if (ytResponse.status === 200 && ytResponse.data) {
-      body.push(ytResponse.data.items[0]);
-      console.log('Youtube result', body);
-    }
-  } catch (error) {
-    console.log(`Error in YouTube Controller: ${error}`);
-  }
-
-  res.json(body);
-};
-
-// return the best youtube ID for a given search string.
+// return the best YouTube search result for a given query.
 // optionally take in the duration of the requested track in milliseconds
 // to be used when trying to determine best match
-const getYTId = async (searchString, targetDuration) => {
+// returns ID by default, but optionally returns the full result object
+const getBestYouTubeSearchResult = async (
+  searchString,
+  targetDuration,
+  fullObject = false,
+) => {
   const searchURL = `${YT_API_SEARCH_URL}${encodeURIComponent(
     searchString,
   )}&key=${ytKey}`;
@@ -51,12 +34,15 @@ const getYTId = async (searchString, targetDuration) => {
       // if a targetDuration was provided, let's see if we can factor it in our decision
       if (targetDuration) {
         console.log('targetDuration provided, getting video data');
+        // we need to call a 2nd endpoint to get video data
+
+        // contruct the get params for each video ID
         const idsString = items.reduce(
           (acc, val, idx) =>
             acc + (idx > 0 ? '&' : '') + 'id=' + val.id.videoId,
           '',
         );
-  
+
         const videosURL = `${YT_API_VIDEOS_URL}&${idsString}&key=${ytKey}`;
         console.log('videosURL', videosURL);
         const ytVideosResponse = await axios.get(videosURL);
@@ -76,7 +62,7 @@ const getYTId = async (searchString, targetDuration) => {
               ? { id: val.id, diff: newDiff, idx }
               : acc;
           },
-          { id: null, diff: 99999, idx: -1 },
+          { id: null, diff: Number.MAX_SAFE_INTEGER, idx: -1 },
         );
 
         console.log('closestDurationVideo', closestDurationVideo);
@@ -84,6 +70,13 @@ const getYTId = async (searchString, targetDuration) => {
         if (closestDurationVideo.id) {
           videoId = closestDurationVideo.id;
         }
+      }
+
+      if (fullObject) {
+        const target = items.filter(
+          (item) => item.id && item.id.videoId === videoId,
+        );
+        return target.length > 0 ? target[0] : {};
       }
 
       return videoId;
@@ -140,7 +133,7 @@ const getYouTubeLink = (query, lengthMs) => {
   return new Promise(async (resolve) => {
     try {
       console.log('getYT Link query', query);
-      const ytId = await getYTId(query, lengthMs);
+      const ytId = await getBestYouTubeSearchResult(query, lengthMs);
 
       const res = await downloadYTAsMp3(
         ytId,
@@ -157,6 +150,20 @@ const getYouTubeLink = (query, lengthMs) => {
   });
 };
 
-exports.getYTId = getYTId;
+const searchv2 = async (req, res) => {
+  const { query } = req;
+  const { q, lengthMs } = query;
+
+  const ytObject = await getBestYouTubeSearchResult(q, lengthMs, true);
+  console.log('ytObject', ytObject);
+
+  res.json({
+    success: true,
+    data: ytObject,
+  });
+};
+
+exports.getBestYouTubeSearchResult = getBestYouTubeSearchResult;
 exports.downloadYTAsMp3 = downloadYTAsMp3;
 exports.getYouTubeLink = getYouTubeLink;
+exports.searchv2 = searchv2;

@@ -76,7 +76,7 @@ const AppWrapper = ({
       case 'F':
         // TODO: clean this shit up
         if (!loadedTrack.title || !loadedTrack.artists) return;
-        getYoutubeLink(`${loadedTrack.artists[0].name} ${loadedTrack.title}`);
+        getYoutubeLink(`${loadedTrack.artists[0].name} ${loadedTrack.title}`, loadedTrack.lengthMs);
         break;
       case 'm':
       case 'M':

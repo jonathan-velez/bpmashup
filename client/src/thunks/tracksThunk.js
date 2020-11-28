@@ -149,18 +149,21 @@ export const fetchTracksSimilar = async (trackId, page = 1, perPage = 20) => {
   };
 };
 
-export const getYoutubeLink = async (searchString) => {
+export const getYoutubeLink = async (searchString, lengthMs) => {
   return async (dispatch) => {
     dispatch({
       type: START_ASYNC,
     });
 
     const request = await callAPIorCache(
-      `${API_GET_YOUTUBE_LINK}?q=${encodeURIComponent(searchString)}`,
+      `${API_GET_YOUTUBE_LINK}?q=${encodeURIComponent(
+        searchString,
+      )}&lengthMs=${lengthMs}`,
     );
+    
     dispatch({
       type: GET_YOUTUBE_LINK,
-      payload: request,
+      payload: request.data,
     });
   };
 };

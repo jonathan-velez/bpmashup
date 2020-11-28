@@ -46,7 +46,7 @@ class Footer extends React.PureComponent {
 
     const getYouTube = loadedTrack => {
       if (loadedTrack.id) {
-        getYoutubeLink(`${loadedTrack.artists[0].name} ${loadedTrack.title}`);
+        getYoutubeLink(`${loadedTrack.artists[0].name} ${loadedTrack.title}`, loadedTrack.lengthMs);
       }
     }
 

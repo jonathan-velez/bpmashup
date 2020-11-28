@@ -93,18 +93,17 @@ const mediaPlayer = (state = defaultState, action) => {
         volume: action.payload
       }
     case GET_YOUTUBE_LINK: {
-      // TODO: This needs a lot of work. Rather than just pull the first result,
-      // we should have some logic to determine best fit. e.g.: yt length matches bp's stated length, etc.
-      // should also handle null values
       const { data } = action.payload;
-      if (data.length === 0) {
+      
+      if (!data.etag) {
         return {
           ...state,
           youTubeObject: {}
         }
       }
 
-      const youTubeId = data[0].id && data[0].id.videoId;
+      const youTubeId = data.id && data.id.videoId;
+
       if (!youTubeId) {
         return {
           ...state,
@@ -112,13 +111,13 @@ const mediaPlayer = (state = defaultState, action) => {
         }
       }
 
-      const youTubeTitle = data[0].snippet.title;
-      const youTubeImageUrl = data[0].snippet.thumbnails.default.url;
-      const youTubeImageWidth = data[0].snippet.thumbnails.default.width;
-      const youTubeImageHeight = data[0].snippet.thumbnails.default.height;
-      const youTubeDescription = data[0].snippet.description;
+      const youTubeTitle = data.snippet.title;
+      const youTubeImageUrl = data.snippet.thumbnails.default.url;
+      const youTubeImageWidth = data.snippet.thumbnails.default.width;
+      const youTubeImageHeight = data.snippet.thumbnails.default.height;
+      const youTubeDescription = data.snippet.description;
 
-      const youTubeUrl = `http://youtube.com/watch?v=${youTubeId}`;
+      const youTubeUrl = `https://youtube.com/watch?v=${youTubeId}`;
 
       const youTubeObject = {
         youTubeId,
