@@ -154,7 +154,7 @@ function processDownloadJob(data) {
     const { key, searchTerms } = data;
     const { artists, name, mixName } = searchTerms;
 
-    const response = await zippyController.getDownladLink({
+    let response = await zippyController.getDownladLink({
       artists,
       name,
       mixName,
@@ -162,12 +162,21 @@ function processDownloadJob(data) {
 
     console.log('zippy response', response);
 
+    // fallback to youtube if zippy fails
+    if (!response.success) {
+      console.log('zippy failed, try YT');
+      const searchString = [artists, name, mixName].join(' ');
+      response = await ytController.getYouTubeLink(searchString);
+    }
+
+    let { success, href, fileName } = response;
+
     const updateData = {
       queueId: key,
-      status: response.success ? 'available' : 'notAvailable',
-      url: response.success ? response.href : null,
+      status: success ? 'available' : 'notAvailable',
+      url: success ? href : null,
       dateProcessed: admin.firestore.Timestamp.now(),
-      fileName: response.fileName || null,
+      fileName: fileName || null,
     };
 
     // update firesstore
