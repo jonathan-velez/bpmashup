@@ -153,6 +153,7 @@ function processDownloadJob(data) {
     // update queued item as 'available' in Firestore
     const { key, searchTerms } = data;
     const { artists, name, mixName } = searchTerms;
+    let isYouTube = false;
 
     let response = await zippyController.getDownladLink({
       artists,
@@ -167,6 +168,7 @@ function processDownloadJob(data) {
       console.log('zippy failed, try YT');
       const searchString = [artists, name, mixName].join(' ');
       response = await ytController.getYouTubeLink(searchString);
+      isYouTube = true;
     }
 
     let { success, href, fileName } = response;
@@ -177,6 +179,7 @@ function processDownloadJob(data) {
       url: success ? href : null,
       dateProcessed: admin.firestore.Timestamp.now(),
       fileName: fileName || null,
+      isYouTube,
     };
 
     // update firesstore
