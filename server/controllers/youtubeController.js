@@ -4,7 +4,9 @@ const ytdl = require('ytdl-core');
 const ffmpeg = require('fluent-ffmpeg');
 const moment = require('moment');
 
-const ytKey = process.env.YOUTUBE_API_KEY;
+const { logToFirestore } = require('../util/firebaseUtils');
+
+const YT_KEY = process.env.YOUTUBE_API_KEY;
 const YT_API_SEARCH_URL =
   'https://www.googleapis.com/youtube/v3/search?type=video&safeSearch=none&videoEmbeddable=true&videoSyndicated=true&part=snippet&videoDuration=medium&q=';
 const YT_API_VIDEOS_URL =
@@ -21,7 +23,7 @@ const getBestYouTubeSearchResult = async (
 ) => {
   const searchURL = `${YT_API_SEARCH_URL}${encodeURIComponent(
     searchString,
-  )}&key=${ytKey}`;
+  )}&key=${YT_KEY}`;
 
   try {
     const ytSearchResponse = await axios.get(searchURL);
@@ -43,7 +45,7 @@ const getBestYouTubeSearchResult = async (
           '',
         );
 
-        const videosURL = `${YT_API_VIDEOS_URL}&${idsString}&key=${ytKey}`;
+        const videosURL = `${YT_API_VIDEOS_URL}&${idsString}&key=${YT_KEY}`;
         console.log('videosURL', videosURL);
         const ytVideosResponse = await axios.get(videosURL);
         const { data = {} } = ytVideosResponse;
@@ -66,6 +68,11 @@ const getBestYouTubeSearchResult = async (
         );
 
         console.log('closestDurationVideo', closestDurationVideo);
+
+        logToFirestore({
+          ...closestDurationVideo,
+          type: 'closestDurationVideo',
+        });
 
         if (closestDurationVideo.id) {
           videoId = closestDurationVideo.id;

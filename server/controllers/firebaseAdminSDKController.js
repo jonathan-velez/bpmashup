@@ -4,8 +4,13 @@ const serviceAccount = JSON.parse(
 );
 
 exports.firebaseInstance = () => {
-  return admin.initializeApp({
+  console.log('Initiazing Firebase instance.');
+
+  const app = admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
     databaseURL: 'https://bpmashup-firestore.firebaseio.com',
   });
+
+  const firestore = app.firestore();
+  return firestore;
 };

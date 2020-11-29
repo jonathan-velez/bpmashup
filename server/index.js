@@ -17,8 +17,7 @@ const {
 } = constants;
 
 const firebaseAdmin = require('./controllers/firebaseAdminSDKController');
-const firebaseInstance = firebaseAdmin.firebaseInstance();
-const firestore = firebaseInstance.firestore();
+const firestore = firebaseAdmin.firebaseInstance();
 
 const staticFiles = express.static(path.join(__dirname, '../client/build'));
 app.use(staticFiles);
@@ -167,7 +166,10 @@ function processDownloadJob(data) {
     if (!response.success) {
       console.log('zippy failed, try YT');
       const searchString = [artists, name, mixName].join(' ');
-      response = await ytController.getYouTubeLink(searchString, track.lengthMs);
+      response = await ytController.getYouTubeLink(
+        searchString,
+        track.lengthMs,
+      );
       isYouTube = true;
     }
 
