@@ -40,7 +40,6 @@ import {
   CLEAR_LOVED_LABELS_DETAILS,
   ADD_ACTION_MESSAGE,
   REMOVE_ACTION_MESSAGE,
-  ADD_TRACK_TO_DOWNLOAD_QUEUE,
 } from '../constants/actionTypes';
 
 export const startAsync = () => {
