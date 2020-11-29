@@ -19,6 +19,8 @@ import DownloadQueuePage from './DownloadQueuePage';
 import Home from './Home';
 import Genre from './Genre';
 import Preferences from './Preferences';
+import ProtectedRoute from './ProtectedRoute';
+import PageNotFound from './PageNotFound';
 
 const Main = () => {
   const containerStyle = {
@@ -30,9 +32,9 @@ const Main = () => {
       <Switch>
         <Route exact path='/chart/:chartName/:chartId' component={Chart} />
         <Route exact path='/track/:trackName/:trackId' component={Track} />
-        <Route exact path='/history/my-activity' component={MyActivity} />
-        <Route exact path='/history/loved-labels' component={MyLovedLabels} />
-        <Route
+        <ProtectedRoute exact path='/history/my-activity' component={MyActivity} />
+        <ProtectedRoute exact path='/history/loved-labels' component={MyLovedLabels} />
+        <ProtectedRoute
           exact
           path='/history/loved-tracks'
           component={MyLovedTracks}
@@ -79,10 +81,11 @@ const Main = () => {
           path='/genre/:genreName/:genreId'
           component={Genre}
         />
-        <Route exact path='/my-profile' component={MyProfile} />
-        <Route exact path='/preferences' component={Preferences} />
-        <Route exact path='/download-queue' component={DownloadQueuePage} />
+        <ProtectedRoute exact path='/my-profile' component={MyProfile} />
+        <ProtectedRoute exact path='/preferences' component={Preferences} />
+        <ProtectedRoute exact path='/download-queue' component={DownloadQueuePage} />
         <Route exact path='/' component={Home} />
+        <Route component={PageNotFound} />
       </Switch>
     </Container>
   );
