@@ -1,8 +1,12 @@
 import { LOAD_PERMS, LOAD_PREFERENCES } from '../constants/actionTypes';
 
+const defaultPreferences = {
+  fallbackYouTube: true,
+};
+
 const defaultState = {
   permissions: [],
-  preferences: {},
+  preferences: defaultPreferences,
 };
 
 const userDetail = (state = defaultState, action) => {

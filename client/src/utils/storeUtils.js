@@ -141,15 +141,12 @@ export const registerFirebaseListeners = () => {
     // listen to user preferences
     const userPreferencesRef = firestore.collection(`users/${uid}/preferences`);
     const userPreferences = userPreferencesRef.onSnapshot((preferences) => {
-      const userPreferences = {};
+      let userPreferences = {};
       preferences.forEach((snapshot) => {
-        const { id } = snapshot;
-        const preferenceItem = {
-          id,
+        userPreferences = {
+          ...userPreferences,
           ...snapshot.data(),
         };
-
-        userPreferences[id] = preferenceItem;
 
         store.dispatch({
           type: LOAD_PREFERENCES,

@@ -150,7 +150,7 @@ downloadQueue.process(BULL_PROCESS_CONCURRENCY, async (job) => {
 function processDownloadJob(data) {
   return new Promise(async (resolve) => {
     // update queued item as 'available' in Firestore
-    const { key, searchTerms, track = {} } = data;
+    const { key, searchTerms, track = {}, addedBy } = data;
     const { artists, name, mixName } = searchTerms;
     let isYouTube = false;
 
@@ -164,13 +164,32 @@ function processDownloadJob(data) {
 
     // fallback to youtube if zippy fails
     if (!response.success) {
-      console.log('zippy failed, try YT');
-      const searchString = [artists, name, mixName].join(' ');
-      response = await ytController.getYouTubeLink(
-        searchString,
-        track.lengthMs,
+      console.log(
+        `Zippy failed! Check user's preferences to see if they want to fall back to YouTube`,
       );
-      isYouTube = true;
+
+      const userRef = await firestore
+        .collection('users')
+        .doc(addedBy)
+        .collection('preferences')
+        .doc('prefs')
+        .get();
+
+      // TODO: implement cloud firestore functions to initiate preferences collection on user creation
+      // For now, we'll default to true here and override if the user flipped it off in pref UI
+      const { fallbackYouTube = true } = userRef.data() || {};
+
+      if (fallbackYouTube) {
+        console.log('User want.');
+        const searchString = [artists, name, mixName].join(' ');
+        response = await ytController.getYouTubeLink(
+          searchString,
+          track.lengthMs,
+        );
+        isYouTube = true;
+      } else {
+        console.log(`User no want.`);
+      }
     }
 
     let { success, href, fileName } = response;
