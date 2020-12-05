@@ -10,7 +10,9 @@ import { trackHasBeenDownloaded } from '../selectors';
 export const addTrackToDownloadQueue = (track) => {
   return async (dispatch, getState) => {
     const state = getState();
-    const { uid } = state.firebaseState.auth;
+    const { firebaseState = {} } = state;
+    const { auth = {} } = firebaseState;
+    const { uid } = auth;
     if (!uid || uid === 0) return;
 
     let { id: beatportTrackId, name, mixName } = track;
@@ -20,10 +22,11 @@ export const addTrackToDownloadQueue = (track) => {
     );
 
     mixName = mixName
-      .replace('Original', '')
-      .replace('Mix', '')
-      .replace('Version', '')
-      .replace('Remix', '');
+      .toLowerCase()
+      .replace('mix', '')
+      .replace('version', '')
+      .replace('remix', '')
+      .trim();
 
     // check if track already's been added
     if (trackHasBeenDownloaded(state, beatportTrackId)) {
@@ -84,7 +87,6 @@ export const updateTrackStatus = (queueId, status) => {
   return (dispatch, getState) => {
     const state = getState();
     const { uid } = state.firebaseState.auth;
-    
     const firestore = firebase.firestore();
     const userItemRef = firestore
       .collection('users')
