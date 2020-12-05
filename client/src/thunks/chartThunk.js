@@ -95,7 +95,7 @@ export async function fetchChartsByProfileId(
     });
 
     const beatportChardData = await callAPIorCache(
-      `${API_GET_CHARTS_BY_PROFILE_ID}?djprofileId=${profileId}&publishedOnly=true&page=${page}&perPage=${perPage}`,
+      `${API_GET_CHARTS_BY_PROFILE_ID}?djprofileId=${profileId}&publishedOnly=true&page=${page}&perPage=${perPage}&sortBy=publishDate+DESC`,
     );
 
     const { data, status } = beatportChardData;
@@ -121,7 +121,7 @@ export async function fetchChartsByGenreId(
     });
 
     const beatportChardData = await callAPIorCache(
-      `${API_GET_CHART}?facets=genreId:${genreId}&publishedOnly=true&page=${page}&perPage=${perPage}`,
+      `${API_GET_CHART}?facets=genreId:${genreId}&publishedOnly=true&page=${page}&perPage=${perPage}&sortBy=publishDate+DESC`,
     );
 
     const { data, status } = beatportChardData;
