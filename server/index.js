@@ -194,6 +194,21 @@ function processDownloadJob(data) {
 
     let { success, href, fileName } = response;
 
+    return resolve({
+      key,
+      success,
+      href,
+      fileName,
+      isYouTube,
+      addedBy,
+    });
+  });
+}
+
+const updateFirestoreWithJobResult = (payload) => {
+  return new Promise((resolve, reject) => {
+    const { key, success, href, fileName, isYouTube, addedBy } = payload;
+
     const updateData = {
       queueId: key,
       status: success ? 'available' : 'notAvailable',
@@ -203,28 +218,62 @@ function processDownloadJob(data) {
       isYouTube,
     };
 
-    // update firesstore
-    // TODO: If failed, add reason. e.g. No google hits, No suitable zippy hits, etc.
-    // zippy response { href: null, success: false, error: 'No file found' }
-    const batch = firestore.batch();
-    const globalRef = firestore.collection('downloadQueue').doc(data.key);
-    batch.update(globalRef, updateData);
+    try {
+      // update firesstore
+      // TODO: If failed, add reason. e.g. No google hits, No suitable zippy hits, etc.
+      // zippy response { href: null, success: false, error: 'No file found' }
+      const batch = firestore.batch();
+      const globalRef = firestore.collection('downloadQueue').doc(key);
+      batch.update(globalRef, updateData);
 
-    const userRef = firestore
-      .collection('users')
-      .doc(data.addedBy)
-      .collection('downloadQueue')
-      .doc(data.key);
-    batch.update(userRef, updateData);
-    batch
-      .commit()
-      .then(() => resolve({ ...updateData, success: true }))
-      .catch(() => resolve({ ...updateData, success: false }));
-
-    resolve({ success: true });
+      const userRef = firestore
+        .collection('users')
+        .doc(addedBy)
+        .collection('downloadQueue')
+        .doc(key);
+      batch.update(userRef, updateData);
+      batch
+        .commit()
+        .then(() => resolve({ ...updateData, success: true }))
+        .catch(() => resolve({ ...updateData, success: false }));
+    } catch (error) {
+      reject(error);
+    }
   });
-}
+};
 
-downloadQueue.on('completed', (job, result) => {
-  console.log(`Job completed with result ${JSON.stringify(result)}`);
+downloadQueue.on('completed', async (job, result) => {
+  try {
+    await updateFirestoreWithJobResult(result);
+    console.log(
+      `Job completed with result ${JSON.stringify(result)} - job: ${job}`,
+    );
+  } catch (error) {
+    console.log(`Error updating firestore for job ${job}. Error: ${error}`);
+  }
 });
+
+process
+  .on('SIGTERM', shutdown('SIGTERM'))
+  .on('SIGINT', shutdown('SIGINT'))
+  .on('uncaughtException', shutdown('uncaughtException'));
+
+function shutdown(signal) {
+  return async (err) => {
+    console.log(`${signal}...`);
+    if (err) console.error(err.stack || err);
+
+    setTimeout(() => {
+      console.warn(`Couldn't pause all queues within 30s, sorry! Exiting.`);
+      process.exit(1);
+    }, 30000);
+
+    try {
+      await downloadQueue.pause(true);
+    } catch (err) {
+      console.error(err);
+    }
+
+    process.exit(0);
+  };
+}
