@@ -26,12 +26,14 @@ export const constructLinks = (listItem, type, limit = 0) => {
     if (limit > 0 && idx >= limit) return null;
 
     const { name, id, slug } = val;
-    // TODO: clean this up
+
     let returnUrl = '';
-    if (type !== 'artist') {
-      returnUrl = `/most-popular/${type}/${slug}/${id}/`;
-    } else {
+    if (type === 'genre') {
+      returnUrl = `/genre/${slug}/${id}/`;
+    } else if (type == 'artist') {
       returnUrl = `/artist/${slug}/${id}`;
+    } else {
+      returnUrl = `/most-popular/${type}/${slug}/${id}/`;
     }
 
     return (
@@ -201,7 +203,6 @@ export const getExistingTrackFromGlobalDownloadQueue = async (trackId) => {
     await trackRef
       .get()
       .then((snapshot) => {
-
         if (snapshot.empty) {
           return resolve({
             exists: false,
