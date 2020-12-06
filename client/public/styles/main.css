@@ -166,13 +166,12 @@ input[type='range']:focus::-ms-fill-upper {
 /* footer menubar */
 
 .footer-menu {
-  z-index: 99999 !important;
   height: 85px;
   background: linear-gradient(#fff, #cecece) !important;
 }
 
-.nav-menu {
-  z-index: 99999 !important;
+.ui.dimmer {
+  z-index: 99 !important;
 }
 
 .genre-row {
