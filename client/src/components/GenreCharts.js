@@ -1,9 +1,11 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
+import { Button } from 'semantic-ui-react';
 
 import TitleHeader from './TitleHeader';
 import ChartSlider from './ChartSlider';
 import { fetchChartsByGenreId } from '../thunks';
+import { Link } from 'react-router-dom';
 
 const GenreCharts = ({
   isLoading,
@@ -25,6 +27,15 @@ const GenreCharts = ({
     <React.Fragment>
       <TitleHeader headerPrefix='CHARTS' headerTitle={genreName} />
       <ChartSlider charts={charts} />
+      <br />
+      <Button
+        basic
+        as={Link}
+        to={`/charts/all?genreId=${genreId}`}
+        style={{ float: 'right' }}
+      >
+        View All Charts
+      </Button>
     </React.Fragment>
   );
 };

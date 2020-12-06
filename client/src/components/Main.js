@@ -21,6 +21,7 @@ import Genre from './Genre';
 import Preferences from './Preferences';
 import ProtectedRoute from './ProtectedRoute';
 import PageNotFound from './PageNotFound';
+import Charts from './Charts';
 
 const Main = () => {
   const containerStyle = {
@@ -30,6 +31,7 @@ const Main = () => {
   return (
     <Container style={containerStyle} textAlign='center'>
       <Switch>
+        <Route exact path='/charts/all' component={Charts} />
         <Route exact path='/chart/:chartName/:chartId' component={Chart} />
         <Route exact path='/track/:trackName/:trackId' component={Track} />
         <ProtectedRoute exact path='/history/my-activity' component={MyActivity} />

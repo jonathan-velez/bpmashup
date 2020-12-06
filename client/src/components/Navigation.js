@@ -13,10 +13,15 @@ class Navigation extends React.PureComponent {
     return (
       <Menu fixed='top' borderless>
         <Menu.Item header>
-          <Link to="/"><img src={logo} height='32' width='32' alt='BPMashup' /></Link>
+          <Link to='/'>
+            <img src={logo} height='32' width='32' alt='BPMashup' />
+          </Link>
         </Menu.Item>
         <GenreControl />
         <PlaylistDropdownControl />
+        <Menu.Item as={Link} to='/charts/all'>
+          CHARTS
+        </Menu.Item>
         <Menu.Item as={Link} to='/tracks'>
           TRACKS
         </Menu.Item>
@@ -27,7 +32,7 @@ class Navigation extends React.PureComponent {
           <Auth />
         </Menu.Item>
       </Menu>
-    )
+    );
   }
 }
 
