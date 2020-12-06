@@ -27,7 +27,7 @@ const ChartItemCard = ({ chartItem, history }) => {
       onMouseLeave={handleHide}
       onClick={handleClick}
     >
-      <Dimmer active={active} style={{ cursor: 'pointer' }}>
+      <Dimmer active={active} style={{ cursor: 'pointer', zIndex: 99 }}>
         <h4>{name}</h4>
         {publishDate && <h5>Published on {publishDate}</h5>}
         {chartOwner && <h5>by {chartOwner.name}</h5>}
