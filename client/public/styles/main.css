@@ -162,8 +162,13 @@
   /* footer menubar */
 
   .footer-menu {
+    z-index: 99999 !important;
     height: 85px;
     background: linear-gradient(#fff, #cecece) !important;
+  }
+
+  .nav-menu {
+    z-index: 99999 !important;
   }
 
   .genre-row {
@@ -370,9 +375,8 @@
     justify-content: center;
     align-items: center;
   }
-  
+
   .profilePhotoPlaceholder {
     width: 200px;
     height: 200px;
   }
-  
