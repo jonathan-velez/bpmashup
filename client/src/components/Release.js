@@ -1,4 +1,5 @@
-import React, { Fragment, useEffect } from 'react';
+import React, { useEffect } from 'react';
+import { Helmet } from 'react-helmet';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Item, Placeholder } from 'semantic-ui-react';
@@ -7,10 +8,22 @@ import Scroll from 'react-scroll';
 import TrackListingGroup from './TrackListingGroup';
 import { fetchReleaseData } from '../thunks';
 import { constructLinks } from '../utils/trackUtils';
+import { DEFAULT_PAGE_TITLE } from '../constants/defaults';
 
 const Release = ({ match, fetchReleaseData, release, trackListing }) => {
+  // TODO: deconstruct release obj
   const { params = {} } = match;
   const { releaseId } = params;
+  const {
+    id,
+    name,
+    artists = [],
+    label = {},
+    images = {},
+    catalogNumber,
+    description,
+    releaseDate,
+  } = release;
 
   useEffect(() => {
     if (releaseId) {
@@ -19,18 +32,43 @@ const Release = ({ match, fetchReleaseData, release, trackListing }) => {
     }
   }, [fetchReleaseData, releaseId]);
 
+  let pageTitle = '';
+
+  if (name) {
+    pageTitle = name;
+
+    if (artists.length > 0) {
+      // TODO: create a 'stringify' helper fn for artists. this is repeated elsewhere
+      let artistsString = artists.reduce(
+        (acc, val, idx) => (acc += (idx > 0 ? ', ' : '') + val.name),
+        '',
+      );
+      pageTitle += ' by ' + artistsString;
+    }
+
+    pageTitle += ' :: ';
+  }
+
+  pageTitle += DEFAULT_PAGE_TITLE;
+
   return (
-    <Fragment>
+    <>
+      <Helmet>
+        <title>{pageTitle}</title>
+      </Helmet>
       <Item.Group>
         <Item>
-          {!release.id ? (
+          {!id ? (
             <Placeholder fluid>
               <Placeholder.Image square />
             </Placeholder>
           ) : (
-            <Item.Image src={release.images.large.secureUrl} size='small' />
+            <Item.Image
+              src={images.large && images.large.secureUrl}
+              size='small'
+            />
           )}
-          {!release.id ? (
+          {!id ? (
             <Placeholder>
               <Placeholder.Header>
                 <Placeholder.Line length='very short' />
@@ -45,23 +83,23 @@ const Release = ({ match, fetchReleaseData, release, trackListing }) => {
               verticalAlign='middle'
               className='releaseHeaderContent'
             >
-              <Item.Header>{release.name}</Item.Header>
-              <Item.Meta>{constructLinks(release.artists, 'artist')}</Item.Meta>
+              <Item.Header>{name}</Item.Header>
+              <Item.Meta>{constructLinks(artists, 'artist')}</Item.Meta>
               <Item.Meta>
-                {release.catalogNumber} [
-                <Link to={`/label/${release.label.slug}/${release.label.id}`}>
-                  {release.label.name}
+                {catalogNumber} [
+                <Link to={`/label/${label.slug}/${label.id}`}>
+                  {label.name}
                 </Link>
                 ]
               </Item.Meta>
-              <Item.Description>{release.description}</Item.Description>
-              <Item.Extra>Released: {release.releaseDate}</Item.Extra>
+              <Item.Description>{description}</Item.Description>
+              <Item.Extra>Released: {releaseDate}</Item.Extra>
             </Item.Content>
           )}
         </Item>
       </Item.Group>
       {release.id && <TrackListingGroup trackListing={trackListing} />}
-    </Fragment>
+    </>
   );
 };
 

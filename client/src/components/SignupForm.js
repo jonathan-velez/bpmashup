@@ -6,6 +6,7 @@ import { firebaseConnect } from 'react-redux-firebase';
 
 import { openModalWindow } from '../actions/ActionCreators';
 import LoginForm from './LoginForm';
+import { DEFAULT_PAGE_TITLE } from '../constants/defaults';
 
 const SignupForm = ({ firebase, openModalWindow }) => {
   const initialState = {
@@ -172,7 +173,7 @@ const SignupForm = ({ firebase, openModalWindow }) => {
     <React.Fragment>
       <Form onSubmit={handleFormSubmit} loading={isLoading}>
         <Header as='h2'>
-          Welcome to BPMashup
+          Welcome to {DEFAULT_PAGE_TITLE}
           <Header.Subheader>
             Please sign up with your email and choose a password.
           </Header.Subheader>

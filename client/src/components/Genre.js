@@ -1,6 +1,11 @@
 import React from 'react';
+import { Helmet } from 'react-helmet';
+import _ from 'lodash';
+
 import GenreCharts from './GenreCharts';
 import MostPopularTracks from './MostPopularTracks';
+import { DEFAULT_PAGE_TITLE } from '../constants/defaults';
+import { deslugify } from '../utils/helpers';
 
 const Genre = (props) => {
   const { match = {} } = props;
@@ -8,7 +13,15 @@ const Genre = (props) => {
   const { genreId, genreName } = params;
 
   return (
-    <React.Fragment>
+    <>
+      <Helmet>
+        <title>
+          {genreName
+            ? `${_.startCase(deslugify(genreName))} Top Charts & Tracks :: `
+            : ``}
+          {DEFAULT_PAGE_TITLE}
+        </title>
+      </Helmet>
       <GenreCharts genreId={genreId} genreName={genreName} />
       <MostPopularTracks
         searchType='genre'
@@ -16,7 +29,7 @@ const Genre = (props) => {
         searchName={genreName}
         {...props}
       />
-    </React.Fragment>
+    </>
   );
 };
 

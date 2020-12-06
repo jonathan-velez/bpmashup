@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Helmet } from 'react-helmet';
 import { connect } from 'react-redux';
 import Scroll from 'react-scroll';
 import queryString from 'query-string';
@@ -9,7 +10,7 @@ import TrackAlbum from './TrackAlbum';
 import GenreLabel from './GenreLabel';
 import { fetchChartDataById } from '../thunks';
 import { getPerPageSetting } from '../utils/helpers';
-import { DEFAULT_PAGE } from '../constants/defaults';
+import { DEFAULT_PAGE, DEFAULT_PAGE_TITLE } from '../constants/defaults';
 
 const Chart = ({
   location,
@@ -51,8 +52,24 @@ const Chart = ({
     textTransform: 'uppercase',
   };
 
+  let pageTitle = '';
+  if (name) {
+    pageTitle = name;
+
+    if (chartOwnerName) {
+      pageTitle = pageTitle + ' by ' + chartOwnerName;
+    }
+
+    pageTitle = pageTitle + ' :: ';
+  }
+
+  pageTitle = pageTitle + DEFAULT_PAGE_TITLE;
+
   return (
-    <React.Fragment>
+    <>
+      <Helmet>
+        <title>{pageTitle}</title>
+      </Helmet>
       <Segment placeholder padded='very'>
         <Grid>
           <Grid.Row>
@@ -92,7 +109,7 @@ const Chart = ({
       <Transition visible={visible} animation='fade' duration={1500}>
         <TrackListingGroup trackListing={trackListing} />
       </Transition>
-    </React.Fragment>
+    </>
   );
 };
 

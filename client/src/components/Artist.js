@@ -1,4 +1,5 @@
-import React, { Fragment, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
+import { Helmet } from 'react-helmet';
 import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
 import { Grid, Image, Header, Menu, Button } from 'semantic-ui-react';
@@ -13,6 +14,7 @@ import LoveItem from './LoveItem';
 import ShowMore from './ShowMore';
 import ChartSlider from './ChartSlider';
 import ReleaseList from './ReleaseList';
+import { DEFAULT_PAGE_TITLE } from '../constants/defaults';
 
 const Artist = ({
   match,
@@ -136,15 +138,24 @@ const Artist = ({
   }
 
   return (
-    <Fragment>
+    <>
+      <Helmet>
+        <title>
+          {name ? `${name} :: ` : ``}{DEFAULT_PAGE_TITLE}
+        </title>
+      </Helmet>
       <Grid divided stackable>
         {imageSrc && (
-          <React.Fragment>
+          <>
             <Grid.Row columns={1}>
               <Grid.Column>
                 <Header floated='right' size='huge' className='item-header'>
                   {name}{' '}
-                  <LoveItem itemType='artist' item={{ id, name, slug }} type='button' />
+                  <LoveItem
+                    itemType='artist'
+                    item={{ id, name, slug }}
+                    type='button'
+                  />
                 </Header>
               </Grid.Column>
             </Grid.Row>
@@ -185,7 +196,7 @@ const Artist = ({
                 {activeItemContent}
               </Grid.Column>
             </Grid.Row>
-          </React.Fragment>
+          </>
         )}
       </Grid>
       <Menu secondary pointing>
@@ -232,7 +243,7 @@ const Artist = ({
         </Menu.Item>
       </Menu>
       {activeItemContent2}
-    </Fragment>
+    </>
   );
 };
 

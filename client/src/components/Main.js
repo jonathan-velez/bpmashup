@@ -1,4 +1,5 @@
 import React from 'react';
+import { Helmet } from 'react-helmet';
 import { Route, Switch, withRouter } from 'react-router-dom';
 import { Container } from 'semantic-ui-react';
 
@@ -22,6 +23,7 @@ import Preferences from './Preferences';
 import ProtectedRoute from './ProtectedRoute';
 import PageNotFound from './PageNotFound';
 import Charts from './Charts';
+import { DEFAULT_PAGE_TITLE } from '../constants/defaults';
 
 const Main = () => {
   const containerStyle = {
@@ -30,22 +32,29 @@ const Main = () => {
   };
   return (
     <Container style={containerStyle} textAlign='center'>
+      <Helmet>
+        <title>{DEFAULT_PAGE_TITLE}</title>
+      </Helmet>
       <Switch>
         <Route exact path='/charts/all' component={Charts} />
         <Route exact path='/chart/:chartName/:chartId' component={Chart} />
         <Route exact path='/track/:trackName/:trackId' component={Track} />
-        <ProtectedRoute exact path='/history/my-activity' component={MyActivity} />
-        <ProtectedRoute exact path='/history/loved-labels' component={MyLovedLabels} />
+        <ProtectedRoute
+          exact
+          path='/history/my-activity'
+          component={MyActivity}
+        />
+        <ProtectedRoute
+          exact
+          path='/history/loved-labels'
+          component={MyLovedLabels}
+        />
         <ProtectedRoute
           exact
           path='/history/loved-tracks'
           component={MyLovedTracks}
         />
-        <Route
-          exact
-          path='/artist/:artistName/:artistId'
-          component={Artist}
-        />
+        <Route exact path='/artist/:artistName/:artistId' component={Artist} />
         <Route exact path='/label/:labelName/:labelId' component={Label} />
         <Route
           exact
@@ -78,14 +87,14 @@ const Main = () => {
           path='/:itemType/:itemName/:itemId/tracks'
           component={TracksRoute}
         />
-        <Route
-          exact
-          path='/genre/:genreName/:genreId'
-          component={Genre}
-        />
+        <Route exact path='/genre/:genreName/:genreId' component={Genre} />
         <ProtectedRoute exact path='/my-profile' component={MyProfile} />
         <ProtectedRoute exact path='/preferences' component={Preferences} />
-        <ProtectedRoute exact path='/download-queue' component={DownloadQueuePage} />
+        <ProtectedRoute
+          exact
+          path='/download-queue'
+          component={DownloadQueuePage}
+        />
         <Route exact path='/' component={Home} />
         <Route component={PageNotFound} />
       </Switch>

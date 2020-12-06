@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Helmet } from 'react-helmet';
 import { connect } from 'react-redux';
 import firebase from 'firebase';
 import {
@@ -23,9 +24,9 @@ import { removeTrackFromPlaylist, getPlaylistDetails } from '../thunks';
 import {
   getTracklistGenreCount,
   getTracklistTrackCount,
-  getPlaylistTrackIds,
   getUserId,
 } from '../selectors';
+import { DEFAULT_PAGE_TITLE } from '../constants/defaults';
 
 const PlaylistController = ({
   match = {},
@@ -154,7 +155,13 @@ const PlaylistController = ({
   if (!playlist) return <NothingHereMessage />;
 
   return (
-    <React.Fragment>
+    <>
+      <Helmet>
+        <title>
+          {playlist.name ? `${playlist.name} :: ` : ``}
+          {DEFAULT_PAGE_TITLE}
+        </title>
+      </Helmet>
       <EditablePlaylistHeader
         playlistId={playlistId}
         playlistName={playlist.name}
@@ -215,7 +222,7 @@ const PlaylistController = ({
         removeFromPlaylist={handleRemoveFromPlaylist}
         isPlaylist
       />
-    </React.Fragment>
+    </>
   );
 };
 

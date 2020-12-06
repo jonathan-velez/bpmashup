@@ -1,9 +1,11 @@
 import React from 'react';
+import { Helmet } from 'react-helmet';
 import { connect } from 'react-redux';
 import { Checkbox, Form, Grid, Header, Icon, Popup } from 'semantic-ui-react';
 import firebase from 'firebase';
 
 import { getUserId } from '../selectors';
+import { DEFAULT_PAGE_TITLE } from '../constants/defaults';
 
 const Preferences = ({ userPreferences, uid }) => {
   const firestore = firebase.firestore();
@@ -25,10 +27,17 @@ const Preferences = ({ userPreferences, uid }) => {
     );
   };
 
+  const pageHeader = 'User Preferences';
+
   return (
     <>
+      <Helmet>
+        <title>
+          {pageHeader} :: {DEFAULT_PAGE_TITLE}
+        </title>
+      </Helmet>
       <Header size='medium' textAlign='left'>
-        User Preferences
+        {pageHeader}
       </Header>
       <Grid>
         <Grid.Row>

@@ -7,6 +7,7 @@ import PlaylistDropdownControl from './PlaylistDropdownControl';
 import SearchTracks from './SearchTracks';
 import Auth from './Auth';
 import logo from '../static/vinyl-lg.png';
+import { DEFAULT_PAGE_TITLE } from '../constants/defaults';
 
 class Navigation extends React.PureComponent {
   render() {
@@ -14,7 +15,7 @@ class Navigation extends React.PureComponent {
       <Menu fixed='top' borderless>
         <Menu.Item header>
           <Link to='/'>
-            <img src={logo} height='32' width='32' alt='BPMashup' />
+            <img src={logo} height='32' width='32' alt={DEFAULT_PAGE_TITLE} />
           </Link>
         </Menu.Item>
         <GenreControl />

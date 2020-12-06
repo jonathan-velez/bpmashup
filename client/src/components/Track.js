@@ -1,7 +1,18 @@
 import React, { useEffect, useReducer } from 'react';
+import { Helmet } from 'react-helmet';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Grid, Image, Header, Statistic, Card, Divider, Transition, Pagination, Segment } from 'semantic-ui-react';
+import {
+  Grid,
+  Image,
+  Header,
+  Statistic,
+  Card,
+  Divider,
+  Transition,
+  Pagination,
+  Segment,
+} from 'semantic-ui-react';
 import { animateScroll } from 'react-scroll';
 
 import TrackListingCards from './TrackListingCards';
@@ -12,7 +23,10 @@ import { constructLinks, constructTrackLink } from '../utils/trackUtils';
 import { musicalKeyFilter } from '../utils/helpers';
 import { callAPIorCache } from '../seessionStorageCache';
 import { API_GET_TRACKS, API_GET_CHART } from '../constants/apiPaths';
-import { DEFAULT_BP_ITEM_IMAGE_URL } from '../constants/defaults';
+import {
+  DEFAULT_BP_ITEM_IMAGE_URL,
+  DEFAULT_PAGE_TITLE,
+} from '../constants/defaults';
 import { hasZippyPermission } from '../selectors';
 
 const Track = ({ location = {}, match = {}, canZip }) => {
@@ -30,7 +44,7 @@ const Track = ({ location = {}, match = {}, canZip }) => {
     },
     similarTracksData: [],
     visible: false,
-  }
+  };
 
   const reducer = (state, action) => {
     switch (action.type) {
@@ -39,25 +53,25 @@ const Track = ({ location = {}, match = {}, canZip }) => {
           ...state,
           visible: true,
           trackData: action.payload,
-        }
+        };
       }
       case 'load_chart_data': {
         return {
           ...state,
           chartData: action.payload,
-        }
+        };
       }
       case 'load_similar_tracks_data': {
         return {
           ...state,
           similarTracksData: action.payload,
-        }
+        };
       }
       default: {
         return state;
       }
     }
-  }
+  };
 
   const [state, dispatch] = useReducer(reducer, initialState);
 
@@ -77,7 +91,7 @@ const Track = ({ location = {}, match = {}, canZip }) => {
       await loadSimilarTracksData(id);
     }
     animateScroll.scrollToTop({ duration: 1500 });
-  }
+  };
 
   const loadTrackDataFromPropsOrFetch = async (trackProp) => {
     let trackData;
@@ -94,20 +108,28 @@ const Track = ({ location = {}, match = {}, canZip }) => {
     });
 
     return trackData;
-  }
+  };
 
-  const loadChartData = async (charts = [], page = 1, perPage = chartsPerPage) => {
+  const loadChartData = async (
+    charts = [],
+    page = 1,
+    perPage = chartsPerPage,
+  ) => {
     if (charts.length > 0) {
-      const chartData = await fetchChartData(charts.map(chart => chart.id).join(','), page, perPage);
+      const chartData = await fetchChartData(
+        charts.map((chart) => chart.id).join(','),
+        page,
+        perPage,
+      );
 
       if (chartData.results && chartData.results.length > 0) {
         dispatch({
           type: 'load_chart_data',
           payload: chartData,
-        })
+        });
       }
     }
-  }
+  };
 
   const loadSimilarTracksData = async (trackId) => {
     if (!trackId) return;
@@ -116,13 +138,15 @@ const Track = ({ location = {}, match = {}, canZip }) => {
     dispatch({
       type: 'load_similar_tracks_data',
       payload: similarTracksData,
-    })
-  }
+    });
+  };
 
   const fetchTrackData = async (trackId) => {
     return new Promise(async (resolve, reject) => {
       try {
-        const trackData = await callAPIorCache(`${API_GET_TRACKS}?id=${trackId}`);
+        const trackData = await callAPIorCache(
+          `${API_GET_TRACKS}?id=${trackId}`,
+        );
         const { data = {}, status } = trackData;
 
         if (status !== 200) {
@@ -138,14 +162,19 @@ const Track = ({ location = {}, match = {}, canZip }) => {
       } catch (error) {
         return reject(error);
       }
-    })
-  }
+    });
+  };
 
-  const fetchChartData = async (chartIds, page = 1, perPage = chartsPerPage) => {
+  const fetchChartData = async (
+    chartIds,
+    page = 1,
+    perPage = chartsPerPage,
+  ) => {
     return new Promise(async (resolve, reject) => {
-
       try {
-        const chartData = await callAPIorCache(`${API_GET_CHART}?ids=${chartIds}&page=${page}&perPage=${perPage}`);
+        const chartData = await callAPIorCache(
+          `${API_GET_CHART}?ids=${chartIds}&page=${page}&perPage=${perPage}`,
+        );
         const { data, status } = chartData;
         if (status !== 200) return;
 
@@ -153,13 +182,15 @@ const Track = ({ location = {}, match = {}, canZip }) => {
       } catch (error) {
         return reject(error);
       }
-    })
-  }
+    });
+  };
 
   const fetchSimilarTracksData = async (trackId) => {
     return new Promise(async (resolve, reject) => {
       try {
-        const tracksData = await callAPIorCache(`/api/tracks/similar?id=${trackId}&perPage=10&page=1`);
+        const tracksData = await callAPIorCache(
+          `/api/tracks/similar?id=${trackId}&perPage=10&page=1`,
+        );
         const { data, status } = tracksData;
         if (status !== 200) {
           return reject();
@@ -169,17 +200,15 @@ const Track = ({ location = {}, match = {}, canZip }) => {
           return resolve(data.results);
         }
         return resolve([]);
-
       } catch (error) {
         reject(error);
       }
-    })
-  }
+    });
+  };
 
   useEffect(() => {
     loadData(trackProp);
   }, [trackIdParam]);
-
 
   const handleChartPageChange = (e, data) => {
     const { activePage = 1 } = data;
@@ -189,33 +218,79 @@ const Track = ({ location = {}, match = {}, canZip }) => {
     if (charts.length === 0) return;
 
     loadChartData(charts, activePage);
-  }
+  };
 
-  const { visible = false, chartData = [], trackData = {}, similarTracksData = [] } = state;
-  const { images = {}, artists = [], length = '', bpm = '', label = '', key = {}, releaseDate = '', genres = [], release = '', id } = trackData;
+  const {
+    visible = false,
+    chartData = [],
+    trackData = {},
+    similarTracksData = [],
+  } = state;
+  const {
+    images = {},
+    artists = [],
+    length = '',
+    bpm = '',
+    label = '',
+    key = {},
+    releaseDate = '',
+    genres = [],
+    release = '',
+    id,
+  } = trackData;
+  const { name, mixName } = trackData;
 
   const { results: chartDataResults, metadata: chartDataMetadata } = chartData;
-  const chartTotalPages = (chartDataMetadata && chartDataMetadata.totalPages) || 0;
+  const chartTotalPages =
+    (chartDataMetadata && chartDataMetadata.totalPages) || 0;
 
   if (!id) {
-    return <NothingHereMessage />
+    return <NothingHereMessage />;
   }
+
+  let pageTitle = '';
+  if (name) {
+    pageTitle = name;
+
+    if (mixName) {
+      pageTitle += ' (' + mixName + ')';
+    }
+
+    if (artists.length > 0) {
+      let artistsString = artists.reduce(
+        (acc, val, idx) => (acc += (idx > 0 ? ', ' : '') + val.name),
+        '',
+      );
+      pageTitle += ' by ' + artistsString;
+    }
+
+    pageTitle += ' :: ';
+  }
+
+  pageTitle += DEFAULT_PAGE_TITLE;
 
   // TODO: refactor segments into individual components, add loaders for each
   return (
     <Transition visible={visible} animation='fade' duration={500}>
-      <React.Fragment>
+      <>
+        <Helmet>
+          <title>{pageTitle}</title>
+        </Helmet>
         <Segment placeholder padded='very'>
           <Grid stackable>
             <Grid.Row stretched>
               <Grid.Column width={4}>
-                {id &&
+                {id && (
                   <TrackAlbum
-                    imageUrl={images.large ? images.large.secureUrl : DEFAULT_BP_ITEM_IMAGE_URL}
+                    imageUrl={
+                      images.large
+                        ? images.large.secureUrl
+                        : DEFAULT_BP_ITEM_IMAGE_URL
+                    }
                     track={trackData}
                     imageSize='medium'
                   />
-                }
+                )}
               </Grid.Column>
               <Grid.Column width={12}>
                 <Header as='h1' className='track-title'>
@@ -224,15 +299,21 @@ const Track = ({ location = {}, match = {}, canZip }) => {
                     {constructLinks(artists, 'artist')}
                   </Header.Subheader>
                   <Header.Subheader>
-                    {release.id &&
-                      <Link to={`/release/${release.slug}/${release.id}`}>{release.name}</Link>
-                    }
+                    {release.id && (
+                      <Link to={`/release/${release.slug}/${release.id}`}>
+                        {release.name}
+                      </Link>
+                    )}
                   </Header.Subheader>
                 </Header>
                 <Image src={images.waveform.secureUrl} />
               </Grid.Column>
               <Grid.Column width={4}>
-                <TrackCardActionRow canZip={canZip} numOfButtons={'three'} track={trackData} />
+                <TrackCardActionRow
+                  canZip={canZip}
+                  numOfButtons={'three'}
+                  track={trackData}
+                />
               </Grid.Column>
             </Grid.Row>
             <Grid.Row columns='equal' divided>
@@ -257,19 +338,27 @@ const Track = ({ location = {}, match = {}, canZip }) => {
               <Grid.Column>
                 <Statistic size='mini'>
                   <Statistic.Label>KEY</Statistic.Label>
-                  <Statistic.Value>{musicalKeyFilter(key && key.shortName)}</Statistic.Value>
+                  <Statistic.Value>
+                    {musicalKeyFilter(key && key.shortName)}
+                  </Statistic.Value>
                 </Statistic>
               </Grid.Column>
               <Grid.Column>
                 <Statistic size='mini'>
                   <Statistic.Label>GENRE</Statistic.Label>
-                  <Statistic.Value>{constructLinks(genres, 'genre')}</Statistic.Value>
+                  <Statistic.Value>
+                    {constructLinks(genres, 'genre')}
+                  </Statistic.Value>
                 </Statistic>
               </Grid.Column>
               <Grid.Column>
                 <Statistic size='mini'>
                   <Statistic.Label>LABEL</Statistic.Label>
-                  <Statistic.Value><Link to={`/label/${label.slug}/${label.id}`}>{label.name}</Link></Statistic.Value>
+                  <Statistic.Value>
+                    <Link to={`/label/${label.slug}/${label.id}`}>
+                      {label.name}
+                    </Link>
+                  </Statistic.Value>
                 </Statistic>
               </Grid.Column>
             </Grid.Row>
@@ -277,10 +366,12 @@ const Track = ({ location = {}, match = {}, canZip }) => {
         </Segment>
         <Divider />
         <Grid>
-          {chartTotalPages > 0 &&
-            <React.Fragment>
+          {chartTotalPages > 0 && (
+            <>
               <Grid.Row width={16}>
-                <Header as='h3' className='track-title'>Appears on these Charts</Header>
+                <Header as='h3' className='track-title'>
+                  Appears on these Charts
+                </Header>
               </Grid.Row>
               <Grid.Row>
                 <Grid.Column width={16}>
@@ -289,21 +380,33 @@ const Track = ({ location = {}, match = {}, canZip }) => {
                     itemsPerRow={chartsPerPage}
                     className='trackListingCardGroup'
                   >
-                    {chartDataResults && chartDataResults.length > 0 &&
-                      chartDataResults.map((chart, idx) =>
-                        idx < chartsPerPage &&
-                        <Card className='flex-card' key={chart.sku} as={Link} to={`/chart/${chart.slug}/${chart.id}`}>
-                          <Image src={chart.images && chart.images.xlarge ? chart.images.xlarge.secureUrl : DEFAULT_BP_ITEM_IMAGE_URL} className='flex-card' />
-                          <Card.Content>
-                            {chart.name}
-                          </Card.Content>
-                        </Card>
-                      )
-                    }
+                    {chartDataResults &&
+                      chartDataResults.length > 0 &&
+                      chartDataResults.map(
+                        (chart, idx) =>
+                          idx < chartsPerPage && (
+                            <Card
+                              className='flex-card'
+                              key={chart.sku}
+                              as={Link}
+                              to={`/chart/${chart.slug}/${chart.id}`}
+                            >
+                              <Image
+                                src={
+                                  chart.images && chart.images.xlarge
+                                    ? chart.images.xlarge.secureUrl
+                                    : DEFAULT_BP_ITEM_IMAGE_URL
+                                }
+                                className='flex-card'
+                              />
+                              <Card.Content>{chart.name}</Card.Content>
+                            </Card>
+                          ),
+                      )}
                   </Card.Group>
                 </Grid.Column>
               </Grid.Row>
-              {chartTotalPages > 1 &&
+              {chartTotalPages > 1 && (
                 <Grid.Row>
                   <Grid.Column width={16}>
                     <Pagination
@@ -317,35 +420,43 @@ const Track = ({ location = {}, match = {}, canZip }) => {
                     />
                   </Grid.Column>
                 </Grid.Row>
-              }
-            </React.Fragment>
-          }
-          {similarTracksData && similarTracksData.length > 0 &&
-            <React.Fragment>
+              )}
+            </>
+          )}
+          {similarTracksData && similarTracksData.length > 0 && (
+            <>
               <Divider />
               <Grid.Row width={16}>
-                <Header as='h3' className='track-title'>Similar Tracks</Header>
+                <Header as='h3' className='track-title'>
+                  Similar Tracks
+                </Header>
               </Grid.Row>
-            </React.Fragment>
-          }
+            </>
+          )}
           <Grid.Row>
             <Grid.Column width={16}>
-              {similarTracksData && similarTracksData.length > 0 &&
-                <TrackListingCards trackListing={similarTracksData} itemsPerRow={4} showPosition={false} />
-              }
+              {similarTracksData && similarTracksData.length > 0 && (
+                <TrackListingCards
+                  trackListing={similarTracksData}
+                  itemsPerRow={4}
+                  showPosition={false}
+                />
+              )}
             </Grid.Column>
           </Grid.Row>
         </Grid>
-      </React.Fragment>
+      </>
     </Transition>
   );
+};
 
-}
-
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     canZip: hasZippyPermission(state),
-  }
-}
+  };
+};
 
-export default connect(mapStateToProps, null)(Track);
+export default connect(
+  mapStateToProps,
+  null,
+)(Track);

@@ -1,18 +1,36 @@
-import React, { Fragment, useEffect } from 'react';
+import React, { useEffect } from 'react';
+import { Helmet } from 'react-helmet';
 import { connect } from 'react-redux';
 import { animateScroll } from 'react-scroll';
 import queryString from 'query-string';
 
-import { fetchMostPopularTracks, searchTracks, fetchTracksSimilar, clearTracklist } from '../thunks';
+import {
+  fetchMostPopularTracks,
+  searchTracks,
+  fetchTracksSimilar,
+  clearTracklist,
+} from '../thunks';
 import { deslugify, getPerPageSetting } from '../utils/helpers';
 import { DEFAULT_PAGE } from '../constants/defaults';
 import TrackListingGroup from './TrackListingGroup';
 import TitleHeader from './TitleHeader';
+import { DEFAULT_PAGE_TITLE } from '../constants/defaults';
 
-const TrackListingController = ({ location, match, searchTracks, fetchTracksSimilar, fetchMostPopularTracks, trackListing, clearTracklist }) => {
+const TrackListingController = ({
+  location,
+  match,
+  searchTracks,
+  fetchTracksSimilar,
+  fetchMostPopularTracks,
+  trackListing,
+  clearTracklist,
+}) => {
   const { url, params } = match;
   const { type, searchId, searchString, searchTerm, trackId } = params;
-  const { page = DEFAULT_PAGE, perPage = getPerPageSetting() } = queryString.parse(location.search);
+  const {
+    page = DEFAULT_PAGE,
+    perPage = getPerPageSetting(),
+  } = queryString.parse(location.search);
 
   useEffect(() => {
     animateScroll.scrollToTop({ duration: 1500 });
@@ -27,7 +45,19 @@ const TrackListingController = ({ location, match, searchTracks, fetchTracksSimi
     }
 
     return () => clearTracklist();
-  }, [fetchMostPopularTracks, fetchTracksSimilar, searchTracks, clearTracklist, trackId, searchTerm, type, searchId, searchString, page, perPage]);
+  }, [
+    fetchMostPopularTracks,
+    fetchTracksSimilar,
+    searchTracks,
+    clearTracklist,
+    trackId,
+    searchTerm,
+    type,
+    searchId,
+    searchString,
+    page,
+    perPage,
+  ]);
 
   const pageName = url.split('/')[1];
   let headerTitle = '';
@@ -37,24 +67,29 @@ const TrackListingController = ({ location, match, searchTracks, fetchTracksSimi
 
   switch (pageName) {
     case 'search':
-      headerPrefix = 'SEARCH RESULTS';
+      headerPrefix = 'Search Results';
       headerTitle = params.searchTerm;
       break;
     case 'most-popular':
-      headerPrefix = 'TOP TRACKS';
+      headerPrefix = 'Top Tracks';
       headerTitle = params.searchString;
       break;
     case 'similar-tracks':
-      headerPrefix = 'SIMILAR TO';
+      headerPrefix = 'Similar To';
       headerTitle = params.trackName;
       break;
     default:
-      headerPrefix = 'TOP TRACKS';
-      headerTitle = 'ALL GENRES';
+      headerPrefix = 'Top Tracks';
+      headerTitle = 'All Genres';
   }
 
   return (
-    <Fragment>
+    <>
+      <Helmet>
+        <title>
+          {headerPrefix} - {headerTitle} :: {DEFAULT_PAGE_TITLE}
+        </title>
+      </Helmet>
       <TitleHeader
         headerPrefix={headerPrefix}
         headerTitle={headerTitle}
@@ -62,23 +97,26 @@ const TrackListingController = ({ location, match, searchTracks, fetchTracksSimi
         headerType={headerType}
       />
       <TrackListingGroup trackListing={trackListing} />
-    </Fragment>
-  )
-}
+    </>
+  );
+};
 const mapStateToProps = (state) => {
   const { trackListing, isLoading } = state;
 
   return {
     trackListing,
     isLoading,
-  }
-}
+  };
+};
 
 const mapDispatchToProps = {
   fetchMostPopularTracks,
   searchTracks,
   fetchTracksSimilar,
-  clearTracklist
+  clearTracklist,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(TrackListingController);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(TrackListingController);

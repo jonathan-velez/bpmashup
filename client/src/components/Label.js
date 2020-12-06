@@ -1,4 +1,5 @@
-import React, { Fragment, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
+import { Helmet } from 'react-helmet';
 import { connect } from 'react-redux';
 import { Grid, Image, Header, Menu, Button } from 'semantic-ui-react';
 import Scroll from 'react-scroll';
@@ -10,8 +11,15 @@ import ShowMore from './ShowMore';
 import GenreLabel from './GenreLabel';
 import ItemCards from './ItemCards';
 import TrackListingGroup from './TrackListingGroup';
+import { DEFAULT_PAGE_TITLE } from '../constants/defaults';
 
-const Label = ({ match, labelDetail, trackListing, location, getLabelDetail }) => {
+const Label = ({
+  match,
+  labelDetail,
+  trackListing,
+  location,
+  getLabelDetail,
+}) => {
   const { labelId, labelName } = match.params;
   const { labelData, releasesData } = labelDetail;
   const { images, name, id, biography, genres, slug } = labelData;
@@ -27,34 +35,55 @@ const Label = ({ match, labelDetail, trackListing, location, getLabelDetail }) =
 
   const handleItemClick = (e, { name }) => {
     setActiveItem(name);
-  }
+  };
 
   return (
-    <Fragment>
+    <>
+      <Helmet>
+        <title>
+          {name ? `${name} :: ` : ``}
+          {DEFAULT_PAGE_TITLE}
+        </title>
+      </Helmet>
       <Grid stackable>
-        {imageSrc &&
+        {imageSrc && (
           <Grid.Row columns={2}>
             <Grid.Column>
               <Image src={imageSrc} size='medium' />
             </Grid.Column>
             <Grid.Column textAlign='right'>
-              <Header size='huge' className='item-header'>{name} <LoveItem itemType='label' item={{ id, name, slug }} type='button' /></Header>
+              <Header size='huge' className='item-header'>
+                {name}{' '}
+                <LoveItem
+                  itemType='label'
+                  item={{ id, name, slug }}
+                  type='button'
+                />
+              </Header>
               {biography && <ShowMore content={biography} />}
             </Grid.Column>
           </Grid.Row>
-        }
-        {genres &&
+        )}
+        {genres && (
           <Grid.Row columns={1}>
             <Grid.Column>
-              <Header textAlign='left' dividing>GENRES</Header>
-              {genres && genres.map((genre, idx) => {
-                return (
-                  <GenreLabel key={idx} genreName={genre.name} genreSlug={genre.slug} genreId={genre.id} />
-                )
-              })}
+              <Header textAlign='left' dividing>
+                GENRES
+              </Header>
+              {genres &&
+                genres.map((genre, idx) => {
+                  return (
+                    <GenreLabel
+                      key={idx}
+                      genreName={genre.name}
+                      genreSlug={genre.slug}
+                      genreId={genre.id}
+                    />
+                  );
+                })}
             </Grid.Column>
           </Grid.Row>
-        }
+        )}
       </Grid>
       <Menu secondary pointing>
         <Menu.Item
@@ -63,39 +92,51 @@ const Label = ({ match, labelDetail, trackListing, location, getLabelDetail }) =
           className='item-header'
           active={activeItem === 'tracks'}
           onClick={handleItemClick}
-        >Top Tracks</Menu.Item>
+        >
+          Top Tracks
+        </Menu.Item>
         <Menu.Item
           link
           name='releases'
           className='item-header'
           active={activeItem === 'releases'}
           onClick={handleItemClick}
-        >Featured Releases</Menu.Item>
+        >
+          Featured Releases
+        </Menu.Item>
 
         <Menu.Item position='right'>
           <Button as={Link} to={`${pathname}/tracks`}>
             View All Tracks
-            </Button>
+          </Button>
         </Menu.Item>
       </Menu>
-      {activeItem === 'tracks' ?
-        trackListing && <TrackListingGroup trackListing={trackListing} /> :
-        releasesData && <ItemCards items={releasesData} itemType='release' showHeader={false} />
-      }
-    </Fragment>
+      {activeItem === 'tracks'
+        ? trackListing && <TrackListingGroup trackListing={trackListing} />
+        : releasesData && (
+            <ItemCards
+              items={releasesData}
+              itemType='release'
+              showHeader={false}
+            />
+          )}
+    </>
   );
-}
+};
 
 const mapStateToProps = (state) => {
   const { labelDetail, trackListing } = state;
   return {
     labelDetail,
     trackListing,
-  }
-}
+  };
+};
 
 const mapDispatchToProps = {
   getLabelDetail,
-}
+};
 
-export default connect(mapStateToProps, mapDispatchToProps)(Label);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(Label);

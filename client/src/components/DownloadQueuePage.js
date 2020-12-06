@@ -1,4 +1,5 @@
-import React, { Fragment, useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
+import { Helmet } from 'react-helmet';
 import { connect } from 'react-redux';
 import {
   Checkbox,
@@ -11,6 +12,7 @@ import {
 } from 'semantic-ui-react';
 
 import DownloadQueueTable from './DownloadQueueTable';
+import TitleHeader from './TitleHeader';
 import { updateTrackStatus } from '../thunks';
 import { fileExistsOnDownloadServer } from '../utils/trackUtils';
 import { generateActivityMessage } from '../utils/storeUtils';
@@ -18,6 +20,7 @@ import {
   setDownloadQueueSettings,
   getDownloadQueueSettings,
 } from '../utils/helpers';
+import { DEFAULT_PAGE_TITLE } from '../constants/defaults';
 
 const DownloadQueuePage = ({
   updateTrackStatus,
@@ -217,8 +220,16 @@ const DownloadQueuePage = ({
     setSearchString(target.value && target.value.toLowerCase());
   };
 
+  const pageHeader = 'Download Queue';
+
   return (
-    <Fragment>
+    <>
+      <Helmet>
+        <title>
+          {pageHeader} :: {DEFAULT_PAGE_TITLE}
+        </title>
+      </Helmet>
+      <TitleHeader headerTitle={pageHeader} />
       <Container>
         <Grid columns={5} centered verticalAlign='middle'>
           <Grid.Row>
@@ -286,11 +297,7 @@ const DownloadQueuePage = ({
           <Grid.Column floated='left' textAlign='left' verticalAlign='middle'>
             {`${currentItems.length} tracks`}
           </Grid.Column>
-          <Grid.Column
-            floated='right'
-            textAlign='right'
-            verticalAlign='middle'
-          >
+          <Grid.Column floated='right' textAlign='right' verticalAlign='middle'>
             <Pagination
               onPageChange={(e, data) => handlePageChange(e, data)}
               totalPages={Math.ceil(currentItems.length / limitPerPage)}
@@ -299,7 +306,7 @@ const DownloadQueuePage = ({
           </Grid.Column>
         </Grid.Row>
       </Grid>
-    </Fragment>
+    </>
   );
 };
 

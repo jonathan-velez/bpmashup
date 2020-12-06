@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { Helmet } from 'react-helmet';
 import { connect } from 'react-redux';
 import { Grid, Header } from 'semantic-ui-react';
 import { animateScroll } from 'react-scroll';
@@ -7,6 +8,7 @@ import { searchEverything } from '../thunks';
 import TrackListingGroup from './TrackListingGroup';
 import ItemCards from './ItemCards';
 import NothingHereMessage from './NothingHereMessage';
+import { DEFAULT_PAGE_TITLE } from '../constants/defaults';
 
 const SearchResultsController = ({
   match = {},
@@ -32,27 +34,37 @@ const SearchResultsController = ({
   }
 
   return (
-    <Grid stackable>
-      {artists.length > 0 && <ItemCards items={artists} itemType='artist' />}
-      {labels.length > 0 && <ItemCards items={labels} itemType='label' />}
-      {releases.length > 0 && <ItemCards items={releases} itemType='release' />}
-      {tracks.length > 0 && (
-        <Grid.Row>
-          <Grid.Column>
-            <Header textAlign='left' dividing>
-              TRACKS
-            </Header>
-            <TrackListingGroup trackListing={trackListing} />
-          </Grid.Column>
-        </Grid.Row>
-      )}
-    </Grid>
+    <>
+      <Helmet>
+        <title>
+          {searchTerm ? `Search Results for "${searchTerm}" :: ` : ``}
+          {DEFAULT_PAGE_TITLE}
+        </title>
+      </Helmet>
+      <Grid stackable>
+        {artists.length > 0 && <ItemCards items={artists} itemType='artist' />}
+        {labels.length > 0 && <ItemCards items={labels} itemType='label' />}
+        {releases.length > 0 && (
+          <ItemCards items={releases} itemType='release' />
+        )}
+        {tracks.length > 0 && (
+          <Grid.Row>
+            <Grid.Column>
+              <Header textAlign='left' dividing>
+                TRACKS
+              </Header>
+              <TrackListingGroup trackListing={trackListing} />
+            </Grid.Column>
+          </Grid.Row>
+        )}
+      </Grid>
+    </>
   );
 };
 
 const mapStateToProps = (state) => {
   const { isLoading, searchResults, trackListing } = state;
-  
+
   return {
     isLoading,
     searchResults,

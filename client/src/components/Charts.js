@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
+import { Helmet } from 'react-helmet';
 import { connect } from 'react-redux';
 import { Grid } from 'semantic-ui-react';
 import queryString from 'query-string';
@@ -7,7 +8,10 @@ import Scroll from 'react-scroll';
 
 import { callAPIorCache } from '../seessionStorageCache';
 import { API_GET_CHART } from '../constants/apiPaths';
-import { DEFAULT_CHARTS_PER_PAGE } from '../constants/defaults';
+import {
+  DEFAULT_CHARTS_PER_PAGE,
+  DEFAULT_PAGE_TITLE,
+} from '../constants/defaults';
 import { usePrevious } from '../hooks';
 import ChartItemCard from './ChartItemCard';
 import TitleHeader from './TitleHeader';
@@ -55,7 +59,12 @@ const Charts = ({ location = {}, genreName }) => {
   );
 
   return (
-    <div>
+    <>
+      <Helmet>
+        <title>
+          {genreName ? `${genreName} ` : ``}Charts :: {DEFAULT_PAGE_TITLE}
+        </title>
+      </Helmet>
       <TitleHeader
         headerPrefix='CHARTS'
         headerTitle={genreName || 'All Genres'}
@@ -81,7 +90,7 @@ const Charts = ({ location = {}, genreName }) => {
           })}
         </Grid>
       </InfiniteScroll>
-    </div>
+    </>
   );
 };
 

@@ -198,6 +198,7 @@ input[type='range']:focus::-ms-fill-upper {
 
 .tracklistHeaderPrefix {
   font-weight: 100;
+  text-transform: uppercase;
 }
 
 .boldedText {
