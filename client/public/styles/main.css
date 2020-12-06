@@ -223,6 +223,8 @@ input[type='range']:focus::-ms-fill-upper {
 
 .genre-popup {
   padding: 0 !important;
+  margin-top: 0 !important;
+  transform: translate3d(0px, 69px, 0px) !important;
 }
 
 /* .ui.menu .dropdown.item .menu {
