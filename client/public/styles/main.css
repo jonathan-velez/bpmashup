@@ -170,10 +170,6 @@ input[type='range']:focus::-ms-fill-upper {
   background: linear-gradient(#fff, #cecece) !important;
 }
 
-.ui.dimmer {
-  z-index: 99 !important;
-}
-
 .genre-row {
   padding-top: 0.5rem !important;
   padding-bottom: 0.5rem !important;
