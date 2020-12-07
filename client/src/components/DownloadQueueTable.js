@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Table, Button, Popup, Dropdown } from 'semantic-ui-react';
+import { Table, Button, Popup, Dropdown, Icon } from 'semantic-ui-react';
 import moment from 'moment';
 
 import NothingHereMessage from './NothingHereMessage';
@@ -24,7 +24,15 @@ const DownloadQueueTable = ({
   }
 
   const tableBody = queue.map((item, idx) => {
-    const { addedDate, url, fileName, queueId, track, status } = item;
+    const {
+      addedDate,
+      url,
+      fileName,
+      queueId,
+      track,
+      status,
+      isYouTube = false,
+    } = item;
     const { artists, label, genres, bpm, key: musicalKey, images } = track;
 
     let downloadButtonText = 'Download';
@@ -57,7 +65,8 @@ const DownloadQueueTable = ({
         downloadButtonPopupContent = `This track has already been downloaded.\nDownload it again or better yet - purchase it!`;
         break;
       case 'available':
-        downloadButtonPopupContent = `Your track is available to download!`;
+        downloadButtonPopupContent = `Your track is available to download! ${isYouTube &&
+          '(YouTube rip 😩)'}`;
         break;
       case 'purchased':
         downloadButtonText = 'Purchased';
@@ -111,6 +120,9 @@ const DownloadQueueTable = ({
             onClick={() => downloadTrack(url, fileName, queueId, status)}
           >
             {downloadButtonText}
+            {isYouTube && (
+              <Icon name='youtube' style={{ paddingLeft: '10px' }} />
+            )}
           </Button>
         </div>
       );
