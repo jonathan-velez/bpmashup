@@ -20,6 +20,7 @@ import {
   setDownloadQueueSettings,
   getDownloadQueueSettings,
 } from '../utils/helpers';
+import { getAllDownloadQueueItems } from '../selectors';
 import { DEFAULT_PAGE_TITLE } from '../constants/defaults';
 
 const DownloadQueuePage = ({
@@ -311,13 +312,11 @@ const DownloadQueuePage = ({
 };
 
 const mapStateToProps = (state) => {
-  const { downloadQueue, userDetail } = state;
+  const { userDetail } = state;
   const { preferences } = userDetail;
 
   return {
-    queueItems: Object.keys(downloadQueue.queue).map(
-      (val) => downloadQueue.queue[val],
-    ),
+    queueItems: getAllDownloadQueueItems(state),
     userPreferences: preferences,
   };
 };

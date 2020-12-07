@@ -89,6 +89,12 @@ export const getCurrentDownloadQueueItems = createSelector(
   (queue) => _.filter(queue, (item) => item.status !== 'downloaded'),
 );
 
+export const getAllDownloadQueueItems = createSelector([getDownloadQueue], (queue) => {
+  return Object.keys(queue).map(
+    (val) => queue[val],
+  );
+})
+
 export const getNumOfTracksAvailableToDownload = createSelector(
   [getCurrentDownloadQueueItems],
   (items) => items.filter((item) => item.status === 'available').length,
