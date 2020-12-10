@@ -17,12 +17,12 @@ const TrackListingGroup = ({ trackListing = {} }) => {
   const { totalPages, page, perPage, query } = metadata;
   return (
     <React.Fragment>
-      <TrackListingActionRow
-        activePage={page}
-        totalPages={totalPages}
-        perPage={perPage}
-      />
       <Responsive minWidth={700}>
+        <TrackListingActionRow
+          activePage={page}
+          totalPages={totalPages}
+          perPage={perPage}
+        />
         {getTracklistViewSetting() === 'cards' ? (
           <TrackListingCards trackListing={tracks} />
         ) : (
