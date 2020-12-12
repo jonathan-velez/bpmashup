@@ -23,6 +23,7 @@ const TrackCard = ({ track, showPosition = true, canZip }) => {
     label = {},
     releaseDate,
     key,
+    bpm,
   } = track;
   return (
     <Card
@@ -51,6 +52,7 @@ const TrackCard = ({ track, showPosition = true, canZip }) => {
         <Card.Content>{constructLinks(genres, 'genre')}</Card.Content>
         <Card.Content>{releaseDate}</Card.Content>
         <Card.Content>{musicalKeyFilter(key && key.shortName)}</Card.Content>
+        <Card.Content>{bpm} BPM</Card.Content>
       </Card.Content>
       <Card.Content extra>
         <TrackCardActionRow
