@@ -29,6 +29,7 @@ const Main = () => {
   const containerStyle = {
     marginTop: '7em',
     marginBottom: '8em',
+    paddingBottom: '8em',
   };
   return (
     <Container style={containerStyle} textAlign='center'>
