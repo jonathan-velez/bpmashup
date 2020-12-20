@@ -3,10 +3,7 @@ import React from 'react';
 import LoginForm from '../components/LoginForm';
 import { callAPIorCache } from '../seessionStorageCache';
 
-import {
-  API_GENRES,
-  API_AUTOCOMPLETE,
-} from '../constants/apiPaths';
+import { API_GENRES, API_AUTOCOMPLETE } from '../constants/apiPaths';
 
 import {
   LOAD_TRACK,
@@ -40,157 +37,161 @@ import {
   CLEAR_LOVED_LABELS_DETAILS,
   ADD_ACTION_MESSAGE,
   REMOVE_ACTION_MESSAGE,
+  ADD_TRACK_TO_SELECTED_LIST,
+  REMOVE_TRACK_FROM_SELECTED_LIST,
+  ADD_ALL_TRACKS_TO_SELECTED_LIST,
+  REMOVE_ALL_TRACKS_FROM_SELECTED_LIST,
 } from '../constants/actionTypes';
 
 export const startAsync = () => {
   return {
-    type: START_ASYNC
-  }
-}
+    type: START_ASYNC,
+  };
+};
 
 export const stopAsync = () => {
   return {
-    type: STOP_ASYNC
-  }
-}
+    type: STOP_ASYNC,
+  };
+};
 
 export const fetchGenres = async () => {
   const request = await callAPIorCache(API_GENRES);
 
   return {
     type: FETCH_GENRES,
-    payload: request
-  }
-}
+    payload: request,
+  };
+};
 
-export const loadTrack = track => {
+export const loadTrack = (track) => {
   return {
     type: LOAD_TRACK,
-    payload: track
-  }
-}
+    payload: track,
+  };
+};
 
 export const playPause = () => {
   return {
-    type: PLAY_PAUSE
-  }
-}
+    type: PLAY_PAUSE,
+  };
+};
 
 export const play = () => {
   return {
-    type: PLAY
-  }
-}
+    type: PLAY,
+  };
+};
 
 export const pause = () => {
   return {
-    type: PAUSE
-  }
-}
+    type: PAUSE,
+  };
+};
 
 export const seekMouseDown = () => {
   return {
-    type: SEEK_MOUSE_DOWN
-  }
-}
+    type: SEEK_MOUSE_DOWN,
+  };
+};
 
-export const seekChange = position => {
+export const seekChange = (position) => {
   return {
     type: SEEK_CHANGE,
-    payload: position
-  }
-}
+    payload: position,
+  };
+};
 
 export const seekMouseUp = () => {
   return {
-    type: SEEK_MOUSE_UP
-  }
-}
+    type: SEEK_MOUSE_UP,
+  };
+};
 
-export const updateTrackProgress = state => {
+export const updateTrackProgress = (state) => {
   return {
     type: UPDATE_TRACK_PROGRESS,
-    payload: state
-  }
-}
+    payload: state,
+  };
+};
 
-export const setDuration = duration => {
+export const setDuration = (duration) => {
   return {
     type: SET_DURATION,
-    payload: duration
-  }
-}
+    payload: duration,
+  };
+};
 
 export const updateSuggestionInputValue = (e, d) => {
   return {
     type: UPDATE_SUGGESTION_INPUT_VALUE,
-    payload: d.newValue
-  }
-}
+    payload: d.newValue,
+  };
+};
 
 export const clearSuggestions = () => {
   return {
-    type: CLEAR_SUGGESTIONS
-  }
-}
+    type: CLEAR_SUGGESTIONS,
+  };
+};
 
 export const loadSuggestions = async ({ value }) => {
   const request = await callAPIorCache(`${API_AUTOCOMPLETE}?query=${value}`);
 
   return {
     type: LOAD_SUGGESTIONS,
-    payload: request
-  }
-}
+    payload: request,
+  };
+};
 
 export const toggleMute = () => {
   return {
-    type: TOGGLE_MUTE
-  }
-}
+    type: TOGGLE_MUTE,
+  };
+};
 
-export const loadYoutubeLink = youTubeLink => {
+export const loadYoutubeLink = (youTubeLink) => {
   return {
     type: LOAD_YOUTUBE_URL,
-    payload: youTubeLink
-  }
-}
+    payload: youTubeLink,
+  };
+};
 
-export const setVolume = volume => {
+export const setVolume = (volume) => {
   return {
     type: SET_VOLUME,
-    payload: volume
-  }
-}
+    payload: volume,
+  };
+};
 
-export const loadTracks = tracks => {
+export const loadTracks = (tracks) => {
   return {
     type: LOAD_TRACKS,
-    payload: tracks
-  }
-}
+    payload: tracks,
+  };
+};
 
-export const openModalWindow = payload => {
+export const openModalWindow = (payload) => {
   return {
     type: OPEN_MODAL,
-    payload
-  }
-}
+    payload,
+  };
+};
 
-export const toggleTracklistView = payload => {
+export const toggleTracklistView = (payload) => {
   return {
     type: TOGGLE_TRACKLIST_VIEW,
-    payload
-  }
-}
+    payload,
+  };
+};
 
 export const clearPlaylists = () => {
   return {
-    type: CLEAR_PLAYLISTS
-  }
-}
+    type: CLEAR_PLAYLISTS,
+  };
+};
 
-export const openLoginModalWindow = actionPending => {
+export const openLoginModalWindow = (actionPending) => {
   return {
     type: OPEN_MODAL,
     payload: {
@@ -199,62 +200,88 @@ export const openLoginModalWindow = actionPending => {
       body: <LoginForm />,
       headerIcon: 'sign in',
       actionPending,
-    }
-  }
-}
+    },
+  };
+};
 
 export const clearDownloads = () => {
   return {
     type: CLEAR_DOWNLOADS,
-  }
-}
+  };
+};
 
 export const clearNoDownloads = () => {
   return {
     type: CLEAR_NO_DOWNLOADS,
-  }
-}
+  };
+};
 
 export const clearLovedTracks = () => {
   return {
     type: CLEAR_LOVED_TRACKS,
-  }
-}
+  };
+};
 
 export const clearLovedArtists = () => {
   return {
     type: CLEAR_LOVED_ARTISTS,
-  }
-}
+  };
+};
 
 export const clearLovedArtistsDetails = () => {
   return {
     type: CLEAR_LOVED_ARTISTS_DETAILS,
-  }
-}
+  };
+};
 
 export const clearLovedLabels = () => {
   return {
     type: CLEAR_LOVED_LABELS,
-  }
-}
+  };
+};
 
 export const clearLovedLabelsDetails = () => {
   return {
     type: CLEAR_LOVED_LABELS_DETAILS,
-  }
-}
+  };
+};
 
-export const setActionMessage = payload => {
+export const setActionMessage = (payload) => {
   return {
     type: ADD_ACTION_MESSAGE,
-    payload
-  }
-}
+    payload,
+  };
+};
 
-export const removeActionMessage = id => {
+export const removeActionMessage = (id) => {
   return {
     type: REMOVE_ACTION_MESSAGE,
     payload: id,
-  }
-}
+  };
+};
+
+export const addTrackToSelectedList = (trackId) => {
+  return {
+    type: ADD_TRACK_TO_SELECTED_LIST,
+    payload: trackId,
+  };
+};
+
+export const removeTrackFromSelectedList = (trackId) => {
+  return {
+    type: REMOVE_TRACK_FROM_SELECTED_LIST,
+    payload: trackId,
+  };
+};
+
+export const addAllTracksToSelectedList = () => {
+  return {
+    type: ADD_ALL_TRACKS_TO_SELECTED_LIST,
+  };
+};
+
+export const removeAllTracksFromSelectedList = () => {
+  return {
+    type: REMOVE_ALL_TRACKS_FROM_SELECTED_LIST,
+  };
+};

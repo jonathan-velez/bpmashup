@@ -1,10 +1,32 @@
 import React from 'react';
-import { Table } from 'semantic-ui-react';
+import { connect } from 'react-redux';
+import { Checkbox, Table } from 'semantic-ui-react';
+import {
+  addAllTracksToSelectedList,
+  removeAllTracksFromSelectedList,
+} from '../actions/ActionCreators';
 
-const TrackListingTableHeader = ({ isPlaylist }) => {
+const TrackListingTableHeader = ({
+  isPlaylist,
+  addAllTracksToSelectedList,
+  removeAllTracksFromSelectedList,
+}) => {
+  const handleToggleAllTracks = (checked) => {
+    if (checked) {
+      addAllTracksToSelectedList();
+    } else {
+      removeAllTracksFromSelectedList();
+    }
+  };
+
   return (
     <Table.Header fullWidth>
       <Table.Row>
+        <Table.HeaderCell>
+          <Checkbox
+            onChange={(e, data) => handleToggleAllTracks(data.checked)}
+          />
+        </Table.HeaderCell>
         <Table.HeaderCell />
         <Table.HeaderCell />
         <Table.HeaderCell>TITLE</Table.HeaderCell>
@@ -21,4 +43,7 @@ const TrackListingTableHeader = ({ isPlaylist }) => {
   );
 };
 
-export default TrackListingTableHeader;
+export default connect(
+  null,
+  { addAllTracksToSelectedList, removeAllTracksFromSelectedList },
+)(TrackListingTableHeader);

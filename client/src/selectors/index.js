@@ -14,6 +14,24 @@ const getDownloadQueue = (state) => state.downloadQueue.queue;
 const _getLovedTracks = (state) => state.lovedTracks;
 const _getTracklistTracks = (state) =>
   state.trackListing && state.trackListing.tracks;
+const _getSelectedTrackIds = (state) =>
+  state.trackListing && state.trackListing.selectedTrackIds;
+
+export const getSelectedTracks = createSelector(
+  [_getTracklistTracks, _getSelectedTrackIds],
+  (tracks, selectedTrackIds) =>
+    _.pickBy(tracks, (track) => selectedTrackIds.includes(track.id)),
+);
+
+export const getSelectedTrackIds = createSelector(
+  [_getSelectedTrackIds],
+  (trackIds) => trackIds,
+);
+
+export const getSelectedTracksCount = createSelector(
+  [_getSelectedTrackIds],
+  (trackIds) => trackIds.length,
+);
 
 export const getLovedTrackIds = createSelector(
   [_getLovedTracks],
@@ -75,12 +93,7 @@ export const hasZippyPermission = createSelector(
 // select expired or already downloaded files
 export const getArchivedDownloadQueueItems = createSelector(
   [getDownloadQueue],
-  (queue) =>
-    _.filter(
-      queue,
-      (item) =>
-        item.status === 'downloaded',
-    ),
+  (queue) => _.filter(queue, (item) => item.status === 'downloaded'),
 );
 
 // select files which haven't been downloaded
@@ -89,11 +102,12 @@ export const getCurrentDownloadQueueItems = createSelector(
   (queue) => _.filter(queue, (item) => item.status !== 'downloaded'),
 );
 
-export const getAllDownloadQueueItems = createSelector([getDownloadQueue], (queue) => {
-  return Object.keys(queue).map(
-    (val) => queue[val],
-  );
-})
+export const getAllDownloadQueueItems = createSelector(
+  [getDownloadQueue],
+  (queue) => {
+    return Object.keys(queue).map((val) => queue[val]);
+  },
+);
 
 export const getNumOfTracksAvailableToDownload = createSelector(
   [getCurrentDownloadQueueItems],
@@ -143,6 +157,17 @@ export const getTracklistGenreCount = createSelector(
   },
 );
 
+export const getTracklistTrackIds = createSelector(
+  [_getTracklistTracks],
+  (tracks) => {
+    if (tracks && Object.keys(tracks).length > 0) {
+      return Object.values(tracks).map((track) => track.id);
+    }
+
+    return [];
+  },
+);
+
 export const getTracklistTrackCount = createSelector(
   [_getTracklistTracks],
   (tracks) => {
@@ -168,6 +193,13 @@ const _isTrackLoaded = (state, id) => {
   return trackId === id;
 };
 
+const _isTrackSelected = (state, id) => {
+  return (
+    (state.trackListing && state.trackListing.selectedTrackIds) ||
+    []
+  ).includes(id);
+};
+
 export const isTrackPlaying = createSelector(
   [_isTrackPlaying],
   (isPlaying) => isPlaying,
@@ -175,5 +207,10 @@ export const isTrackPlaying = createSelector(
 
 export const isTrackLoaded = createSelector(
   [_isTrackLoaded],
+  (isLoaded) => isLoaded,
+);
+
+export const isTrackSelected = createSelector(
+  [_isTrackSelected],
   (isLoaded) => isLoaded,
 );

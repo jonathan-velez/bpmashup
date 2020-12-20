@@ -2,6 +2,7 @@ import React from 'react';
 import { Grid } from 'semantic-ui-react';
 
 import TrackListingViewToggleButtons from './TrackListingViewToggleButtons';
+import TrackListingSelectedItemsActionBar from './TrackListingSelectedItemsActionBar';
 import PerPageSelection from './PerPageSelection';
 
 const TrackListingActionRow = ({ page, totalPages, perPage, isLoading }) => {
@@ -12,11 +13,18 @@ const TrackListingActionRow = ({ page, totalPages, perPage, isLoading }) => {
       <Grid.Column textAlign='left'>
         <TrackListingViewToggleButtons />
       </Grid.Column>
-      {totalPages * perPage > 25 &&
+      <Grid.Column>
+        <TrackListingSelectedItemsActionBar />
+      </Grid.Column>
+      {totalPages * perPage > 25 && (
         <Grid.Column textAlign='right'>
-          <PerPageSelection activePage={page} totalPages={totalPages} perPage={perPage} />
+          <PerPageSelection
+            activePage={page}
+            totalPages={totalPages}
+            perPage={perPage}
+          />
         </Grid.Column>
-      }
+      )}
     </Grid>
   );
 };

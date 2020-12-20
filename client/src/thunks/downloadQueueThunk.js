@@ -7,7 +7,7 @@ import {
 import { generateActivityMessage } from '../utils/storeUtils';
 import { trackHasBeenDownloaded } from '../selectors';
 
-export const addTrackToDownloadQueue = (track) => {
+export const addTrackToDownloadQueue = (track, sendToast = true) => {
   return async (dispatch, getState) => {
     const state = getState();
     const { firebaseState = {} } = state;
@@ -36,9 +36,11 @@ export const addTrackToDownloadQueue = (track) => {
     }
 
     // fresh download request, add to Firestore queues
-    dispatch({
-      type: START_ADD_TRACK_TO_DOWNLOAD_QUEUE,
-    });
+    if (sendToast) {
+      dispatch({
+        type: START_ADD_TRACK_TO_DOWNLOAD_QUEUE,
+      });
+    }
 
     const fs = firebase.firestore();
     const downloadItem = {

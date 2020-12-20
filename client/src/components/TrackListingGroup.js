@@ -1,15 +1,25 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { connect } from 'react-redux';
 import { Responsive } from 'semantic-ui-react';
 
 import TrackListingActionRow from './TrackListingActionRow';
 import TrackListingCards from './TrackListingCards';
 import TrackListingTable from './TrackListingTable';
 import Pager from './Pager';
+// import TrackListingSelectedItemsActionBar from './TrackListingSelectedItemsActionBar';
 
 import { getPerPageSetting, getTracklistViewSetting } from '../utils/helpers';
+import { removeAllTracksFromSelectedList } from '../actions/ActionCreators';
 
-const TrackListingGroup = ({ trackListing = {} }) => {
+const TrackListingGroup = ({
+  trackListing = {},
+  removeAllTracksFromSelectedList,
+}) => {
   const { tracks, metadata } = trackListing;
+
+  useEffect(() => {
+    return () => removeAllTracksFromSelectedList();
+  }, [removeAllTracksFromSelectedList]);
 
   if (!tracks || tracks.length < 0) {
     return null;
@@ -33,11 +43,15 @@ const TrackListingGroup = ({ trackListing = {} }) => {
             perPage={perPage}
           />
         )}
+        <TrackListingActionRow
+          activePage={page}
+          totalPages={totalPages}
+          perPage={perPage}
+        />
       </Responsive>
       <Responsive maxWidth={699}>
         <TrackListingCards trackListing={tracks} />
       </Responsive>
-
       {totalPages > 1 && (
         <Pager
           activePage={page}
@@ -52,4 +66,7 @@ const TrackListingGroup = ({ trackListing = {} }) => {
   );
 };
 
-export default TrackListingGroup;
+export default connect(
+  null,
+  { removeAllTracksFromSelectedList },
+)(TrackListingGroup);

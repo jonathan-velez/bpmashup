@@ -2,19 +2,26 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
-import { Table } from 'semantic-ui-react';
+import { Checkbox, Table } from 'semantic-ui-react';
 
 import TrackAlbum from './TrackAlbum';
 import TrackActionDropdown from './TrackActionDropdown';
 import { constructLinks, constructTrackLink } from '../utils/trackUtils';
 import { musicalKeyFilter } from '../utils/helpers';
-import { trackHasBeenDownloaded } from '../selectors';
+import { trackHasBeenDownloaded, isTrackSelected } from '../selectors';
+import {
+  addTrackToSelectedList,
+  removeTrackFromSelectedList,
+} from '../actions/ActionCreators';
 
 const TrackListingTableRow = ({
   idx,
   track,
   isPlaylist,
   trackHasBeenDownloaded,
+  isSelected,
+  addTrackToSelectedList,
+  removeTrackFromSelectedList,
 }) => {
   const {
     id,
@@ -33,8 +40,24 @@ const TrackListingTableRow = ({
     ? moment.unix(seconds).format('YYYY-MM-DD')
     : '????-??-??';
 
+  const handleAddTracktoSelectedTracks = (id, checked) => {
+    if (checked) {
+      addTrackToSelectedList(id);
+    } else {
+      removeTrackFromSelectedList(id);
+    }
+  };
+
   return (
     <Table.Row key={id} id={`track-${id}`} negative={trackHasBeenDownloaded}>
+      <Table.Cell>
+        <Checkbox
+          onChange={(e, data) =>
+            handleAddTracktoSelectedTracks(id, data.checked)
+          }
+          checked={isSelected}
+        />
+      </Table.Cell>
       <Table.Cell>{isPlaylist ? idx + 1 : position}</Table.Cell>
       <Table.Cell>
         <TrackAlbum
@@ -64,7 +87,11 @@ const TrackListingTableRow = ({
 const mapStateToProps = (state, props) => {
   return {
     trackHasBeenDownloaded: trackHasBeenDownloaded(state, props.track.id),
+    isSelected: isTrackSelected(state, props.track.id),
   };
 };
 
-export default connect(mapStateToProps)(TrackListingTableRow);
+export default connect(
+  mapStateToProps,
+  { addTrackToSelectedList, removeTrackFromSelectedList },
+)(TrackListingTableRow);
