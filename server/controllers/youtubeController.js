@@ -126,6 +126,13 @@ const downloadYTAsMp3 = async (id, fileName) => {
             fileName,
             success: true,
           });
+        })
+        .on('error', (error) => {
+          console.log(`Error with ffmpeg: ${error}`);
+          return reject({
+            succes: false,
+            error,
+          });
         });
     } catch (error) {
       return reject({
