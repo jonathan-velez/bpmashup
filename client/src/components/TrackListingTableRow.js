@@ -49,7 +49,12 @@ const TrackListingTableRow = ({
   };
 
   return (
-    <Table.Row key={id} id={`track-${id}`} negative={trackHasBeenDownloaded}>
+    <Table.Row
+      key={id}
+      id={`track-${id}`}
+      negative={trackHasBeenDownloaded}
+      onClick={() => handleAddTracktoSelectedTracks(id, !isSelected)}
+    >
       <Table.Cell>
         <Checkbox
           onChange={(e, data) =>
