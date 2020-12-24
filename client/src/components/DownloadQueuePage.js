@@ -51,6 +51,8 @@ const DownloadQueuePage = ({ updateTrackStatus, queueItems, genres }) => {
   const [sortBy, setSortBy] = useState(sortByStoredSetting);
   const [selectedGenres, setSelectedGenres] = useState([]);
   const [selectedMusicalKeys, setSelectedMusicalKeys] = useState([]);
+  const [bpmStart, setBpmStart] = useState('');
+  const [bpmEnd, setBpmEnd] = useState('');
 
   const [searchString, setSearchString] = useState('');
   const inputRef = useRef(null);
@@ -178,6 +180,24 @@ const DownloadQueuePage = ({ updateTrackStatus, queueItems, genres }) => {
       });
     }
 
+    // filter bpm range
+    if (bpmStart) {
+      items = items.filter((item) => {
+        const { track = {} } = item;
+        const { bpm } = track;
+
+        return bpm >= +bpmStart;
+      });
+    }
+    if (bpmEnd) {
+      items = items.filter((item) => {
+        const { track = {} } = item;
+        const { bpm } = track;
+
+        return bpm <= +bpmEnd;
+      });
+    }
+
     setCurrentItems(items);
     setCurrentItemsPaginated(items.slice(0, limitPerPage));
     setActivePage(1);
@@ -191,6 +211,8 @@ const DownloadQueuePage = ({ updateTrackStatus, queueItems, genres }) => {
     searchString,
     selectedGenres,
     selectedMusicalKeys,
+    bpmStart,
+    bpmEnd,
   ]);
 
   const handleDownloadClick = async (url, fileName, queueId) => {
@@ -266,6 +288,16 @@ const DownloadQueuePage = ({ updateTrackStatus, queueItems, genres }) => {
     setSelectedMusicalKeys(musicalKeys);
   };
 
+  const handleBpmStartChange = (data) => {
+    const { value } = data;
+    setBpmStart(value);
+  };
+
+  const handleBpmEndChange = (data) => {
+    const { value } = data;
+    setBpmEnd(value);
+  };
+
   const pageHeader = 'Download Queue';
 
   return (
@@ -331,7 +363,7 @@ const DownloadQueuePage = ({ updateTrackStatus, queueItems, genres }) => {
               />
             </Grid.Column>
           </Grid.Row>
-          <Grid.Row columns={2}>
+          <Grid.Row columns={4}>
             <Grid.Column>
               <Dropdown
                 placeholder='Genres'
@@ -352,6 +384,28 @@ const DownloadQueuePage = ({ updateTrackStatus, queueItems, genres }) => {
                 selection
                 options={camelotMusicalKeysDropdownArray}
                 onChange={(e, val) => handleMusicalKeyChange(val)}
+              />
+            </Grid.Column>
+            <Grid.Column>
+              <Input
+                type='number'
+                fluid
+                label='BPM Start'
+                placeholder='120'
+                width={2}
+                onChange={(e, data) => handleBpmStartChange(data)}
+                value={bpmStart}
+              />
+            </Grid.Column>
+            <Grid.Column>
+              <Input
+                type='number'
+                fluid
+                label='BPM End'
+                placeholder='135'
+                width={2}
+                onChange={(e, data) => handleBpmEndChange(data)}
+                value={bpmEnd}
               />
             </Grid.Column>
           </Grid.Row>
