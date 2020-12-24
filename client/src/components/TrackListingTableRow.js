@@ -57,9 +57,10 @@ const TrackListingTableRow = ({
     >
       <Table.Cell>
         <Checkbox
-          onChange={(e, data) =>
-            handleAddTracktoSelectedTracks(id, data.checked)
-          }
+          onChange={(e, data) => {
+            e.stopPropagation();
+            handleAddTracktoSelectedTracks(id, data.checked);
+          }}
           checked={isSelected}
         />
       </Table.Cell>
