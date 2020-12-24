@@ -17,6 +17,22 @@ const _getTracklistTracks = (state) =>
 const _getSelectedTrackIds = (state) =>
   state.trackListing && state.trackListing.selectedTrackIds;
 
+const _getGenres = (state) => state.genreListing;
+
+export const getGenresDropdownArray = createSelector(
+  [_getGenres],
+  (genres) => {
+    return genres.map((genre) => {
+      const { id, name, slug } = genre;
+      return {
+        key: slug,
+        text: name,
+        value: id,
+      };
+    });
+  },
+);
+
 export const getSelectedTracks = createSelector(
   [_getTracklistTracks, _getSelectedTrackIds],
   (tracks, selectedTrackIds) =>

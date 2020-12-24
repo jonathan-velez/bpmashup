@@ -9,6 +9,7 @@ import {
   Select,
   Input,
   Icon,
+  Dropdown,
 } from 'semantic-ui-react';
 
 import DownloadQueueTable from './DownloadQueueTable';
@@ -19,15 +20,13 @@ import { generateActivityMessage } from '../utils/storeUtils';
 import {
   setDownloadQueueSettings,
   getDownloadQueueSettings,
+  musicalKeyFilter,
 } from '../utils/helpers';
-import { getAllDownloadQueueItems } from '../selectors';
+import { getAllDownloadQueueItems, getGenresDropdownArray } from '../selectors';
 import { DEFAULT_PAGE_TITLE } from '../constants/defaults';
+import { camelotMusicalKeysDropdownArray } from '../constants/musicalKeys';
 
-const DownloadQueuePage = ({
-  updateTrackStatus,
-  queueItems,
-  // userPreferences,
-}) => {
+const DownloadQueuePage = ({ updateTrackStatus, queueItems, genres }) => {
   // TODO: switch to firebase preferences once we build them out
   // const { downloadQueueDefaultSortBy = {} } = userPreferences;
 
@@ -50,6 +49,8 @@ const DownloadQueuePage = ({
   );
   const [hideFailed, setHideFailed] = useState(hideFailedStoredSetting);
   const [sortBy, setSortBy] = useState(sortByStoredSetting);
+  const [selectedGenres, setSelectedGenres] = useState([]);
+  const [selectedMusicalKeys, setSelectedMusicalKeys] = useState([]);
 
   const [searchString, setSearchString] = useState('');
   const inputRef = useRef(null);
@@ -146,16 +147,50 @@ const DownloadQueuePage = ({
       });
     }
 
+    // filter genres
+    if (selectedGenres.length > 0) {
+      items = items.filter((item) => {
+        const { track = {} } = item;
+        const { genres = [] } = track;
+        const { id } = genres[0];
+        return selectedGenres.includes(id);
+      });
+    }
+
+    // filter musical keys
+    if (selectedMusicalKeys.length > 0) {
+      items = items.filter((item) => {
+        const { track = {} } = item;
+        const { key: musicalKey = {} } = track;
+        const camelotKey = musicalKeyFilter(musicalKey && musicalKey.shortName);
+
+        let musicalKeyId = '';
+        if (camelotKey) {
+          const filteredMusicalKey = camelotMusicalKeysDropdownArray.filter(
+            (val) => val.text === camelotKey,
+          );
+
+          if (filteredMusicalKey.length > 0) {
+            musicalKeyId = filteredMusicalKey[0].value;
+          }
+        }
+        return selectedMusicalKeys.includes(musicalKeyId);
+      });
+    }
+
     setCurrentItems(items);
     setCurrentItemsPaginated(items.slice(0, limitPerPage));
     setActivePage(1);
   }, [
     queueItems,
+    genres,
     showArchiveItems,
     hideFailed,
     limitPerPage,
     sortBy,
     searchString,
+    selectedGenres,
+    selectedMusicalKeys,
   ]);
 
   const handleDownloadClick = async (url, fileName, queueId) => {
@@ -221,6 +256,16 @@ const DownloadQueuePage = ({
     setSearchString(target.value && target.value.toLowerCase());
   };
 
+  const handleGenresChange = (val) => {
+    const { value: genres } = val;
+    setSelectedGenres(genres);
+  };
+
+  const handleMusicalKeyChange = (val) => {
+    const { value: musicalKeys } = val;
+    setSelectedMusicalKeys(musicalKeys);
+  };
+
   const pageHeader = 'Download Queue';
 
   return (
@@ -233,6 +278,7 @@ const DownloadQueuePage = ({
       <TitleHeader headerTitle={pageHeader} />
       <Container>
         <Grid columns={5} centered verticalAlign='middle'>
+          {/* TODO: refactor into a filter bar component */}
           <Grid.Row>
             <Grid.Column floated='right'>
               <Input
@@ -285,6 +331,30 @@ const DownloadQueuePage = ({
               />
             </Grid.Column>
           </Grid.Row>
+          <Grid.Row columns={2}>
+            <Grid.Column>
+              <Dropdown
+                placeholder='Genres'
+                fluid
+                multiple
+                search
+                selection
+                options={genres}
+                onChange={(e, val) => handleGenresChange(val)}
+              />
+            </Grid.Column>
+            <Grid.Column>
+              <Dropdown
+                placeholder='Keys'
+                fluid
+                multiple
+                search
+                selection
+                options={camelotMusicalKeysDropdownArray}
+                onChange={(e, val) => handleMusicalKeyChange(val)}
+              />
+            </Grid.Column>
+          </Grid.Row>
         </Grid>
       </Container>
       <DownloadQueueTable
@@ -318,6 +388,7 @@ const mapStateToProps = (state) => {
   return {
     queueItems: getAllDownloadQueueItems(state),
     userPreferences: preferences,
+    genres: getGenresDropdownArray(state),
   };
 };
 

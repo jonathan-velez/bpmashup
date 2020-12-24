@@ -6,7 +6,7 @@ import queryString from 'query-string';
 import _ from 'lodash';
 import moment from 'moment';
 
-import { KeyCamelot } from '../constants/musicalKeys';
+import { camelotMusicalKeysDropdownArray } from '../constants/musicalKeys';
 
 const FilterBar = ({ location, history, genreListing }) => {
   const { search } = location;
@@ -103,16 +103,6 @@ const FilterBar = ({ location, history, genreListing }) => {
     };
   });
 
-  const keyOptions = Object.values(KeyCamelot)
-    .sort((a, b) => a.replace(/\D/g, '') - b.replace(/\D/g, ''))
-    .map((musicalKey) => {
-      return {
-        key: _.invert(KeyCamelot)[musicalKey],
-        value: +_.invert(KeyCamelot)[musicalKey],
-        text: musicalKey,
-      };
-    });
-
   const today = moment().format('YYYY-MM-DD');
   const yesterday = moment()
     .subtract(1, 'day')
@@ -201,7 +191,7 @@ const FilterBar = ({ location, history, genreListing }) => {
               clearable
               fluid
               selection
-              options={keyOptions}
+              options={camelotMusicalKeysDropdownArray}
               onChange={handleKeyChange}
               value={selectedMusicalKey}
               width={2}
