@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { animateScroll } from 'react-scroll';
 import queryString from 'query-string';
+import { withRouter } from 'react-router-dom';
 
 import TitleHeader from './TitleHeader';
 import TrackListingGroup from './TrackListingGroup';
@@ -12,7 +13,7 @@ import { getPerPageSetting } from '../utils/helpers';
 import { getLovedTrackIds } from '../selectors';
 
 const MyLovedTracks = ({
-  location,
+  location = {},
   trackListing,
   trackIds,
   getTracksByIds,
@@ -20,7 +21,7 @@ const MyLovedTracks = ({
   const {
     page = DEFAULT_PAGE,
     perPage = getPerPageSetting(),
-  } = queryString.parse(location.search);
+  } = queryString.parse(location.search || {});
 
   useEffect(() => {
     if (trackIds) {
@@ -58,4 +59,4 @@ const mapDispatchToProps = {
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(MyLovedTracks);
+)(withRouter(MyLovedTracks));
