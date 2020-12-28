@@ -53,6 +53,7 @@ const DownloadQueuePage = ({ updateTrackStatus, queueItems, genres }) => {
   const [selectedMusicalKeys, setSelectedMusicalKeys] = useState([]);
   const [bpmStart, setBpmStart] = useState('');
   const [bpmEnd, setBpmEnd] = useState('');
+  const [showYouTubeOnly, setShowYouTubeOnly] = useState(false);
 
   const [searchString, setSearchString] = useState('');
   const inputRef = useRef(null);
@@ -198,6 +199,11 @@ const DownloadQueuePage = ({ updateTrackStatus, queueItems, genres }) => {
       });
     }
 
+    // show YouTube only
+    if (showYouTubeOnly) {
+      items = items.filter((item) => item.isYouTube);
+    }
+
     setCurrentItems(items);
     setCurrentItemsPaginated(items.slice(0, limitPerPage));
     setActivePage(1);
@@ -213,6 +219,7 @@ const DownloadQueuePage = ({ updateTrackStatus, queueItems, genres }) => {
     selectedMusicalKeys,
     bpmStart,
     bpmEnd,
+    showYouTubeOnly,
   ]);
 
   const handleDownloadClick = async (url, fileName, queueId) => {
@@ -298,6 +305,11 @@ const DownloadQueuePage = ({ updateTrackStatus, queueItems, genres }) => {
     setBpmEnd(value);
   };
 
+  const handleToggleYouTubeOnly = (data) => {
+    const { checked } = data;
+    setShowYouTubeOnly(checked);
+  };
+
   const pageHeader = 'Download Queue';
 
   return (
@@ -309,15 +321,14 @@ const DownloadQueuePage = ({ updateTrackStatus, queueItems, genres }) => {
       </Helmet>
       <TitleHeader headerTitle={pageHeader} />
       <Container>
-        <Grid columns={5} centered verticalAlign='middle'>
+        <Grid columns={6} verticalAlign='middle'>
           {/* TODO: refactor into a filter bar component */}
           <Grid.Row>
             <Grid.Column floated='right'>
               <Input
                 ref={inputRef}
-                size='large'
+                size='small'
                 onChange={(e) => handleSearchInput(e)}
-                style={{ width: '200px' }}
                 iconPosition='left'
                 placeholder='Artists, Title, Label'
               >
@@ -328,7 +339,7 @@ const DownloadQueuePage = ({ updateTrackStatus, queueItems, genres }) => {
             <Grid.Column floated='right'>
               <Checkbox
                 toggle
-                label='Include DL/Purchased'
+                label='DL/Purchased'
                 onChange={handleArchiveToggle}
                 checked={showArchiveItems}
               />
@@ -339,6 +350,14 @@ const DownloadQueuePage = ({ updateTrackStatus, queueItems, genres }) => {
                 label='Hide Failed'
                 onChange={handleHideFailed}
                 checked={hideFailed}
+              />
+            </Grid.Column>
+            <Grid.Column floated='right'>
+              <Checkbox
+                toggle
+                label='YouTube Only'
+                onChange={(e, data) => handleToggleYouTubeOnly(data)}
+                checked={showYouTubeOnly}
               />
             </Grid.Column>
             <Grid.Column textAlign='right' floated='right'>
