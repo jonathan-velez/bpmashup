@@ -4,12 +4,12 @@ import { Redirect } from 'react-router-dom';
 
 import { getUserId } from '../selectors';
 
-const ProtectedRoute = ({ component: Component, uid }) => {
+const ProtectedRoute = ({ component: Component, uid, ...props }) => {
   if (!uid) {
     return <Redirect to={{ pathname: '/' }} />;
   }
 
-  return <Component />;
+  return <Component {...props} />;
 };
 
 const mapStateToProps = (state) => {

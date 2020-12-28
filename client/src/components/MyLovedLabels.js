@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { animateScroll } from 'react-scroll';
-import { withRouter } from 'react-router-dom';
 import queryString from 'query-string';
 
 import { DEFAULT_PAGE } from '../constants/defaults';
@@ -80,4 +79,4 @@ const mapDispatchToProps = {
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(withRouter(MyLovedLabels));
+)(MyLovedLabels);

@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { animateScroll } from 'react-scroll';
 import queryString from 'query-string';
-import { withRouter } from 'react-router-dom';
 
 import TitleHeader from './TitleHeader';
 import TrackListingGroup from './TrackListingGroup';
@@ -59,4 +58,4 @@ const mapDispatchToProps = {
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(withRouter(MyLovedTracks));
+)(MyLovedTracks);
