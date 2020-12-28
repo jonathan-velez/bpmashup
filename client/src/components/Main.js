@@ -23,6 +23,7 @@ import Preferences from './Preferences';
 import ProtectedRoute from './ProtectedRoute';
 import PageNotFound from './PageNotFound';
 import Charts from './Charts';
+import LatestFromMyLoves from './LatestFromMyLoves';
 import KeyboardShortcutsLegend from './KeyboardShortcutsLegend';
 import { DEFAULT_PAGE_TITLE } from '../constants/defaults';
 
@@ -56,11 +57,7 @@ const Main = () => {
           path='/history/loved-tracks'
           component={MyLovedTracks}
         />
-        <Route
-          exact
-          path='/artist/:artistName/:artistId'
-          component={Artist}
-        />
+        <Route exact path='/artist/:artistName/:artistId' component={Artist} />
         <Route exact path='/label/:labelName/:labelId' component={Label} />
         <Route
           exact
@@ -88,6 +85,7 @@ const Main = () => {
           component={Release}
         />
         <Route exact path='/tracks' component={TracksRoute} />
+        <Route exact path='/latest' component={LatestFromMyLoves} />
         <Route
           exact
           path='/:itemType/:itemName/:itemId/tracks'

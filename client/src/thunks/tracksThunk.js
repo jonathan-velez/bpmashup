@@ -1,5 +1,6 @@
 import queryString from 'query-string';
 import _ from 'lodash';
+import moment from 'moment';
 
 import {
   START_ASYNC,
@@ -132,6 +133,36 @@ export const getTracksByIds = async (
   };
 };
 
+export const getLatestTracksByLabelAndArtistIds = async (
+  labelIds = [],
+  artistIds = [],
+  page = DEFAULT_PAGE,
+  perPage = getPerPageSetting(),
+) => {
+  return async (dispatch) => {
+    dispatch({
+      type: START_ASYNC,
+    });
+
+    const requestResult = await callAPIorCache(
+      `${API_MY_BEATPORT}?artistIds=${
+        Array.isArray(artistIds) ? artistIds.join(',') : artistIds
+      }&labelIds=${
+        Array.isArray(labelIds) ? labelIds.join(',') : labelIds
+      }&page=${page}&perPage=${perPage}&publishDateStart=${moment()
+        .subtract(30, 'days')
+        .format('YYYY-MM-DD')}&publishDateEnd=${moment().format(
+        'YYYY-MM-DD',
+      )}`,
+    );
+
+    dispatch({
+      type: FETCH_TRACKS,
+      payload: requestResult,
+    });
+  };
+};
+
 export const fetchTracksSimilar = async (trackId, page = 1, perPage = 20) => {
   return async (dispatch) => {
     dispatch({
@@ -160,7 +191,7 @@ export const getYoutubeLink = async (searchString, lengthMs) => {
         searchString,
       )}&lengthMs=${lengthMs}`,
     );
-    
+
     dispatch({
       type: GET_YOUTUBE_LINK,
       payload: request.data,

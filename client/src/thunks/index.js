@@ -21,6 +21,7 @@ import {
   getYoutubeLink,
   getTracksByIds,
   clearTracklist,
+  getLatestTracksByLabelAndArtistIds,
 } from './tracksThunk';
 import {
   fetchChartDataById,
@@ -65,4 +66,5 @@ export {
   getPlaylistDetails,
   removeTrackFromPlaylist,
   fetchChartsByGenreId,
+  getLatestTracksByLabelAndArtistIds,
 };

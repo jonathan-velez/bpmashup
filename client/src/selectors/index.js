@@ -12,6 +12,8 @@ const getUserPermissions = (state) =>
 
 const getDownloadQueue = (state) => state.downloadQueue.queue;
 const _getLovedTracks = (state) => state.lovedTracks;
+const _getLovedLabels = (state) => state.lovedLabels;
+const _getLovedArtists = (state) => state.lovedArtists;
 const _getTracklistTracks = (state) =>
   state.trackListing && state.trackListing.tracks;
 const _getSelectedTrackIds = (state) =>
@@ -52,6 +54,16 @@ export const getSelectedTracksCount = createSelector(
 export const getLovedTrackIds = createSelector(
   [_getLovedTracks],
   (tracks) => Object.keys(_.pickBy(tracks, (track) => track.loved)),
+);
+
+export const getLovedLabelIds = createSelector(
+  [_getLovedLabels],
+  (labels) => Object.keys(_.pickBy(labels, (label) => label.loved)),
+);
+
+export const getLovedArtistIds = createSelector(
+  [_getLovedArtists],
+  (artists) => Object.keys(_.pickBy(artists, (artist) => artist.loved)),
 );
 
 export const getUserId = createSelector(

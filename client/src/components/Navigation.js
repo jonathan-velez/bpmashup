@@ -54,6 +54,9 @@ class Navigation extends React.PureComponent {
         <Menu.Item as={Link} to='/tracks'>
           TRACKS
         </Menu.Item>
+        <Menu.Item as={Link} to='/latest'>
+          LATEST
+        </Menu.Item>
         <Responsive minWidth={850} as={Menu.Item}>
           <SearchTracks />
         </Responsive>
