@@ -149,7 +149,7 @@ export const getLatestTracksByLabelAndArtistIds = async (
         Array.isArray(artistIds) ? artistIds.join(',') : artistIds
       }&labelIds=${
         Array.isArray(labelIds) ? labelIds.join(',') : labelIds
-      }&page=${page}&perPage=${perPage}&publishDateStart=${moment()
+      }&page=${page}&perPage=${perPage}&sortBy=publishDate+DESC&publishDateStart=${moment()
         .subtract(30, 'days')
         .format('YYYY-MM-DD')}&publishDateEnd=${moment().format(
         'YYYY-MM-DD',
