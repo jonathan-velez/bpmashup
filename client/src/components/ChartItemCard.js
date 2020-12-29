@@ -28,9 +28,11 @@ const ChartItemCard = ({ chartItem, history }) => {
       onClick={handleClick}
     >
       <Dimmer active={active} style={{ cursor: 'pointer', zIndex: 99 }}>
-        <h4>{name}</h4>
-        {publishDate && <h5>Published on {publishDate}</h5>}
-        {chartOwner && <h5>by {chartOwner.name}</h5>}
+        <h3>{name}</h3>
+        <h5>
+          {publishDate && `Published on ${publishDate}`}
+          {chartOwner && ` by ${chartOwner.name}`}
+        </h5>
       </Dimmer>
       <Image
         src={images.xlarge && images.xlarge.secureUrl}
