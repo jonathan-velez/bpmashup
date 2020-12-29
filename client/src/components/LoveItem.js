@@ -2,12 +2,12 @@ import React from 'react';
 import { Button, Icon, Menu } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 
-import { toggleItemNew } from '../thunks';
+import { toggleLoveItem } from '../thunks';
 
 const LoveItem = ({
   itemType,
   item,
-  toggleItemNew,
+  toggleLoveItem,
   lovedTracks,
   lovedArtists,
   lovedLabels,
@@ -31,7 +31,7 @@ const LoveItem = ({
   }
 
   const handleClick = () => {
-    toggleItemNew(itemType, item, !isLoved);
+    toggleLoveItem(itemType, item, !isLoved);
 
     setTimeout(() => {
       clickCallback();
@@ -70,7 +70,7 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = { toggleItemNew };
+const mapDispatchToProps = { toggleLoveItem };
 
 export default connect(
   mapStateToProps,

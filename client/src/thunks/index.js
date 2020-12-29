@@ -8,7 +8,7 @@ import {
   removeTrackFromPlaylist,
 } from './playlistThunk';
 import { downloadTrack, addTrackToNoDownloadList } from './downloadTrackThunk';
-import { toggleLoveItem, loveLabelNew, toggleItemNew } from './loveItemThunk';
+import { toggleLoveItem } from './loveItemThunk';
 import { getMyFavoriteLabels, getLabelsById } from './myFavoritesThunk';
 import { searchEverything, searchTracks } from './searchEverythingThunk';
 import { fetchReleaseData } from './releaseThunk';
@@ -61,8 +61,6 @@ export {
   addTrackToDownloadQueue,
   updateTrackStatus,
   fetchChartsByProfileId,
-  loveLabelNew,
-  toggleItemNew,
   getPlaylistDetails,
   removeTrackFromPlaylist,
   fetchChartsByGenreId,
