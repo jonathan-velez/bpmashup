@@ -69,7 +69,9 @@ export async function fetchChartsByIds(
     });
 
     const chartData = await callAPIorCache(
-      `${API_GET_CHART}?ids=${chartIds.join(',')}&page=${page}&perPage=${perPage}`,
+      `${API_GET_CHART}?ids=${chartIds.join(
+        ',',
+      )}&page=${page}&perPage=${perPage}`,
     );
     const { data, status } = chartData;
     if (status !== 200) return;
