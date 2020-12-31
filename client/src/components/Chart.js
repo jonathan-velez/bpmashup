@@ -1,9 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import Scroll from 'react-scroll';
 import queryString from 'query-string';
-import { Transition, Grid, Image, Header, Segment } from 'semantic-ui-react';
+import {
+  Transition,
+  Grid,
+  Image,
+  Header,
+  Segment,
+  Button,
+} from 'semantic-ui-react';
 
 import TrackListingGroup from './TrackListingGroup';
 import TrackAlbum from './TrackAlbum';
@@ -48,7 +56,8 @@ const Chart = ({
   } = chartListing;
   const { xlarge = {} } = images;
   const { secureUrl } = xlarge;
-  const { name: chartOwnerName } = chartOwner || {};
+  const { name: chartOwnerName, slug: chartOwnerSlug, id: chartOwnerId } =
+    chartOwner || {};
 
   let pageTitle = '';
   if (name) {
@@ -70,42 +79,59 @@ const Chart = ({
       </Helmet>
       <Segment placeholder padded='very'>
         <Grid>
-          <Grid.Row>
-            <Grid.Column width={4}>
+          <Grid.Row stretched>
+            <Grid.Column width={4} verticalAlign='middle'>
               {firstTrack ? (
                 <TrackAlbum imageUrl={secureUrl} track={firstTrack} />
               ) : (
                 <Image src={secureUrl} />
               )}
             </Grid.Column>
-            <Grid.Column width={8} textAlign='left'>
-              <Header size='huge' className='item-header'>
-                {name}{' '}
-                <LoveItem
-                  itemType='chart'
-                  item={{ id, name, slug }}
-                  type='button'
-                  style={{ float: 'right' }}
-                />
-                {chartOwnerName && (
-                  <Header.Subheader>{chartOwnerName}</Header.Subheader>
-                )}
-                {publishDate && (
-                  <Header.Subheader>{publishDate}</Header.Subheader>
-                )}
-              </Header>
-              {genres &&
-                genres.map((genre, idx) => {
-                  return (
-                    <GenreLabel
-                      key={idx}
-                      genreName={genre.name}
-                      genreSlug={genre.slug}
-                      genreId={genre.id}
-                    />
-                  );
-                })}
-              <p>{description}</p>
+            <Grid.Column width={12} textAlign='left'>
+              <div>
+                <Header size='huge' className='item-header'>
+                  {name}{' '}
+                  <LoveItem
+                    itemType='chart'
+                    item={{ id, name, slug }}
+                    type='button'
+                    style={{ float: 'right' }}
+                  />
+                  {chartOwnerName && (
+                    <Header.Subheader>{chartOwnerName}</Header.Subheader>
+                  )}
+                  {publishDate && (
+                    <Header.Subheader>{publishDate}</Header.Subheader>
+                  )}
+                </Header>
+              </div>
+              <div>
+                {genres &&
+                  genres.map((genre, idx) => {
+                    return (
+                      <GenreLabel
+                        key={idx}
+                        genreName={genre.name}
+                        genreSlug={genre.slug}
+                        genreId={genre.id}
+                      />
+                    );
+                  })}
+              </div>
+              <div>
+                <p>{description}</p>
+              </div>
+              <div>
+                <Button
+                  basic
+                  size='medium'
+                  style={{ float: 'left' }}
+                  as={Link}
+                  to={`/charts/${chartOwnerSlug}/${chartOwnerId}`}
+                >
+                  View all of {chartOwnerName}'s charts
+                </Button>
+              </div>
             </Grid.Column>
           </Grid.Row>
         </Grid>
