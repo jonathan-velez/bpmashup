@@ -3,9 +3,10 @@ import {
   GET_CHART_DATA,
   FETCH_TRACKS,
   START_ASYNC,
-  FETCH_CHART_METADATA,
+  FETCH_CHARTS,
   FETCH_CHARTS_BY_PROFILE_ID,
   FETCH_CHARTS_BY_GENRE_ID,
+  CLEAR_CHARTS,
 } from '../constants/actionTypes';
 import {
   API_GET_CHART,
@@ -32,13 +33,13 @@ export async function fetchChartDataById(
 
     // hard code the page and perPage on the metadata call as it will always be the first result
     // we'll benefit from the cached api call when page + perPage changes come on the tracks call below
-    const chartMetadata = await callAPIorCache(
+    const chartsMetadata = await callAPIorCache(
       `${API_GET_CHART}?id=${chartId}&page=1&perPage=25`,
     );
     const chartObject =
-      (chartMetadata.data.results &&
-        Array.isArray(chartMetadata.data.results) &&
-        chartMetadata.data.results[0]) ||
+      (chartsMetadata.data.results &&
+        Array.isArray(chartsMetadata.data.results) &&
+        chartsMetadata.data.results[0]) ||
       {};
 
     const chartTracks = await callAPIorCache(
@@ -57,7 +58,7 @@ export async function fetchChartDataById(
   };
 }
 
-export async function fetchChartMetadataByIds(
+export async function fetchChartsByIds(
   chartIds = [],
   page = DEFAULT_PAGE,
   perPage = DEFAULT_CHARTS_PER_PAGE,
@@ -68,15 +69,13 @@ export async function fetchChartMetadataByIds(
     });
 
     const chartData = await callAPIorCache(
-      `${API_GET_CHART}?ids=${chartIds.join(
-        ',',
-      )}&page=${page}&perPage=${perPage}`,
+      `${API_GET_CHART}?ids=${chartIds.join(',')}&page=${page}&perPage=${perPage}`,
     );
     const { data, status } = chartData;
     if (status !== 200) return;
 
     dispatch({
-      type: FETCH_CHART_METADATA,
+      type: FETCH_CHARTS,
       payload: data,
     });
   };
@@ -130,6 +129,14 @@ export async function fetchChartsByGenreId(
     dispatch({
       type: FETCH_CHARTS_BY_GENRE_ID,
       payload: data,
+    });
+  };
+}
+
+export function clearInfiniteCharts() {
+  return (dispatch) => {
+    dispatch({
+      type: CLEAR_CHARTS,
     });
   };
 }

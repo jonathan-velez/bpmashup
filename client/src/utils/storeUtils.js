@@ -10,6 +10,7 @@ import {
   LOAD_PERMS,
   UPDATE_DOWNLOAD_QUEUE,
   LOAD_PREFERENCES,
+  LOAD_LOVED_CHARTS,
 } from '../constants/actionTypes';
 
 import {
@@ -114,6 +115,25 @@ export const registerFirebaseListeners = () => {
       });
 
     listeners.push(lovedTracks);
+
+    // listen to loved charts
+    const lovedCharts = userRef
+      .collection('loves')
+      .doc('charts')
+      .onSnapshot((lovedCharts) => {
+        let payload = {};
+        if (lovedCharts.exists) {
+          payload = lovedCharts.data();
+        }
+
+        // dispatch redux
+        store.dispatch({
+          type: LOAD_LOVED_CHARTS,
+          payload,
+        });
+      });
+
+    listeners.push(lovedCharts);
 
     // listen to download queue
     const downloadQueueRefFirestore = firestore

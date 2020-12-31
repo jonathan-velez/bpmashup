@@ -15,6 +15,8 @@ import lovedArtists from './lovedArtists';
 import lovedArtistsDetails from './lovedArtistsDetails';
 import lovedLabels from './lovedLabels';
 import lovedLabelsDetails from './lovedLabelsDetails';
+import lovedCharts from './lovedCharts';
+import chartListInfinite from './chartListInfinite';
 import searchResults from './searchResults';
 import release from './release';
 import artistDetail from './artistDetail';
@@ -40,6 +42,8 @@ const rootReducer = combineReducers({
   lovedArtists,
   lovedLabels,
   lovedLabelsDetails,
+  lovedCharts,
+  chartListInfinite,
   firebaseState: firebaseReducer,
   routing: routerReducer,
   searchResults,

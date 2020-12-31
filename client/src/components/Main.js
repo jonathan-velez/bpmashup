@@ -5,21 +5,22 @@ import { Container } from 'semantic-ui-react';
 
 import TrackListingController from './TrackListingController';
 import PlaylistController from './PlaylistController';
-import MyLovedLabels from './MyLovedLabels';
 import SearchResultsController from './SearchResultsController';
 import Release from './Release';
 import Artist from './Artist';
 import Label from './Label';
 import TracksRoute from './TracksRoute';
+import MyLovedLabels from './MyLovedLabels';
 import MyLovedTracks from './MyLovedTracks';
+import MyLovedCharts from './MyLovedCharts';
 import MyActivity from './MyActivity';
+import MyProfile from './MyProfile';
+import Preferences from './Preferences';
 import Track from './Track';
 import Chart from './Chart';
-import MyProfile from './MyProfile';
 import DownloadQueuePage from './DownloadQueuePage';
 import Home from './Home';
 import Genre from './Genre';
-import Preferences from './Preferences';
 import ProtectedRoute from './ProtectedRoute';
 import PageNotFound from './PageNotFound';
 import Charts from './Charts';
@@ -56,6 +57,11 @@ const Main = () => {
           exact
           path='/history/loved-tracks'
           component={MyLovedTracks}
+        />
+        <ProtectedRoute
+          exact
+          path='/history/loved-charts'
+          component={MyLovedCharts}
         />
         <Route exact path='/artist/:artistName/:artistId' component={Artist} />
         <Route exact path='/label/:labelName/:labelId' component={Label} />

@@ -25,7 +25,8 @@ import {
 } from './tracksThunk';
 import {
   fetchChartDataById,
-  fetchChartMetadataByIds,
+  fetchChartsByIds,
+  clearInfiniteCharts,
   fetchChartsByProfileId,
   fetchChartsByGenreId,
 } from './chartThunk';
@@ -57,7 +58,8 @@ export {
   getTracksByIds,
   clearTracklist,
   fetchChartDataById,
-  fetchChartMetadataByIds,
+  fetchChartsByIds,
+  clearInfiniteCharts,
   addTrackToDownloadQueue,
   updateTrackStatus,
   fetchChartsByProfileId,

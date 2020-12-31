@@ -11,8 +11,10 @@ const LoveItem = ({
   lovedTracks,
   lovedArtists,
   lovedLabels,
+  lovedCharts,
   type = 'button',
   clickCallback = () => {},
+  style = {},
 }) => {
   let isLoved = false;
 
@@ -25,6 +27,9 @@ const LoveItem = ({
       break;
     case 'track':
       isLoved = lovedTracks[item.id] && lovedTracks[item.id].loved;
+      break;
+    case 'chart':
+      isLoved = lovedCharts[item.id] && lovedCharts[item.id].loved;
       break;
     default:
       break;
@@ -47,7 +52,7 @@ const LoveItem = ({
   );
 
   const loveButton = (
-    <Button basic onClick={handleClick}>
+    <Button basic onClick={handleClick} style={style}>
       <Button.Content visible>{loveIcon}</Button.Content>
     </Button>
   );
@@ -63,10 +68,13 @@ const LoveItem = ({
 };
 
 const mapStateToProps = (state) => {
+  const { lovedTracks, lovedArtists, lovedLabels, lovedCharts } = state;
+
   return {
-    lovedTracks: state.lovedTracks,
-    lovedArtists: state.lovedArtists,
-    lovedLabels: state.lovedLabels,
+    lovedTracks,
+    lovedArtists,
+    lovedLabels,
+    lovedCharts,
   };
 };
 

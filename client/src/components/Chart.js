@@ -8,6 +8,7 @@ import { Transition, Grid, Image, Header, Segment } from 'semantic-ui-react';
 import TrackListingGroup from './TrackListingGroup';
 import TrackAlbum from './TrackAlbum';
 import GenreLabel from './GenreLabel';
+import LoveItem from './LoveItem';
 import { fetchChartDataById } from '../thunks';
 import { getPerPageSetting } from '../utils/helpers';
 import { DEFAULT_PAGE, DEFAULT_PAGE_TITLE } from '../constants/defaults';
@@ -36,6 +37,8 @@ const Chart = ({
   }, [fetchChartDataById, chartId, page, perPage]);
 
   const {
+    id,
+    slug,
     images = {},
     name,
     description,
@@ -46,11 +49,6 @@ const Chart = ({
   const { xlarge = {} } = images;
   const { secureUrl } = xlarge;
   const { name: chartOwnerName } = chartOwner || {};
-
-  const trackTitleHeader = {
-    textAlign: 'left',
-    textTransform: 'uppercase',
-  };
 
   let pageTitle = '';
   if (name) {
@@ -81,8 +79,14 @@ const Chart = ({
               )}
             </Grid.Column>
             <Grid.Column width={8} textAlign='left'>
-              <Header as='h1' style={trackTitleHeader}>
-                {name}
+              <Header size='huge' className='item-header'>
+                {name}{' '}
+                <LoveItem
+                  itemType='chart'
+                  item={{ id, name, slug }}
+                  type='button'
+                  style={{ float: 'right' }}
+                />
                 {chartOwnerName && (
                   <Header.Subheader>{chartOwnerName}</Header.Subheader>
                 )}

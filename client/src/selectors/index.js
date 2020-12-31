@@ -14,12 +14,29 @@ const getDownloadQueue = (state) => state.downloadQueue.queue;
 const _getLovedTracks = (state) => state.lovedTracks;
 const _getLovedLabels = (state) => state.lovedLabels;
 const _getLovedArtists = (state) => state.lovedArtists;
+const _getLovedCharts = (state) => state.lovedCharts;
+const _getInfiniteCharts = (state) => state.chartListInfinite;
 const _getTracklistTracks = (state) =>
   state.trackListing && state.trackListing.tracks;
 const _getSelectedTrackIds = (state) =>
   state.trackListing && state.trackListing.selectedTrackIds;
-
+const _getChartsList = (state) => state.chartsList;
 const _getGenres = (state) => state.genreListing;
+
+export const getCharts = createSelector(
+  [_getChartsList],
+  (charts) => (charts.results && charts.results.charts) || [],
+);
+
+export const getChartsMetadata = createSelector(
+  [_getChartsList],
+  (charts) => (charts.metadata && charts.metadata.charts) || {},
+);
+
+export const getInfiniteCharts = createSelector(
+  [_getInfiniteCharts],
+  (charts) => charts,
+);
 
 export const getGenresDropdownArray = createSelector(
   [_getGenres],
@@ -64,6 +81,11 @@ export const getLovedLabelIds = createSelector(
 export const getLovedArtistIds = createSelector(
   [_getLovedArtists],
   (artists) => Object.keys(_.pickBy(artists, (artist) => artist.loved)),
+);
+
+export const getLovedChartIds = createSelector(
+  [_getLovedCharts],
+  (charts) => Object.keys(_.pickBy(charts, (chart) => chart.loved)),
 );
 
 export const getUserId = createSelector(

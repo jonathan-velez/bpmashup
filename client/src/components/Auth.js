@@ -87,6 +87,11 @@ const Auth = ({
               />
               <Dropdown.Item
                 as={Link}
+                to='/history/loved-charts'
+                text='Loved Charts'
+              />
+              <Dropdown.Item
+                as={Link}
                 to='/history/my-activity'
                 text='My Activity'
               />

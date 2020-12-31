@@ -1,6 +1,7 @@
 import {
   FETCH_CHARTS_BY_PROFILE_ID,
   FETCH_CHARTS_BY_GENRE_ID,
+  FETCH_CHARTS,
 } from '../constants/actionTypes';
 
 const defaultState = {
@@ -18,6 +19,7 @@ const chartsList = (state = defaultState, action) => {
   switch (type) {
     case FETCH_CHARTS_BY_PROFILE_ID:
       return payload;
+    case FETCH_CHARTS:
     case FETCH_CHARTS_BY_GENRE_ID: {
       const { metadata = {}, results = [] } = payload;
 

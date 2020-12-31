@@ -16,6 +16,7 @@ import {
   FETCH_CHARTS_BY_PROFILE_ID,
   FETCH_CHARTS_BY_GENRE_ID,
   FETCH_RELEASES,
+  FETCH_CHARTS,
 } from '../constants/actionTypes';
 
 const isLoading = (state = false, action) => {
@@ -35,6 +36,7 @@ const isLoading = (state = false, action) => {
     case GENERAL_ERROR:
     case LOAD_LOVED_LABELS_DETAILS:
     case GET_CHART_DATA:
+    case FETCH_CHARTS:
     case FETCH_CHARTS_BY_PROFILE_ID:
     case FETCH_CHARTS_BY_GENRE_ID:
     case FETCH_RELEASES:
