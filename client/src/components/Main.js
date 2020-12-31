@@ -23,7 +23,7 @@ import Home from './Home';
 import Genre from './Genre';
 import ProtectedRoute from './ProtectedRoute';
 import PageNotFound from './PageNotFound';
-import Charts from './Charts';
+import ChartsByGenreId from './ChartsByGenreId';
 import InfiniteChartsByProfileId from './InfiniteChartsByProfileId';
 import LatestFromMyLoves from './LatestFromMyLoves';
 import KeyboardShortcutsLegend from './KeyboardShortcutsLegend';
@@ -41,7 +41,7 @@ const Main = () => {
         <title>{DEFAULT_PAGE_TITLE}</title>
       </Helmet>
       <Switch>
-        <Route exact path='/charts/all' component={Charts} />
+        <Route exact path='/charts/all' component={ChartsByGenreId} />
         <Route
           exact
           path='/charts/:ownerName/:ownerId'

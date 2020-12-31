@@ -16,7 +16,7 @@ import { usePrevious } from '../hooks';
 import ChartItemCard from './ChartItemCard';
 import TitleHeader from './TitleHeader';
 
-const Charts = ({ location = {}, genreName }) => {
+const ChartsByGenreId = ({ location = {}, genreName }) => {
   const { page = 1, genreId = '' } = queryString.parse(location.search || {});
   const prevGenreId = usePrevious(genreId);
 
@@ -109,4 +109,4 @@ const mapStateToProps = (state, ownProps) => {
 export default connect(
   mapStateToProps,
   {},
-)(Charts);
+)(ChartsByGenreId);
