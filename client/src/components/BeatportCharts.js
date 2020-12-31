@@ -6,6 +6,7 @@ import { Button } from 'semantic-ui-react';
 import TitleHeader from './TitleHeader';
 import ChartSlider from './ChartSlider';
 import { fetchChartsByProfileId, clearInfiniteCharts } from '../thunks';
+import { DEFAULT_BEATPORT_PROFILE_ID } from '../constants/defaults';
 
 // TODO: Generalize this component as a Slider for charts by owner ID
 const BeatportCharts = ({
@@ -16,7 +17,7 @@ const BeatportCharts = ({
 }) => {
   useEffect(() => {
     clearInfiniteCharts();
-    fetchChartsByProfileId('36047');
+    fetchChartsByProfileId(DEFAULT_BEATPORT_PROFILE_ID);
 
     return () => clearInfiniteCharts();
   }, [fetchChartsByProfileId, clearInfiniteCharts]);
@@ -33,7 +34,7 @@ const BeatportCharts = ({
       <Button
         basic
         as={Link}
-        to={`charts/beatport/36047`}
+        to={`charts/beatport/${DEFAULT_BEATPORT_PROFILE_ID}`}
         style={{ float: 'right', marginTop: '12px' }}
       >
         View All Charts

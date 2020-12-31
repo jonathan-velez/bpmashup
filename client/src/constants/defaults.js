@@ -5,3 +5,4 @@ export const DEFAULT_BP_ITEM_IMAGE_URL = 'https://geo-media.beatport.com/image/a
 export const DEFAULT_CHARTS_PER_PAGE = 24;
 export const DEFAULT_TRACKLISTING_VIEW = 'cards';
 export const DEFAULT_PAGE_TITLE = 'BPMashup';
+export const DEFAULT_BEATPORT_PROFILE_ID = '36047';
