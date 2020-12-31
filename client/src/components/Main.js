@@ -24,6 +24,7 @@ import Genre from './Genre';
 import ProtectedRoute from './ProtectedRoute';
 import PageNotFound from './PageNotFound';
 import Charts from './Charts';
+import InfiniteChartsByProfileId from './InfiniteChartsByProfileId';
 import LatestFromMyLoves from './LatestFromMyLoves';
 import KeyboardShortcutsLegend from './KeyboardShortcutsLegend';
 import { DEFAULT_PAGE_TITLE } from '../constants/defaults';
@@ -41,6 +42,11 @@ const Main = () => {
       </Helmet>
       <Switch>
         <Route exact path='/charts/all' component={Charts} />
+        <Route
+          exact
+          path='/charts/:ownerName/:ownerId'
+          component={InfiniteChartsByProfileId}
+        />
         <Route exact path='/chart/:chartName/:chartId' component={Chart} />
         <Route exact path='/track/:trackName/:trackId' component={Track} />
         <ProtectedRoute

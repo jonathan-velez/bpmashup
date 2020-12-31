@@ -1,4 +1,8 @@
-import { FETCH_CHARTS, CLEAR_CHARTS } from '../constants/actionTypes';
+import {
+  FETCH_CHARTS,
+  FETCH_CHARTS_BY_PROFILE_ID,
+  CLEAR_CHARTS,
+} from '../constants/actionTypes';
 
 const defaultState = [];
 
@@ -9,6 +13,9 @@ const chartsList = (state = defaultState, action) => {
   switch (type) {
     case FETCH_CHARTS: {
       return [...state, ...results];
+    }
+    case FETCH_CHARTS_BY_PROFILE_ID: {
+      return [...state, ...(results.charts || [])];
     }
     case CLEAR_CHARTS: {
       return defaultState;
