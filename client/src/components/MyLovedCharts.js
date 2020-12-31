@@ -26,6 +26,8 @@ const MyLovedCharts = ({
   infiniteCharts,
 }) => {
   useEffect(() => {
+    clearInfiniteCharts();
+
     if (lovedChartIds.length > 0) {
       Scroll.animateScroll.scrollToTop({ duration: 500 });
       fetchAndSetChartData(lovedChartIds);
