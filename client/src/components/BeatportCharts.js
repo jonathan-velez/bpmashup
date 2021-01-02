@@ -37,7 +37,7 @@ const BeatportCharts = ({
         to={`charts/beatport/${DEFAULT_BEATPORT_PROFILE_ID}`}
         style={{ float: 'right', marginTop: '12px' }}
       >
-        View All Charts
+        Beatport's Charts
       </Button>
     </React.Fragment>
   );
