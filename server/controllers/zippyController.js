@@ -68,8 +68,11 @@ function getDownladLink(query) {
       const pagesHtml = {};
       let indexOfBestLink = -1;
 
-      // filter links to just the ones on zippyshare.com
+      // filter links to just the HTML files on zippyshare.com
       linksList = linksList.filter((link) => link.includes('zippyshare.com/'));
+      linksList = linksList.filter(
+        (link) => link.substr(link.length - 5) === '.html',
+      );
       console.log('filteredLinks', linksList);
 
       console.log('# of links', linksList.length);
