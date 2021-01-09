@@ -2,6 +2,7 @@ import { createSelector } from 'reselect';
 import _ from 'lodash';
 
 import { getUserDownloadQueueTrackIds } from './userActivity';
+const { REACT_APP_ADMIN_USER_ID } = process.env; // eslint-disable-line no-undef
 
 const getUserAuth = (state) => state.firebaseState && state.firebaseState.auth;
 const getUserProfile = (state) =>
@@ -92,6 +93,12 @@ export const getUserId = createSelector(
   [getUserAuth],
   (auth) => auth.uid,
 );
+
+export const isAdmin = createSelector(
+  [getUserAuth],
+  (auth) => auth.uid === REACT_APP_ADMIN_USER_ID,
+);
+
 export const getUserPhotoURL = createSelector(
   [getUserProfile],
   (profile) => {

@@ -19,7 +19,7 @@ import {
 } from '../actions/ActionCreators';
 import ConfirmAction from './ConfirmAction';
 import UserAvatar from './UserAvatar';
-import { getNumOfTracksAvailableToDownload } from '../selectors';
+import { getNumOfTracksAvailableToDownload, isAdmin } from '../selectors';
 
 // TODO: Dispatch through actions/thunks rather than importing store
 // TODO: Extract avatar into own component, register listener so image updates are detected, use selector to get image
@@ -29,6 +29,7 @@ const Auth = ({
   firebase,
   history,
   numOfTracksAvailableToDownload,
+  isAdmin,
 }) => {
   const logIn = () => {
     store.dispatch(openLoginModalWindow());
@@ -75,6 +76,13 @@ const Auth = ({
                 text='Download Queue'
                 label={numOfTracksAvailableToDownload}
               />
+              {isAdmin && (
+                <Dropdown.Item
+                  as={Link}
+                  to='/download-queue/admin'
+                  text='Download Queue Admin'
+                />
+              )}
               <Dropdown.Item
                 as={Link}
                 to='/history/loved-tracks'
@@ -125,6 +133,7 @@ export default compose(
       auth,
       profile,
       numOfTracksAvailableToDownload: getNumOfTracksAvailableToDownload(state),
+      isAdmin: isAdmin(state),
     };
   }),
 )(withRouter(Auth));

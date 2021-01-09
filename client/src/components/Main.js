@@ -22,6 +22,8 @@ import DownloadQueuePage from './DownloadQueuePage';
 import Home from './Home';
 import Genre from './Genre';
 import ProtectedRoute from './ProtectedRoute';
+import AdminRoute from './AdminRoute';
+import AdminDownloadQueue from './AdminDownloadQueue';
 import PageNotFound from './PageNotFound';
 import ChartsByGenreId from './ChartsByGenreId';
 import InfiniteChartsByProfileId from './InfiniteChartsByProfileId';
@@ -69,7 +71,11 @@ const Main = () => {
           path='/history/loved-charts'
           component={MyLovedCharts}
         />
-        <Route exact path='/artist/:artistName/:artistId' component={Artist} />
+        <Route
+          exact
+          path='/artist/:artistName/:artistId'
+          component={Artist}
+        />
         <Route exact path='/label/:labelName/:labelId' component={Label} />
         <Route
           exact
@@ -115,6 +121,11 @@ const Main = () => {
           exact
           path='/download-queue'
           component={DownloadQueuePage}
+        />
+        <AdminRoute
+          exact
+          path='/download-queue/admin'
+          component={AdminDownloadQueue}
         />
         <Route exact path='/' component={Home} />
         <Route component={PageNotFound} />
