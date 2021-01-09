@@ -28,7 +28,6 @@ const MyHistoryTracksController = ({
 
   useEffect(() => {
     if (ids) {
-      console.log('trackIds', ids);
       animateScroll.scrollToTop({ duration: 300 });
       getTracksByIds(ids, page, perPage);
     }
