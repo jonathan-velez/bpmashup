@@ -4,8 +4,6 @@ import { Redirect } from 'react-router-dom';
 
 import { isAdmin } from '../selectors';
 
-// const { REACT_APP_ADMIN_USER_ID } = process.env; // eslint-disable-line no-undef
-
 const AdminRoute = ({ component: Component, isAdmin, ...props }) => {
   if (!isAdmin) {
     return <Redirect to={{ pathname: '/' }} />;
