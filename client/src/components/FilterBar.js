@@ -12,7 +12,7 @@ const FilterBar = ({ location, history, genreListing }) => {
   const { search } = location;
   const key = +queryString.parse(search).key || '';
   const genre = +queryString.parse(search).genre || '';
-  const perPage = +queryString.parse(search).perPage || '';
+  const per_page = +queryString.parse(search).per_page || '';
   const publishDateStart = +queryString.parse(search).publishDateStart || '';
   const publishDateEnd = +queryString.parse(search).publishDateEnd || '';
   const bpm = +queryString.parse(search).bpm || '';
@@ -24,7 +24,7 @@ const FilterBar = ({ location, history, genreListing }) => {
   const [selectedMusicalKey, setSelectedMusicalKey] = useState(
     +queryString.parse(search).key || '',
   );
-  const [selectedPerPage, setSelectedPerPage] = useState(perPage);
+  const [selectedPerPage, setSelectedPerPage] = useState(per_page);
   const [selectedPublishDateStart, setSelectedPublishDateStart] = useState(
     publishDateStart,
   );
@@ -36,11 +36,11 @@ const FilterBar = ({ location, history, genreListing }) => {
   useEffect(() => {
     setSelectedGenre(genre);
     setSelectedMusicalKey(key);
-    setSelectedPerPage(perPage);
+    setSelectedPerPage(per_page);
     setSelectedPublishDateStart(publishDateStart);
     setSelectedPublishDateEnd(publishDateEnd);
     setSelectedBpm(bpm);
-  }, [genre, key, perPage, publishDateStart, publishDateEnd, bpm]);
+  }, [genre, key, per_page, publishDateStart, publishDateEnd, bpm]);
 
   const handleAccordionClick = (e, titleProps) => {
     const { index } = titleProps;
@@ -76,7 +76,7 @@ const FilterBar = ({ location, history, genreListing }) => {
         _.pickBy({
           genre: selectedGenre,
           key: selectedMusicalKey,
-          perPage: selectedPerPage,
+          per_page: selectedPerPage,
           publishDateStart: selectedPublishDateStart,
           publishDateEnd: selectedPublishDateEnd,
           bpm: selectedBpm,

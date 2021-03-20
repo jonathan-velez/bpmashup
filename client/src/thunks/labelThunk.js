@@ -21,7 +21,7 @@ export const getLabelDetail = (labelId, labelName) => {
       `${API_GET_LABEL_BY_ID}?id=${labelId}&name=${labelName}`,
     );
     const labelTracksCall = callAPIorCache(
-      `${API_MOST_POPULAR_BY_LABEL}?id=${labelId}&perPage=${DEFAULT_PER_PAGE}`,
+      `${API_MOST_POPULAR_BY_LABEL}?id=${labelId}&per_page=${DEFAULT_PER_PAGE}`,
     );
     const labelReleasesCall = callAPIorCache(
       `${API_MOST_POPULAR_RELEASES_BY_LABEL}?id=${labelId}`,

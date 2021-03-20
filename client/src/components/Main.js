@@ -23,7 +23,7 @@ import Home from './Home';
 import Genre from './Genre';
 import ProtectedRoute from './ProtectedRoute';
 import AdminRoute from './AdminRoute';
-import AdminDownloadQueue from './AdminDownloadQueue';
+import AdminDownloadQueueController from './AdminDownloadQueueController';
 import PageNotFound from './PageNotFound';
 import ChartsByGenreId from './ChartsByGenreId';
 import InfiniteChartsByProfileId from './InfiniteChartsByProfileId';
@@ -125,7 +125,7 @@ const Main = () => {
         <AdminRoute
           exact
           path='/download-queue/admin'
-          component={AdminDownloadQueue}
+          component={AdminDownloadQueueController}
         />
         <Route exact path='/' component={Home} />
         <Route component={PageNotFound} />

@@ -5,9 +5,9 @@ import { Redirect } from 'react-router-dom';
 import { isAdmin } from '../selectors';
 
 const AdminRoute = ({ component: Component, isAdmin, ...props }) => {
-  if (!isAdmin) {
-    return <Redirect to={{ pathname: '/' }} />;
-  }
+  // if (!isAdmin) {
+  //   return <Redirect to={{ pathname: '/' }} />;
+  // }
 
   return <Component {...props} />;
 };

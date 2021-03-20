@@ -35,8 +35,8 @@ function getDownladLink(query) {
   return new Promise(async (resolve) => {
     try {
       console.log('query', query);
-      let { artists, name: trackName, mixName } = query;
-      let searchString = [artists, trackName, mixName].join(' ');
+      let { artists, name: trackName, mix_name } = query;
+      let searchString = [artists, trackName, mix_name].join(' ');
 
       searchString = searchString.replace(/[()]/g, ''); // TODO: replace common terms: mix, remix, original
 
@@ -155,8 +155,8 @@ function getDownladLink(query) {
         const trackNameWords = [
           ...new Set(trackName.split(/[\s-]+/).filter(Boolean)),
         ];
-        const mixNameWords = [
-          ...new Set(mixName.split(/[\s-]+/).filter(Boolean)),
+        const mix_nameWords = [
+          ...new Set(mix_name.split(/[\s-]+/).filter(Boolean)),
         ];
 
         const matchedArtistsWords = [];
@@ -189,14 +189,14 @@ function getDownladLink(query) {
           }
         }
 
-        for (let x = 0; x < mixNameWords.length; x++) {
+        for (let x = 0; x < mix_nameWords.length; x++) {
           for (let y = 0; y < titleWords.length; y++) {
             let wordFound = false;
             if (
-              titleWords[y].toLowerCase() === mixNameWords[x].toLowerCase() &&
+              titleWords[y].toLowerCase() === mix_nameWords[x].toLowerCase() &&
               !wordFound
             ) {
-              matchedMixNameWords.push(mixNameWords[x]);
+              matchedMixNameWords.push(mix_nameWords[x]);
               wordFound = true;
             }
           }
@@ -218,7 +218,7 @@ function getDownladLink(query) {
         const matchedTrackNamePercentage =
           (matchedTrackNameWords.length / trackNameWords.length) * 100;
         const matchedMixNameWordsPercentage =
-          (matchedMixNameWords.length / mixNameWords.length) * 100;
+          (matchedMixNameWords.length / mix_nameWords.length) * 100;
 
         console.log(
           `Artist Matches in Link ${i}: ${matchedArtistsWords.length}/${artistWords.length}. matchedArtistsPercentage: ${matchedArtistsPercentage}`,
@@ -227,7 +227,7 @@ function getDownladLink(query) {
           `TrackName Matches in Link ${i}: ${matchedTrackNameWords.length}/${trackNameWords.length}. matchedTrackNamePercentage: ${matchedTrackNamePercentage}`,
         );
         console.log(
-          `MixName Matches in Link ${i}: ${matchedMixNameWords.length}/${mixNameWords.length}. matchedMixNameWordsPercentage: ${matchedMixNameWordsPercentage}`,
+          `MixName Matches in Link ${i}: ${matchedMixNameWords.length}/${mix_nameWords.length}. matchedMixNameWordsPercentage: ${matchedMixNameWordsPercentage}`,
         );
         console.log(
           `Total Matches in Link ${i}: ${combinedMatches}/${searchWords.length}. combinedMatchesPercentage: ${combinedMatchesPercentage}`,

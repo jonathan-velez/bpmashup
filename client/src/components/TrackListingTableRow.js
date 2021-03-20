@@ -25,16 +25,19 @@ const TrackListingTableRow = ({
 }) => {
   const {
     id,
-    images,
-    artists,
-    genres,
-    label,
+    // images,
+    artists = [],
+    genre = {},
+    // label,
     bpm,
     key,
-    releaseDate,
-    position,
+    publishDate,
     dateAdded = {},
+    release,
   } = track;
+  const { image, label } = release;
+  const { id: labelId, name: labelName, slug: labelSlug } = label;
+
   const { seconds } = dateAdded;
   const dateAddedFormatted = seconds
     ? moment.unix(seconds).format('YYYY-MM-DD')
@@ -49,11 +52,7 @@ const TrackListingTableRow = ({
   };
 
   return (
-    <Table.Row
-      key={id}
-      id={`track-${id}`}
-      negative={trackHasBeenDownloaded}
-    >
+    <Table.Row key={id} id={`track-${id}`} negative={trackHasBeenDownloaded}>
       <Table.Cell>
         <Checkbox
           onChange={(e, data) => {
@@ -63,10 +62,10 @@ const TrackListingTableRow = ({
           checked={isSelected}
         />
       </Table.Cell>
-      <Table.Cell>{isPlaylist ? idx + 1 : position}</Table.Cell>
+      <Table.Cell>{isPlaylist ? idx + 1 : ''}</Table.Cell>
       <Table.Cell>
         <TrackAlbum
-          imageUrl={images.medium.secureUrl}
+          imageUrl={image.uri}
           imageSize='tiny'
           iconSize='big'
           track={track}
@@ -75,12 +74,15 @@ const TrackListingTableRow = ({
       <Table.Cell>{constructTrackLink(track)}</Table.Cell>
       <Table.Cell>{constructLinks(artists, 'artist')}</Table.Cell>
       <Table.Cell>
-        <Link to={`/label/${label.slug}/${label.id}`}>{label.name}</Link>
+        <Link to={`/label/${labelSlug}/${labelId}`}>[{labelName}]</Link>
       </Table.Cell>
-      <Table.Cell>{constructLinks(genres, 'genre')}</Table.Cell>
+      <Table.Cell>{constructLinks([genre], 'genre')}</Table.Cell>
       <Table.Cell>{bpm}</Table.Cell>
-      <Table.Cell>{musicalKeyFilter(key && key.shortName)}</Table.Cell>
-      <Table.Cell>{releaseDate}</Table.Cell>
+      <Table.Cell>
+        {key.camelot_number}
+        {key.camelot_letter}
+      </Table.Cell>
+      <Table.Cell>{publishDate}</Table.Cell>
       {isPlaylist && <Table.Cell>{dateAddedFormatted}</Table.Cell>}
       <Table.Cell>
         <TrackActionDropdown track={track} />

@@ -125,8 +125,8 @@ export const activityLogger = (store) => (next) => (action) => {
 
   switch (type) {
     case LOAD_TRACK:
-      logTrack(track, userData, 'trackPlaysAll');
-      generateActivityMessage(`Playing track - ${track.title}`);
+      // logTrack(track, userData, 'trackPlaysAll');
+      // generateActivityMessage(`Playing track - ${track.title}`);
       break;
     case GET_YOUTUBE_LINK:
       firebase.set(`/trackPlaysYouTube/${id}`, {

@@ -18,30 +18,30 @@ const MyLovedLabels = ({
 }) => {
   const {
     page = DEFAULT_PAGE,
-    perPage = getPerPageSetting(),
+    per_page = getPerPageSetting(),
   } = queryString.parse(location.search);
   const { labels = {}, metadata = {} } = lovedLabelsDetails;
   const {
     totalPages,
     query,
     page: activePage,
-    perPage: activePerPage,
+    per_page: activePerPage,
   } = metadata;
 
   useEffect(() => {
-    const fetchMyFavoriteLabels = (labelIds = [], page, perPage) => {
+    const fetchMyFavoriteLabels = (labelIds = [], page, per_page) => {
       if (labelIds.length > 0) {
         animateScroll.scrollToTop({ duration: 300 });
-        getLabelsById(labelIds.join(','), page, perPage);
+        getLabelsById(labelIds.join(','), page, per_page);
       }
     };
 
     const lovedLabelIds = Object.keys(lovedLabels);
 
     if (lovedLabelIds && lovedLabelIds.length > 0) {
-      fetchMyFavoriteLabels(lovedLabelIds, page, perPage);
+      fetchMyFavoriteLabels(lovedLabelIds, page, per_page);
     }
-  }, [getLabelsById, lovedLabels, page, perPage]);
+  }, [getLabelsById, lovedLabels, page, per_page]);
 
   if (lovedLabels.length === 0) {
     return <NothingHereMessage />;
@@ -56,7 +56,7 @@ const MyLovedLabels = ({
           totalPages={totalPages}
           firstItem={null}
           lastItem={null}
-          perPage={activePerPage}
+          per_page={activePerPage}
           query={query}
         />
       )}

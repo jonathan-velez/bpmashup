@@ -57,7 +57,7 @@ export const getArtistDetails = ({ artistId, artistName }) => {
       );
 
       const artistsMostPopularTracks = callAPIorCache(
-        `${API_MOST_POPULAR_BY_ARTISTS}?id=${artistId}&perPage=${DEFAULT_PER_PAGE}`,
+        `${API_MOST_POPULAR_BY_ARTISTS}?id=${artistId}&per_page=${DEFAULT_PER_PAGE}`,
       );
 
       successfulCall({

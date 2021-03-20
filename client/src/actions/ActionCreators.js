@@ -41,6 +41,7 @@ import {
   REMOVE_TRACK_FROM_SELECTED_LIST,
   ADD_ALL_TRACKS_TO_SELECTED_LIST,
   REMOVE_ALL_TRACKS_FROM_SELECTED_LIST,
+  UPDATE_ADMIN_DOWNLOAD_QUEUE_ACTIVITY_DATA,
 } from '../constants/actionTypes';
 
 export const startAsync = () => {
@@ -283,5 +284,12 @@ export const addAllTracksToSelectedList = () => {
 export const removeAllTracksFromSelectedList = () => {
   return {
     type: REMOVE_ALL_TRACKS_FROM_SELECTED_LIST,
+  };
+};
+
+export const updateAdminDownloadQueueActivityData = (payload) => {
+  return {
+    type: UPDATE_ADMIN_DOWNLOAD_QUEUE_ACTIVITY_DATA,
+    payload,
   };
 };

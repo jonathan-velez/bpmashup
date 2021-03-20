@@ -21,7 +21,7 @@ const MyHistoryTracksController = ({
 }) => {
   const {
     page = DEFAULT_PAGE,
-    perPage = getPerPageSetting(),
+    per_page = getPerPageSetting(),
   } = queryString.parse(location.search);
 
   const ids = trackIds.join(',');
@@ -29,9 +29,9 @@ const MyHistoryTracksController = ({
   useEffect(() => {
     if (ids) {
       animateScroll.scrollToTop({ duration: 300 });
-      getTracksByIds(ids, page, perPage);
+      getTracksByIds(ids, page, per_page);
     }
-  }, [ids, page, perPage, clearTracklist, getTracksByIds]);
+  }, [ids, page, per_page, clearTracklist, getTracksByIds]);
 
   if (trackIds.length === 0) {
     return <NothingHereMessage />;

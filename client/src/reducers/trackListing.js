@@ -1,3 +1,4 @@
+/* eslint-disable no-unreachable */
 import _ from 'lodash';
 import {
   FETCH_TRACKS,
@@ -23,14 +24,21 @@ const trackListing = (state = defaultState, action) => {
   switch (action.type) {
     case SEARCH_TRACKS:
     case FETCH_TRACKS: {
-      if (
-        !_.has(action.payload.data, 'metadata') ||
-        !_.has(action.payload.data, 'results')
-      ) {
+      // console.log(action.payload.data);
+      // return defaultState;
+
+      if (!_.has(action.payload.data, 'results')) {
         return defaultState;
       }
 
-      const { metadata, results } = action.payload.data;
+      const { results } = action.payload.data;
+      const { count, page, per_page } = results;
+      const metadata = {
+        // pageType: 'playlist',
+        per_page: per_page,
+        page,
+        totalPages: count / per_page,
+      };
 
       // extract id as the key, convert array to object
       const keyedTracks = _.mapKeys(results, 'id');
@@ -50,7 +58,7 @@ const trackListing = (state = defaultState, action) => {
         ...state,
         metadata: {
           pageType: 'playlist',
-          perPage: 25,
+          per_page: 25,
           page: 1,
           totalPages,
         },

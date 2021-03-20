@@ -48,13 +48,13 @@ export const constructLinks = (listItem, type, limit = 0) => {
 };
 
 export const constructTrackLink = (track, className) => {
-  const { slug, id, name, mixName } = track;
+  const { slug, id, name, mix_name } = track;
   return (
     <Link
       to={{ pathname: `/track/${slug}/${id}`, state: { track } }}
       className={className}
     >
-      {name} <span className='track-mix-name'>({mixName})</span>
+      {name} <span className='track-mix-name'>({mix_name})</span>
     </Link>
   );
 };
@@ -80,8 +80,8 @@ export const downloadTrack = (track) => {
       (acc, artist, idx) => (acc += (idx > 0 ? ' ' : '') + artist.name),
       '',
     );
-    let { name, mixName } = track;
-    mixName = mixName
+    let { name, mix_name } = track;
+    mix_name = mix_name
       .replace('Original', '')
       .replace('Mix', '')
       .replace('Version', '')
@@ -93,8 +93,8 @@ export const downloadTrack = (track) => {
       .get(
         `/api/download-track?artists=${encodeURIComponent(
           artists,
-        )}&name=${encodeURIComponent(name)}&mixName=${encodeURIComponent(
-          mixName,
+        )}&name=${encodeURIComponent(name)}&mix_name=${encodeURIComponent(
+          mix_name,
         )}`,
       )
       .then((res) => {

@@ -37,8 +37,8 @@ const mediaPlayer = (state = defaultState, action) => {
 
       return {
         ...state,
-        loadedUrl: action.payload.sampleSecureUrl,
-        sampleUrl: action.payload.sampleSecureUrl,
+        loadedUrl: action.payload.sample_url,
+        sampleUrl: action.payload.sample_url,
         played: 0,
         loaded: 0,
         playing: true,

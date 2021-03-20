@@ -45,6 +45,10 @@ export const registerFirebaseListeners = () => {
     playlistsRef.onSnapshot((playlists) => {
       let payload = {};
 
+      playlists.docChanges().forEach((change) => {
+        console.log('change!', change);
+      });
+
       playlists.forEach(async (item) => {
         const playlist = item.data();
 

@@ -64,24 +64,21 @@ const executeOA = (reqPath, reqQuery) => {
 
 async function callApi(req, res) {
   const reqPath = utils.filterPath(req.url);
-  let reqQuery = utils.constructRequestQueryString(req.query);
+  const reqQuery = utils.constructRequestQueryString(req.query);
+  console.log('req.query', req.query);
+  console.log('reqQuery', reqQuery);
+  const bpUrl = utils.urlBuilderNew(reqPath, reqQuery);
 
   try {
-    const bpData = await executeOA(reqPath, reqQuery);
-    const model = bpAPIConfig[reqPath] && bpAPIConfig[reqPath].model;
+    console.log('calling bp url', bpUrl);
+    const result = await axios.get(bpUrl);
+    const { data, status } = result;
 
-    // remove properties that aren't in our model
-    if (model) {
-      for (let key in bpData.results) {
-        if (bpData.results.hasOwnProperty(key)) {
-          Object.getOwnPropertyNames(bpData.results[key]).forEach((val) => {
-            if (model.indexOf(val) === -1) delete bpData.results[key][val];
-          });
-        }
-      }
+    if (status !== 200) {
+      return res.json({});
     }
 
-    res.json(bpData);
+    return res.json(data);
   } catch (ex) {
     console.log('BP API error: ', ex);
     res.json({});

@@ -24,14 +24,14 @@ const TrackListingGroup = ({
   if (!tracks || tracks.length < 0) {
     return null;
   }
-  const { totalPages, page, perPage, query } = metadata;
+  const { totalPages, page, per_page, query } = metadata;
   return (
     <React.Fragment>
       <Responsive minWidth={700}>
         <TrackListingActionRow
           activePage={page}
           totalPages={totalPages}
-          perPage={perPage}
+          per_page={per_page}
         />
         {getTracklistViewSetting() === 'cards' ? (
           <TrackListingCards trackListing={tracks} />
@@ -40,13 +40,13 @@ const TrackListingGroup = ({
             trackListing={tracks}
             isPlaylist={false}
             page={page}
-            perPage={perPage}
+            per_page={per_page}
           />
         )}
         <TrackListingActionRow
           activePage={page}
           totalPages={totalPages}
-          perPage={perPage}
+          per_page={per_page}
         />
       </Responsive>
       <Responsive maxWidth={699}>
@@ -58,7 +58,7 @@ const TrackListingGroup = ({
           totalPages={totalPages}
           firstItem={null}
           lastItem={null}
-          perPage={perPage || getPerPageSetting()}
+          per_page={per_page || getPerPageSetting()}
           query={query}
         />
       )}

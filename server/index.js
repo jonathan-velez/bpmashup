@@ -42,6 +42,9 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
+// NEW BP V4 URLS
+app.get(`${API_BASE_URL}/tracks/top/100`, bpController.callApi);
+
 app.get(`${API_BASE_URL}/genres`, bpController.callApi);
 app.get(`${API_BASE_URL}/search`, bpController.callApi);
 app.get(`${API_BASE_URL}/most-popular`, bpController.callApi);
@@ -151,13 +154,13 @@ function processDownloadJob(data) {
   return new Promise(async (resolve) => {
     // update queued item as 'available' in Firestore
     const { key, searchTerms, track = {}, addedBy } = data;
-    const { artists, name, mixName } = searchTerms;
+    const { artists, name, mix_name } = searchTerms;
     let isYouTube = false;
 
     let response = await zippyController.getDownladLink({
       artists,
       name,
-      mixName,
+      mix_name,
     });
 
     console.log('zippy response', response);
@@ -181,7 +184,7 @@ function processDownloadJob(data) {
 
       if (fallbackYouTube) {
         console.log('User want.');
-        const searchString = [artists, name, mixName].join(' ');
+        const searchString = [artists, name, mix_name].join(' ');
         response = await ytController.getYouTubeLink(
           searchString,
           track.lengthMs,

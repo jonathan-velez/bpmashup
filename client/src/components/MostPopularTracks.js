@@ -24,15 +24,15 @@ const MostPopularTracks = ({
 }) => {
   const {
     page = DEFAULT_PAGE,
-    perPage = getPerPageSetting(),
+    per_page = getPerPageSetting(),
   } = queryString.parse(location.search);
 
   useEffect(() => {
     animateScroll.scrollToTop({ duration: 1500 });
-    fetchMostPopularTracks(searchType, searchId, searchName, page, perPage);
+    fetchMostPopularTracks(searchType, searchId, searchName, page, per_page);
 
     return () => clearTracklist();
-  }, [fetchMostPopularTracks, searchType, searchId, searchName, page, perPage]);
+  }, [fetchMostPopularTracks, searchType, searchId, searchName, page, per_page]);
 
   return (
     <Fragment>

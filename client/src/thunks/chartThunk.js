@@ -24,17 +24,17 @@ import {
 export async function fetchChartDataById(
   chartId,
   page = DEFAULT_PAGE,
-  perPage = DEFAULT_PER_PAGE,
+  per_page = DEFAULT_PER_PAGE,
 ) {
   return async (dispatch) => {
     dispatch({
       type: START_ASYNC,
     });
 
-    // hard code the page and perPage on the metadata call as it will always be the first result
-    // we'll benefit from the cached api call when page + perPage changes come on the tracks call below
+    // hard code the page and per_page on the metadata call as it will always be the first result
+    // we'll benefit from the cached api call when page + per_page changes come on the tracks call below
     const chartsMetadata = await callAPIorCache(
-      `${API_GET_CHART}?id=${chartId}&page=1&perPage=25`,
+      `${API_GET_CHART}?id=${chartId}&page=1&per_page=25`,
     );
     const chartObject =
       (chartsMetadata.data.results &&
@@ -43,7 +43,7 @@ export async function fetchChartDataById(
       {};
 
     const chartTracks = await callAPIorCache(
-      `${API_GET_TRACKS}?chartId=${chartId}&page=${page}&perPage=${perPage}`,
+      `${API_GET_TRACKS}?chartId=${chartId}&page=${page}&per_page=${per_page}`,
     );
 
     dispatch({
@@ -61,7 +61,7 @@ export async function fetchChartDataById(
 export async function fetchChartsByIds(
   chartIds = [],
   page = DEFAULT_PAGE,
-  perPage = DEFAULT_CHARTS_PER_PAGE,
+  per_page = DEFAULT_CHARTS_PER_PAGE,
 ) {
   return async (dispatch) => {
     dispatch({
@@ -71,7 +71,7 @@ export async function fetchChartsByIds(
     const chartData = await callAPIorCache(
       `${API_GET_CHART}?ids=${chartIds.join(
         ',',
-      )}&page=${page}&perPage=${perPage}`,
+      )}&page=${page}&per_page=${per_page}`,
     );
     const { data, status } = chartData;
     if (status !== 200) return;
@@ -86,7 +86,7 @@ export async function fetchChartsByIds(
 export async function fetchChartsByProfileId(
   profileId,
   page = DEFAULT_PAGE,
-  perPage = DEFAULT_CHARTS_PER_PAGE,
+  per_page = DEFAULT_CHARTS_PER_PAGE,
 ) {
   return async (dispatch) => {
     if (!profileId) return;
@@ -96,7 +96,7 @@ export async function fetchChartsByProfileId(
     });
 
     const beatportChardData = await callAPIorCache(
-      `${API_GET_CHARTS_BY_PROFILE_ID}?djprofileId=${profileId}&publishedOnly=true&page=${page}&perPage=${perPage}&sortBy=publishDate+DESC`,
+      `${API_GET_CHARTS_BY_PROFILE_ID}?djprofileId=${profileId}&publishedOnly=true&page=${page}&per_page=${per_page}&sortBy=publishDate+DESC`,
     );
 
     const { data, status } = beatportChardData;
@@ -112,7 +112,7 @@ export async function fetchChartsByProfileId(
 export async function fetchChartsByGenreId(
   genreId,
   page = DEFAULT_PAGE,
-  perPage = DEFAULT_CHARTS_PER_PAGE,
+  per_page = DEFAULT_CHARTS_PER_PAGE,
 ) {
   return async (dispatch) => {
     if (!genreId) return;
@@ -122,7 +122,7 @@ export async function fetchChartsByGenreId(
     });
 
     const beatportChardData = await callAPIorCache(
-      `${API_GET_CHART}?facets=genreId:${genreId}&publishedOnly=true&page=${page}&perPage=${perPage}&sortBy=publishDate+DESC`,
+      `${API_GET_CHART}?facets=genreId:${genreId}&publishedOnly=true&page=${page}&per_page=${per_page}&sortBy=publishDate+DESC`,
     );
 
     const { data, status } = beatportChardData;

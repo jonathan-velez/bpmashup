@@ -113,13 +113,13 @@ const Track = ({ location = {}, match = {}, canZip }) => {
   const loadChartData = async (
     charts = [],
     page = 1,
-    perPage = chartsPerPage,
+    per_page = chartsPerPage,
   ) => {
     if (charts.length > 0) {
       const chartData = await fetchChartData(
         charts.map((chart) => chart.id).join(','),
         page,
-        perPage,
+        per_page,
       );
 
       if (chartData.results && chartData.results.length > 0) {
@@ -168,12 +168,12 @@ const Track = ({ location = {}, match = {}, canZip }) => {
   const fetchChartData = async (
     chartIds,
     page = 1,
-    perPage = chartsPerPage,
+    per_page = chartsPerPage,
   ) => {
     return new Promise(async (resolve, reject) => {
       try {
         const chartData = await callAPIorCache(
-          `${API_GET_CHART}?ids=${chartIds}&page=${page}&perPage=${perPage}`,
+          `${API_GET_CHART}?ids=${chartIds}&page=${page}&per_page=${per_page}`,
         );
         const { data, status } = chartData;
         if (status !== 200) return;
@@ -189,7 +189,7 @@ const Track = ({ location = {}, match = {}, canZip }) => {
     return new Promise(async (resolve, reject) => {
       try {
         const tracksData = await callAPIorCache(
-          `/api/tracks/similar?id=${trackId}&perPage=10&page=1`,
+          `/api/tracks/similar?id=${trackId}&per_page=10&page=1`,
         );
         const { data, status } = tracksData;
         if (status !== 200) {
@@ -238,7 +238,7 @@ const Track = ({ location = {}, match = {}, canZip }) => {
     release = '',
     id,
   } = trackData;
-  const { name, mixName } = trackData;
+  const { name, mix_name } = trackData;
 
   const { results: chartDataResults, metadata: chartDataMetadata } = chartData;
   const chartTotalPages =
@@ -252,8 +252,8 @@ const Track = ({ location = {}, match = {}, canZip }) => {
   if (name) {
     pageTitle = name;
 
-    if (mixName) {
-      pageTitle += ' (' + mixName + ')';
+    if (mix_name) {
+      pageTitle += ' (' + mix_name + ')';
     }
 
     if (artists.length > 0) {

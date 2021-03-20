@@ -20,7 +20,7 @@ const LatestFromMyLoves = ({
 }) => {
   const {
     page = DEFAULT_PAGE,
-    perPage = getPerPageSetting(),
+    per_page = getPerPageSetting(),
   } = queryString.parse(location.search);
 
   useEffect(() => {
@@ -37,7 +37,7 @@ const LatestFromMyLoves = ({
       lovedLabelIds,
       lovedArtistIds,
       page,
-      perPage,
+      per_page,
     );
     // }
   }, [
@@ -45,7 +45,7 @@ const LatestFromMyLoves = ({
     lovedLabelIds,
     getLatestTracksByLabelAndArtistIds,
     page,
-    perPage,
+    per_page,
   ]);
 
   if (lovedLabelIds.length <= 0 || lovedArtistIds.length <= 0) {

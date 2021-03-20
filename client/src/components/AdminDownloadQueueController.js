@@ -1,9 +1,15 @@
 import React, { useEffect, useState } from 'react';
+import { connect } from 'react-redux';
 import firebase from 'firebase';
 import { Header, Grid, Statistic } from 'semantic-ui-react';
 import _ from 'lodash';
 
-const AdminDownloadQueue = () => {
+import { updateAdminDownloadQueueActivityData } from '../actions/ActionCreators';
+
+const AdminDownloadQueueController = ({
+  arrayData,
+  updateAdminDownloadQueueActivityData,
+}) => {
   const [downloadQueueItems, setDownloadQueueItems] = useState({});
   const [downloadQueueItemsArray, setDownloadQueueItemsArray] = useState([]);
   const [mostPopularGenre, setMostPopularGenre] = useState({
@@ -22,6 +28,8 @@ const AdminDownloadQueue = () => {
 
   useEffect(() => {
     const firestore = firebase.firestore();
+    // TODO: Limit this to a 'safe' date range. 7 days?
+    // TODO: Look into detecting only the delta
     const downloadQueueRef = firestore.collection('downloadQueue');
 
     const unregisterListener = downloadQueueRef.onSnapshot((items) => {
@@ -40,6 +48,12 @@ const AdminDownloadQueue = () => {
       });
       setDownloadQueueItemsArray(downloadQueueItemsArray);
       setDownloadQueueItems(downloadQueueItems);
+
+      console.log('downloadQueueItemsArray', downloadQueueItemsArray);
+
+      updateAdminDownloadQueueActivityData({
+        downloadQueueItemsArray,
+      });
     });
 
     return () => unregisterListener();
@@ -64,10 +78,7 @@ const AdminDownloadQueue = () => {
         const { track, addedBy, searchTerms } = item;
 
         // genres
-        const genre =
-          track.genres &&
-          track.genres[0] &&
-          `${track.genres[0].id}|${track.genres[0].name}`;
+        const genre = track.genres && track.genres[0] && track.genres[0].name;
         acc.genres[genre] = (acc.genres[genre] || 0) + 1;
 
         // artists
@@ -79,8 +90,8 @@ const AdminDownloadQueue = () => {
 
         // tracks
         const trackTitle = `${searchTerms.artists} -  ${searchTerms.name} ${
-          searchTerms.mixName && searchTerms.mixName.trim().length > 0
-            ? `(${_.startCase(_.toLower(searchTerms.mixName))})`
+          searchTerms.mix_name && searchTerms.mix_name.trim().length > 0
+            ? `(${_.startCase(_.toLower(searchTerms.mix_name))})`
             : ''
         }`;
 
@@ -141,4 +152,15 @@ const AdminDownloadQueue = () => {
   );
 };
 
-export default AdminDownloadQueue;
+const mapStateToProps = (state) => {
+  return { arrayData: state.globalDownloadActivity.downloadQueueItemsArray };
+};
+
+const mapDispatchToProps = {
+  updateAdminDownloadQueueActivityData,
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(AdminDownloadQueueController);

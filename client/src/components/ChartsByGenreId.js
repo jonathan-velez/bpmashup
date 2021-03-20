@@ -40,7 +40,7 @@ const ChartsByGenreId = ({ location = {}, genreName }) => {
     async (genreId, page) => {
       const beatportChartData = await callAPIorCache(
         `${API_GET_CHART}?${genreId &&
-          `facets=genreId:${genreId}`}&publishedOnly=true&page=${page}&perPage=${DEFAULT_CHARTS_PER_PAGE}&sortBy=publishDate+DESC`,
+          `facets=genreId:${genreId}`}&publishedOnly=true&page=${page}&per_page=${DEFAULT_CHARTS_PER_PAGE}&sortBy=publishDate+DESC`,
       );
 
       const { data, status } = beatportChartData;

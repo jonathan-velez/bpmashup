@@ -15,13 +15,13 @@ export const addTrackToDownloadQueue = (track, sendToast = true) => {
     const { uid } = auth;
     if (!uid || uid === 0) return;
 
-    let { id: beatportTrackId, name, mixName } = track;
+    let { id: beatportTrackId, name, mix_name } = track;
     const artists = track.artists.reduce(
       (acc, artist, idx) => (acc += (idx > 0 ? ' ' : '') + artist.name),
       '',
     );
 
-    mixName = mixName
+    mix_name = mix_name
       .toLowerCase()
       .replace('mix', '')
       .replace('version', '')
@@ -50,7 +50,7 @@ export const addTrackToDownloadQueue = (track, sendToast = true) => {
       searchTerms: {
         artists,
         name,
-        mixName,
+        mix_name,
       },
       track: {
         ...track,

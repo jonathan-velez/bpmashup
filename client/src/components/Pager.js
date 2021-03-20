@@ -3,7 +3,7 @@ import { withRouter } from 'react-router-dom';
 import { Pagination } from 'semantic-ui-react';
 import queryString from 'query-string';
 
-const Pager = ({ activePage, totalPages, perPage, history, isLoading }) => {
+const Pager = ({ activePage, totalPages, per_page, history, isLoading }) => {
   const pagerStyle = {
     'marginTop': '15px'
   };
@@ -22,7 +22,7 @@ const Pager = ({ activePage, totalPages, perPage, history, isLoading }) => {
         const newSearchString = queryString.stringify({
           ...parsedSearch,
           page: data.activePage || 1,
-          perPage,
+          per_page,
         });
 
         const pushObject = {

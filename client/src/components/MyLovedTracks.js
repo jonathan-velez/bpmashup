@@ -19,15 +19,15 @@ const MyLovedTracks = ({
 }) => {
   const {
     page = DEFAULT_PAGE,
-    perPage = getPerPageSetting(),
+    per_page = getPerPageSetting(),
   } = queryString.parse(location.search || {});
 
   useEffect(() => {
     if (trackIds) {
       animateScroll.scrollToTop({ duration: 300 });
-      getTracksByIds(trackIds, page, perPage);
+      getTracksByIds(trackIds, page, per_page);
     }
-  }, [trackIds, page, perPage, getTracksByIds]);
+  }, [trackIds, page, per_page, getTracksByIds]);
 
   if (trackIds.length === 0) {
     return <NothingHereMessage />;

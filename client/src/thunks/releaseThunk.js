@@ -17,12 +17,12 @@ export async function fetchReleaseData(releaseId) {
     });
 
     const releaseMetadata = await callAPIorCache(
-      `${API_GET_RELEASES}?id=${releaseId}&perPage=${DEFAULT_PER_PAGE}`,
+      `${API_GET_RELEASES}?id=${releaseId}&per_page=${DEFAULT_PER_PAGE}`,
     );
     const releaseObject = releaseMetadata.data.results[0];
 
     const releaseTracks = await callAPIorCache(
-      `${API_GET_TRACKS}?releaseId=${releaseId}&perPage=${DEFAULT_PER_PAGE}`,
+      `${API_GET_TRACKS}?releaseId=${releaseId}&per_page=${DEFAULT_PER_PAGE}`,
     );
     releaseObject.tracks = releaseTracks.data.results;
 
@@ -45,9 +45,9 @@ export async function fetchReleasesByArtistId(artistId) {
       type: START_ASYNC,
     });
 
-    // TODO: pull in perPage and page for real
+    // TODO: pull in per_page and page for real
     const releaseData = await callAPIorCache(
-      `${API_GET_RELEASES}?facets=artistId:${artistId}&perPage=25`,
+      `${API_GET_RELEASES}?facets=artistId:${artistId}&per_page=25`,
     );
 
     let payload = {};

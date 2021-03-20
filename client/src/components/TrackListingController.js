@@ -29,7 +29,7 @@ const TrackListingController = ({
   const { type, searchId, searchString, searchTerm, trackId } = params;
   const {
     page = DEFAULT_PAGE,
-    perPage = getPerPageSetting(),
+    per_page = getPerPageSetting(),
   } = queryString.parse(location.search);
 
   useEffect(() => {
@@ -41,7 +41,7 @@ const TrackListingController = ({
     } else if (trackId) {
       fetchTracksSimilar(trackId);
     } else {
-      fetchMostPopularTracks(type, searchId, searchString, page, perPage);
+      fetchMostPopularTracks(type, searchId, searchString, page, per_page);
     }
 
     return () => clearTracklist();
@@ -56,7 +56,7 @@ const TrackListingController = ({
     searchId,
     searchString,
     page,
-    perPage,
+    per_page,
   ]);
 
   const pageName = url.split('/')[1];

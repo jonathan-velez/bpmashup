@@ -182,11 +182,11 @@ export const sortObject = (obj, direction = 'asc') => {
 };
 
 export const getPerPageSetting = () => {
-  return getStorage('perPage') || DEFAULT_PER_PAGE;
+  return getStorage('per_page') || DEFAULT_PER_PAGE;
 };
 
-export const setPerPageSetting = (perPage) => {
-  setStorage('perPage', perPage);
+export const setPerPageSetting = (per_page) => {
+  setStorage('per_page', per_page);
 };
 
 export const getDownloadQueueSettings = () => {

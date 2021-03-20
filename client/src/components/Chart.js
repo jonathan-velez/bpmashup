@@ -33,16 +33,16 @@ const Chart = ({
   const { chartId } = match.params;
   const {
     page = DEFAULT_PAGE,
-    perPage = getPerPageSetting(),
+    per_page = getPerPageSetting(),
   } = queryString.parse(location.search);
 
   useEffect(() => {
     if (chartId) {
-      fetchChartDataById(chartId, page, perPage);
+      fetchChartDataById(chartId, page, per_page);
       Scroll.animateScroll.scrollToTop({ duration: 1500 });
       setVisible(true);
     }
-  }, [fetchChartDataById, chartId, page, perPage]);
+  }, [fetchChartDataById, chartId, page, per_page]);
 
   const {
     id,

@@ -47,7 +47,7 @@ export const getTracks = async (searchFacets) => {
 
     const pageModel = {
       page: DEFAULT_PAGE,
-      perPage: getPerPageSetting(),
+      per_page: getPerPageSetting(),
       publishDateStart: null,
       publishDateEnd: null,
     };
@@ -87,11 +87,11 @@ export const getTracks = async (searchFacets) => {
 };
 
 export const fetchMostPopularTracks = async (
-  type = 'genre',
+  type,
   id,
   name,
   page = DEFAULT_PAGE,
-  perPage = getPerPageSetting(),
+  per_page = getPerPageSetting(),
   endPoint = API_MOST_POPULAR,
 ) => {
   return async (dispatch) => {
@@ -99,8 +99,29 @@ export const fetchMostPopularTracks = async (
       type: START_ASYNC,
     });
 
+    let urlString = API_MOST_POPULAR + '?';
+
+    switch (type) {
+      case 'genre':
+        urlString += `genre_id=${id}`;
+        break;
+      case 'artist':
+        urlString += `artist_id=${id}`;
+        break;
+      case 'label':
+        urlString += `label_id=${id}`;
+        break;
+      case 'key':
+        urlString += `key_id=${id}`;
+        break;
+      default:
+    }
+
+    urlString += `&page=${page}&per_page=${per_page}`;
+
     const requestResult = await callAPIorCache(
-      `${endPoint}/${type}?s=${name}&id=${id}&page=${page}&perPage=${perPage}`,
+      // `${endPoint}/${type}?s=${name}&id=${id}&page=${page}&per_page=${per_page}`,
+      urlString,
     );
 
     dispatch({
@@ -113,7 +134,7 @@ export const fetchMostPopularTracks = async (
 export const getTracksByIds = async (
   ids = [],
   page = DEFAULT_PAGE,
-  perPage = getPerPageSetting(),
+  per_page = getPerPageSetting(),
 ) => {
   return async (dispatch) => {
     dispatch({
@@ -123,7 +144,7 @@ export const getTracksByIds = async (
     const requestResult = await callAPIorCache(
       `${API_GET_TRACKS}?ids=${
         Array.isArray(ids) ? ids.join(',') : ids
-      }&page=${page}&perPage=${perPage}`,
+      }&page=${page}&per_page=${per_page}`,
     );
 
     dispatch({
@@ -137,7 +158,7 @@ export const getLatestTracksByLabelAndArtistIds = async (
   labelIds = [],
   artistIds = [],
   page = DEFAULT_PAGE,
-  perPage = getPerPageSetting(),
+  per_page = getPerPageSetting(),
 ) => {
   return async (dispatch) => {
     dispatch({
@@ -149,11 +170,9 @@ export const getLatestTracksByLabelAndArtistIds = async (
         Array.isArray(artistIds) ? artistIds.join(',') : artistIds
       }&labelIds=${
         Array.isArray(labelIds) ? labelIds.join(',') : labelIds
-      }&page=${page}&perPage=${perPage}&sortBy=publishDate+DESC&publishDateStart=${moment()
+      }&page=${page}&per_page=${per_page}&sortBy=publishDate+DESC&publishDateStart=${moment()
         .subtract(30, 'days')
-        .format('YYYY-MM-DD')}&publishDateEnd=${moment().format(
-        'YYYY-MM-DD',
-      )}`,
+        .format('YYYY-MM-DD')}&publishDateEnd=${moment().format('YYYY-MM-DD')}`,
     );
 
     dispatch({
@@ -163,14 +182,14 @@ export const getLatestTracksByLabelAndArtistIds = async (
   };
 };
 
-export const fetchTracksSimilar = async (trackId, page = 1, perPage = 20) => {
+export const fetchTracksSimilar = async (trackId, page = 1, per_page = 20) => {
   return async (dispatch) => {
     dispatch({
       type: START_ASYNC,
     });
 
     const request = await callAPIorCache(
-      `${API_SIMILAR_TRACKS}?id=${trackId}&perPage=${perPage}&page=${page}`,
+      `${API_SIMILAR_TRACKS}?id=${trackId}&per_page=${per_page}&page=${page}`,
     );
 
     dispatch({

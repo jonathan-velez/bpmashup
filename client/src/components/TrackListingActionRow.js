@@ -5,7 +5,7 @@ import TrackListingViewToggleButtons from './TrackListingViewToggleButtons';
 import TrackListingSelectedItemsActionBar from './TrackListingSelectedItemsActionBar';
 import PerPageSelection from './PerPageSelection';
 
-const TrackListingActionRow = ({ page, totalPages, perPage, isLoading }) => {
+const TrackListingActionRow = ({ page, totalPages, per_page, isLoading }) => {
   if (isLoading) return null;
 
   return (
@@ -16,12 +16,12 @@ const TrackListingActionRow = ({ page, totalPages, perPage, isLoading }) => {
       <Grid.Column>
         <TrackListingSelectedItemsActionBar />
       </Grid.Column>
-      {totalPages * perPage > 25 && (
+      {totalPages * per_page > 25 && (
         <Grid.Column textAlign='right'>
           <PerPageSelection
             activePage={page}
             totalPages={totalPages}
-            perPage={perPage}
+            per_page={per_page}
           />
         </Grid.Column>
       )}

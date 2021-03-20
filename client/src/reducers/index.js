@@ -29,6 +29,7 @@ import downloadQueue from './downloadQueue';
 import chartsList from './chartsList';
 import releaseList from './releaseList';
 import playlistDetails from './playlistDetails';
+import globalDownloadActivity from './globalDownloadActivity';
 
 const rootReducer = combineReducers({
   trackListing,
@@ -59,6 +60,7 @@ const rootReducer = combineReducers({
   chartsList,
   releaseList,
   playlistDetails,
+  globalDownloadActivity,
 });
 
 export default rootReducer;

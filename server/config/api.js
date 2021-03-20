@@ -51,7 +51,7 @@ const apiConfig = {
         required: true,
       },
       {
-        name: 'perPage',
+        name: 'per_page',
         dataType: 'int',
         required: false,
       },
@@ -71,7 +71,7 @@ const apiConfig = {
         required: false,
       },
       {
-        name: 'perPage',
+        name: 'per_page',
         dataType: 'int',
         required: false,
       },
@@ -96,7 +96,7 @@ const apiConfig = {
         required: false,
       },
       {
-        name: 'perPage',
+        name: 'per_page',
         dataType: 'int',
         required: false,
       },
@@ -141,7 +141,7 @@ const apiConfig = {
         required: false,
       },
       {
-        name: 'perPage',
+        name: 'per_page',
         dataType: 'int',
         required: false,
       },
@@ -176,7 +176,7 @@ const apiConfig = {
         required: false,
       },
       {
-        name: 'perPage',
+        name: 'per_page',
         dataType: 'int',
         required: false,
       },
@@ -211,7 +211,7 @@ const apiConfig = {
         required: false,
       },
       {
-        name: 'perPage',
+        name: 'per_page',
         dataType: 'int',
         required: false,
       },
@@ -246,7 +246,7 @@ const apiConfig = {
         required: false,
       },
       {
-        name: 'perPage',
+        name: 'per_page',
         dataType: 'int',
         required: false,
       },
@@ -296,7 +296,7 @@ const apiConfig = {
         required: false,
       },
       {
-        name: 'perPage',
+        name: 'per_page',
         dataType: 'int',
         required: false,
       },
@@ -342,7 +342,7 @@ const apiConfig = {
         required: false,
       },
       {
-        name: 'perPage',
+        name: 'per_page',
         dataType: 'int',
         required: false,
       },
@@ -377,7 +377,7 @@ const apiConfig = {
         required: false,
       },
       {
-        name: 'perPage',
+        name: 'per_page',
         dataType: 'int',
         required: false,
       },
@@ -443,7 +443,7 @@ const apiConfig = {
         required: false,
       },
       {
-        name: 'perPage',
+        name: 'per_page',
         dataType: 'int',
         required: false,
       },
@@ -484,7 +484,7 @@ const apiConfig = {
         required: false,
       },
       {
-        name: 'perPage',
+        name: 'per_page',
         dataType: 'int',
         required: false,
       },
@@ -535,7 +535,7 @@ const apiConfig = {
         required: false,
       },
       {
-        name: 'perPage',
+        name: 'per_page',
         dataType: 'string',
         required: false,
       },
@@ -585,7 +585,7 @@ const apiConfig = {
         required: false,
       },
       {
-        name: 'perPage',
+        name: 'per_page',
         dataType: 'string',
         required: false,
       },
@@ -615,7 +615,7 @@ const apiConfig = {
         required: false,
       },
       {
-        name: 'perPage',
+        name: 'per_page',
         dataType: 'string',
         required: false,
       },
