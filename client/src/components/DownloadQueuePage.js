@@ -20,7 +20,6 @@ import { generateActivityMessage } from '../utils/storeUtils';
 import {
   setDownloadQueueSettings,
   getDownloadQueueSettings,
-  musicalKeyFilter,
 } from '../utils/helpers';
 import { getAllDownloadQueueItems, getGenresDropdownArray } from '../selectors';
 import { DEFAULT_PAGE_TITLE } from '../constants/defaults';
@@ -140,12 +139,14 @@ const DownloadQueuePage = ({ updateTrackStatus, queueItems, genres }) => {
         artists = artists.toLowerCase();
         name = name.toLowerCase();
 
-        const { label = {} } = track;
+        const { release = {} } = track;
+        const { label } = release;
+        const { slug: labelSlug } = label;
 
         return (
           artists.includes(searchString) ||
           name.includes(searchString) ||
-          label.slug.includes(searchString)
+          labelSlug.includes(searchString)
         );
       });
     }
@@ -154,8 +155,8 @@ const DownloadQueuePage = ({ updateTrackStatus, queueItems, genres }) => {
     if (selectedGenres.length > 0) {
       items = items.filter((item) => {
         const { track = {} } = item;
-        const { genres = [] } = track;
-        const { id } = genres[0];
+        const { genre = {} } = track;
+        const { id } = genre;
         return selectedGenres.includes(id);
       });
     }
@@ -164,8 +165,8 @@ const DownloadQueuePage = ({ updateTrackStatus, queueItems, genres }) => {
     if (selectedMusicalKeys.length > 0) {
       items = items.filter((item) => {
         const { track = {} } = item;
-        const { key: musicalKey = {} } = track;
-        const camelotKey = musicalKeyFilter(musicalKey && musicalKey.shortName);
+        const { key } = track;
+        const camelotKey = `${key.camelot_number}${key.camelot_letter}`;
 
         let musicalKeyId = '';
         if (camelotKey) {
