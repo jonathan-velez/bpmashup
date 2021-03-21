@@ -146,44 +146,72 @@ async function getLabelData(req, res) {
 }
 
 // Get artist details from Beatport. If no biography is found, hit up Last.fm's API and patch the bio into the BP response object
-async function getArtistData(req, res) {
-  let detail = await executeOA('artists/detail', { id: req.query.id });
-  let { results } = detail;
-  let jsonResponse = {};
+const getArtistData = async (req, res) => {
+  const { id: artistId } = req.query;
 
-  if (results) {
-    const { biography, name } = results;
-    jsonResponse = {
-      ...jsonResponse,
-      results,
-    };
+  // fetch base level artist data:
+  // bio, image.uri, name, slug, dj_association
+  // e.g. https://www.beatport.com/api/v4/catalog/artists/98876
 
-    if (!biography) {
-      console.log('No bio in beatport, call last-fm API', name);
-      const lastFmArtistData = await lastFmController.callGetArtistInfo(name);
-      const { bio } = lastFmArtistData;
+  const artistUrl = `${BASE_URL}artists/${artistId}`;
+  const artistResult = await axios.get(artistUrl);
+  let { data: artistData } = artistResult;
 
-      if (bio) {
-        let { content: biography } = bio;
-        // remove last.fm link
-        biography = biography.substr(
-          0,
-          biography.indexOf('<a href="https://www.last.fm'),
-        );
+  if (artistResult.status !== 200) {
+    return res.status(artistResult.status).json({
+      success: false,
+      //...
+    });
+  }
 
-        jsonResponse = {
-          ...jsonResponse,
-          ...detail,
-          results: {
-            ...results,
-            biography,
-          },
-        };
-      }
+  // fetch bio from last.fm if bp doesn't have it
+  if (!artistData.bio) {
+    console.log('No bio in beatport, call last-fm API', artistData.name);
+    const lastFmArtistData = await lastFmController.callGetArtistInfo(artistData.name);
+    const { bio } = lastFmArtistData;
+
+    if (bio) {
+      let { content: biography } = bio;
+      // remove last.fm link
+      biography = biography.substr(
+        0,
+        biography.indexOf('<a href="https://www.last.fm'),
+      );
+
+      artistData = {
+        ...artistData,
+        bio: biography,
+      };
     }
   }
-  res.json(jsonResponse);
-}
+
+  // fetch artist charts by their dj id
+  // e.g. https://www.beatport.com/api/v4/catalog/charts?dj_id=25496
+  const { dj_association } = artistData;
+  let artistChartsData = {};
+  if (dj_association) {
+    const artistChartsUrl = `${BASE_URL}charts?dj_id=${dj_association}`;
+    const artistChartsResult = await axios.get(artistChartsUrl);
+    artistChartsData = artistChartsResult.data;
+  }
+
+  // fetch latest artist releases by their artist id
+  // e.g. https://www.beatport.com/api/v4/catalog/releases?artist_id=25496&order_by=-release_date
+  // Note: prepend the order_by value with a "-" for descending order
+  const { id: artist_id } = artistData;
+  const artistReleasesUrl = `${BASE_URL}releases?artist_id=${artist_id}&order_by=-release_date`;
+  const artistReleasesResult = await axios.get(artistReleasesUrl);
+  const { data: artistReleasesData } = artistReleasesResult;
+
+  res.status(200).json({
+    success: true,
+    data: {
+      artistData,
+      artistChartsData,
+      artistReleasesData,
+    },
+  });
+};
 
 exports.callApi = callApi;
 exports.getArtistData = getArtistData;
