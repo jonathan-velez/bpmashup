@@ -7,7 +7,7 @@ import { Checkbox, Table } from 'semantic-ui-react';
 import TrackAlbum from './TrackAlbum';
 import TrackActionDropdown from './TrackActionDropdown';
 import { constructLinks, constructTrackLink } from '../utils/trackUtils';
-import { musicalKeyFilter } from '../utils/helpers';
+import { getCamelotKey } from '../utils/helpers';
 import { trackHasBeenDownloaded, isTrackSelected } from '../selectors';
 import {
   addTrackToSelectedList,
@@ -78,10 +78,7 @@ const TrackListingTableRow = ({
       </Table.Cell>
       <Table.Cell>{constructLinks([genre], 'genre')}</Table.Cell>
       <Table.Cell>{bpm}</Table.Cell>
-      <Table.Cell>
-        {key.camelot_number}
-        {key.camelot_letter}
-      </Table.Cell>
+      <Table.Cell>{getCamelotKey(key)}</Table.Cell>
       <Table.Cell>{publishDate}</Table.Cell>
       {isPlaylist && <Table.Cell>{dateAddedFormatted}</Table.Cell>}
       <Table.Cell>

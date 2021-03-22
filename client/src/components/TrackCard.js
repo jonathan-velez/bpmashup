@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Card, Label } from 'semantic-ui-react';
+import { Card } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 
 import TrackAlbum from './TrackAlbum';
@@ -13,7 +13,7 @@ import {
 // import { musicalKeyFilter } from '../utils/helpers';
 import { hasZippyPermission } from '../selectors';
 
-const TrackCard = ({ track, showPosition = true, canZip }) => {
+const TrackCard = ({ track, canZip }) => {
   const {
     id,
     genre = {},
