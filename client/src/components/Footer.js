@@ -76,8 +76,10 @@ class Footer extends React.PureComponent {
     const getYouTube = (loadedTrack) => {
       if (loadedTrack.id) {
         getYoutubeLink(
-          `${loadedTrack.artists[0].name} ${loadedTrack.title}`,
-          loadedTrack.lengthMs,
+          `${loadedTrack.artists[0].name} ${loadedTrack.name} ${
+            loadedTrack.mix_name
+          }`,
+          loadedTrack.length_ms,
         );
       }
     };
@@ -91,7 +93,11 @@ class Footer extends React.PureComponent {
 
     const trackImage = (
       <Image
-        src={loadedTrack.images && loadedTrack.images.large.secureUrl}
+        src={
+          loadedTrack.release &&
+          loadedTrack.release.image &&
+          loadedTrack.release.image.uri
+        }
         circular
         size='mini'
         onClick={() => scrollToTrack(loadedTrack.id)}
@@ -129,7 +135,9 @@ class Footer extends React.PureComponent {
             trigger={trackImage}
             content={`${loadedTrack.artists
               .map((artist) => artist.name)
-              .join(', ')} - ${loadedTrack.title}`}
+              .join(', ')} - ${loadedTrack.name}${
+              loadedTrack.mix_name ? ` (${loadedTrack.mix_name}) ` : ''
+            }`}
           />
         </Menu.Item>
         <Menu.Item>

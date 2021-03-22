@@ -2,7 +2,6 @@ const OAuth = require('oauth').OAuth;
 const axios = require('axios');
 const cheerio = require('cheerio');
 
-const bpAPIConfig = require('../config/api');
 const utils = require('../utils');
 const constants = require('../config/constants');
 const lastFmController = require('../controllers/lastFmController');
@@ -190,7 +189,7 @@ const getArtistData = async (req, res) => {
   const { dj_association } = artistData;
   let artistChartsData = {};
   if (dj_association) {
-    const artistChartsUrl = `${BASE_URL}charts?dj_id=${dj_association}`;
+    const artistChartsUrl = `${BASE_URL}charts?dj_id=${dj_association}&per_page=36`;
     const artistChartsResult = await axios.get(artistChartsUrl);
     artistChartsData = artistChartsResult.data;
   }
@@ -206,9 +205,9 @@ const getArtistData = async (req, res) => {
   res.status(200).json({
     success: true,
     data: {
-      artistData,
-      artistChartsData,
-      artistReleasesData,
+      ...artistData,
+      charts: artistChartsData.results,
+      featuredReleases: artistReleasesData.results,
     },
   });
 };

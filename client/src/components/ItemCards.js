@@ -6,7 +6,7 @@ import { constructLinks } from '../utils/trackUtils';
 
 const ItemCards = ({ items, itemType, showHeader = true }) => {
   const itemsRow = Array.isArray(items) && items.map(item => {
-    const { slug, id, images, name } = item;
+    const { slug, id, image = {}, name } = item;
     let linkUrl = '';
     let metaContent = '';
 
@@ -40,7 +40,7 @@ const ItemCards = ({ items, itemType, showHeader = true }) => {
     return (
       <Card key={id}>
         <Link to={linkUrl}>
-          <Image src={images.large.secureUrl} />
+          <Image src={image.uri} />
         </Link>
         <Card.Content>
           <Card.Header>

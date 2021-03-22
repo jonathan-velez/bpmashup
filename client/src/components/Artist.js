@@ -5,10 +5,9 @@ import { Link, withRouter } from 'react-router-dom';
 import { Grid, Image, Header, Menu, Button } from 'semantic-ui-react';
 import Scroll from 'react-scroll';
 
-import { getArtistDetails, fetchChartsByProfileId } from '../thunks';
+import { getArtistDetails } from '../thunks';
 import TrackListingGroup from './TrackListingGroup';
 import ItemCards from './ItemCards';
-import GenreLabel from './GenreLabel';
 import EventsList from './EventsList';
 import LoveItem from './LoveItem';
 import ShowMore from './ShowMore';
@@ -19,10 +18,8 @@ import { DEFAULT_PAGE_TITLE } from '../constants/defaults';
 const Artist = ({
   match,
   getArtistDetails,
-  fetchChartsByProfileId,
   artistDetail,
   trackListing,
-  chartsList,
   location,
 }) => {
   const [activeItem, setActiveItem] = useState('biography');
@@ -31,27 +28,23 @@ const Artist = ({
   const { params } = match;
   const { artistId, artistName } = params;
   const { artistData = {}, eventsData = [] } = artistDetail;
+
   const {
     name,
     id,
-    biography,
-    images,
-    genres,
-    featuredReleases,
-    profile,
+    bio,
+    image = {},
     slug,
+    charts,
+    featuredReleases,
   } = artistData;
 
-  const imageSrc = images && images.large.secureUrl;
+  const imageSrc = image.uri;
   const { pathname } = location;
   const eventStyle = {
     maxHeight: '405px',
     overflowY: 'scroll',
   };
-  const { id: profileId } = profile || {};
-
-  const { results = {} } = chartsList;
-  let { charts = [] } = results;
 
   useEffect(() => {
     const fetchArtistData = (artistId) => {
@@ -68,10 +61,6 @@ const Artist = ({
     fetchArtistData(artistId);
   }, [artistId, artistName, getArtistDetails]);
 
-  useEffect(() => {
-    fetchChartsByProfileId(profileId);
-  }, [fetchChartsByProfileId, profileId]);
-
   const handleItemClick = (e, { name }) => {
     setActiveItem(name);
   };
@@ -86,21 +75,7 @@ const Artist = ({
   let activeItemContent = null;
   switch (activeItem) {
     case 'biography':
-      activeItemContent = biography && <ShowMore content={biography} />;
-      break;
-    case 'genres':
-      activeItemContent =
-        genres &&
-        genres.map((genre, idx) => {
-          return (
-            <GenreLabel
-              key={idx}
-              genreName={genre.name}
-              genreSlug={genre.slug}
-              genreId={genre.id}
-            />
-          );
-        });
+      activeItemContent = bio && <ShowMore content={bio} />;
       break;
     case 'events':
       activeItemContent = eventsData && eventsData.length > 0 && (
@@ -141,7 +116,8 @@ const Artist = ({
     <>
       <Helmet>
         <title>
-          {name ? `${name} :: ` : ``}{DEFAULT_PAGE_TITLE}
+          {name ? `${name} :: ` : ``}
+          {DEFAULT_PAGE_TITLE}
         </title>
       </Helmet>
       <Grid divided stackable>
@@ -173,15 +149,6 @@ const Artist = ({
                     onClick={handleItemClick}
                   >
                     Biography
-                  </Menu.Item>
-                  <Menu.Item
-                    link
-                    name='genres'
-                    className='item-header'
-                    active={activeItem === 'genres'}
-                    onClick={handleItemClick}
-                  >
-                    Genres
                   </Menu.Item>
                   <Menu.Item
                     link
@@ -248,18 +215,16 @@ const Artist = ({
 };
 
 const mapStateToProps = (state) => {
-  const { artistDetail, trackListing, chartsList } = state;
+  const { artistDetail, trackListing } = state;
 
   return {
     artistDetail,
     trackListing,
-    chartsList,
   };
 };
 
 const mapDispatchToProps = {
   getArtistDetails,
-  fetchChartsByProfileId,
 };
 
 export default connect(

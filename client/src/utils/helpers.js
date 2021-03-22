@@ -228,3 +228,7 @@ export const setTracklistViewSetting = (viewType = 'cards') => {
 export const convertEpochToDate = (seconds) => {
   return new Date(0).setUTCSeconds(seconds || 0);
 };
+
+export const getCamelotKey = (key) => {
+  return key.camelot_number + key.camelot_letter;
+};

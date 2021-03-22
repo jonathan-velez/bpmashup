@@ -56,6 +56,7 @@ app.get(`${API_BASE_URL}/tracks/similar`, bpController.callApi);
 app.get(`${API_BASE_URL}/labels`, bpController.getLabelData);
 app.get(`${API_BASE_URL}/releases`, bpController.callApi);
 app.get(`${API_BASE_URL}/artist`, bpController.getArtistData);
+app.get(`${API_BASE_URL}/artists/:artistId/top/:perPage`, bpController.callApi);
 app.get(`${API_BASE_URL}/most-popular-releases/:type`, bpController.callApi);
 app.get(`${API_BASE_URL}/my-beatport`, bpController.callApi);
 app.get(`${API_BASE_URL}/charts`, bpController.callApi);
@@ -154,13 +155,13 @@ function processDownloadJob(data) {
   return new Promise(async (resolve) => {
     // update queued item as 'available' in Firestore
     const { key, searchTerms, track = {}, addedBy } = data;
-    const { artists, name, mix_name } = searchTerms;
+    const { artists, name, mixName } = searchTerms;
     let isYouTube = false;
 
     let response = await zippyController.getDownladLink({
       artists,
       name,
-      mix_name,
+      mixName,
     });
 
     console.log('zippy response', response);
@@ -184,7 +185,7 @@ function processDownloadJob(data) {
 
       if (fallbackYouTube) {
         console.log('User want.');
-        const searchString = [artists, name, mix_name].join(' ');
+        const searchString = [artists, name, mixName].join(' ');
         response = await ytController.getYouTubeLink(
           searchString,
           track.lengthMs,

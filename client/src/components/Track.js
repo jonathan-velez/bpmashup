@@ -20,7 +20,7 @@ import TrackAlbum from './TrackAlbum';
 import TrackCardActionRow from './TrackCardActionRow';
 import NothingHereMessage from './NothingHereMessage';
 import { constructLinks, constructTrackLink } from '../utils/trackUtils';
-import { musicalKeyFilter } from '../utils/helpers';
+import { getCamelotKey } from '../utils/helpers';
 import { callAPIorCache } from '../seessionStorageCache';
 import { API_GET_TRACKS, API_GET_CHART } from '../constants/apiPaths';
 import {
@@ -227,18 +227,20 @@ const Track = ({ location = {}, match = {}, canZip }) => {
     similarTracksData = [],
   } = state;
   const {
-    images = {},
-    artists = [],
-    length = '',
-    bpm = '',
-    label = '',
-    key = {},
-    releaseDate = '',
-    genres = [],
-    release = '',
     id,
+    genre = {},
+    artists = [],
+    image: waveFormImage,
+    publish_date,
+    key,
+    bpm,
+    release = {},
+    name,
+    mix_name,
+    length,
   } = trackData;
-  const { name, mix_name } = trackData;
+  const { image = {}, label = {} } = release;
+  const { id: labelId, name: labelName, slug: labelSlug } = label;
 
   const { results: chartDataResults, metadata: chartDataMetadata } = chartData;
   const chartTotalPages =
@@ -282,11 +284,7 @@ const Track = ({ location = {}, match = {}, canZip }) => {
               <Grid.Column width={4}>
                 {id && (
                   <TrackAlbum
-                    imageUrl={
-                      images.large
-                        ? images.large.secureUrl
-                        : DEFAULT_BP_ITEM_IMAGE_URL
-                    }
+                    imageUrl={(image && image.uri) || DEFAULT_BP_ITEM_IMAGE_URL}
                     track={trackData}
                     imageSize='medium'
                   />
@@ -306,7 +304,7 @@ const Track = ({ location = {}, match = {}, canZip }) => {
                     )}
                   </Header.Subheader>
                 </Header>
-                <Image src={images.waveform.secureUrl} />
+                <Image src={waveFormImage && waveFormImage.uri} />
               </Grid.Column>
               <Grid.Column width={4}>
                 <TrackCardActionRow
@@ -326,7 +324,7 @@ const Track = ({ location = {}, match = {}, canZip }) => {
               <Grid.Column>
                 <Statistic size='mini'>
                   <Statistic.Label>RELEASED</Statistic.Label>
-                  <Statistic.Value>{releaseDate}</Statistic.Value>
+                  <Statistic.Value>{publish_date}</Statistic.Value>
                 </Statistic>
               </Grid.Column>
               <Grid.Column>
@@ -338,16 +336,14 @@ const Track = ({ location = {}, match = {}, canZip }) => {
               <Grid.Column>
                 <Statistic size='mini'>
                   <Statistic.Label>KEY</Statistic.Label>
-                  <Statistic.Value>
-                    {musicalKeyFilter(key && key.shortName)}
-                  </Statistic.Value>
+                  <Statistic.Value>{getCamelotKey(key)}</Statistic.Value>
                 </Statistic>
               </Grid.Column>
               <Grid.Column>
                 <Statistic size='mini'>
                   <Statistic.Label>GENRE</Statistic.Label>
                   <Statistic.Value>
-                    {constructLinks(genres, 'genre')}
+                    {constructLinks([genre], 'genre')}
                   </Statistic.Value>
                 </Statistic>
               </Grid.Column>
@@ -355,8 +351,8 @@ const Track = ({ location = {}, match = {}, canZip }) => {
                 <Statistic size='mini'>
                   <Statistic.Label>LABEL</Statistic.Label>
                   <Statistic.Value>
-                    <Link to={`/label/${label.slug}/${label.id}`}>
-                      {label.name}
+                    <Link to={`/label/${labelSlug}/${labelId}`}>
+                      {labelName}
                     </Link>
                   </Statistic.Value>
                 </Statistic>

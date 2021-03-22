@@ -2,7 +2,6 @@ import { callAPIorCache } from '../seessionStorageCache';
 import {
   API_GET_ARTIST_DETAIL,
   API_GET_ARTIST_EVENTS_BY_NAME,
-  API_MOST_POPULAR_BY_ARTISTS,
 } from '../constants/apiPaths';
 import {
   START_ASYNC,
@@ -31,7 +30,7 @@ export const getArtistDetails = ({ artistId, artistName }) => {
       dispatch({
         type: GET_ARTIST_DETAIL,
         payload: {
-          artistData: artistData.results,
+          artistData: artistData.data,
           eventsData: eventsData.events,
         },
       });
@@ -57,7 +56,8 @@ export const getArtistDetails = ({ artistId, artistName }) => {
       );
 
       const artistsMostPopularTracks = callAPIorCache(
-        `${API_MOST_POPULAR_BY_ARTISTS}?id=${artistId}&per_page=${DEFAULT_PER_PAGE}`,
+        // `${API_MOST_POPULAR_BY_ARTISTS}?id=${artistId}&per_page=${DEFAULT_PER_PAGE}`,
+        `/api/artists/${artistId}/top/${DEFAULT_PER_PAGE}/`,
       );
 
       successfulCall({

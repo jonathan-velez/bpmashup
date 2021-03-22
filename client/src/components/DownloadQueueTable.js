@@ -33,7 +33,10 @@ const DownloadQueueTable = ({
       status,
       isYouTube = false,
     } = item;
-    const { artists, label, genres, bpm, key: musicalKey, images } = track;
+    const { artists, genre = {}, bpm, key: musicalKey, release } = track;
+    const { image, label } = release;
+    const { id: labelId, name: labelName, slug: labelSlug } = label;
+
 
     let downloadButtonText = 'Download';
     let downloadButtonColor = 'positive';
@@ -131,9 +134,9 @@ const DownloadQueueTable = ({
       track && (
         <Table.Row key={idx}>
           <Table.Cell>
-            {images ? (
+            {image ? (
               <TrackAlbum
-                imageUrl={images.medium && images.medium.secureUrl}
+                imageUrl={image.uri}
                 imageSize='tiny'
                 iconSize='big'
                 track={track}
@@ -145,9 +148,9 @@ const DownloadQueueTable = ({
           <Table.Cell>{constructTrackLink(track)}</Table.Cell>
           <Table.Cell>{constructLinks(artists, 'artist')}</Table.Cell>
           <Table.Cell>
-            <Link to={`/label/${label.slug}/${label.id}`}>{label.name}</Link>
+            <Link to={`/label/${labelSlug}/${labelId}`}>{labelName}</Link>
           </Table.Cell>
-          <Table.Cell>{constructLinks(genres, 'genre')}</Table.Cell>
+          <Table.Cell>{constructLinks([genre], 'genre')}</Table.Cell>
           <Table.Cell>{bpm}</Table.Cell>
           <Table.Cell>
             {musicalKeyFilter(musicalKey && musicalKey.shortName)}
