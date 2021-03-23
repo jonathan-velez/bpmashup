@@ -59,7 +59,7 @@ const DownloadQueueTable = ({
       label = track.label;
     }
 
-    const { id: labelId, name: labelName, slug: labelSlug } = label;
+    const { id: labelId, name: labelName, slug: labelSlug } = label = {};
 
     let downloadButtonText = 'Download';
     let downloadButtonColor = 'positive';
