@@ -75,20 +75,33 @@ const Track = ({ location = {}, match = {}, canZip }) => {
 
   const [state, dispatch] = useReducer(reducer, initialState);
 
+  const loadChartsByTrackId = async (id, page = 1, perPage = chartsPerPage) => {
+    const chartsResult = await callAPIorCache(
+      `${API_GET_CHART}?track_id=${id}&page=${page}&per_page=${perPage}`,
+    );
+
+    const { data = {}, status } = chartsResult;
+
+    if (status !== 200) {
+      return;
+    }
+
+    dispatch({
+      type: 'load_chart_data',
+      payload: data,
+    });
+  };
+
   const loadData = async (trackProp) => {
     // Track object (trackProp) is passed as prop in location.state if the user lands here through <Link />
     // If the user lands here via other means, we need to fetch the Track data
     // Once we have Track data, we need to fetch the list of Charts the track is on
     // Lastly, we fetch similar tracks
     const trackData = await loadTrackDataFromPropsOrFetch(trackProp);
-    const { charts = [], id } = trackData;
-
-    if (charts.length > 0) {
-      await loadChartData(charts);
-    }
+    const { id } = trackData;
 
     if (id) {
-      await loadSimilarTracksData(id);
+      await Promise.all([loadChartsByTrackId(id), loadSimilarTracksData(id)]);
     }
     animateScroll.scrollToTop({ duration: 1500 });
   };
@@ -108,27 +121,6 @@ const Track = ({ location = {}, match = {}, canZip }) => {
     });
 
     return trackData;
-  };
-
-  const loadChartData = async (
-    charts = [],
-    page = 1,
-    per_page = chartsPerPage,
-  ) => {
-    if (charts.length > 0) {
-      const chartData = await fetchChartData(
-        charts.map((chart) => chart.id).join(','),
-        page,
-        per_page,
-      );
-
-      if (chartData.results && chartData.results.length > 0) {
-        dispatch({
-          type: 'load_chart_data',
-          payload: chartData,
-        });
-      }
-    }
   };
 
   const loadSimilarTracksData = async (trackId) => {
@@ -165,26 +157,6 @@ const Track = ({ location = {}, match = {}, canZip }) => {
     });
   };
 
-  const fetchChartData = async (
-    chartIds,
-    page = 1,
-    per_page = chartsPerPage,
-  ) => {
-    return new Promise(async (resolve, reject) => {
-      try {
-        const chartData = await callAPIorCache(
-          `${API_GET_CHART}?ids=${chartIds}&page=${page}&per_page=${per_page}`,
-        );
-        const { data, status } = chartData;
-        if (status !== 200) return;
-
-        return resolve(data);
-      } catch (error) {
-        return reject(error);
-      }
-    });
-  };
-
   const fetchSimilarTracksData = async (trackId) => {
     return new Promise(async (resolve, reject) => {
       try {
@@ -213,11 +185,11 @@ const Track = ({ location = {}, match = {}, canZip }) => {
   const handleChartPageChange = (e, data) => {
     const { activePage = 1 } = data;
     const { trackData = {} } = state;
-    const { charts = [] } = trackData;
+    const { id } = trackData;
 
-    if (charts.length === 0) return;
+    if (!id) return;
 
-    loadChartData(charts, activePage);
+    loadChartsByTrackId(id, activePage);
   };
 
   const {
@@ -242,9 +214,12 @@ const Track = ({ location = {}, match = {}, canZip }) => {
   const { image = {}, label = {} } = release;
   const { id: labelId, name: labelName, slug: labelSlug } = label;
 
-  const { results: chartDataResults, metadata: chartDataMetadata } = chartData;
-  const chartTotalPages =
-    (chartDataMetadata && chartDataMetadata.totalPages) || 0;
+  const {
+    results: chartDataResults,
+    count: chartCount,
+    per_page: chartPerPage,
+  } = chartData;
+  const chartTotalPages = Math.ceil(chartCount / chartPerPage);
 
   if (!id) {
     return <NothingHereMessage />;
@@ -383,14 +358,14 @@ const Track = ({ location = {}, match = {}, canZip }) => {
                           idx < chartsPerPage && (
                             <Card
                               className='flex-card'
-                              key={chart.sku}
+                              key={chart.id}
                               as={Link}
                               to={`/chart/${chart.slug}/${chart.id}`}
                             >
                               <Image
                                 src={
-                                  chart.images && chart.images.xlarge
-                                    ? chart.images.xlarge.secureUrl
+                                  chart.image && chart.image.uri
+                                    ? chart.image.uri
                                     : DEFAULT_BP_ITEM_IMAGE_URL
                                 }
                                 className='flex-card'

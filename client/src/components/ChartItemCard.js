@@ -13,11 +13,11 @@ const ChartItemCard = ({ chartItem, history }) => {
 
   const {
     id,
-    images = {},
+    image = {},
     slug,
     name,
-    publishDate,
-    chartOwner = {},
+    publish_date,
+    person = {},
   } = chartItem;
 
   return (
@@ -30,12 +30,12 @@ const ChartItemCard = ({ chartItem, history }) => {
       <Dimmer active={active} style={{ cursor: 'pointer', zIndex: 99 }}>
         <h3>{name}</h3>
         <h5>
-          {publishDate && `Published on ${publishDate}`}
-          {chartOwner && ` by ${chartOwner.name}`}
+          {publish_date && `Published on ${publish_date}`}
+          {person && person.owner_name && ` by ${person.owner_name}`}
         </h5>
       </Dimmer>
       <Image
-        src={images.xlarge && images.xlarge.secureUrl}
+        src={image && image.uri}
         as={Link}
         to={`/chart/${slug}/${id}`}
       />
