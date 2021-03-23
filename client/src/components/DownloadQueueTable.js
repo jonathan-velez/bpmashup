@@ -18,8 +18,7 @@ const DownloadQueueTable = ({
   retryDownload,
   markTrackAsPurchased,
 }) => {
-  const queueItems = Object.keys(queue);
-  if (queueItems.length === 0) {
+  if (queue.length === 0) {
     return <NothingHereMessage />;
   }
 
@@ -33,10 +32,34 @@ const DownloadQueueTable = ({
       status,
       isYouTube = false,
     } = item;
-    const { artists, genre = {}, bpm, key: musicalKey, release } = track;
-    const { image, label } = release;
-    const { id: labelId, name: labelName, slug: labelSlug } = label;
 
+    let artists,
+      genre = {},
+      bpm,
+      musicalKey,
+      image,
+      label;
+    // hacky way to deal w/ older download items pre bp v4 API release where the track changed
+    if (
+      moment.unix(addedDate.seconds).isAfter(moment('20210321', 'YYYYMMDD'))
+    ) {
+      artists = track.artists;
+      genre = track.genre;
+      bpm = track.bpm;
+      musicalKey = track.key;
+      image = track.release && track.release.image && track.release.image.uri;
+      label = track.release && track.release.label;
+    } else {
+      artists = track.artists;
+      genre = track.genres;
+      bpm = track.bpm;
+      musicalKey = track.key;
+      image =
+        track.images && track.images.medium && track.images.medium.secureUrl;
+      label = track.label;
+    }
+
+    const { id: labelId, name: labelName, slug: labelSlug } = label;
 
     let downloadButtonText = 'Download';
     let downloadButtonColor = 'positive';
@@ -136,7 +159,7 @@ const DownloadQueueTable = ({
           <Table.Cell>
             {image ? (
               <TrackAlbum
-                imageUrl={image.uri}
+                imageUrl={image}
                 imageSize='tiny'
                 iconSize='big'
                 track={track}
