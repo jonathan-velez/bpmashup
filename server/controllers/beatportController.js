@@ -166,7 +166,9 @@ const getArtistData = async (req, res) => {
   // fetch bio from last.fm if bp doesn't have it
   if (!artistData.bio) {
     console.log('No bio in beatport, call last-fm API', artistData.name);
-    const lastFmArtistData = await lastFmController.callGetArtistInfo(artistData.name);
+    const lastFmArtistData = await lastFmController.callGetArtistInfo(
+      artistData.name,
+    );
     const { bio } = lastFmArtistData;
 
     if (bio) {
@@ -212,6 +214,26 @@ const getArtistData = async (req, res) => {
   });
 };
 
+// beatport API v4 /tracks/similar is blocked, but they have tracks/{id}/beatbot available
+// which pulls in Recommended Tracks, which may very well be the same data anyway
+const fetchBeatbotTracks = async (req, res) => {
+  const { id } = req.query;
+
+  if (!id) {
+    return res.status(500).json({
+      success: false,
+      message: 'No track ID specified',
+    });
+  }
+
+  const beatbotUrl = `${BASE_URL}tracks/${id}/beatbot`;
+  const beatbotResult = await axios.get(beatbotUrl);
+  const { data } = beatbotResult;
+
+  res.status(200).json(data);
+};
+
 exports.callApi = callApi;
 exports.getArtistData = getArtistData;
 exports.getLabelData = getLabelData;
+exports.fetchBeatbotTracks = fetchBeatbotTracks;
