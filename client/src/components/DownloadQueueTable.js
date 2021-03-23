@@ -38,7 +38,7 @@ const DownloadQueueTable = ({
       bpm,
       musicalKey,
       image,
-      label;
+      label = {};
     // hacky way to deal w/ older download items pre bp v4 API release where the track changed
     if (
       moment.unix(addedDate.seconds).isAfter(moment('20210321', 'YYYYMMDD'))
@@ -59,7 +59,7 @@ const DownloadQueueTable = ({
       label = track.label;
     }
 
-    const { id: labelId, name: labelName, slug: labelSlug } = label = {};
+    const { id: labelId, name: labelName, slug: labelSlug } = label || {};
 
     let downloadButtonText = 'Download';
     let downloadButtonColor = 'positive';
@@ -173,7 +173,7 @@ const DownloadQueueTable = ({
           <Table.Cell>
             <Link to={`/label/${labelSlug}/${labelId}`}>{labelName}</Link>
           </Table.Cell>
-          <Table.Cell>{constructLinks([genre], 'genre')}</Table.Cell>
+          <Table.Cell></Table.Cell>
           <Table.Cell>{bpm}</Table.Cell>
           <Table.Cell>
             {musicalKeyFilter(musicalKey && musicalKey.shortName)}
