@@ -384,19 +384,49 @@ const _parseZippyPage = (pageLink, pageHtml) => {
 
         */
 
+        /*
+          Updated script as of 23-MAR-2021:
+
+          var a = 255590;
+          var b = 742589;
+          document.getElementById('dlbutton').omg = "f";
+          if (document.getElementById('dlbutton').omg != 'f') {
+            a = Math.ceil(a/3);
+          } else {
+            a = Math.floor(a/3);
+          }
+          document.getElementById('dlbutton').href = "/d/rUKvJhuH/"+(a + 255590%b)+"/GUZ%20%28NL%29%20-%20Set%20U%20Free%20%28Extended%20Mix%29%20%5bTraxCrate.com%5d.mp3";
+          if (document.getElementById('fimage')) {
+              document.getElementById('fimage').href = "/i/rUKvJhuH/"+(a + 255590%b)+"/GUZ%20%28NL%29%20-%20Set%20U%20Free%20%28Extended%20Mix%29%20%5bTraxCrate.com%5d.mp3";
+          }
+
+        */
+
         try {
-          let aVar = scriptData.substring(
-            scriptData.indexOf('var a =') + 8,
-            scriptData.indexOf(';'),
-          );
-          let bVar = 3;
+          let aVar = scriptData.substring(scriptData.indexOf('var a =') + 8);
+          aVar = aVar.substring(0, aVar.indexOf(';'));
+
+          let bVar = scriptData.substring(scriptData.indexOf('var b =') + 8);
+          bVar = bVar.substring(0, bVar.indexOf(';'));
+
+          console.log('aVar', aVar);
+          console.log('bVar', bVar);
+
+          console.log('Script Data', scriptData, '********');
+
+          let omg =
+            scriptData.indexOf(
+              'document.getElementById(\'dlbutton\').omg = "f";',
+            ) >= 0;
+          aVar = omg ? Math.floor(aVar / 3) : (aVar = Math.ceil(aVar / 3));
 
           let mp3Link = scriptData.substring(
             scriptData.indexOf("document.getElementById('dlbutton').href = ") +
               43,
           );
           mp3Link = mp3Link.substring(0, mp3Link.indexOf(';'));
-          mp3Link = mp3Link.replace('(a, 3)+b)', `(${aVar}, 3)+${bVar})`);
+          mp3Link = mp3Link.replace('(a + ', `(${aVar} + `);
+          mp3Link = mp3Link.replace('%b)', `%${bVar})`);
 
           console.log('pre eval mp3Link', mp3Link);
 
@@ -407,12 +437,12 @@ const _parseZippyPage = (pageLink, pageHtml) => {
           downloadLink =
             pageLink.substr(0, pageLink.indexOf('.com/') + 4) + mp3Link;
         } catch (error) {
-          console.log(
+          console.error(
             'Error extracting mp3 link from zippyshare',
             error,
-            'scriptData',
+            '\nscriptData',
             scriptData,
-            'pageLink',
+            '\npageLink',
             pageLink,
           );
         }
