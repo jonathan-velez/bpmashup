@@ -155,13 +155,13 @@ function processDownloadJob(data) {
   return new Promise(async (resolve) => {
     // update queued item as 'available' in Firestore
     const { key, searchTerms, track = {}, addedBy } = data;
-    const { artists, name, mixName } = searchTerms;
+    const { artists, name, mix_name } = searchTerms;
     let isYouTube = false;
 
     let response = await zippyController.getDownladLink({
       artists,
       name,
-      mixName,
+      mix_name,
     });
 
     console.log('zippy response', response);
@@ -185,7 +185,7 @@ function processDownloadJob(data) {
 
       if (fallbackYouTube) {
         console.log('User want.');
-        const searchString = [artists, name, mixName].join(' ');
+        const searchString = [artists, name, mix_name].join(' ');
         response = await ytController.getYouTubeLink(
           searchString,
           track.lengthMs,
