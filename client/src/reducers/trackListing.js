@@ -24,20 +24,16 @@ const trackListing = (state = defaultState, action) => {
   switch (action.type) {
     case SEARCH_TRACKS:
     case FETCH_TRACKS: {
-      // console.log(action.payload.data);
-      // return defaultState;
-
       if (!_.has(action.payload.data, 'results')) {
         return defaultState;
       }
 
-      const { results } = action.payload.data;
-      const { count, page, per_page } = results;
+      const { results, count, page, per_page } = action.payload.data;
       const metadata = {
         // pageType: 'playlist',
         per_page: per_page,
         page,
-        totalPages: count / per_page,
+        totalPages: Math.ceil(count / per_page),
       };
 
       // extract id as the key, convert array to object

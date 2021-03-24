@@ -233,7 +233,22 @@ const fetchBeatbotTracks = async (req, res) => {
   res.status(200).json(data);
 };
 
+const fetchTopGenreTracks = async (req, res) => {
+  try {
+    const { genreId, numOfTracks = 100 } = req.params;
+
+    const topTracksUrl = `${BASE_URL}genres/${genreId}/top/${numOfTracks}`;
+    const topTracksResult = await axios.get(topTracksUrl);
+    const { data } = topTracksResult;
+
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+};
+
 exports.callApi = callApi;
 exports.getArtistData = getArtistData;
 exports.getLabelData = getLabelData;
 exports.fetchBeatbotTracks = fetchBeatbotTracks;
+exports.fetchTopGenreTracks = fetchTopGenreTracks;

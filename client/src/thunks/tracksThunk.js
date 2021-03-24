@@ -103,7 +103,7 @@ export const fetchMostPopularTracks = async (
 
     switch (type) {
       case 'genre':
-        urlString += `genre_id=${id}`;
+        urlString = `/api/genres/${id || 1}/top/100/?`;
         break;
       case 'artist':
         urlString += `artist_id=${id}`;
