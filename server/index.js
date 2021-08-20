@@ -49,6 +49,8 @@ app.get(`${API_BASE_URL}/genres`, bpController.callApi);
 app.get(`${API_BASE_URL}/search`, bpController.callApi);
 app.get(`${API_BASE_URL}/most-popular`, bpController.callApi);
 app.get(`${API_BASE_URL}/most-popular/:type`, bpController.callApi);
+app.get(`${API_BASE_URL}/labels/:labelId/top/:top`, bpController.callApi);
+app.get(`${API_BASE_URL}/labels/:labelId/releases`, bpController.callApi);
 app.get(`${API_BASE_URL}/genres/:genreId/top/:numOfTracks`, bpController.fetchTopGenreTracks);
 app.get(`${API_BASE_URL}/autocomplete`, bpController.callApi);
 app.get(`${API_BASE_URL}/artists/detail`, bpController.callApi);
