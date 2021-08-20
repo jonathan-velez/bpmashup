@@ -50,7 +50,7 @@ const executeOA = (reqPath, reqQuery) => {
           return reject(error);
         }
 
-        if (error || returnData.metadata.error) {
+        if (error || (returnData && returnData.metadata && returnData.metadata.error)) {
           console.log(`Error calling '${urlStr}': `, returnData.metadata.error);
           return reject(error);
         }
@@ -131,7 +131,7 @@ async function getLabelData(req, res) {
         }
       }
 
-      res.json({
+      return res.json({
         ...labelResults,
         results: [labelData],
       });
