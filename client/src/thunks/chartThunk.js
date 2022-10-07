@@ -10,7 +10,6 @@ import {
 } from '../constants/actionTypes';
 import {
   API_GET_CHART,
-  API_GET_TRACKS,
   API_GET_CHARTS_BY_PROFILE_ID,
 } from '../constants/apiPaths';
 import {
@@ -31,24 +30,17 @@ export async function fetchChartDataById(
       type: START_ASYNC,
     });
 
-    // hard code the page and per_page on the metadata call as it will always be the first result
-    // we'll benefit from the cached api call when page + per_page changes come on the tracks call below
     const chartsMetadata = await callAPIorCache(
-      `${API_GET_CHART}?id=${chartId}&page=1&per_page=25`,
+      `${API_GET_CHART}/${chartId}`,
     );
-    const chartObject =
-      (chartsMetadata.data.results &&
-        Array.isArray(chartsMetadata.data.results) &&
-        chartsMetadata.data.results[0]) ||
-      {};
 
     const chartTracks = await callAPIorCache(
-      `${API_GET_TRACKS}?chartId=${chartId}&page=${page}&per_page=${per_page}`,
+      `${API_GET_CHART}/${chartId}/tracks?page=${page}&per_page=${per_page}`,
     );
 
     dispatch({
       type: GET_CHART_DATA,
-      payload: chartObject,
+      payload: chartsMetadata && chartsMetadata.data,
     });
 
     dispatch({
@@ -122,7 +114,7 @@ export async function fetchChartsByGenreId(
     });
 
     const beatportChardData = await callAPIorCache(
-      `${API_GET_CHART}?facets=genreId:${genreId}&publishedOnly=true&page=${page}&per_page=${per_page}&sortBy=publishDate+DESC`,
+      `${API_GET_CHART}?genre_id=${genreId}&is_published=true&page=${page}&per_page=${per_page}`,
     );
 
     const { data, status } = beatportChardData;

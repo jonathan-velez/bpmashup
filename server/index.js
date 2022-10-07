@@ -63,6 +63,8 @@ app.get(`${API_BASE_URL}/artists/:artistId/top/:perPage`, bpController.callApi);
 app.get(`${API_BASE_URL}/most-popular-releases/:type`, bpController.callApi);
 app.get(`${API_BASE_URL}/my-beatport`, bpController.callApi);
 app.get(`${API_BASE_URL}/charts`, bpController.callApi);
+app.get(`${API_BASE_URL}/charts/:chartId`, bpController.callApi);
+app.get(`${API_BASE_URL}/charts/:chartId/tracks`, bpController.callApi);
 app.get(`${API_BASE_URL}/profile/charts`, bpController.callApi);
 app.get(`${API_BASE_URL}/download-track`, zippyController.zippyScrape);
 app.get(`${API_BASE_URL}/youtube/search-v2`, ytController.searchv2);

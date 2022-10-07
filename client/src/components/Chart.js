@@ -47,17 +47,15 @@ const Chart = ({
   const {
     id,
     slug,
-    images = {},
+    image =  {},
     name,
     description,
     genres,
     publishDate,
-    chartOwner = {},
+    person = {},
   } = chartListing;
-  const { xlarge = {} } = images;
-  const { secureUrl } = xlarge;
-  const { name: chartOwnerName, slug: chartOwnerSlug, id: chartOwnerId } =
-    chartOwner || {};
+  const { owner_name: chartOwnerName, owner_slug: chartOwnerSlug, id: chartOwnerId } =
+    person || {};
 
   let pageTitle = '';
   if (name) {
@@ -82,9 +80,9 @@ const Chart = ({
           <Grid.Row stretched>
             <Grid.Column width={4} verticalAlign='middle'>
               {firstTrack ? (
-                <TrackAlbum imageUrl={secureUrl} track={firstTrack} />
+                <TrackAlbum imageUrl={image.uri} track={firstTrack} />
               ) : (
-                <Image src={secureUrl} />
+                <Image src={image.uri} />
               )}
             </Grid.Column>
             <Grid.Column width={12} textAlign='left'>
