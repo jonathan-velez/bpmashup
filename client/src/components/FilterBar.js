@@ -199,7 +199,6 @@ const FilterBar = ({ location, history, genreListing }) => {
               onChange={handleBPMStartChange}
               value={selectedBpmStart}
             />
-            -
             <Form.Input
               type='number'
               fluid
