@@ -27,10 +27,9 @@ export const getTracks = async (searchFacets) => {
       type: START_ASYNC,
     });
 
-    let facetsString = '';
     const facetsModel = {
-      key: null,
-      genre: null,
+      key_id: null,
+      genre_id: null,
       artistId: null,
       labelId: null,
       bpm: null,
@@ -59,19 +58,8 @@ export const getTracks = async (searchFacets) => {
       }, {}),
     );
 
-    if (facetsParams) {
-      const facets = Object.keys(facetsParams);
-
-      for (let i = 0; i < facets.length; i++) {
-        const facetName = facets[i];
-        facetsString +=
-          (i > 0 ? ',' : '') + facetName + ':' + facetsParams[facetName];
-      }
-    }
-
     const tracksRequest = await callAPIorCache(
-      `${API_MY_BEATPORT}?${pageParams}${
-        facetsParams ? `&facets=${facetsString}` : ''
+      `${API_GET_TRACKS}?${pageParams}${facetsParams ? '&' + queryString.stringify(facetsParams) : ''
       }`,
     );
 
@@ -92,7 +80,6 @@ export const fetchMostPopularTracks = async (
   name,
   page = DEFAULT_PAGE,
   per_page = getPerPageSetting(),
-  endPoint = API_MOST_POPULAR,
 ) => {
   return async (dispatch) => {
     dispatch({
@@ -120,7 +107,6 @@ export const fetchMostPopularTracks = async (
     urlString += `&page=${page}&per_page=${per_page}`;
 
     const requestResult = await callAPIorCache(
-      // `${endPoint}/${type}?s=${name}&id=${id}&page=${page}&per_page=${per_page}`,
       urlString,
     );
 
@@ -142,8 +128,7 @@ export const getTracksByIds = async (
     });
 
     const requestResult = await callAPIorCache(
-      `${API_GET_TRACKS}?ids=${
-        Array.isArray(ids) ? ids.join(',') : ids
+      `${API_GET_TRACKS}?ids=${Array.isArray(ids) ? ids.join(',') : ids
       }&page=${page}&per_page=${per_page}`,
     );
 
@@ -166,10 +151,8 @@ export const getLatestTracksByLabelAndArtistIds = async (
     });
 
     const requestResult = await callAPIorCache(
-      `${API_MY_BEATPORT}?artistIds=${
-        Array.isArray(artistIds) ? artistIds.join(',') : artistIds
-      }&labelIds=${
-        Array.isArray(labelIds) ? labelIds.join(',') : labelIds
+      `${API_MY_BEATPORT}?artistIds=${Array.isArray(artistIds) ? artistIds.join(',') : artistIds
+      }&labelIds=${Array.isArray(labelIds) ? labelIds.join(',') : labelIds
       }&page=${page}&per_page=${per_page}&sortBy=publishDate+DESC&publishDateStart=${moment()
         .subtract(30, 'days')
         .format('YYYY-MM-DD')}&publishDateEnd=${moment().format('YYYY-MM-DD')}`,

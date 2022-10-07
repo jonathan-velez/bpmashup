@@ -10,8 +10,8 @@ import { camelotMusicalKeysDropdownArray } from '../constants/musicalKeys';
 
 const FilterBar = ({ location, history, genreListing }) => {
   const { search } = location;
-  const key = +queryString.parse(search).key || '';
-  const genre = +queryString.parse(search).genre || '';
+  const key_id = +queryString.parse(search).key_id || '';
+  const genre_id = +queryString.parse(search).genre_id || '';
   const per_page = +queryString.parse(search).per_page || '';
   const publishDateStart = +queryString.parse(search).publishDateStart || '';
   const publishDateEnd = +queryString.parse(search).publishDateEnd || '';
@@ -19,7 +19,7 @@ const FilterBar = ({ location, history, genreListing }) => {
 
   const [activeIndex, setActiveIndex] = useState(0);
   const [selectedGenre, setSelectedGenre] = useState(
-    +queryString.parse(search).genre || '',
+    +queryString.parse(search).genre_id || '',
   );
   const [selectedMusicalKey, setSelectedMusicalKey] = useState(
     +queryString.parse(search).key || '',
@@ -34,13 +34,13 @@ const FilterBar = ({ location, history, genreListing }) => {
   const [selectedBpm, setSelectedBpm] = useState(bpm);
 
   useEffect(() => {
-    setSelectedGenre(genre);
-    setSelectedMusicalKey(key);
+    setSelectedGenre(genre_id);
+    setSelectedMusicalKey(key_id);
     setSelectedPerPage(per_page);
     setSelectedPublishDateStart(publishDateStart);
     setSelectedPublishDateEnd(publishDateEnd);
     setSelectedBpm(bpm);
-  }, [genre, key, per_page, publishDateStart, publishDateEnd, bpm]);
+  }, [genre_id, key_id, per_page, publishDateStart, publishDateEnd, bpm]);
 
   const handleAccordionClick = (e, titleProps) => {
     const { index } = titleProps;
@@ -74,8 +74,8 @@ const FilterBar = ({ location, history, genreListing }) => {
     history.push(
       `?${queryString.stringify(
         _.pickBy({
-          genre: selectedGenre,
-          key: selectedMusicalKey,
+          genre_id: selectedGenre,
+          key_id: selectedMusicalKey,
           per_page: selectedPerPage,
           publishDateStart: selectedPublishDateStart,
           publishDateEnd: selectedPublishDateEnd,
