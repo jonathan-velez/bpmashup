@@ -5,7 +5,6 @@
   "main": "index.js",
   "scripts": {
     "build": "cd client && npm run build",
-    "heroku-postbuild": "npm run build",
     "install": "(cd client && npm install) && (cd server && npm install)",
     "start": "concurrently \"cd client && PORT=3000 npm start\" \"cd server && PORT=3001 npm run --max_old_space_size=4096 start-dev\"",
     "start-prod": "cd server && npm start"
