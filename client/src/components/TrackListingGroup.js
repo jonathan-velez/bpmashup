@@ -24,7 +24,14 @@ const TrackListingGroup = ({
   if (!tracks || tracks.length < 0) {
     return null;
   }
-  const { totalPages, page, per_page, query } = metadata;
+  let { totalPages, page, per_page, query } = metadata;
+  
+  // page comes in as "1/2". we need just the page
+  const pageSlashPos = page && page.indexOf('/');
+  if(pageSlashPos >= 0){
+    page = page.substring(0, page.indexOf('/'));
+  }
+
   return (
     <React.Fragment>
       <Responsive minWidth={700}>
