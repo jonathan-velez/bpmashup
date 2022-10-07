@@ -15,7 +15,8 @@ const FilterBar = ({ location, history, genreListing }) => {
   const per_page = +queryString.parse(search).per_page || '';
   const publishDateStart = +queryString.parse(search).publishDateStart || '';
   const publishDateEnd = +queryString.parse(search).publishDateEnd || '';
-  const bpm = +queryString.parse(search).bpm || '';
+  const bpmStart = +queryString.parse(search).bpmStart || '';
+  const bpmEnd = +queryString.parse(search).bpmEnd || '';
 
   const [activeIndex, setActiveIndex] = useState(0);
   const [selectedGenre, setSelectedGenre] = useState(
@@ -31,7 +32,8 @@ const FilterBar = ({ location, history, genreListing }) => {
   const [selectedPublishDateEnd, setSelectedPublishDateEnd] = useState(
     publishDateEnd,
   );
-  const [selectedBpm, setSelectedBpm] = useState(bpm);
+  const [selectedBpmStart, setSelectedBpmStart] = useState(bpmStart);
+  const [selectedBpmEnd, setSelectedBpmEnd] = useState(bpmEnd);
 
   useEffect(() => {
     setSelectedGenre(genre_id);
@@ -39,8 +41,9 @@ const FilterBar = ({ location, history, genreListing }) => {
     setSelectedPerPage(per_page);
     setSelectedPublishDateStart(publishDateStart);
     setSelectedPublishDateEnd(publishDateEnd);
-    setSelectedBpm(bpm);
-  }, [genre_id, key_id, per_page, publishDateStart, publishDateEnd, bpm]);
+    setSelectedBpmStart(bpmStart);
+    setSelectedBpmEnd(bpmEnd);
+  }, [genre_id, key_id, per_page, publishDateStart, publishDateEnd, bpmStart, bpmEnd]);
 
   const handleAccordionClick = (e, titleProps) => {
     const { index } = titleProps;
@@ -57,8 +60,12 @@ const FilterBar = ({ location, history, genreListing }) => {
     setSelectedMusicalKey(value);
   };
 
-  const handleBPMChange = (e, { value }) => {
-    setSelectedBpm(value);
+  const handleBPMStartChange = (e, { value }) => {
+    setSelectedBpmStart(value);
+  };
+
+  const handleBPMEndChange = (e, { value }) => {
+    setSelectedBpmEnd(value);
   };
 
   const handleTimeframeChange = (e, { value }) => {
@@ -70,6 +77,14 @@ const FilterBar = ({ location, history, genreListing }) => {
   };
 
   const filterTracks = () => {
+    let publish_date, bpm;
+    if (selectedPublishDateStart || selectedPublishDateEnd) {
+      publish_date = `${selectedPublishDateStart}:${selectedPublishDateEnd}`;
+    }
+    if (selectedBpmStart || selectedBpmEnd) {
+      bpm = `${selectedBpmStart}:${selectedBpmEnd}`;
+    }
+    
     // use _.pickBy to remove non-filtered options
     history.push(
       `?${queryString.stringify(
@@ -77,8 +92,8 @@ const FilterBar = ({ location, history, genreListing }) => {
           genre_id: selectedGenre,
           key_id: selectedMusicalKey,
           per_page: selectedPerPage,
-          publish_date: `${selectedPublishDateStart}:${selectedPublishDateEnd}`,
-          bpm: selectedBpm,
+          publish_date,
+          bpm,
         }),
       )}`,
     );
@@ -90,7 +105,8 @@ const FilterBar = ({ location, history, genreListing }) => {
     setSelectedPerPage('');
     setSelectedPublishDateStart('');
     setSelectedPublishDateEnd('');
-    setSelectedBpm('');
+    setSelectedBpmStart('');
+    setSelectedBpmEnd('');
   };
 
   const genreOptions = genreListing.map((genre) => {
@@ -178,11 +194,19 @@ const FilterBar = ({ location, history, genreListing }) => {
             <Form.Input
               type='number'
               fluid
-              label='BPM'
-              placeholder='128'
+              label='BPM START'
               width={2}
-              onChange={handleBPMChange}
-              value={selectedBpm}
+              onChange={handleBPMStartChange}
+              value={selectedBpmStart}
+            />
+            -
+            <Form.Input
+              type='number'
+              fluid
+              label='BPM END'
+              width={2}
+              onChange={handleBPMEndChange}
+              value={selectedBpmEnd}
             />
             <Form.Select
               label='KEY'
@@ -204,7 +228,7 @@ const FilterBar = ({ location, history, genreListing }) => {
               options={timeframeOptions}
               onChange={handleTimeframeChange}
               value={selectedTimeframe}
-              width={3}
+              width={2}
             />
             <Form.Button label='GO' color='red' onClick={filterTracks}>
               <Icon name='filter' />
