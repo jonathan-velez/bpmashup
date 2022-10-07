@@ -35,7 +35,7 @@ const TrackListingTableHeader = ({
         <Table.HeaderCell>GENRE</Table.HeaderCell>
         <Table.HeaderCell>BPM</Table.HeaderCell>
         <Table.HeaderCell>KEY</Table.HeaderCell>
-        <Table.HeaderCell>RELEASED</Table.HeaderCell>
+        <Table.HeaderCell>PUBLISHED</Table.HeaderCell>
         {isPlaylist && <Table.HeaderCell>DATE ADDED</Table.HeaderCell>}
         <Table.HeaderCell>&nbsp;</Table.HeaderCell>
       </Table.Row>

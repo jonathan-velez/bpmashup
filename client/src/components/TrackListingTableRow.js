@@ -31,7 +31,7 @@ const TrackListingTableRow = ({
     // label,
     bpm,
     key,
-    publishDate,
+    publish_date,
     dateAdded = {},
     release,
   } = track;
@@ -79,7 +79,7 @@ const TrackListingTableRow = ({
       <Table.Cell>{constructLinks([genre], 'genre')}</Table.Cell>
       <Table.Cell>{bpm}</Table.Cell>
       <Table.Cell>{getCamelotKey(key)}</Table.Cell>
-      <Table.Cell>{publishDate}</Table.Cell>
+      <Table.Cell>{publish_date}</Table.Cell>
       {isPlaylist && <Table.Cell>{dateAddedFormatted}</Table.Cell>}
       <Table.Cell>
         <TrackActionDropdown track={track} />
