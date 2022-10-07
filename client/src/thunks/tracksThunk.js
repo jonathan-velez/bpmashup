@@ -47,8 +47,7 @@ export const getTracks = async (searchFacets) => {
     const pageModel = {
       page: DEFAULT_PAGE,
       per_page: getPerPageSetting(),
-      publishDateStart: null,
-      publishDateEnd: null,
+      publish_date: null,
     };
 
     const pageParams = queryString.stringify(
