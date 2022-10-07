@@ -180,11 +180,12 @@ const FilterBar = ({ location, history, genreListing }) => {
       <Accordion.Content active={activeIndex === 0}>
         <Form>
           <Form.Group style={{ textAlign: 'left' }}>
-            <Form.Select
+            <Form.Dropdown
               label='GENRE'
               placeholder='House'
               clearable
               fluid
+              search
               selection
               options={genreOptions}
               onChange={handleGenreChange}
