@@ -89,7 +89,7 @@ const FilterBar = ({ location, history, genreListing }) => {
     history.push(
       `?${queryString.stringify(
         _.pickBy({
-          genre_id: selectedGenre,
+          genre_id: selectedGenre.join(','),
           key_id: selectedMusicalKey,
           per_page: selectedPerPage,
           publish_date,
@@ -187,6 +187,7 @@ const FilterBar = ({ location, history, genreListing }) => {
               fluid
               search
               selection
+              multiple
               options={genreOptions}
               onChange={handleGenreChange}
               value={selectedGenre}
