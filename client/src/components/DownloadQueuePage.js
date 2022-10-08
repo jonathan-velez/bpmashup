@@ -113,11 +113,11 @@ const DownloadQueuePage = ({ updateTrackStatus, queueItems, genres }) => {
         });
         break;
       case 'oldest':
-        items.sort((a, b) => a.addedDate - b.addedDate);
+        items.sort((a, b) => a.addedDate.seconds - b.addedDate.seconds);
         break;
       case 'newest':
       default:
-        items.sort((a, b) => b.addedDate - a.addedDate);
+        items.sort((a, b) => b.addedDate.seconds - a.addedDate.seconds);
     }
 
     if (!showArchiveItems) {
