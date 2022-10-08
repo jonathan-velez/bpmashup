@@ -15,7 +15,7 @@ const chartsList = (state = defaultState, action) => {
       return [...state, ...results];
     }
     case FETCH_CHARTS_BY_PROFILE_ID: {
-      return [...state, ...(results.charts || [])];
+      return [...state, ...(results || [])];
     }
     case CLEAR_CHARTS: {
       return defaultState;

@@ -10,7 +10,6 @@ import {
 } from '../constants/actionTypes';
 import {
   API_GET_CHART,
-  API_GET_CHARTS_BY_PROFILE_ID,
 } from '../constants/apiPaths';
 import {
   DEFAULT_CHARTS_PER_PAGE,
@@ -88,7 +87,7 @@ export async function fetchChartsByProfileId(
     });
 
     const beatportChardData = await callAPIorCache(
-      `${API_GET_CHARTS_BY_PROFILE_ID}?djprofileId=${profileId}&publishedOnly=true&page=${page}&per_page=${per_page}&sortBy=publishDate+DESC`,
+      `${API_GET_CHART}?dj_id=${profileId}&is_published=true&page=${page}&per_page=${per_page}`,
     );
 
     const { data, status } = beatportChardData;
