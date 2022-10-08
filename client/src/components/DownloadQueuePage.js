@@ -140,13 +140,13 @@ const DownloadQueuePage = ({ updateTrackStatus, queueItems, genres }) => {
         name = name.toLowerCase();
 
         const { release = {} } = track;
-        const { label } = release;
+        const { label = {} } = release;
         const { slug: labelSlug } = label;
 
         return (
-          artists.includes(searchString) ||
-          name.includes(searchString) ||
-          labelSlug.includes(searchString)
+          artists && artists.includes(searchString) ||
+          name && name.includes(searchString) ||
+          labelSlug && labelSlug.includes(searchString)
         );
       });
     }
