@@ -1,6 +1,6 @@
 # BPMashup
 
-https://bpmashup.herokuapp.com/
+https://bpmashup.com
 
 ### Features
 
