@@ -11,7 +11,7 @@
     "eslint-plugin-react": "^7.12.4",
     "firebase": "^8.0.0",
     "history": "^4.7.2",
-    "immer": "^8.0.0",
+    "immer": "^9.0.6",
     "lodash": "^4.17.4",
     "moment": "^2.20.1",
     "node-uuid": "^1.4.8",
