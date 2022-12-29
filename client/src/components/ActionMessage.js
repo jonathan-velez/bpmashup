@@ -23,6 +23,7 @@ class ActionMessage extends React.PureComponent {
           return (
             <List.Item key={idx}>
               <Message
+                negative={messageType === 'negative'}
                 positive={!messageType || messageType === 'positive'}
                 error={messageType === 'error'}
                 compact
