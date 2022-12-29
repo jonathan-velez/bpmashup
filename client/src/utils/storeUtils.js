@@ -45,10 +45,6 @@ export const registerFirebaseListeners = () => {
     playlistsRef.onSnapshot((playlists) => {
       let payload = {};
 
-      playlists.docChanges().forEach((change) => {
-        console.log('change!', change);
-      });
-
       playlists.forEach(async (item) => {
         const playlist = item.data();
 
@@ -146,12 +142,17 @@ export const registerFirebaseListeners = () => {
     const downloadQueue = downloadQueueRefFirestore.onSnapshot((downloads) => {
       const downloadQueueUser = {};
       downloads.forEach((snapshot) => {
+        const snapshotData = snapshot.data();
+
         const queueItem = {
           id: snapshot.id,
-          ...snapshot.data(),
+          ...snapshotData,
         };
 
-        downloadQueueUser[snapshot.id] = queueItem;
+        // filter out purged
+        if(!snapshotData.purged){
+          downloadQueueUser[snapshot.id] = queueItem;
+        }
       });
 
       store.dispatch({
@@ -185,7 +186,6 @@ export const registerFirebaseListeners = () => {
   });
 };
 
-// TODO: take in optional positive/negative and icon parameters. Icon would be cool to send a music one for track playing
 export const generateActivityMessage = (message, messageType = 'positive') => {
   const id = v4();
   store.dispatch(

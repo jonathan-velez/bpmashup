@@ -33,6 +33,7 @@ import {
 import {
   addTrackToDownloadQueue,
   updateTrackStatus,
+  purgeFailedFromPersonalQueue,
 } from './downloadQueueThunk';
 
 export {
@@ -67,4 +68,5 @@ export {
   removeTrackFromPlaylist,
   fetchChartsByGenreId,
   getLatestTracksByLabelAndArtistIds,
+  purgeFailedFromPersonalQueue,
 };

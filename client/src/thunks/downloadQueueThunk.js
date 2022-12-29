@@ -5,7 +5,48 @@ import {
   START_ADD_TRACK_TO_DOWNLOAD_QUEUE,
 } from '../constants/actionTypes';
 import { generateActivityMessage } from '../utils/storeUtils';
-import { trackHasBeenDownloaded } from '../selectors';
+import { trackHasBeenDownloaded, getUserId } from '../selectors';
+
+export const purgeFailedFromPersonalQueue = (sendToast = true) => {
+  return async (dispatch, getState) => {
+    const state = getState();
+    const uid = getUserId(state);
+
+    if (!uid) {
+      return generateActivityMessage(`Unable to find your user ID. Make sure you're logged in`);
+    }
+
+    const firestore = firebase.firestore();
+    const queuePurge = firestore.collection(`users/${uid}/downloadQueue`);
+
+    queuePurge.get().then((snapshot) => {
+      if (snapshot.empty) {
+        return generateActivityMessage('Nothing in your download queue', 'negative');
+      }
+
+      let purgeCount = 0;
+      const batch = firestore.batch();
+
+      snapshot.forEach((doc) => {
+        const docData = doc.data();
+        if (docData.status === 'notAvailable' && !docData.purged) {
+          purgeCount++;
+          batch.update(doc.ref, { purged: true });
+        }
+      });
+      
+      if(purgeCount === 0) {
+        return generateActivityMessage('Nothing to purge', 'negative');
+      }
+
+      batch.commit();
+
+      if (sendToast) {
+        return generateActivityMessage(`${purgeCount} failed download${purgeCount > 1 ? 's have' : ' has'} been purged from your queue.`);
+      }
+    });
+  }
+}
 
 export const addTrackToDownloadQueue = (track, sendToast = true) => {
   return async (dispatch, getState) => {

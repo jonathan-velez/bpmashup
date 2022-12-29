@@ -10,11 +10,12 @@ import {
   Input,
   Icon,
   Dropdown,
+  Button,
 } from 'semantic-ui-react';
 
 import DownloadQueueTable from './DownloadQueueTable';
 import TitleHeader from './TitleHeader';
-import { updateTrackStatus } from '../thunks';
+import { updateTrackStatus, purgeFailedFromPersonalQueue } from '../thunks';
 import { fileExistsOnDownloadServer } from '../utils/trackUtils';
 import { generateActivityMessage } from '../utils/storeUtils';
 import {
@@ -25,7 +26,7 @@ import { getAllDownloadQueueItems, getGenresDropdownArray } from '../selectors';
 import { DEFAULT_PAGE_TITLE } from '../constants/defaults';
 import { camelotMusicalKeysDropdownArray } from '../constants/musicalKeys';
 
-const DownloadQueuePage = ({ updateTrackStatus, queueItems, genres }) => {
+const DownloadQueuePage = ({ updateTrackStatus, purgeFailedFromPersonalQueue, queueItems, genres }) => {
   // TODO: switch to firebase preferences once we build them out
   // const { downloadQueueDefaultSortBy = {} } = userPreferences;
 
@@ -240,6 +241,10 @@ const DownloadQueuePage = ({ updateTrackStatus, queueItems, genres }) => {
     }
   };
 
+  const handlePurgeClick = () => {
+    purgeFailedFromPersonalQueue();
+  }
+
   const retryDownload = (queueId) => {
     updateTrackStatus(queueId, 'initiated'); // TODO: set update date and retry tally. consider throttling/limiting requests
     generateActivityMessage('Track re-initiated for processing.');
@@ -429,6 +434,11 @@ const DownloadQueuePage = ({ updateTrackStatus, queueItems, genres }) => {
               />
             </Grid.Column>
           </Grid.Row>
+          <Grid.Row>
+            <Grid.Column>
+              <Button onClick={handlePurgeClick}>Purge Failed</Button>
+            </Grid.Column>
+          </Grid.Row>
         </Grid>
       </Container>
       <DownloadQueueTable
@@ -468,6 +478,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = {
   updateTrackStatus,
+  purgeFailedFromPersonalQueue,
 };
 
 export default connect(
