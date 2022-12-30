@@ -22,11 +22,11 @@ import {
   setDownloadQueueSettings,
   getDownloadQueueSettings,
 } from '../utils/helpers';
-import { getAllDownloadQueueItems, getGenresDropdownArray } from '../selectors';
+import { getAllDownloadQueueItems, getGenresDropdownArray, getFailedDownloadQueueItems } from '../selectors';
 import { DEFAULT_PAGE_TITLE } from '../constants/defaults';
 import { camelotMusicalKeysDropdownArray } from '../constants/musicalKeys';
 
-const DownloadQueuePage = ({ updateTrackStatus, purgeFailedFromPersonalQueue, queueItems, genres }) => {
+const DownloadQueuePage = ({ updateTrackStatus, purgeFailedFromPersonalQueue, queueItems, genres, failedItems }) => {
   // TODO: switch to firebase preferences once we build them out
   // const { downloadQueueDefaultSortBy = {} } = userPreferences;
 
@@ -434,11 +434,15 @@ const DownloadQueuePage = ({ updateTrackStatus, purgeFailedFromPersonalQueue, qu
               />
             </Grid.Column>
           </Grid.Row>
-          <Grid.Row>
-            <Grid.Column>
-              <Button onClick={handlePurgeClick}>Purge Failed</Button>
-            </Grid.Column>
-          </Grid.Row>
+          {failedItems.length > 0 &&
+            <Grid.Row>
+              <Grid.Column>
+                <Button
+                  onClick={handlePurgeClick}
+                >Purge Failed</Button>
+              </Grid.Column>
+            </Grid.Row>
+          }
         </Grid>
       </Container>
       <DownloadQueueTable
@@ -471,6 +475,7 @@ const mapStateToProps = (state) => {
 
   return {
     queueItems: getAllDownloadQueueItems(state),
+    failedItems: getFailedDownloadQueueItems(state),
     userPreferences: preferences,
     genres: getGenresDropdownArray(state),
   };

@@ -158,6 +158,12 @@ export const getCurrentDownloadQueueItems = createSelector(
   (queue) => _.filter(queue, (item) => item.status !== 'downloaded'),
 );
 
+// select failed failes
+export const getFailedDownloadQueueItems = createSelector(
+  [getDownloadQueue],
+  (queue) => _.filter(queue, (item) => item.status === 'notAvailable'),
+);
+
 export const getAllDownloadQueueItems = createSelector(
   [getDownloadQueue],
   (queue) => {
